@@ -1,8 +1,8 @@
 import type { ChapterMeta } from '../../contracts.ts';
 
 /**
- * 순수 데이터. 타입 import 외에는 아무것도 가져오지 않는다.
- * (Node의 빌드 스크립트와 모든 챕터의 내비게이션이 이 파일을 읽는다)
+ * Pure data. Imports nothing except type imports.
+ * (Node build scripts and every chapter's navigation read this file)
  */
 export const series: ChapterMeta = {
   id: 'series',
