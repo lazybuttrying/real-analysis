@@ -9,8 +9,8 @@ export interface ThreeStage {
 }
 
 /**
- * three 무대(렌더러, 씬, 카메라)를 만든다. 3D 씬 파일에서만 import 한다.
- * (그래야 three가 vendor-three 청크로 분리되어 3D 씬에 들어갈 때만 로드된다)
+ * Creates a three stage (renderer, scene, camera). Imported only from 3D scene files.
+ * (That way three is split into the vendor-three chunk and loaded only when entering a 3D scene)
  */
 export function createThreeStage(host: HTMLElement): ThreeStage {
   const renderer = new WebGLRenderer({ antialias: true, alpha: true });
@@ -37,7 +37,7 @@ export function createThreeStage(host: HTMLElement): ThreeStage {
     camera,
     resize,
     dispose() {
-      // geometry, material, texture 해제는 만든 쪽(씬)의 책임이다. 여기서는 렌더러와 WebGL 컨텍스트만 해제한다.
+      // Disposing geometry, materials, and textures is the creator's (the scene's) responsibility. Only the renderer and WebGL context are released here.
       renderer.dispose();
       renderer.forceContextLoss();
       renderer.domElement.remove();
