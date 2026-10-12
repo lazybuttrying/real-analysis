@@ -1,6 +1,6 @@
 /**
- * 1..n 에서 그래프에 그릴 인덱스를 고른다.
- * n 이 maxPoints 이하이면 전부, 크면 로그 간격으로 고르고 1과 n 은 항상 포함한다.
+ * Picks the indices from 1..n to plot on the graph.
+ * If n is at most maxPoints, all of them; otherwise a log-spaced selection, always including 1 and n.
  */
 export function sampleIndices(n: number, maxPoints: number): number[] {
   if (n <= maxPoints) return Array.from({ length: n }, (_, i) => i + 1);
