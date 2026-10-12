@@ -1,5 +1,18 @@
 import { select, type Selection } from 'd3';
 
+/** Compact number formatting for readouts: fixed decimals in the normal range, exponential outside it. */
+export function fmt(x: number, digits = 6): string {
+  if (!Number.isFinite(x)) return String(x);
+  if (x !== 0 && (Math.abs(x) >= 1e7 || Math.abs(x) < 1e-4)) return x.toExponential(3);
+  return String(Number(x.toFixed(digits)));
+}
+
+/** Always-exponential formatting, for huge values like n!. */
+export function fmtSci(x: number, digits = 3): string {
+  if (x === 0) return '0';
+  return x.toExponential(digits);
+}
+
 export interface Margin {
   top: number;
   right: number;
