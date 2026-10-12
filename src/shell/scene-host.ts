@@ -17,7 +17,7 @@ function writeReloadFlag(on: boolean): void {
     if (on) sessionStorage.setItem(RELOAD_FLAG, '1');
     else sessionStorage.removeItem(RELOAD_FLAG);
   } catch {
-    // 저장소를 쓸 수 없는 환경이면 자동 새로고침 보호만 포기한다.
+    // If storage is unavailable in this environment, just give up the auto-reload guard.
   }
 }
 
@@ -30,8 +30,8 @@ interface Mounted {
 }
 
 /**
- * 씬 하나를 호스트 요소에 올리고 수명주기를 관리한다.
- * 상태 흐름: idle → loading → mounted → disposed
+ * Mounts one scene into a host element and manages its lifecycle.
+ * State flow: idle → loading → mounted → disposed
  */
 export class SceneHost {
   private readonly host: HTMLElement;
@@ -57,7 +57,7 @@ export class SceneHost {
       if (token === this.loadToken) this.handleLoadError(error);
       return;
     }
-    // 로딩 중에 다른 씬으로 이동했다면 이 결과는 버린다. (동적 import는 취소할 수 없다)
+    // If navigation moved to another scene while loading, discard this result. (A dynamic import cannot be cancelled)
     if (token !== this.loadToken) return;
     writeReloadFlag(false);
 
@@ -80,7 +80,7 @@ export class SceneHost {
     }
   }
 
-  /** 컨트롤 값이 바뀌었을 때 호출한다. 같은 값이면 다시 계산하지 않는다. */
+  /** Called when a control value changes. Does not recompute if the value is unchanged. */
   setState(next: ControlState): void {
     const mounted = this.mounted;
     if (!mounted) return;
@@ -89,7 +89,7 @@ export class SceneHost {
     this.compute(mounted);
   }
 
-  /** rAF, observer, 씬(WebGL 포함), DOM을 순서대로 해제한다. */
+  /** Releases, in order: rAF, the observer, the scene (including WebGL), and the DOM. */
   dispose(): void {
     this.loadToken++;
     this.computeSeq++;
@@ -146,7 +146,7 @@ export class SceneHost {
     this.schedule();
   }
 
-  /** 입력 이벤트마다 그리지 않고 프레임당 한 번만 렌더한다. */
+  /** Renders at most once per frame instead of on every input event. */
   private schedule(): void {
     if (this.frame !== 0) return;
     this.frame = requestAnimationFrame(() => {
@@ -166,7 +166,7 @@ export class SceneHost {
     this.showError('이 씬을 표시하는 중 오류가 발생했습니다.');
   }
 
-  /** 재배포 직후 구버전 탭에서는 청크 파일이 사라져 있을 수 있다. 한 번만 자동으로 새로고침한다. */
+  /** Right after a redeploy, an old tab may find its chunk files gone. Reload automatically, once only. */
   private handleLoadError(error: unknown): void {
     console.error(error);
     if (!readReloadFlag()) {
