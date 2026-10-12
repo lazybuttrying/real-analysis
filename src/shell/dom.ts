@@ -1,4 +1,4 @@
-/** 아주 작은 DOM 생성 헬퍼. */
+/** A tiny DOM creation helper. */
 export function h<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   attrs: Readonly<Record<string, string>> = {},
