@@ -45,7 +45,7 @@ main.home {
   padding: 24px 16px;
 }
 
-/* 챕터 페이지 레이아웃 */
+/* Chapter page layout */
 #app.chapter {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
