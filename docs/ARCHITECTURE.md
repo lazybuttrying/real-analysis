@@ -109,5 +109,5 @@ real-analysis/
 ## 알아둘 점
 
 - `npm install` 시점의 최신 버전이 설치된다(작성 시점 Vite 8, TypeScript 7). `package-lock.json`이 버전을 고정하므로 CI에서는 `npm ci`를 쓴다.
-- `.nvmrc`는 `20`이고 Vite 8은 Node 20.19 이상을 요구한다(`engines`에도 명시). CI에서 `node-version-file`이 20.19 미만으로 해석되면 빌드가 실패한다.
+- `.nvmrc`는 `22`이고 Vite 8은 Node 20.19 이상을 요구한다(`engines`에는 22 이상으로 명시). size-limit가 Node 22부터 제공되는 `fs/promises.glob`을 사용해서 CI 기준 버전을 22로 올렸다(2026-10-12). CI에서 `node-version-file`이 이보다 낮게 해석되면 size 단계가 실패한다.
 - 3D 씬은 basel 하나이며, `view/threekit.ts`가 실제로 그린다. three import는 threekit 안에만 둔다(`check-deps`가 검사).
