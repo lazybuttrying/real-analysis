@@ -3,24 +3,24 @@ import { EULER_GAMMA } from '../../../math/constants';
 import { sampleIndices } from '../../../math/sample';
 import { KahanSum } from '../../../math/sum';
 
-/** 순수 계산. DOM, d3, three를 import 하지 않는다. */
+/** Pure computation. Does not import the DOM, d3, or three. */
 
 export const MAX_N = 1_000_000;
 export const MAX_POINTS = 400;
 
 export interface HarmonicPoint {
   k: number;
-  /** 부분합 S_k */
+  /** Partial sum S_k */
   sum: number;
-  /** 점근식 ln k + γ */
+  /** Asymptotic form ln k + γ */
   asymptotic: number;
 }
 
 export interface HarmonicData {
   n: number;
-  /** 그래프용으로 솎아 낸 점 (n이 크면 로그 간격) */
+  /** Points thinned out for the graph (log-spaced when n is large) */
   points: HarmonicPoint[];
-  /** k = n 에서의 값 */
+  /** Value at k = n */
   final: HarmonicPoint;
 }
 
