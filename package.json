@@ -9,20 +9,76 @@
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "build": "tsc --noEmit && vite build && tsx scripts/prerender.ts",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "check-deps": "tsx scripts/check-deps.ts",
+    "size": "size-limit"
   },
+  "size-limit": [
+    {
+      "name": "home entry",
+      "path": "dist/assets/home-*.js",
+      "limit": "0.6 kB"
+    },
+    {
+      "name": "shared shell chunks",
+      "path": [
+        "dist/assets/i18n-*.js",
+        "dist/assets/tex-*.js",
+        "dist/assets/sum-*.js"
+      ],
+      "limit": "5.5 kB"
+    },
+    {
+      "name": "chapter: series (shell, view kit, all scenes)",
+      "path": [
+        "dist/assets/series-*.js",
+        "dist/assets/d3kit-*.js",
+        "dist/assets/harmonic-*.js",
+        "dist/assets/basel-*.js",
+        "dist/assets/leibniz-*.js",
+        "dist/assets/eseries-*.js",
+        "dist/assets/telescoping-*.js",
+        "dist/assets/geometric-*.js",
+        "dist/assets/wallis-*.js",
+        "dist/assets/stirling-*.js",
+        "dist/assets/grandi-*.js",
+        "dist/assets/zeta4-*.js"
+      ],
+      "limit": "26 kB"
+    },
+    {
+      "name": "vendor: d3",
+      "path": "dist/assets/vendor-d3-*.js",
+      "limit": "25 kB"
+    },
+    {
+      "name": "vendor: katex",
+      "path": "dist/assets/vendor-katex-*.js",
+      "limit": "95 kB"
+    },
+    {
+      "name": "vendor: three (basel only)",
+      "path": "dist/assets/vendor-three-*.js",
+      "limit": "170 kB"
+    }
+  ],
   "dependencies": {
     "d3": "^7.9.0",
     "katex": "^0.19.0",
     "three": "^0.186.1"
   },
   "devDependencies": {
+    "@size-limit/file": "^14.2.0",
     "@types/d3": "^7.4.3",
     "@types/katex": "^0.16.8",
     "@types/node": "^26.6.5",
     "@types/three": "^0.186.0",
+    "size-limit": "^14.2.0",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
   }
 }

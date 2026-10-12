@@ -18,9 +18,14 @@ const fromRoot = (path: string): string => fileURLToPath(new URL(path, import.me
 /** The single source of truth for the chapter list is src/catalog.ts. It is only read here. */
 const chapterIds = catalog.map((chapter) => chapter.id);
 
+const LANG_SEGMENTS = new Set(['ko', 'en']);
+
 /**
- * For the dev/preview server: rewrites /<base><chapter>/<scene>/ requests to that chapter's index.html.
- * In static deployment, the prerender step creates an index.html per scene and takes over this role.
+ * For the dev/preview server: rewrites page requests to the entry that boots them.
+ * Language-prefixed paths (/<lang>/<chapter>/<scene>/, /<lang>/) and legacy
+ * un-prefixed chapter paths are handled; the shell itself redirects legacy
+ * paths to the preferred language once booted.
+ * In static deployment, the prerender step creates an index.html per page and takes over this role.
  */
 function chapterFallback(): Plugin {
   const rewrite: Connect.NextHandleFunction = (req, _res, next) => {
@@ -29,11 +34,14 @@ function chapterFallback(): Plugin {
     const pathname = queryAt === -1 ? url : url.slice(0, queryAt);
     const query = queryAt === -1 ? '' : url.slice(queryAt);
 
-    if (pathname.startsWith(BASE)) {
-      const chapter = pathname.slice(BASE.length).split('/')[0] ?? '';
-      const hasExtension = /\.[a-z0-9]+$/i.test(pathname);
-      if (chapterIds.includes(chapter) && !hasExtension) {
+    if (pathname.startsWith(BASE) && !/\.[a-z0-9]+$/i.test(pathname)) {
+      const segments = pathname.slice(BASE.length).split('/').filter(Boolean);
+      const [first, second] = segments;
+      const chapter = first !== undefined && LANG_SEGMENTS.has(first) ? second : first;
+      if (chapter !== undefined && chapterIds.includes(chapter)) {
         req.url = `${BASE}${chapter}/index.html${query}`;
+      } else if (first !== undefined && LANG_SEGMENTS.has(first) && second === undefined) {
+        req.url = `${BASE}index.html${query}`;
       }
     }
     next();

@@ -1,5 +1,5 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { grandiModel, type GrandiData } from '../models/grandi';
 
@@ -13,6 +13,7 @@ const MARGIN = { top: 88, right: 20, bottom: 40, left: 56 };
 
 function createGrandiScene(): Scene<GrandiData> {
   let chart: Chart | undefined;
+  let lang: Lang = 'ko';
   let last: { data: GrandiData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -36,7 +37,15 @@ function createGrandiScene(): Scene<GrandiData> {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(`N = ${n}    S_N = ${data.sum} (never settles)    Cesàro mean = ${fmt(data.cesaroMean)}    sum of the series: does not exist — divergent`);
+      .text(
+        localize(
+          {
+            ko: `N = ${n}    S_N = ${data.sum} (절대 안정되지 않음)    체사로 평균 = ${fmt(data.cesaroMean)}    급수의 합: 존재하지 않음 — 발산`,
+            en: `N = ${n}    S_N = ${data.sum} (never settles)    Cesàro mean = ${fmt(data.cesaroMean)}    sum of the series: does not exist — divergent`,
+          },
+          lang,
+        ),
+      );
     g.append('text')
       .attr('x', 0)
       .attr('y', -44)
@@ -48,7 +57,15 @@ function createGrandiScene(): Scene<GrandiData> {
       .attr('y', -24)
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
-      .text('both cannot be right — regrouping terms is only legal for convergent series');
+      .text(
+        localize(
+          {
+            ko: '둘 다 맞을 수는 없습니다 — 항을 다시 묶는 것은 수렴급수에서만 허용됩니다',
+            en: 'both cannot be right — regrouping terms is only legal for convergent series',
+          },
+          lang,
+        ),
+      );
 
     // The 1/2 line: where the Cesaro mean settles. It is not a sum.
     g.append('line')
@@ -95,18 +112,19 @@ function createGrandiScene(): Scene<GrandiData> {
       .attr('y', y(1) - 12)
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
-      .text('partial sums: 1, 0, 1, 0, …');
+      .text(localize({ ko: '부분합: 1, 0, 1, 0, …', en: 'partial sums: 1, 0, 1, 0, …' }, lang));
     g.append('text')
       .attr('x', x(xMax) - 4)
       .attr('y', y(data.cesaroMean) - 12)
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .attr('fill', GOLD)
-      .text('Cesàro mean');
+      .text(localize({ ko: '체사로 평균', en: 'Cesàro mean' }, lang));
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       chart = createChart(host, MARGIN);
     },
     render(data, state) {

@@ -11,7 +11,8 @@
 | 계약 | Model은 순수 함수(`compute`, 반환 `D \| Promise<D>`), Scene은 `mount/render/resize/dispose`, 컨트롤은 선언형 `ControlSpec`, 데이터는 단방향 |
 | 번들 | 챕터별 entry, 공유 vendor 청크(d3, three, katex), 씬은 동적 import |
 | 챕터 entry | 챕터가 5개 이상이므로 `<챕터>/index.html`은 `catalog`에서 생성(`scripts/gen-entries.ts`), 생성물은 `.gitignore` |
-| 라우팅 | 경로 URL(`/series/harmonic/`), 챕터 간은 풀 페이지 이동, 챕터 안은 `pushState` |
+| 라우팅 | 경로 URL(`/<언어>/<챕터>/<씬>/`), 챕터 간은 풀 페이지 이동, 챕터 안은 `pushState` |
+| 언어 | 한국어·영어 둘 다, URL 접두사(`/ko/`·`/en/`), 헤더 KO \| EN 전환, 프리렌더 hreflang |
 | 상태 | `ControlSpec`이 컨트롤 상태와 URL 쿼리(`?n=500&logX=0`)의 단일 원천. 기본값은 URL에서 생략 |
 | SEO | 씬별 프리렌더(제목, 요약, 본문, KaTeX), sitemap, canonical, 챕터 허브 페이지 |
 | 배포 | GitHub Pages, 공식 Pages 액션, PR에서는 검증만 하고 배포는 main push에서만 |
@@ -79,21 +80,24 @@ real-analysis/
 - [x] 챕터 entry 자동 생성, 멀티 entry 빌드, vendor 청크 분리 (d3, KaTeX는 첫 로드에 들어가지 않음)
 - [x] dev/preview에서 `/<챕터>/<씬>/` 직접 접근
 - [x] 컨트롤 ↔ URL 상태, 씬 수명주기, 오류 처리
-- [x] 예시 씬 1개(`series/harmonic`: 조화급수 부분합, d3)
+- [x] series 챕터 씬 10개 전부 (harmonic 외 basel·leibniz·eseries·telescoping·geometric·wallis·stirling·grandi·zeta4)
+- [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
+- [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
+- [x] 의존 방향 검사 (`scripts/check-deps.ts`: `models → view` 금지, `meta.ts` import 제한, three는 threekit만)
+- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), `sitemap.xml`, `404.html`, `robots.txt`, title 중복·`summary` 비어 있음 검사
+- [x] CI 검사와 챕터별 번들 예산(`size-limit`), `deploy.yml`에 test → check-deps → build → 프리렌더 검증 → size-limit 반영. PR은 검증만, 배포는 main push에서만
 
 남음 (착수 순서)
 
-- [ ] vitest 추가, 모델 단위 테스트 (현재 모델·상태·생성기는 임시 스크립트로만 검증함)
-- [ ] 의존 방향 lint (`models → view` 금지, `meta.ts` import 제한)
-- [ ] `scripts/prerender.ts`: 씬별 HTML(title, description, canonical, 본문, KaTeX), `sitemap.xml`, `404.html`, `robots.txt`
-- [ ] CI 검사: 챕터 entry, 프리렌더 결과 존재, title 중복, `summary` 비어 있음, 챕터별 번들 예산(`size-limit`)
-- [ ] `deploy.yml`: `setup-node`(`node-version-file: .nvmrc`, `cache: npm`) → `npm ci` → build → Pages 액션 (`pages: write`, `id-token: write`). PR은 검증만, 배포는 main push에서만
-- [ ] 나머지 씬과 챕터, 씬별 `content/*.md` 본문, Search Console에 sitemap 제출
+- [ ] 나머지 챕터(8~10장), 씬별 `content/*.md` 본문, Search Console에 sitemap 제출
 
 ## 아직 정해지지 않은 것
 
-1. **언어(한국어, 영어, 둘 다):** `<html lang>`, 키워드, URL 구조(`/ko/`·`/en/`)가 달라진다. 둘 다라면 `SceneMeta`와 프리렌더에 `hreflang`을 지금 넣는 편이 낫다.
-2. **도메인(github.io 하위 경로 vs 커스텀):** 색인을 제출하기 전에 정한다. 지금은 `SITE_BASE` 환경변수(기본 `/real-analysis/`)로 바꿀 수 있다.
+1. **도메인(github.io 하위 경로 vs 커스텀):** 색인을 제출하기 전에 정한다. 지금은 `SITE_BASE` 환경변수(기본 `/real-analysis/`)로 바꿀 수 있다.
+
+## 결정됨
+
+1. **언어: 한국어·영어 둘 다 (2026-10-12 결정).** 모든 경로는 언어 접두사 `/ko/`·`/en/`를 앞에 붙인다. 접두사가 없는 경로는 저장된 선호 언어(localStorage `lang` 키, 기본값 ko)로 리다이렉트한다. 헤더의 KO | EN 전환은 챕터·씬·쿼리를 유지한 채 언어 구간만 바꾼다. `SceneMeta`·`ChapterMeta` 텍스트와 컨트롤 라벨은 언어별 레코드(`{ ko, en }`)로 저장하고, 셸 문자열은 셸 사전으로 관리한다. 프리렌더는 언어별 페이지를 만들고 hreflang(ko, en, x-default)을 넣는다.
 
 ## 규모가 커지면 다시 볼 것
 
@@ -106,4 +110,4 @@ real-analysis/
 
 - `npm install` 시점의 최신 버전이 설치된다(작성 시점 Vite 8, TypeScript 7). `package-lock.json`이 버전을 고정하므로 CI에서는 `npm ci`를 쓴다.
 - `.nvmrc`는 `20`이고 Vite 8은 Node 20.19 이상을 요구한다(`engines`에도 명시). CI에서 `node-version-file`이 20.19 미만으로 해석되면 빌드가 실패한다.
-- 3D 씬은 아직 없다. `view/threekit.ts`는 타입체크만 통과했고 실제로 그려 본 적은 없다.
+- 3D 씬은 basel 하나이며, `view/threekit.ts`가 실제로 그린다. three import는 threekit 안에만 둔다(`check-deps`가 검사).

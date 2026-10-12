@@ -1,5 +1,5 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createChart, fmtSci, type Chart } from '../../../view/d3kit';
 import { stirlingModel, type StirlingData } from '../models/stirling';
 
@@ -12,6 +12,7 @@ const MARGIN = { top: 64, right: 20, bottom: 40, left: 56 };
 
 function createStirlingScene(): Scene<StirlingData> {
   let chart: Chart | undefined;
+  let lang: Lang = 'ko';
   let last: { data: StirlingData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -31,14 +32,28 @@ function createStirlingScene(): Scene<StirlingData> {
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
       .text(
-        `n = ${n}    n! = ${fmtSci(data.fact)}    Stirling = ${fmtSci(data.approx)}    relative error = ${(data.relErr * 100).toFixed(2)}%`,
+        localize(
+          {
+            ko: `n = ${n}    n! = ${fmtSci(data.fact)}    Stirling = ${fmtSci(data.approx)}    상대오차 = ${(data.relErr * 100).toFixed(2)}%`,
+            en: `n = ${n}    n! = ${fmtSci(data.fact)}    Stirling = ${fmtSci(data.approx)}    relative error = ${(data.relErr * 100).toFixed(2)}%`,
+          },
+          lang,
+        ),
       );
     g.append('text')
       .attr('x', 0)
       .attr('y', -22)
       .attr('font-size', 12)
       .style('fill', 'var(--muted)')
-      .text('idea level: the π in the formula enters through the Wallis product in the full derivation');
+      .text(
+        localize(
+          {
+            ko: '아이디어 수준: 식 안의 π는 전체 유도 과정에서 월리스 곱을 통해 들어옵니다',
+            en: 'idea level: the π in the formula enters through the Wallis product in the full derivation',
+          },
+          lang,
+        ),
+      );
 
     const mainH = Math.round((height - 64) * 0.6);
     const errTop = mainH + 56;
@@ -88,7 +103,7 @@ function createStirlingScene(): Scene<StirlingData> {
       .attr('y', mainH + 26)
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
-      .text('relative error — shrinks like 1/(12n)');
+      .text(localize({ ko: '상대오차 — 1/(12n)처럼 줄어듭니다', en: 'relative error — shrinks like 1/(12n)' }, lang));
     const errG = g.append('g').attr('transform', `translate(0,${errTop})`);
     const yErr = scaleLinear().domain([0, 0.09]).range([errH, 0]);
     errG.append('g').call(axisLeft(yErr).ticks(4));
@@ -108,7 +123,8 @@ function createStirlingScene(): Scene<StirlingData> {
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       chart = createChart(host, MARGIN);
     },
     render(data, state) {

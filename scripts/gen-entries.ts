@@ -22,6 +22,12 @@ const escapeHtml = (text: string): string =>
 
 const escapeRegExp = (text: string): string => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+/**
+ * One entry per chapter serves both languages: the language is a URL segment
+ * the shell reads at boot (and corrects <html lang> to match). The static
+ * shell therefore carries the default language only; the prerendered per-language
+ * pages carry the exact one.
+ */
 export function entryHtml(chapter: ChapterMeta): string {
   return `<!doctype html>
 <html lang="ko">
@@ -29,7 +35,7 @@ export function entryHtml(chapter: ChapterMeta): string {
     ${MARKER}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escapeHtml(chapter.title)}</title>
+    <title>${escapeHtml(chapter.title.ko)}</title>
   </head>
   <body>
     <div id="app"></div>
