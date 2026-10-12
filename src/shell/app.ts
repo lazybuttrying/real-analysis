@@ -12,7 +12,7 @@ const URL_SYNC_DELAY_MS = 200;
 
 type Loaders = Readonly<Record<string, SceneLoader>>;
 
-/** 챕터 entry 에서 호출한다. 챕터 안의 라우팅(씬 이동)과 컨트롤, 씬 수명주기를 연결한다. */
+/** Called from a chapter entry. Wires up routing within the chapter (scene navigation), controls, and the scene lifecycle. */
 export function startChapter(chapterId: string, loaders: Loaders): void {
   const chapter = catalog.find((candidate) => candidate.id === chapterId);
   const root = document.getElementById('app');
@@ -72,7 +72,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
     });
   };
 
-  /** 슬라이더를 끄는 동안 replaceState 가 쏟아지지 않도록 늦춘다. (일부 브라우저는 호출 횟수를 제한한다) */
+  /** Debounced so replaceState is not spammed while a slider is dragged. (Some browsers rate-limit the calls) */
   const scheduleUrlSync = (scene: SceneMeta, state: ControlState): void => {
     window.clearTimeout(urlSyncTimer);
     urlSyncTimer = window.setTimeout(() => {
@@ -117,7 +117,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
   };
 
   const route = (): void => {
-    // 이전 씬의 URL 동기화가 새 경로에 덮어쓰이지 않게 한다.
+    // Prevents the previous scene's URL sync from overwriting the new path.
     window.clearTimeout(urlSyncTimer);
 
     const { sceneId } = parsePath(BASE, location.pathname);
@@ -133,7 +133,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
     showScene(scene);
   };
 
-  // 같은 챕터 안의 링크만 가로챈다. 나머지(홈, 다른 챕터)는 일반 페이지 이동이다.
+  // Intercepts only links within the same chapter. The rest (home, other chapters) are plain page navigations.
   root.addEventListener('click', (event) => {
     if (event.defaultPrevented || event.button !== 0) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
