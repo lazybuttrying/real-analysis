@@ -1,7 +1,7 @@
 import type { ControlSpec, ControlState, ControlValue } from '../contracts';
 import { h } from './dom';
 
-/** ControlSpec 으로부터 공통 컨트롤 UI를 만든다. 씬은 컨트롤 DOM을 직접 만들지 않는다. */
+/** Builds the shared control UI from ControlSpec. Scenes never build control DOM themselves. */
 export function buildControls(
   container: HTMLElement,
   specs: readonly ControlSpec[],
