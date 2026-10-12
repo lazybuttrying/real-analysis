@@ -1,0 +1,8 @@
+node_modules
+dist
+*.log
+.DS_Store
+
+# >>> generated chapter entries (scripts/gen-entries.ts) >>>
+/series/
+# <<< generated chapter entries <<<
