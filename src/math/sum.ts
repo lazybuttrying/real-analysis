@@ -1,6 +1,6 @@
 /**
- * Kahan 보상 합산.
- * 항이 많은 부분합에서 일반 누적 합의 반올림 오차가 쌓이는 것을 줄인다.
+ * Kahan compensated summation.
+ * Reduces the rounding error that accumulates in a plain running total over many terms, as in partial sums.
  */
 export class KahanSum {
   private sum = 0;
