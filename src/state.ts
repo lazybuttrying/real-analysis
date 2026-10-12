@@ -1,15 +1,15 @@
 import type { ControlSpec, ControlState, ControlValue } from './contracts.ts';
 
 /**
- * ControlSpec 이 컨트롤 상태와 URL 쿼리의 단일 원천이다.
- * 알 수 없는 키는 무시하고, 범위를 벗어난 값은 clamp 한다.
+ * ControlSpec is the single source of truth for control state and the URL query.
+ * Unknown keys are ignored, and out-of-range values are clamped.
  */
 
 type SliderSpec = Extract<ControlSpec, { kind: 'slider' }>;
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
-/** step 격자에 맞추고 부동소수점 잡음을 걷어낸다. */
+/** Snaps to the step grid and strips floating-point noise. */
 function snap(value: number, spec: SliderSpec): number {
   const steps = Math.round((value - spec.min) / spec.step);
   return Number((spec.min + steps * spec.step).toFixed(10));
@@ -46,7 +46,7 @@ export function parseState(specs: readonly ControlSpec[], search: string): Contr
   return state;
 }
 
-/** 기본값과 같은 항목은 생략해서 URL을 짧게 유지한다. 결과는 '' 또는 '?a=1&b=0'. */
+/** Entries equal to their default are omitted to keep the URL short. The result is '' or '?a=1&b=0'. */
 export function serializeState(specs: readonly ControlSpec[], state: ControlState): string {
   const params = new URLSearchParams();
   for (const spec of specs) {
