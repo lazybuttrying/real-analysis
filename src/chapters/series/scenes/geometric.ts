@@ -1,5 +1,5 @@
 import { scaleLinear } from 'd3';
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { geometricModel, type GeometricData } from '../models/geometric';
 
@@ -13,6 +13,7 @@ const MARGIN = { top: 64, right: 24, bottom: 24, left: 24 };
 
 function createGeometricScene(): Scene<GeometricData> {
   let chart: Chart | undefined;
+  let lang: Lang = 'ko';
   let last: { data: GeometricData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -29,13 +30,29 @@ function createGeometricScene(): Scene<GeometricData> {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(`steps = ${steps}    filled S = ${fmt(data.sum)}    gap (1/2)^steps = ${fmt(data.gapValue)}    limit = 1`);
+      .text(
+        localize(
+          {
+            ko: `단계 = ${steps}    채운 합 S = ${fmt(data.sum)}    빈틈 (1/2)^단계 = ${fmt(data.gapValue)}    극한 = 1`,
+            en: `steps = ${steps}    filled S = ${fmt(data.sum)}    gap (1/2)^steps = ${fmt(data.gapValue)}    limit = 1`,
+          },
+          lang,
+        ),
+      );
     g.append('text')
       .attr('x', 0)
       .attr('y', -22)
       .attr('font-size', 12)
       .style('fill', 'var(--muted)')
-      .text('each step fills half of what is left; the dashed gap halves every step and never quite vanishes');
+      .text(
+        localize(
+          {
+            ko: '매 단계 남은 부분의 절반을 채웁니다. 점선 빈틈은 단계마다 절반으로 줄지만 완전히 사라지지는 않습니다',
+            en: 'each step fills half of what is left; the dashed gap halves every step and never quite vanishes',
+          },
+          lang,
+        ),
+      );
 
     const S = Math.min(width, height) - 8;
     const ox = (width - S) / 2;
@@ -83,7 +100,7 @@ function createGeometricScene(): Scene<GeometricData> {
       .attr('font-size', 14)
       .attr('font-weight', 600)
       .style('fill', 'var(--bound)')
-      .text('gap');
+      .text(localize({ ko: '빈틈', en: 'gap' }, lang));
     if (gapW > 46 && gapH > 22) {
       gapLabel.attr('x', xs((gp.x0 + gp.x1) / 2)).attr('y', ys((gp.y0 + gp.y1) / 2) + 5).attr('text-anchor', 'middle');
     } else {
@@ -108,7 +125,8 @@ function createGeometricScene(): Scene<GeometricData> {
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       chart = createChart(host, MARGIN);
     },
     render(data, state) {

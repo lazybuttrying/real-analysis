@@ -1,10 +1,11 @@
 import { axisBottom, axisLeft, line, scaleLinear, scaleLog, type ScaleContinuousNumeric } from 'd3';
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { harmonicModel, type HarmonicData, type HarmonicPoint } from '../models/harmonic';
 
 function createHarmonicScene(): Scene<HarmonicData> {
   let chart: Chart | undefined;
+  let lang: Lang = 'ko';
   let last: { data: HarmonicData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -48,12 +49,18 @@ function createHarmonicScene(): Scene<HarmonicData> {
       .attr('fill', 'currentColor')
       .attr('font-size', 12)
       .text(`n = ${data.n.toLocaleString()}   S_n = ${data.final.sum.toFixed(6)}   ln n + γ = ${data.final.asymptotic.toFixed(6)}`);
-    g.append('text').attr('x', 8).attr('y', 32).attr('font-size', 12).style('fill', 'var(--accent)').text('— 부분합 S_n');
+    g.append('text')
+      .attr('x', 8)
+      .attr('y', 32)
+      .attr('font-size', 12)
+      .style('fill', 'var(--accent)')
+      .text(localize({ ko: '— 부분합 S_n', en: '— partial sums S_n' }, lang));
     g.append('text').attr('x', 8).attr('y', 48).attr('font-size', 12).style('fill', 'var(--bound)').text('- - ln n + γ');
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       chart = createChart(host);
     },
     render(data, state) {

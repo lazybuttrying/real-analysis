@@ -1,5 +1,5 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { leibnizModel, LIMIT, type LeibnizData } from '../models/leibniz';
 
@@ -12,6 +12,7 @@ const MARGIN = { top: 64, right: 20, bottom: 40, left: 56 };
 
 function createLeibnizScene(): Scene<LeibnizData> {
   let chart: Chart | undefined;
+  let lang: Lang = 'ko';
   let last: { data: LeibnizData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -34,13 +35,29 @@ function createLeibnizScene(): Scene<LeibnizData> {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(`N = ${n}    S_N = ${fmt(data.sum, 7)}    π/4 = ${fmt(LIMIT, 7)}    |error| = ${fmt(data.error)}`);
+      .text(
+        localize(
+          {
+            ko: `N = ${n}    S_N = ${fmt(data.sum, 7)}    π/4 = ${fmt(LIMIT, 7)}    |오차| = ${fmt(data.error)}`,
+            en: `N = ${n}    S_N = ${fmt(data.sum, 7)}    π/4 = ${fmt(LIMIT, 7)}    |error| = ${fmt(data.error)}`,
+          },
+          lang,
+        ),
+      );
     g.append('text')
       .attr('x', 0)
       .attr('y', -22)
       .attr('font-size', 12)
       .attr('fill', GOLD)
-      .text(`alternating estimate: |error| ≤ next term 1/(2N+1) = ${fmt(data.bound)} — π/4 always sits between S_N and S_{N+1}`);
+      .text(
+        localize(
+          {
+            ko: `교대급수 추정: |오차| ≤ 다음 항 1/(2N+1) = ${fmt(data.bound)} — π/4는 항상 S_N과 S_{N+1} 사이에 있습니다`,
+            en: `alternating estimate: |error| ≤ next term 1/(2N+1) = ${fmt(data.bound)} — π/4 always sits between S_N and S_{N+1}`,
+          },
+          lang,
+        ),
+      );
 
     // Target line at deviation 0.
     g.append('line')
@@ -87,11 +104,12 @@ function createLeibnizScene(): Scene<LeibnizData> {
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .attr('fill', GOLD)
-      .text('bracket = next term');
+      .text(localize({ ko: '구간 = 다음 항', en: 'bracket = next term' }, lang));
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       chart = createChart(host, MARGIN);
     },
     render(data, state) {

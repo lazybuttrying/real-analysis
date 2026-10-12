@@ -1,5 +1,5 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { wallisModel, LIMIT, type WallisData } from '../models/wallis';
 
@@ -12,6 +12,7 @@ const MARGIN = { top: 64, right: 20, bottom: 40, left: 56 };
 
 function createWallisScene(): Scene<WallisData> {
   let chart: Chart | undefined;
+  let lang: Lang = 'ko';
   let last: { data: WallisData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -34,13 +35,29 @@ function createWallisScene(): Scene<WallisData> {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(`factor pairs = ${data.pairs}    product = ${fmt(data.product, 7)}    π/2 = ${fmt(LIMIT, 7)}    |error| = ${fmt(data.error)}`);
+      .text(
+        localize(
+          {
+            ko: `인수 쌍 = ${data.pairs}    곱 = ${fmt(data.product, 7)}    π/2 = ${fmt(LIMIT, 7)}    |오차| = ${fmt(data.error)}`,
+            en: `factor pairs = ${data.pairs}    product = ${fmt(data.product, 7)}    π/2 = ${fmt(LIMIT, 7)}    |error| = ${fmt(data.error)}`,
+          },
+          lang,
+        ),
+      );
     g.append('text')
       .attr('x', 0)
       .attr('y', -22)
       .attr('font-size', 12)
       .style('fill', 'var(--muted)')
-      .text('every factor swings the product past π/2; the swings shrink toward zero');
+      .text(
+        localize(
+          {
+            ko: '인수를 하나 곱할 때마다 곱이 π/2를 넘어 흔들리고, 그 흔들림은 점점 0으로 줄어듭니다',
+            en: 'every factor swings the product past π/2; the swings shrink toward zero',
+          },
+          lang,
+        ),
+      );
 
     // Target line at pi/2 (deviation 0).
     g.append('line')
@@ -79,7 +96,8 @@ function createWallisScene(): Scene<WallisData> {
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       chart = createChart(host, MARGIN);
     },
     render(data, state) {

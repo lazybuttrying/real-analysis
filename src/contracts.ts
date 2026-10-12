@@ -1,17 +1,32 @@
 /**
  * Contracts shared across the whole app.
  *
- * This file holds no runtime code other than types and defineScene.
- * meta.ts and scripts/ import this file from Node, so it must not depend on the DOM, d3, or three.
+ * This file holds no runtime code other than types, defineScene, and the small
+ * pure language helpers below. meta.ts and scripts/ import this file from Node,
+ * so it must not depend on the DOM, d3, or three.
  *
  * Data flow (one-way):
  *   ControlState → SceneModel.compute → derived data D → Scene.render
  */
 
+/** Languages the site is published in. The language is a URL path segment (see paths.ts). */
+export type Lang = 'ko' | 'en';
+
+export const LANGS: readonly Lang[] = ['ko', 'en'];
+
+export const DEFAULT_LANG: Lang = 'ko';
+
+/** A user-visible text in every language. Content data (meta.ts) is stored in this shape. */
+export type LocalizedText = Readonly<Record<Lang, string>>;
+
+export function localize(text: LocalizedText, lang: Lang): string {
+  return text[lang];
+}
+
 export type ControlSpec =
-  | { kind: 'slider'; key: string; label: string; min: number; max: number; step: number; init: number }
-  | { kind: 'toggle'; key: string; label: string; init: boolean }
-  | { kind: 'select'; key: string; label: string; options: readonly string[]; init: string };
+  | { kind: 'slider'; key: string; label: LocalizedText; min: number; max: number; step: number; init: number }
+  | { kind: 'toggle'; key: string; label: LocalizedText; init: boolean }
+  | { kind: 'select'; key: string; label: LocalizedText; options: readonly string[]; init: string };
 
 export type ControlValue = number | boolean | string;
 
@@ -25,7 +40,8 @@ export interface SceneModel<D> {
 
 /** Handles rendering. Lifecycle: mount → (render | resize)* → dispose. */
 export interface Scene<D> {
-  mount(host: HTMLElement): void;
+  /** The page language is fixed for the lifetime of a page (switching languages is a full navigation), so it is handed over once at mount. */
+  mount(host: HTMLElement, lang: Lang): void;
   render(data: D, state: ControlState): void;
   /** Called when the host size changes. Redrawing is the scene's responsibility. */
   resize?(width: number, height: number): void;
@@ -49,12 +65,12 @@ export function defineScene<D>(module: SceneModule<D>): SceneModule<D> {
 }
 
 export interface SceneMeta {
-  /** URL slug within the chapter. The page path is /<chapter id>/<scene id>/ */
+  /** URL slug within the chapter. The page path is /<lang>/<chapter id>/<scene id>/ */
   id: string;
-  title: string;
+  title: LocalizedText;
   order: number;
   /** Used in the meta description and the first paragraph of the body. */
-  summary: string;
+  summary: LocalizedText;
   /** Key formulas (TeX) to prerender. */
   tex?: readonly string[];
   /** Scene ids worth viewing first (within the same chapter). */
@@ -65,7 +81,7 @@ export interface SceneMeta {
 export interface ChapterMeta {
   /** URL path and folder name. Lowercase letters, digits, and hyphens. */
   id: string;
-  title: string;
-  summary: string;
+  title: LocalizedText;
+  summary: LocalizedText;
   scenes: readonly SceneMeta[];
 }

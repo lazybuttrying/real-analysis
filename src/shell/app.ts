@@ -1,10 +1,11 @@
 import '../style.css';
 import { catalog } from '../catalog';
-import type { ChapterMeta, ControlState, SceneLoader, SceneMeta } from '../contracts';
-import { chapterUrl, homeUrl, parsePath, sceneUrl } from '../paths';
+import { localize, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
+import { chapterUrl, fallbackLang, homeUrl, parsePath, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
+import { langSwitcher, rememberLang, storedLang, tr } from './i18n';
 import { SceneHost } from './scene-host';
 
 const BASE = import.meta.env.BASE_URL;
@@ -14,18 +15,31 @@ type Loaders = Readonly<Record<string, SceneLoader>>;
 
 /** Called from a chapter entry. Wires up routing within the chapter (scene navigation), controls, and the scene lifecycle. */
 export function startChapter(chapterId: string, loaders: Loaders): void {
-  const chapter = catalog.find((candidate) => candidate.id === chapterId);
   const root = document.getElementById('app');
-  if (!chapter || !root) throw new Error(`챕터 또는 #app 을 찾을 수 없습니다: ${chapterId}`);
-  mountChapter(chapter, loaders, root);
+  const parsed = parsePath(BASE, location.pathname);
+
+  // Legacy un-prefixed path (/series/..., /series/harmonic/): move to the
+  // language-prefixed path, keeping chapter, scene, and query.
+  if (parsed.lang === undefined) {
+    const lang = fallbackLang(storedLang());
+    location.replace(`${withLang(BASE, { ...parsed, chapterId }, lang)}${location.search}`);
+    return;
+  }
+  const lang = parsed.lang;
+  rememberLang(lang);
+  document.documentElement.lang = lang;
+
+  const chapter = catalog.find((candidate) => candidate.id === chapterId);
+  if (!chapter || !root) throw new Error(`${tr(lang, 'chapterMissing')}: ${chapterId}`);
+  mountChapter(chapter, loaders, root, lang);
 }
 
-function sceneLink(chapter: ChapterMeta, scene: SceneMeta): HTMLAnchorElement {
-  return h('a', { href: sceneUrl(BASE, chapter.id, scene.id), 'data-spa': '', 'data-scene': scene.id }, scene.title);
+function sceneLink(lang: Lang, chapter: ChapterMeta, scene: SceneMeta): HTMLAnchorElement {
+  return h('a', { href: sceneUrl(BASE, lang, chapter.id, scene.id), 'data-spa': '', 'data-scene': scene.id }, localize(scene.title, lang));
 }
 
-function renderText(target: HTMLElement, scene: SceneMeta): void {
-  target.replaceChildren(h('h1', {}, scene.title), h('p', {}, scene.summary));
+function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
+  target.replaceChildren(h('h1', {}, localize(scene.title, lang)), h('p', {}, localize(scene.summary, lang)));
 
   const tex = scene.tex;
   if (!tex || tex.length === 0) return;
@@ -36,13 +50,14 @@ function renderText(target: HTMLElement, scene: SceneMeta): void {
     .catch((error: unknown) => console.error(error));
 }
 
-function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement): void {
+function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement, lang: Lang): void {
   const scenes = [...chapter.scenes].sort((a, b) => a.order - b.order);
+  const chapterTitle = localize(chapter.title, lang);
 
   const nav = h(
     'nav',
-    { 'aria-label': `${chapter.title} 목차` },
-    h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(chapter, scene)))),
+    { 'aria-label': `${chapterTitle} ${tr(lang, 'tocLabel')}` },
+    h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene)))),
   );
   const hub = h('section', { class: 'hub' });
   const hostEl = h('div', { class: 'scene-host' });
@@ -55,14 +70,15 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
     h(
       'header',
       {},
-      h('a', { href: homeUrl(BASE), class: 'site-title' }, 'Real Analysis'),
-      h('a', { href: chapterUrl(BASE, chapter.id), 'data-spa': '' }, chapter.title),
+      h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
+      h('a', { href: chapterUrl(BASE, lang, chapter.id), 'data-spa': '' }, chapterTitle),
+      langSwitcher(lang, (target) => `${withLang(BASE, parsePath(BASE, location.pathname), target)}${location.search}`),
     ),
     nav,
     h('main', {}, hub, sceneView),
   );
 
-  const sceneHost = new SceneHost(hostEl);
+  const sceneHost = new SceneHost(hostEl, lang);
   let urlSyncTimer: number | undefined;
 
   const markActive = (sceneId: string | undefined): void => {
@@ -84,12 +100,12 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
     sceneHost.dispose();
     sceneView.hidden = true;
     hub.hidden = false;
-    document.title = `${chapter.title} | Real Analysis`;
+    document.title = `${chapterTitle} | Real Analysis`;
     hub.replaceChildren(
-      h('h1', {}, chapter.title),
+      h('h1', {}, chapterTitle),
       ...(notice ? [h('p', { role: 'alert' }, notice)] : []),
-      h('p', {}, chapter.summary),
-      h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(chapter, scene), ` — ${scene.summary}`))),
+      h('p', {}, localize(chapter.summary, lang)),
+      h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene), ` — ${localize(scene.summary, lang)}`))),
     );
     markActive(undefined);
   };
@@ -97,12 +113,12 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
   const showScene = (scene: SceneMeta): void => {
     hub.hidden = true;
     sceneView.hidden = false;
-    document.title = `${scene.title} | Real Analysis`;
+    document.title = `${localize(scene.title, lang)} | Real Analysis`;
     markActive(scene.id);
-    renderText(textEl, scene);
+    renderText(textEl, scene, lang);
 
     const state = parseState(scene.controls, location.search);
-    buildControls(controlsEl, scene.controls, state, (next) => {
+    buildControls(controlsEl, scene.controls, state, lang, (next) => {
       sceneHost.setState(next);
       scheduleUrlSync(scene, next);
     });
@@ -110,7 +126,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
     const loader = loaders[scene.id];
     if (!loader) {
       sceneHost.dispose();
-      sceneHost.showError(`'${scene.id}' 씬의 로더가 등록되어 있지 않습니다.`);
+      sceneHost.showError(`${tr(lang, 'loaderMissing')}: ${scene.id}`);
       return;
     }
     void sceneHost.show(loader, state);
@@ -127,7 +143,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement)
     }
     const scene = scenes.find((candidate) => candidate.id === sceneId);
     if (!scene) {
-      showHub(`'${sceneId}' 씬을 찾을 수 없습니다.`);
+      showHub(`${tr(lang, 'sceneNotFound')}: ${sceneId}`);
       return;
     }
     showScene(scene);

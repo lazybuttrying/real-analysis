@@ -1,4 +1,4 @@
-import type { ControlSpec, ControlState, ControlValue } from '../contracts';
+import { localize, type ControlSpec, type ControlState, type ControlValue, type Lang } from '../contracts';
 import { h } from './dom';
 
 /** Builds the shared control UI from ControlSpec. Scenes never build control DOM themselves. */
@@ -6,6 +6,7 @@ export function buildControls(
   container: HTMLElement,
   specs: readonly ControlSpec[],
   initial: ControlState,
+  lang: Lang,
   onChange: (next: ControlState) => void,
 ): void {
   let current = initial;
@@ -18,7 +19,7 @@ export function buildControls(
 
   for (const spec of specs) {
     const row = h('label', { class: 'control' });
-    const name = h('span', {}, spec.label);
+    const name = h('span', {}, localize(spec.label, lang));
 
     switch (spec.kind) {
       case 'slider': {

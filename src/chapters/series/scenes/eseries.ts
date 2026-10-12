@@ -1,5 +1,5 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { eseriesModel, LIMIT, type ESeriesData, type StepPoint } from '../models/eseries';
 
@@ -11,6 +11,7 @@ const MARGIN = { top: 64, right: 20, bottom: 40, left: 56 };
 
 function createESeriesScene(): Scene<ESeriesData> {
   let chart: Chart | undefined;
+  let lang: Lang = 'ko';
   let last: { data: ESeriesData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -35,14 +36,28 @@ function createESeriesScene(): Scene<ESeriesData> {
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
       .text(
-        `n = ${n}    series Σ 1/k! = ${fmt(data.seriesValue, 8)}    compound (1+1/n)^n = ${fmt(data.compoundValue, 8)}    e = ${fmt(LIMIT, 8)}`,
+        localize(
+          {
+            ko: `n = ${n}    급수 Σ 1/k! = ${fmt(data.seriesValue, 8)}    복리 (1+1/n)^n = ${fmt(data.compoundValue, 8)}    e = ${fmt(LIMIT, 8)}`,
+            en: `n = ${n}    series Σ 1/k! = ${fmt(data.seriesValue, 8)}    compound (1+1/n)^n = ${fmt(data.compoundValue, 8)}    e = ${fmt(LIMIT, 8)}`,
+          },
+          lang,
+        ),
       );
     g.append('text')
       .attr('x', 0)
       .attr('y', -22)
       .attr('font-size', 12)
       .style('fill', 'var(--muted)')
-      .text(`|error|  series = ${fmt(data.seriesError)}      |error|  compound = ${fmt(data.compoundError)}`);
+      .text(
+        localize(
+          {
+            ko: `|오차|  급수 = ${fmt(data.seriesError)}      |오차|  복리 = ${fmt(data.compoundError)}`,
+            en: `|error|  series = ${fmt(data.seriesError)}      |error|  compound = ${fmt(data.compoundError)}`,
+          },
+          lang,
+        ),
+      );
 
     // Target line at e (deviation 0).
     g.append('line')
@@ -82,18 +97,19 @@ function createESeriesScene(): Scene<ESeriesData> {
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .attr('fill', GOLD)
-      .text('series Σ 1/k!');
+      .text(localize({ ko: '급수 Σ 1/k!', en: 'series Σ 1/k!' }, lang));
     g.append('text')
       .attr('x', x(xMax) - 6)
       .attr('y', y(data.compoundValue - LIMIT) + 24)
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
-      .text('compound (1 + 1/n)^n');
+      .text(localize({ ko: '복리 (1 + 1/n)^n', en: 'compound (1 + 1/n)^n' }, lang));
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       chart = createChart(host, MARGIN);
     },
     render(data, state) {

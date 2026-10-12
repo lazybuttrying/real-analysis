@@ -1,4 +1,4 @@
-import { defineScene, type ControlState, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import {
   clearGroup,
   createBars,
@@ -30,6 +30,7 @@ function createBaselScene(): Scene<BaselData> {
   let root: RootGroup | undefined;
   let wrap: HTMLDivElement | undefined;
   let readoutEl: HTMLDivElement | undefined;
+  let lang: Lang = 'ko';
   let last: { data: BaselData; state: ControlState } | undefined;
 
   const draw = (): void => {
@@ -82,23 +83,28 @@ function createBaselScene(): Scene<BaselData> {
     );
 
     // Labels.
-    const l1 = createLabel('terms 1/n²', { worldHeight: 0.6, color: '#bcdcff', bg: LABEL_BG });
+    const l1 = createLabel(localize({ ko: '항 1/n²', en: 'terms 1/n²' }, lang), { worldHeight: 0.6, color: '#bcdcff', bg: LABEL_BG });
     l1.position.set(xAt(0), 2.9, 2.2);
     root.add(l1);
-    const l2 = createLabel('partial sums', { worldHeight: 0.6, color: '#ffe1a1', bg: LABEL_BG });
+    const l2 = createLabel(localize({ ko: '부분합', en: 'partial sums' }, lang), { worldHeight: 0.6, color: '#ffe1a1', bg: LABEL_BG });
     l2.position.set(xAt(0), LIMIT * YS + 0.85, -2.4);
     root.add(l2);
-    const l3 = createLabel('limit π²/6', { worldHeight: 0.6, color: '#ffe1a1', bg: LABEL_BG });
+    const l3 = createLabel(localize({ ko: '극한 π²/6', en: 'limit π²/6' }, lang), { worldHeight: 0.6, color: '#ffe1a1', bg: LABEL_BG });
     l3.position.set(xAt(n - 1) + 0.4, LIMIT * YS + 0.55, -0.6);
     root.add(l3);
 
-    readoutEl.textContent =
-      `N = ${n}    S_N = ${fmt(data.sum)}    limit π²/6 = ${fmt(data.limit)}    ` +
-      `|error| = ${fmt(data.error)}    last term 1/N² = ${fmt(data.lastTerm)}`;
+    readoutEl.textContent = localize(
+      {
+        ko: `N = ${n}    S_N = ${fmt(data.sum)}    극한 π²/6 = ${fmt(data.limit)}    |오차| = ${fmt(data.error)}    마지막 항 1/N² = ${fmt(data.lastTerm)}`,
+        en: `N = ${n}    S_N = ${fmt(data.sum)}    limit π²/6 = ${fmt(data.limit)}    |error| = ${fmt(data.error)}    last term 1/N² = ${fmt(data.lastTerm)}`,
+      },
+      lang,
+    );
   };
 
   return {
-    mount(host) {
+    mount(host, pageLang) {
+      lang = pageLang;
       wrap = document.createElement('div');
       wrap.style.position = 'relative';
       wrap.style.width = '100%';
@@ -130,8 +136,13 @@ function createBaselScene(): Scene<BaselData> {
       const caption = document.createElement('div');
       caption.style.fontSize = '12px';
       caption.style.color = 'var(--muted)';
-      caption.textContent =
-        "Idea level: the picture shows the sum converging — it is not a proof of why π appears (Euler's leap: sin x as an infinite product).";
+      caption.textContent = localize(
+        {
+          ko: '아이디어 수준: 그림은 합이 수렴하는 모습을 보여줄 뿐, π가 왜 등장하는지는 증명하지 않습니다. (오일러의 도약: sin x를 무한곱으로 쓰기)',
+          en: "Idea level: the picture shows the sum converging — it is not a proof of why π appears (Euler's leap: sin x as an infinite product).",
+        },
+        lang,
+      );
       overlay.append(readoutEl, caption);
       wrap.append(overlay);
     },

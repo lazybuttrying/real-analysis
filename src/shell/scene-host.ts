@@ -1,6 +1,7 @@
-import type { AnySceneModule, ControlState, SceneLoader } from '../contracts';
+import type { AnySceneModule, ControlState, Lang, SceneLoader } from '../contracts';
 import { shallowEqual } from '../state';
 import { h } from './dom';
+import { tr } from './i18n';
 
 const RELOAD_FLAG = 'real-analysis:chunk-reload';
 
@@ -35,14 +36,16 @@ interface Mounted {
  */
 export class SceneHost {
   private readonly host: HTMLElement;
+  private readonly lang: Lang;
   private mounted: Mounted | undefined;
   private loadToken = 0;
   private computeSeq = 0;
   private frame = 0;
   private observer: ResizeObserver | undefined;
 
-  constructor(host: HTMLElement) {
+  constructor(host: HTMLElement, lang: Lang) {
     this.host = host;
+    this.lang = lang;
   }
 
   async show(load: SceneLoader, state: ControlState): Promise<void> {
@@ -63,7 +66,7 @@ export class SceneHost {
 
     try {
       const scene = module.createScene();
-      scene.mount(this.host);
+      scene.mount(this.host, this.lang);
       const mounted: Mounted = { model: module.model, scene, state, data: undefined, hasData: false };
       this.mounted = mounted;
 
@@ -163,7 +166,7 @@ export class SceneHost {
 
   private fail(error: unknown): void {
     console.error(error);
-    this.showError('이 씬을 표시하는 중 오류가 발생했습니다.');
+    this.showError(tr(this.lang, 'sceneDisplayError'));
   }
 
   /** Right after a redeploy, an old tab may find its chunk files gone. Reload automatically, once only. */
@@ -174,14 +177,14 @@ export class SceneHost {
       location.reload();
       return;
     }
-    const button = h('button', { type: 'button' }, '새로고침');
+    const button = h('button', { type: 'button' }, tr(this.lang, 'reload'));
     button.addEventListener('click', () => location.reload());
     this.host.dataset['status'] = 'error';
     this.host.replaceChildren(
       h(
         'div',
         { class: 'scene-error', role: 'alert' },
-        h('p', {}, '씬을 불러오지 못했습니다. 새 버전이 배포되었을 수 있습니다.'),
+        h('p', {}, tr(this.lang, 'sceneLoadFailed')),
         button,
       ),
     );

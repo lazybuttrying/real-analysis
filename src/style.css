@@ -45,6 +45,32 @@ main.home {
   padding: 24px 16px;
 }
 
+.home-header {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 12px 16px 0;
+}
+
+/* KO | EN switcher, present in the header of every page */
+.lang-switch {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.lang-switch a {
+  text-decoration: none;
+}
+
+.lang-switch [aria-current='true'] {
+  font-weight: 700;
+  color: var(--fg);
+}
+
 /* Chapter page layout */
 #app.chapter {
   display: grid;
