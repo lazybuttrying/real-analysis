@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run check-deps
+      - run: npm run build
+      - name: Verify prerender outputs
+        run: |
+          test -f dist/sitemap.xml
+          test -f dist/404.html
+          test -f dist/robots.txt
+          test -f dist/ko/index.html
+          test -f dist/en/index.html
+          test -f dist/ko/series/index.html
+          test -f dist/en/series/index.html
+          test -f dist/ko/series/harmonic/index.html
+          test -f dist/en/series/grandi/index.html
+      - run: npm run size
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
