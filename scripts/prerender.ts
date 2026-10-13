@@ -24,7 +24,7 @@ import { STRINGS } from '../src/shell/i18n.ts';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST = join(ROOT, 'dist');
 const SITE_NAME = 'Real Analysis';
-const ORIGIN = (process.env.SITE_ORIGIN ?? 'https://lazybuttrying.github.io').replace(/\/$/, '');
+const ORIGIN = (process.env.SITE_ORIGIN ?? 'https://sdykim.me').replace(/\/$/, '');
 
 function normalizeBase(raw: string): string {
   const withLead = raw.startsWith('/') ? raw : `/${raw}`;
