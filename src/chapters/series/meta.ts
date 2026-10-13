@@ -1128,5 +1128,220 @@ export const series: ChapterMeta = {
         },
       ],
     },
+    {
+      id: 'rearrangement',
+      title: { ko: '재배열 정리', en: 'Rearranging Changes the Sum' },
+      order: 11,
+      summary: {
+        ko: String.raw`조건수렴 급수는 순서를 바꾸면 합이 바뀝니다 — \(\ln 2 \approx 0.6931\)이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로. 라이프니츠 장면의 짝꿍입니다.`,
+        en: String.raw`Reordering a conditionally convergent series changes its sum — \(\ln 2 \approx 0.6931\) becomes \(\frac{3}{2}\ln 2 \approx 1.0397\). Twin of the Leibniz scene.`,
+      },
+      tex: [String.raw`\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n} = \ln 2 \xrightarrow{(+,+,-)} \frac{3}{2}\ln 2`],
+      prerequisites: ['leibniz'],
+      controls: [{ kind: 'slider', key: 'n', label: { ko: '항 개수', en: 'Terms' }, min: 6, max: 300, step: 1, init: 60 }],
+      problems: [
+        {
+          id: 'ppn-numerical',
+          statement: {
+            ko: String.raw`\((+,+,-)\) 재배열의 부분합이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로 수렴함을 수치로 확인하세요. (수치 확인 — 엄밀한 증명은 생략합니다.)`,
+            en: String.raw`Verify numerically that the \((+,+,-)\) rearrangement's partial sums tend to \(\frac{3}{2}\ln 2 \approx 1.0397\). (Numerical check; rigorous proof omitted.)`,
+          },
+          display: [String.raw`\frac{3}{2}\ln 2 \approx 1.03972`],
+          preset: { n: 150 },
+          presetCaption: {
+            ko: String.raw`\(n=150\): 재배열 부분합이 \(1.0397\) 근처에 안착합니다.`,
+            en: String.raw`\(n=150\): the rearranged partial sums settle near \(1.0397\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(n = 150\)에서 재배열 부분합 \(T_{150}\)을 직접 계산하면 목표값 \(\frac{3}{2}\ln 2 \approx 1.03972\)와 \(0.01\) 이내로 일치합니다 — \(|T_{150} - \frac{3}{2}\ln 2| \approx 0.0050\). (수치 확인)`,
+                en: String.raw`Directly computing \(T_{150}\) gives \(|T_{150} - \frac{3}{2}\ln 2| \approx 0.0050 < 0.01\). (Numerical check)`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(n = 300\)으로 늘리면 오차는 약 \(0.0025\)로 더 줄어듭니다 — 수렴 방향이 일관되므로 단순한 우연이 아닙니다.`,
+                en: String.raw`Raising \(n\) to \(300\) shrinks the error to about \(0.0025\) — the direction of convergence is consistent, not a coincidence.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`일반 공식도 알려드립니다 (아이디어 수준): \(p\)개 양항과 \(q\)개 음항을 반복하는 재배열의 합은 \(\ln 2 + \frac{1}{2}\ln\frac{p}{q}\)입니다. \(p = 2, q = 1\)을 대입하면 \(\ln 2 + \frac{1}{2}\ln 2 = \frac{3}{2}\ln 2\)가 나옵니다. 이 공식의 증명은 여기서 다루지 않습니다.`,
+                en: String.raw`The general formula is stated as known (idea level): a rearrangement repeating \(p\) positive and \(q\) negative terms sums to \(\ln 2 + \frac{1}{2}\ln\frac{p}{q}\). For \(p = 2, q = 1\) this gives \(\frac{3}{2}\ln 2\). Its proof is not covered here.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'absolute-invariant',
+          statement: {
+            ko: String.raw`절대수렴 급수는 재배열해도 합이 바뀌지 않음을 아이디어 수준으로 설명하세요. (엄밀한 증명은 생략합니다.)`,
+            en: String.raw`Explain at idea level why rearranging an absolutely convergent series never changes its sum. (Idea level; proof omitted.)`,
+          },
+          preset: { n: 60 },
+          presetCaption: {
+            ko: String.raw`꼬리를 얼마든 작게 만들 수 있으면 순서는 중요하지 않습니다.`,
+            en: String.raw`If tails can be made arbitrarily small, order stops mattering.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\sum a_n\)이 절대수렴하면, \(\varepsilon > 0\)마다 꼬리 \(\sum_{n>N}|a_n| < \varepsilon\)을 만족하는 \(N\)이 존재합니다. (스케치 — 엄밀한 증명은 생략)`,
+                en: String.raw`If \(\sum a_n\) converges absolutely, then for every \(\varepsilon > 0\) there is an \(N\) with tail \(\sum_{n>N}|a_n| < \varepsilon\). (Sketch only; rigorous proof omitted)`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`재배열의 부분합도 충분히 멀리 가면 원래 급수의 처음 \(N\)개 항을 모두 포함하므로, 두 부분합의 차이는 꼬리 항들로만 이루어져 \(2\varepsilon\)보다 작아집니다.`,
+                en: String.raw`A rearrangement's partial sums eventually contain the first \(N\) terms of the original, so the two partial sums differ only by tail terms — less than \(2\varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\varepsilon\)은 임의이므로 두 합은 같습니다. 즉, 꼬리를 얼마든 작게 만들 수 있으면 순서를 바꿔도 합이 바뀌지 않습니다.`,
+                en: String.raw`Since \(\varepsilon\) is arbitrary, the two sums agree: when tails can be made arbitrarily small, reordering cannot change the sum.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'alternating-remainder',
+          statement: {
+            ko: String.raw`교대조화급수의 부분합이 \(\lvert S_n - \ln 2\rvert \leq \frac{1}{n+1}\)을 만족함을 증명하세요.`,
+            en: String.raw`Prove \(\lvert S_n - \ln 2\rvert \leq \frac{1}{n+1}\) for the alternating harmonic partial sums.`,
+          },
+          display: [String.raw`\lvert R_n\rvert \leq a_{n+1} = \frac{1}{n+1}`],
+          preset: { n: 100 },
+          presetCaption: {
+            ko: String.raw`\(n=100\): 오차가 \(1/101 \approx 0.0099\) 안에 갇힙니다.`,
+            en: String.raw`\(n=100\): the error is trapped inside \(1/101 \approx 0.0099\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(a_n = 1/n\)은 감소하면서 \(0\)으로 갑니다. 짝수 부분합은 증가하고 홀수 부분합은 감소합니다: \(S_{2m+2} - S_{2m} = a_{2m+1} - a_{2m+2} > 0\), \(S_{2m+3} - S_{2m+1} = -(a_{2m+2} - a_{2m+3}) < 0\).`,
+                en: String.raw`\(a_n = 1/n\) decreases to \(0\). Even partial sums increase, odd ones decrease: \(S_{2m+2} - S_{2m} = a_{2m+1} - a_{2m+2} > 0\) and \(S_{2m+3} - S_{2m+1} = -(a_{2m+2} - a_{2m+3}) < 0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`극한 \(S = \ln 2\)는 항상 연속한 두 부분합 \(S_n\)과 \(S_{n+1}\) 사이에 끼이므로, \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\)입니다.`,
+                en: String.raw`The limit \(S = \ln 2\) always lies between two consecutive partial sums \(S_n\) and \(S_{n+1}\), so \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`예를 들어 \(n = 100\)이면 \(|S_{100} - \ln 2| \le \frac{1}{101} \approx 0.0099\)입니다 — 캡션의 수치와 일치합니다.`,
+                en: String.raw`For \(n = 100\) this gives \(|S_{100} - \ln 2| \le \frac{1}{101} \approx 0.0099\) — matching the caption's figure.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'improper',
+      title: { ko: '이상적분', en: 'Improper Integrals' },
+      order: 12,
+      summary: {
+        ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
+        en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,
+      },
+      tex: [
+        String.raw`\int_1^{\infty}\frac{dx}{x^p} = \frac{1}{p-1}\ \ (p>1)`,
+        String.raw`\int_0^1\frac{dx}{\sqrt{x}} = 2`,
+      ],
+      prerequisites: ['harmonic'],
+      controls: [
+        { kind: 'select', key: 'kind', label: { ko: '적분 종류', en: 'Integral kind' }, options: ['tail', 'singular'], init: 'tail' },
+        { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 0.5, max: 2, step: 0.01, init: 1 },
+        { kind: 'slider', key: 'R', label: { ko: '위끝 R', en: 'Upper limit R' }, min: 2, max: 50, step: 1, init: 10 },
+        { kind: 'slider', key: 'eps', label: { ko: '아래끝 ε', en: 'Lower limit ε' }, min: 0.001, max: 0.5, step: 0.001, init: 0.01 },
+      ],
+      problems: [
+        {
+          id: 'p2-integral',
+          statement: {
+            ko: String.raw`\(\int_1^\infty \frac{dx}{x^2} = 1\)을 직접 계산하세요.`,
+            en: String.raw`Compute \(\int_1^\infty \frac{dx}{x^2} = 1\) directly.`,
+          },
+          display: [String.raw`\int_1^R \frac{dx}{x^2} = 1 - \frac{1}{R} \to 1`],
+          preset: { kind: 'tail', p: 2, R: 20, eps: 0.01 },
+          presetCaption: {
+            ko: String.raw`\(p=2, R=20\): 넓이 \(0.95\)가 \(1\)을 향해 다가갑니다.`,
+            en: String.raw`\(p=2, R=20\): area \(0.95\) approaches \(1\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\int_1^R x^{-2}\,dx = \left[-x^{-1}\right]_1^R = 1 - \frac{1}{R}\)입니다.`,
+                en: String.raw`\(\int_1^R x^{-2}\,dx = \left[-x^{-1}\right]_1^R = 1 - \frac{1}{R}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(R \to \infty\)이면 \(\frac{1}{R} \to 0\)이므로 넓이는 \(1\)로 수렴합니다. \(R = 20\)에서 \(1 - \frac{1}{20} = 0.95\) — 캡션의 수치와 일치합니다.`,
+                en: String.raw`As \(R \to \infty\), \(\frac{1}{R} \to 0\), so the area tends to \(1\). At \(R = 20\): \(1 - \frac{1}{20} = 0.95\) — matching the caption's figure.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'p-le-one-diverges',
+          statement: {
+            ko: String.raw`\(p \leq 1\)일 때 \(\int_1^\infty \frac{dx}{x^p}\)가 발산함을 증명하세요.`,
+            en: String.raw`Prove \(\int_1^\infty \frac{dx}{x^p}\) diverges for \(p \leq 1\).`,
+          },
+          display: [String.raw`\int_1^R \frac{dx}{x} = \ln R \to \infty`],
+          preset: { kind: 'tail', p: 1, R: 50, eps: 0.01 },
+          presetCaption: {
+            ko: String.raw`\(p=1\): 넓이가 \(\ln R\)처럼 끝없이 자랍니다.`,
+            en: String.raw`\(p=1\): the area grows like \(\ln R\) without bound.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(p = 1\): \(\int_1^R \frac{dx}{x} = \ln R \to \infty\) (\(R \to \infty\)). \(R = 50\)에서 넓이는 \(\ln 50 \approx 3.912\)입니다.`,
+                en: String.raw`\(p = 1\): \(\int_1^R \frac{dx}{x} = \ln R \to \infty\) as \(R \to \infty\). At \(R = 50\) the area is \(\ln 50 \approx 3.912\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(p < 1\): \(\int_1^R x^{-p}\,dx = \frac{R^{1-p}-1}{1-p}\)이고 \(1 - p > 0\)이므로 \(R \to \infty\)일 때 \(\infty\)로 발산합니다.`,
+                en: String.raw`\(p < 1\): \(\int_1^R x^{-p}\,dx = \frac{R^{1-p}-1}{1-p}\), and since \(1 - p > 0\) this diverges to \(\infty\) as \(R \to \infty\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'singular-half',
+          statement: {
+            ko: String.raw`\(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)를 특이점에서의 극한으로 계산하세요.`,
+            en: String.raw`Compute \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) as a limit at the singularity.`,
+          },
+          display: [String.raw`\int_\varepsilon^1 x^{-1/2}\,dx = 2 - 2\sqrt{\varepsilon} \to 2`],
+          preset: { kind: 'singular', p: 0.5, R: 10, eps: 0.01 },
+          presetCaption: {
+            ko: String.raw`\(p=1/2, \varepsilon=0.01\): 넓이 \(1.8\)이 \(2\)로 다가갑니다.`,
+            en: String.raw`\(p=1/2, \varepsilon=0.01\): area \(1.8\) approaches \(2\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\int_\varepsilon^1 x^{-1/2}\,dx = \left[2\sqrt{x}\right]_\varepsilon^1 = 2 - 2\sqrt{\varepsilon}\)입니다.`,
+                en: String.raw`\(\int_\varepsilon^1 x^{-1/2}\,dx = \left[2\sqrt{x}\right]_\varepsilon^1 = 2 - 2\sqrt{\varepsilon}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\varepsilon \to 0^+\)이면 \(\sqrt{\varepsilon} \to 0\)이므로 넓이는 \(2\)로 수렴합니다. \(\varepsilon = 0.01\)에서 \(2 - 2\sqrt{0.01} = 2 - 0.2 = 1.8\) — 캡션의 수치와 일치합니다.`,
+                en: String.raw`As \(\varepsilon \to 0^+\), \(\sqrt{\varepsilon} \to 0\), so the area tends to \(2\). At \(\varepsilon = 0.01\): \(2 - 2\sqrt{0.01} = 2 - 0.2 = 1.8\) — matching the caption's figure.`,
+              },
+            },
+          ],
+        },
+      ],
+    }
   ],
 };

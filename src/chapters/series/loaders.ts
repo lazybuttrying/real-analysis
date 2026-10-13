@@ -12,4 +12,6 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   stirling: () => import('./scenes/stirling').then((module) => module.default),
   grandi: () => import('./scenes/grandi').then((module) => module.default),
   zeta4: () => import('./scenes/zeta4').then((module) => module.default),
+  rearrangement: () => import('./scenes/rearrangement').then((module) => module.default),
+  improper: () => import('./scenes/improper').then((module) => module.default),
 };
