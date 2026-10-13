@@ -31,6 +31,8 @@ export const STRINGS = {
     ko: '해석학의 개념을 직접 움직여 보며 익히는 인터랙티브 시각화 모음입니다.',
     en: 'Interactive visualizations for learning the ideas of real analysis by moving them yourself.',
   },
+  problemsHeading: { ko: '예제', en: 'Examples & Exercises' },
+  showProof: { ko: '증명 보기', en: 'Show proof' },
 } satisfies Record<string, LocalizedText>;
 
 export type StringKey = keyof typeof STRINGS;

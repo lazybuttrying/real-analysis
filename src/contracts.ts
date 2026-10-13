@@ -98,6 +98,33 @@ export function defineScene<D>(module: SceneModule<D>): SceneModule<D> {
   return module;
 }
 
+/** One step of a rigorous proof: prose (with \(...\) inline TeX) plus optional display formulas. */
+export interface ProofStep {
+  text: LocalizedText;
+  display?: readonly string[];
+}
+
+/**
+ * An example/exercise attached to a scene. The mini visualization reuses the
+ * scene's own model and renderer with the fixed `preset` control state
+ * (non-interactive); `presetCaption` describes that preset in one line.
+ * The proof is bilingual data; renderers show it behind a toggle.
+ */
+export interface ProblemMeta {
+  /** Unique within the scene; used for element ids. */
+  id: string;
+  /** Problem statement; prose may embed \(...\) inline TeX. */
+  statement: LocalizedText;
+  /** Display formulas shown under the statement. */
+  display?: readonly string[];
+  /** Fixed control values for the mini visualization. Must be valid for the scene's controls. */
+  preset: ControlState;
+  /** One-line caption describing the preset. Prose may embed \(...\) inline TeX. */
+  presetCaption: LocalizedText;
+  /** The rigorous proof, shown behind a toggle. */
+  proof: readonly ProofStep[];
+}
+
 export interface SceneMeta {
   /** URL slug within the chapter. The page path is /<lang>/<chapter id>/<scene id>/ */
   id: string;
@@ -114,6 +141,8 @@ export interface SceneMeta {
   /** Scene ids worth viewing first (within the same chapter). */
   prerequisites?: readonly string[];
   controls: readonly ControlSpec[];
+  /** Examples/exercises with mini visualizations and proofs. Optional; scenes without it are untouched. */
+  problems?: readonly ProblemMeta[];
 }
 
 export interface ChapterMeta {

@@ -1,6 +1,6 @@
 import '../style.css';
 import { catalog } from '../catalog';
-import { localize, stripInlineMath, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
+import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { chapterUrl, fallbackLang, homeUrl, parsePath, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
@@ -64,6 +64,108 @@ function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
     .catch((error: unknown) => console.error(error));
 }
 
+/**
+ * Renders the problems section (examples/exercises) below the scene text.
+ * Each problem reuses the scene's own module with a fixed preset for a compact,
+ * non-interactive mini visualization; proofs live in <details> so they work
+ * with zero JS. Text shows delimiter-stripped immediately and is upgraded to
+ * KaTeX once the tex module arrives (same pattern as summarySpan).
+ */
+function renderProblems(
+  host: HTMLElement,
+  scene: SceneMeta,
+  lang: Lang,
+  loader: SceneLoader,
+  track: (dispose: () => void) => void,
+): void {
+  const problems = scene.problems;
+  if (!problems || problems.length === 0) return;
+
+  const section = h('section', { class: 'problems' });
+  section.append(h('h2', {}, tr(lang, 'problemsHeading')));
+  host.append(section);
+
+  interface RichTarget {
+    el: HTMLElement;
+    text: string;
+    display?: readonly string[];
+  }
+  const richTargets: RichTarget[] = [];
+  const vizJobs: Array<{ host: HTMLElement; preset: ControlState }> = [];
+
+  for (const problem of problems) {
+    const card = h('article', { class: 'problem', id: `problem-${scene.id}-${problem.id}` });
+
+    const statement = h('p', { class: 'problem-statement' }, stripInlineMath(localize(problem.statement, lang)));
+    card.append(statement);
+    richTargets.push({ el: statement, text: localize(problem.statement, lang), display: problem.display });
+
+    const vizHost = h('div', { class: 'problem-viz-host' });
+    const caption = h('figcaption', {}, stripInlineMath(localize(problem.presetCaption, lang)));
+    card.append(h('figure', { class: 'problem-viz' }, vizHost, caption));
+    richTargets.push({ el: caption, text: localize(problem.presetCaption, lang) });
+    vizJobs.push({ host: vizHost, preset: problem.preset });
+
+    const details = h('details', { class: 'problem-proof' });
+    details.append(h('summary', {}, tr(lang, 'showProof')));
+    const list = h('ol', {});
+    for (const step of problem.proof) {
+      const item = h('li', {}, stripInlineMath(localize(step.text, lang)));
+      list.append(item);
+      richTargets.push({ el: item, text: localize(step.text, lang), display: step.display });
+    }
+    details.append(list);
+    card.append(details);
+    section.append(card);
+  }
+
+  import('./tex')
+    .then((tex) => {
+      for (const { el, text, display } of richTargets) {
+        if (!el.isConnected) continue;
+        if (display !== undefined && display.length > 0) {
+          el.replaceChildren();
+          const textSpan = document.createElement('span');
+          tex.renderRichText(textSpan, text);
+          el.append(textSpan);
+          const formulas = document.createElement('div');
+          formulas.className = 'tex';
+          tex.renderTex(formulas, display);
+          el.append(formulas);
+        } else {
+          tex.renderRichText(el, text);
+        }
+      }
+    })
+    .catch((error: unknown) => console.error(error));
+
+  // Mini visualizations reuse the scene module (already loading for the main
+  // viz) with fixed presets. Each renders once and never listens to controls.
+  loader()
+    .then((module: AnySceneModule) => {
+      for (const job of vizJobs) {
+        if (!job.host.isConnected) continue;
+        const mini = module.createScene();
+        try {
+          mini.mount(job.host, lang);
+        } catch (error) {
+          console.error(error);
+          continue;
+        }
+        track(() => mini.dispose());
+        Promise.resolve()
+          .then(() => module.model.compute(job.preset))
+          .then(
+            (data: unknown) => {
+              if (job.host.isConnected) mini.render(data, job.preset);
+            },
+            (error: unknown) => console.error(error),
+          );
+      }
+    })
+    .catch((error: unknown) => console.error(error));
+}
+
 function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement, lang: Lang): void {
   const scenes = [...chapter.scenes].sort((a, b) => a.order - b.order);
   // Chapter numbers are automatic: the catalog order is the numbering, never stored in meta files.
@@ -97,6 +199,20 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
   const sceneHost = new SceneHost(hostEl, lang);
   let urlSyncTimer: number | undefined;
 
+  /** Disposers for the problem mini-visualizations of the current scene. */
+  let problemDisposers: Array<() => void> = [];
+  const disposeProblems = (): void => {
+    const disposers = problemDisposers;
+    problemDisposers = [];
+    for (const dispose of disposers) {
+      try {
+        dispose();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   const markActive = (sceneId: string | undefined): void => {
     nav.querySelectorAll<HTMLAnchorElement>('a[data-scene]').forEach((anchor) => {
       if (anchor.dataset['scene'] === sceneId) anchor.setAttribute('aria-current', 'page');
@@ -114,6 +230,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
 
   const showHub = (notice?: string): void => {
     sceneHost.dispose();
+    disposeProblems();
     sceneView.hidden = true;
     hub.hidden = false;
     document.title = `${chapterTitle} | Real Analysis`;
@@ -129,6 +246,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
   const showScene = (scene: SceneMeta): void => {
     hub.hidden = true;
     sceneView.hidden = false;
+    disposeProblems();
     document.title = `${localize(scene.title, lang)} | Real Analysis`;
     markActive(scene.id);
     renderText(textEl, scene, lang);
@@ -146,6 +264,9 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
       return;
     }
     void sceneHost.show(loader, state);
+    renderProblems(textEl, scene, lang, loader, (dispose) => {
+      problemDisposers.push(dispose);
+    });
   };
 
   const route = (): void => {

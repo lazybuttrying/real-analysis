@@ -163,6 +163,60 @@ main.home {
   color: var(--bound);
 }
 
+/* Problems (examples/exercises) section on scene pages */
+.problems {
+  margin-top: 2rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.5rem;
+}
+
+.problems > h2 {
+  font-size: 1.25rem;
+}
+
+.problem {
+  margin: 1.25rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.problem-statement {
+  font-weight: 600;
+}
+
+.problem-viz {
+  margin: 1rem 0;
+}
+
+.problem-viz-host {
+  height: 240px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.problem-viz figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.problem-proof summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.problem-proof ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.problem-proof li {
+  margin: 0.5rem 0;
+}
+
 @media (max-width: 720px) {
   #app.chapter {
     grid-template-columns: minmax(0, 1fr);

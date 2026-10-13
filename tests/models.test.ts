@@ -270,3 +270,77 @@ describe('uniform model', () => {
     expect(viaModel.epsilon).toBe(0.2);
   });
 });
+
+describe('problems: every number stated in the 18 proofs', () => {
+  it('epsilon-n: the N values claimed in the proofs match the model', () => {
+    // 1/n^2, eps = 0.01 -> N = ceil(1/sqrt(0.01)) = 10
+    expect(epsilonNTail('sq', 0.01).firstN).toBe(10);
+    // n/(n+1), eps = 0.05 -> N = 19 (1/20 = 0.05 is not < 0.05)
+    expect(epsilonNTail('frac', 0.05).firstN).toBe(19);
+    // (-1)^n/n, eps = 0.05 -> N = 20
+    expect(epsilonNTail('alt', 0.05).firstN).toBe(20);
+    expect(sequenceKey('1/n²')).toBe('sq');
+  });
+
+  it('holes: x_5 is the exact fraction claimed, in lowest terms', () => {
+    const steps = babylonian(5);
+    expect(steps[1]?.p).toBe(3n);
+    expect(steps[1]?.q).toBe(2n);
+    expect(steps[2]?.p).toBe(17n);
+    expect(steps[2]?.q).toBe(12n);
+    expect(steps[3]?.p).toBe(577n);
+    expect(steps[3]?.q).toBe(408n);
+    expect(steps[4]?.p).toBe(665857n);
+    expect(steps[4]?.q).toBe(470832n);
+    expect(steps[5]?.p).toBe(886731088897n);
+    expect(steps[5]?.q).toBe(627013566048n);
+    // The Pell identity behind the "lowest terms" claim: p^2 - 2q^2 = 1.
+    for (let n = 1; n <= 5; n++) {
+      const s = steps[n]!;
+      expect(s.p * s.p - 2n * s.q * s.q).toBe(1n);
+    }
+  });
+
+  it('holes: the error chain e_1..e_4 and the 1e-24 bound', () => {
+    const steps = babylonian(5);
+    const e = (n: number): number => steps[n]!.value ** 2 - 2;
+    expect(e(1)).toBeCloseTo(1 / 4, 12);
+    expect(e(2)).toBeCloseTo(1 / 144, 12);
+    expect(e(3)).toBeCloseTo(1 / 166464, 12);
+    expect(e(4)).toBeCloseTo(1 / 221682772224, 12);
+    expect(e(4)).toBeLessThan(4.6e-12);
+    // The proof's conclusion: |x_5 - sqrt(2)| < 1e-24.
+    expect(steps[5]!.error).toBeLessThan(1e-24);
+  });
+
+  it('cantor: stage 3 has 8 intervals of total length 8/27', () => {
+    const viaModel = cantorModel.compute({ stage: 3 }) as CantorData;
+    expect(viaModel.stages[3]).toHaveLength(8);
+    expect(viaModel.totalLength).toBeCloseTo(8 / 27, 12);
+  });
+
+  it('ivt: the crossing values claimed in the proofs', () => {
+    const cubic = ivtData('cubic', 0.5);
+    expect(cubic.c).toBe(0);
+    expect(cubic.xi).toBeCloseTo(0.6823278038, 9);
+    expect(Math.abs(cubic.xi ** 3 + cubic.xi - 1)).toBeLessThan(1e-12);
+    const sine = ivtData('sine', 0.5);
+    expect(sine.c).toBe(0.5);
+    expect(Math.abs(sine.xi - Math.PI / 6)).toBeLessThan(1e-12);
+  });
+
+  it('uniform: the grid sup norm and the exact supremum distinction', () => {
+    const data = uniformData(8, 0.2);
+    // The chart samples a grid, so it reads just under the exact supremum 1.
+    expect(data.supNorm).toBeCloseTo(0.9802, 3);
+    expect(data.supNorm).toBeLessThan(1);
+    expect(data.escapeX).toBeCloseTo(0.2 ** (1 / 8), 12);
+  });
+
+  it('bolzano-weierstrass: the sin(n) illustration values', () => {
+    // Claimed in the proof as numerical illustration (not as proof).
+    expect(Math.sin(35489)).toBeCloseTo(0.999999, 5);
+    expect(Math.sin(36199)).toBeCloseTo(0.999999, 5);
+    expect(Math.abs(Math.sin(35489))).toBeLessThanOrEqual(1);
+  });
+});

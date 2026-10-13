@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
-import { LANGS, localize, splitInlineMath, stripInlineMath, type Lang } from '../src/contracts.ts';
+import { LANGS, localize, splitInlineMath, stripInlineMath, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { chapterUrl, homeUrl, sceneUrl } from '../src/paths.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -49,6 +49,36 @@ const renderSummaryHtml = (text: string): string =>
 
 /** True when any language's form of the text embeds inline math (the page then needs the KaTeX stylesheet). */
 const hasInlineMath = (text: { ko: string; en: string }): boolean => LANGS.some((lang) => localize(text, lang).includes('\\('));
+
+/** Static body form of one display formula. */
+const renderDisplayHtml = (formula: string): string =>
+  `<div class="tex-block">${katex.renderToString(formula, { displayMode: true, throwOnError: false })}</div>`;
+
+/**
+ * Static body form of a scene's problems section: statements, preset captions,
+ * and proofs (in <details>, so they work with zero JS). The mini visualizations
+ * are client-only; static HTML carries a figure with the caption.
+ */
+const renderProblemsHtml = (scene: SceneMeta, lang: Lang): string => {
+  const problems = scene.problems;
+  if (!problems || problems.length === 0) return '';
+  const cards = problems
+    .map((problem) => {
+      const steps = problem.proof
+        .map((step) => `<li>${renderSummaryHtml(localize(step.text, lang))}${(step.display ?? []).map(renderDisplayHtml).join('\n')}</li>`)
+        .join('\n');
+      return `<article class="problem" id="problem-${scene.id}-${problem.id}">
+<p class="problem-statement">${renderSummaryHtml(localize(problem.statement, lang))}</p>
+${(problem.display ?? []).map(renderDisplayHtml).join('\n')}
+<figure class="problem-viz"><figcaption>${renderSummaryHtml(localize(problem.presetCaption, lang))}</figcaption></figure>
+<details class="problem-proof"><summary>${escapeHtml(localize(STRINGS.showProof, lang))}</summary>
+<ol>${steps}</ol>
+</details>
+</article>`;
+    })
+    .join('\n');
+  return `<section class="problems"><h2>${escapeHtml(localize(STRINGS.problemsHeading, lang))}</h2>\n${cards}\n</section>`;
+};
 
 interface Page {
   /** Path segments below dist/, e.g. ['en', 'series', 'grandi'] */
@@ -118,14 +148,13 @@ for (const [index, chapter] of catalog.entries()) {
       title: (lang) => `${localize(scene.title, lang)} | ${SITE_NAME}`,
       description: (lang) => stripInlineMath(localize(scene.summary, lang)),
       template: chapter.id,
-      formulas: (scene.tex?.length ?? 0) > 0 || hasInlineMath(scene.summary),
+      formulas: (scene.tex?.length ?? 0) > 0 || hasInlineMath(scene.summary) || (scene.problems?.length ?? 0) > 0,
       body: (lang) =>
         [
           `<h1>${escapeHtml(localize(scene.title, lang))}</h1>`,
           `<p>${renderSummaryHtml(localize(scene.summary, lang))}</p>`,
-          ...(scene.tex ?? []).map(
-            (formula) => `<div class="tex-block">${katex.renderToString(formula, { displayMode: true, throwOnError: false })}</div>`,
-          ),
+          ...(scene.tex ?? []).map((formula) => renderDisplayHtml(formula)),
+          renderProblemsHtml(scene, lang),
           `<p><a href="${chapterUrl(BASE, lang, chapter.id)}">${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</a></p>`,
         ].join('\n'),
     });
@@ -143,6 +172,24 @@ function selfCheck(): string[] {
       for (const lang of LANGS) {
         if (!localize(scene.title, lang).trim()) problems.push(`scene '${chapter.id}/${scene.id}' has an empty title (${lang})`);
         if (!localize(scene.summary, lang).trim()) problems.push(`scene '${chapter.id}/${scene.id}' has an empty summary (${lang})`);
+      }
+      const seenProblemIds = new Set<string>();
+      for (const problem of scene.problems ?? []) {
+        if (seenProblemIds.has(problem.id)) problems.push(`scene '${chapter.id}/${scene.id}' has a duplicate problem id '${problem.id}'`);
+        seenProblemIds.add(problem.id);
+        for (const lang of LANGS) {
+          if (!localize(problem.statement, lang).trim())
+            problems.push(`problem '${chapter.id}/${scene.id}/${problem.id}' has an empty statement (${lang})`);
+          if (!localize(problem.presetCaption, lang).trim())
+            problems.push(`problem '${chapter.id}/${scene.id}/${problem.id}' has an empty preset caption (${lang})`);
+        }
+        if (problem.proof.length === 0) problems.push(`problem '${chapter.id}/${scene.id}/${problem.id}' has an empty proof`);
+        problem.proof.forEach((step, index) => {
+          for (const lang of LANGS) {
+            if (!localize(step.text, lang).trim())
+              problems.push(`problem '${chapter.id}/${scene.id}/${problem.id}' has an empty proof step ${index} (${lang})`);
+          }
+        });
       }
     }
   }
