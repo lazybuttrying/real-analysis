@@ -626,9 +626,266 @@ export const limits: ChapterMeta = {
       ],
     },
     {
+      id: 'epsdelta',
+      title: { ko: 'ε-δ 정의', en: 'The ε–δ Definition' },
+      order: 6,
+      summary: {
+        ko: String.raw`함수의 극한 \(\lim_{x\to a} f(x) = L\)의 엄밀한 뜻: \(\varepsilon\) 띠를 아무리 좁혀도, \(a\) 근처의 \(\delta\) 띠 안에서는 \(f\)가 그 띠 안에 머뭅니다. \(f(x)=2x\), \(a=1\), \(L=2\)에서 \(\delta=\varepsilon/2\)를 확인합니다.`,
+        en: String.raw`The rigorous meaning of \(\lim_{x\to a} f(x) = L\): no matter how narrow the \(\varepsilon\)-band, there is a \(\delta\)-band around \(a\) where \(f\) stays inside it. Check \(\delta = \varepsilon/2\) for \(f(x) = 2x\), \(a = 1\), \(L = 2\).`,
+      },
+      tex: [
+        String.raw`\forall\varepsilon > 0\ \exists\delta > 0:\ 0 < \lvert x - a\rvert < \delta \Rightarrow \lvert f(x) - L\rvert < \varepsilon`,
+        String.raw`\lvert 2x - 2\rvert = 2\lvert x - 1\rvert`,
+      ],
+      prerequisites: ['epsilon-n'],
+      controls: [{ kind: 'slider', key: 'epsilon', label: { ko: 'ε', en: 'ε' }, min: 0.05, max: 1, step: 0.05, init: 0.4 }],
+      problems: [
+        {
+          id: 'linear-limit',
+          statement: {
+            ko: String.raw`\(\lim_{x \to 2} 3x = 6\)임을 \(\varepsilon\)-\(\delta\) 정의로 증명하고, 각 \(\varepsilon > 0\)에 대한 \(\delta\)를 구하세요.`,
+            en: String.raw`Prove \(\lim_{x \to 2} 3x = 6\) from the \(\varepsilon\)-\(\delta\) definition; give \(\delta\) for each \(\varepsilon > 0\).`,
+          },
+          display: [String.raw`\delta(\varepsilon) = \frac{\varepsilon}{3},\qquad \lvert 3x - 6\rvert = 3\lvert x - 2\rvert`],
+          preset: { epsilon: 0.3 },
+          presetCaption: {
+            ko: String.raw`\(\varepsilon = 0.3\) — 이 장면의 \(2x\)에서는 \(\delta = \varepsilon/2 = 0.15\); 문제의 \(3x\)에서는 기울기 \(3\)이 분모에 옵니다.`,
+            en: String.raw`\(\varepsilon = 0.3\) — for this scene's \(2x\), \(\delta = \varepsilon/2 = 0.15\); for the problem's \(3x\) the slope \(3\) goes in the denominator.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(\delta = \frac{\varepsilon}{3}\)이라 둡니다. \(0 < \lvert x - 2\rvert < \delta\)이면 \(\lvert 3x - 6\rvert = \lvert 3(x - 2)\rvert = 3\lvert x - 2\rvert < 3\delta = \varepsilon\)입니다. 따라서 정의에 의해 \(\lim_{x \to 2} 3x = 6\)입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), put \(\delta = \frac{\varepsilon}{3}\). If \(0 < \lvert x - 2\rvert < \delta\), then \(\lvert 3x - 6\rvert = \lvert 3(x-2)\rvert = 3\lvert x - 2\rvert < 3\delta = \varepsilon\). Hence \(\lim_{x \to 2} 3x = 6\) by the definition.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`핵심은 \(\lvert 3x - 6\rvert = 3\lvert x - 2\rvert\)로 인수분해되는 것입니다: 기울기 \(3\)이 입력 오차를 증폭시키므로, \(\delta = \varepsilon/3\)으로 정확히 상쇄합니다.`,
+                en: String.raw`The point is the factorization \(\lvert 3x - 6\rvert = 3\lvert x - 2\rvert\): the slope \(3\) amplifies the input error, and \(\delta = \varepsilon/3\) exactly cancels that amplification.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`수치 확인: \(\varepsilon = 0.03\)이면 \(\delta = 0.01\)입니다. \(\lvert x - 2\rvert < 0.01\)인 모든 \(x\)에 대해 \(\lvert 3x - 6\rvert = 3\lvert x - 2\rvert < 0.03 = \varepsilon\)입니다.`,
+                en: String.raw`Numerically: \(\varepsilon = 0.03\) gives \(\delta = 0.01\). For every \(x\) with \(\lvert x - 2\rvert < 0.01\) we have \(\lvert 3x - 6\rvert = 3\lvert x - 2\rvert < 0.03 = \varepsilon\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'square-limit',
+          statement: {
+            ko: String.raw`\(\lim_{x \to 1} x^2 = 1\)임을 \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\)로 증명하세요.`,
+            en: String.raw`Prove \(\lim_{x \to 1} x^2 = 1\) with \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\).`,
+          },
+          display: [String.raw`\lvert x^2 - 1\rvert = \lvert x - 1\rvert \cdot \lvert x + 1\rvert < 3\delta \leq \varepsilon`],
+          preset: { epsilon: 0.6 },
+          presetCaption: {
+            ko: String.raw`\(\varepsilon = 0.6\), \(\delta = 0.3\) — 곡선 \(x^2\)에는 일정한 비율 \(\delta/\varepsilon\)이 없지만, 이 장면의 직선에는 있습니다.`,
+            en: String.raw`\(\varepsilon = 0.6\), \(\delta = 0.3\) — the curve \(x^2\) admits no constant ratio \(\delta/\varepsilon\); this scene's line does.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\lvert x^2 - 1\rvert = \lvert (x-1)(x+1)\rvert = \lvert x - 1\rvert \cdot \lvert x + 1\rvert\)입니다. 문제는 \(\lvert x + 1\rvert\)인데, 이는 \(x\)에 따라 변하므로 먼저 \(x\)를 \(1\) 근처에 가둡니다.`,
+                en: String.raw`\(\lvert x^2 - 1\rvert = \lvert (x-1)(x+1)\rvert = \lvert x - 1\rvert \cdot \lvert x + 1\rvert\). The factor \(\lvert x + 1\rvert\) varies with \(x\), so first trap \(x\) near \(1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\lvert x - 1\rvert < 1\)이면 \(0 < x < 2\)이므로 \(\lvert x + 1\rvert = x + 1 < 3\)입니다. 따라서 \(\lvert x^2 - 1\rvert < 3\lvert x - 1\rvert\)입니다.`,
+                en: String.raw`If \(\lvert x - 1\rvert < 1\) then \(0 < x < 2\), so \(\lvert x + 1\rvert = x + 1 < 3\). Hence \(\lvert x^2 - 1\rvert < 3\lvert x - 1\rvert\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\)이라 둡니다. \(\lvert x - 1\rvert < \delta\)이면 두 조건 \(\lvert x - 1\rvert < 1\)과 \(\lvert x - 1\rvert < \frac{\varepsilon}{3}\)이 모두 성립하므로, \(\lvert x^2 - 1\rvert < 3 \cdot \frac{\varepsilon}{3} = \varepsilon\)입니다. 따라서 \(\lim_{x \to 1} x^2 = 1\)입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), put \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\). If \(\lvert x - 1\rvert < \delta\), both \(\lvert x - 1\rvert < 1\) and \(\lvert x - 1\rvert < \frac{\varepsilon}{3}\) hold, so \(\lvert x^2 - 1\rvert < 3 \cdot \frac{\varepsilon}{3} = \varepsilon\). Hence \(\lim_{x \to 1} x^2 = 1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`수치 확인: \(\varepsilon = 0.3\)이면 \(\delta = \min(1, 0.1) = 0.1\)이고, \(\lvert x - 1\rvert < 0.1\)일 때 \(\lvert x^2 - 1\rvert < 3 \cdot 0.1 = 0.3 = \varepsilon\)입니다.`,
+                en: String.raw`Numerically: \(\varepsilon = 0.3\) gives \(\delta = \min(1, 0.1) = 0.1\), and for \(\lvert x - 1\rvert < 0.1\) we get \(\lvert x^2 - 1\rvert < 3 \cdot 0.1 = 0.3 = \varepsilon\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'limit-unique',
+          statement: {
+            ko: String.raw`\(f\)가 \(a\)에서 \(L_1\)과 \(L_2\)로 수렴하면 \(L_1 = L_2\)임을 증명하세요 (극한의 유일성).`,
+            en: String.raw`Prove that if \(f\) tends to both \(L_1\) and \(L_2\) at \(a\), then \(L_1 = L_2\) (uniqueness of limits).`,
+          },
+          display: [
+            String.raw`\lvert L_1 - L_2\rvert \leq \lvert L_1 - f(x)\rvert + \lvert f(x) - L_2\rvert < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon`,
+          ],
+          preset: { epsilon: 0.1 },
+          presetCaption: {
+            ko: String.raw`\(\varepsilon = 0.1\) — 아무리 작은 \(\varepsilon\)을 잡아도 두 후보는 \(\varepsilon\) 안에 갇혀 결국 하나가 됩니다.`,
+            en: String.raw`\(\varepsilon = 0.1\) — however small \(\varepsilon\) is, both candidates are trapped within \(\varepsilon\) and must coincide.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\varepsilon > 0\)을 잡습니다. 정의에 의해, \(0 < \lvert x - a\rvert < \delta_1\)이면 \(\lvert f(x) - L_1\rvert < \frac{\varepsilon}{2}\)인 \(\delta_1 > 0\)과, \(0 < \lvert x - a\rvert < \delta_2\)이면 \(\lvert f(x) - L_2\rvert < \frac{\varepsilon}{2}\)인 \(\delta_2 > 0\)이 존재합니다. \(\delta = \min(\delta_1, \delta_2) > 0\)이라 둡니다.`,
+                en: String.raw`Let \(\varepsilon > 0\). By the definition there are \(\delta_1 > 0\) with \(\lvert f(x) - L_1\rvert < \frac{\varepsilon}{2}\) when \(0 < \lvert x - a\rvert < \delta_1\), and \(\delta_2 > 0\) with \(\lvert f(x) - L_2\rvert < \frac{\varepsilon}{2}\) when \(0 < \lvert x - a\rvert < \delta_2\). Put \(\delta = \min(\delta_1, \delta_2) > 0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(0 < \lvert x - a\rvert < \delta\)인 \(x\)에 대해 (실수에서는 그런 \(x\)가 항상 존재합니다) 삼각부등식으로 \(\lvert L_1 - L_2\rvert \leq \lvert L_1 - f(x)\rvert + \lvert f(x) - L_2\rvert < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\)입니다.`,
+                en: String.raw`For any \(x\) with \(0 < \lvert x - a\rvert < \delta\) (in \(\mathbb{R}\) such an \(x\) always exists), the triangle inequality gives \(\lvert L_1 - L_2\rvert \leq \lvert L_1 - f(x)\rvert + \lvert f(x) - L_2\rvert < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`이는 모든 \(\varepsilon > 0\)에 대해 성립합니다. \(\lvert L_1 - L_2\rvert > 0\)이라면 \(\varepsilon = \frac{\lvert L_1 - L_2\rvert}{2}\)를 잡으면 모순이므로, \(\lvert L_1 - L_2\rvert = 0\), 즉 \(L_1 = L_2\)입니다.`,
+                en: String.raw`This holds for every \(\varepsilon > 0\). If \(\lvert L_1 - L_2\rvert > 0\), choosing \(\varepsilon = \frac{\lvert L_1 - L_2\rvert}{2}\) gives a contradiction; hence \(\lvert L_1 - L_2\rvert = 0\), i.e. \(L_1 = L_2\).`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'continuity',
+      title: { ko: '연속의 정의', en: 'The Definition of Continuity' },
+      order: 7,
+      summary: {
+        ko: String.raw`\(f\)가 \(a\)에서 연속이란 \(\lim_{x\to a} f(x) = f(a)\)인 것 — 극한값과 함수값이 일치해야 합니다. 점 \(a\)를 움직여 보고, broken 모드에서는 한 점의 값을 들어 올려 정의가 깨지는 모습을 확인합니다.`,
+        en: String.raw`\(f\) is continuous at \(a\) when \(\lim_{x\to a} f(x) = f(a)\) — the limit and the value must agree. Move the point \(a\); in broken mode the value at one point is lifted and the definition breaks.`,
+      },
+      tex: [
+        String.raw`f \text{ continuous at } a \iff \lim_{x \to a} f(x) = f(a)`,
+        String.raw`g(a) = a^2 + 1 \neq a^2 = \lim_{x \to a} g(x)`,
+      ],
+      prerequisites: ['epsdelta'],
+      controls: [
+        { kind: 'slider', key: 'a', label: { ko: '점 a', en: 'Point a' }, min: -2, max: 2, step: 0.1, init: 1 },
+        { kind: 'toggle', key: 'broken', label: { ko: '한 점 깨뜨리기', en: 'Break one point' }, init: false },
+      ],
+      problems: [
+        {
+          id: 'polynomial-continuous',
+          statement: {
+            ko: String.raw`연속함수들의 합과 곱이 연속임을 증명하고, 이로부터 모든 다항식이 연속임을 보이세요.`,
+            en: String.raw`Prove that sums and products of continuous functions are continuous, and deduce that every polynomial is continuous.`,
+          },
+          display: [
+            String.raw`\lvert f(x)g(x) - f(a)g(a)\rvert \leq \lvert f(x)\rvert\cdot\lvert g(x) - g(a)\rvert + \lvert g(a)\rvert\cdot\lvert f(x) - f(a)\rvert`,
+          ],
+          preset: { a: 1, broken: false },
+          presetCaption: {
+            ko: String.raw`\(a = 1\), 온전한 포물선 — 다항식은 모든 점에서 연속입니다.`,
+            en: String.raw`\(a = 1\), the intact parabola — polynomials are continuous everywhere.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`상수함수 \(c\): \(\lvert c - c\rvert = 0 < \varepsilon\)이므로 연속입니다. 항등함수 \(x \mapsto x\): \(\lvert x - a\rvert < \delta\)에서 \(\lvert x - a\rvert < \varepsilon\)이 되도록 \(\delta = \varepsilon\)을 잡으면 됩니다.`,
+                en: String.raw`Constants \(c\): \(\lvert c - c\rvert = 0 < \varepsilon\), so continuous. The identity \(x \mapsto x\): \(\delta = \varepsilon\) works, since \(\lvert x - a\rvert < \delta\) gives \(\lvert x - a\rvert < \varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`(합) \(f, g\)가 \(a\)에서 연속이라 하자. \(\varepsilon > 0\)에 대해 \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2}\)인 \(\delta_1\)과 \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2}\)인 \(\delta_2\)를 잡고 \(\delta = \min(\delta_1, \delta_2)\)라 두면, \(\lvert (f+g)(x) - (f+g)(a)\rvert \leq \lvert f(x) - f(a)\rvert + \lvert g(x) - g(a)\rvert < \varepsilon\)입니다.`,
+                en: String.raw`(Sum) Let \(f, g\) be continuous at \(a\). Given \(\varepsilon > 0\), take \(\delta_1\) with \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2}\) and \(\delta_2\) with \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2}\); with \(\delta = \min(\delta_1, \delta_2)\), \(\lvert (f+g)(x) - (f+g)(a)\rvert \leq \lvert f(x) - f(a)\rvert + \lvert g(x) - g(a)\rvert < \varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`(곱) 항등식 \(\lvert f(x)g(x) - f(a)g(a)\rvert \leq \lvert f(x)\rvert\cdot\lvert g(x) - g(a)\rvert + \lvert g(a)\rvert\cdot\lvert f(x) - f(a)\rvert\)를 씁니다. 먼저 \(f\)를 \(a\) 근처에서 가둡니다: \(f\)의 연속성에 의해 \(\lvert x - a\rvert < \delta_0\)이면 \(\lvert f(x) - f(a)\rvert < 1\)인 \(\delta_0\)가 존재하고, 그 안에서는 \(\lvert f(x)\rvert \leq \lvert f(a)\rvert + 1 =: M\)입니다(국소 유계성). 이제 \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2M}\)인 \(\delta_1\)과 \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2(\lvert g(a)\rvert + 1)}\)인 \(\delta_2\)를 잡고 \(\delta = \min(\delta_0, \delta_1, \delta_2)\)라 두면, \(\lvert f(x)g(x) - f(a)g(a)\rvert < M \cdot \frac{\varepsilon}{2M} + \lvert g(a)\rvert \cdot \frac{\varepsilon}{2(\lvert g(a)\rvert+1)} < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\)입니다.`,
+                en: String.raw`(Product) Use the identity \(\lvert f(x)g(x) - f(a)g(a)\rvert \leq \lvert f(x)\rvert\cdot\lvert g(x) - g(a)\rvert + \lvert g(a)\rvert\cdot\lvert f(x) - f(a)\rvert\). First bound \(f\) near \(a\): by continuity of \(f\) there is \(\delta_0\) with \(\lvert f(x) - f(a)\rvert < 1\) for \(\lvert x - a\rvert < \delta_0\), hence \(\lvert f(x)\rvert \leq \lvert f(a)\rvert + 1 =: M\) there (local boundedness). Now take \(\delta_1\) with \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2M}\) and \(\delta_2\) with \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2(\lvert g(a)\rvert + 1)}\); with \(\delta = \min(\delta_0, \delta_1, \delta_2)\) we get \(\lvert f(x)g(x) - f(a)g(a)\rvert < M \cdot \frac{\varepsilon}{2M} + \lvert g(a)\rvert \cdot \frac{\varepsilon}{2(\lvert g(a)\rvert+1)} < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`귀납법으로 \(x^n\)이 연속이고(곱 규칙 반복), \(c x^n\)도 연속이며(상수 × 연속), 이들의 합인 다항식도 연속입니다(합 규칙).`,
+                en: String.raw`By induction \(x^n\) is continuous (repeated product rule), \(c x^n\) is continuous (constant times continuous), and their sum — a polynomial — is continuous (sum rule).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'abs-continuous',
+          statement: {
+            ko: String.raw`\(\lvert x\rvert\)가 \(0\)에서 연속임을 \(\delta = \varepsilon\)으로 증명하세요.`,
+            en: String.raw`Prove \(\lvert x\rvert\) is continuous at \(0\) with \(\delta = \varepsilon\).`,
+          },
+          display: [String.raw`\left\lvert \lvert x\rvert - 0 \right\rvert = \lvert x\rvert < \varepsilon`],
+          preset: { a: 0, broken: false },
+          presetCaption: {
+            ko: String.raw`\(a = 0\) — 뾰족점에서도 연속성은 살아 있습니다 (미분가능성과는 다른 이야기입니다).`,
+            en: String.raw`\(a = 0\) — continuity survives the cusp (differentiability is another story).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`보일 것은 \(\lvert x - 0\rvert < \delta \Rightarrow \lvert \lvert x\rvert - \lvert 0\rvert \rvert < \varepsilon\)입니다. 그런데 \(\lvert \lvert x\rvert - 0\rvert = \lvert x\rvert\)이므로, 문제는 \(\lvert x\rvert < \varepsilon\)을 얻는 것으로 줄어듭니다.`,
+                en: String.raw`We need \(\lvert x - 0\rvert < \delta \Rightarrow \lvert \lvert x\rvert - \lvert 0\rvert \rvert < \varepsilon\). But \(\lvert \lvert x\rvert - 0\rvert = \lvert x\rvert\), so it suffices to get \(\lvert x\rvert < \varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\delta = \varepsilon\)이라 두면 \(\lvert x - 0\rvert = \lvert x\rvert < \delta = \varepsilon\)이 바로 원하는 부등식입니다. 따라서 \(\lvert x\rvert\)는 \(0\)에서 연속입니다.`,
+                en: String.raw`Put \(\delta = \varepsilon\): then \(\lvert x - 0\rvert = \lvert x\rvert < \delta = \varepsilon\) is exactly the desired inequality. Hence \(\lvert x\rvert\) is continuous at \(0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`[관점] 연속이 미분을 보장하지는 않습니다: \(\lvert x\rvert\)는 \(0\)에서 미분가능하지 않습니다. 연속은 "끊어지지 않음"일 뿐, "매끄러움"이 아닙니다.`,
+                en: String.raw`[framing] Continuity does not imply differentiability: \(\lvert x\rvert\) is not differentiable at \(0\). Continuity is "no breaks", not "smoothness".`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'composition-continuous',
+          statement: {
+            ko: String.raw`\(f\)가 \(a\)에서 연속이고 \(g\)가 \(f(a)\)에서 연속이면, 합성함수 \(h = g \circ f\)가 \(a\)에서 연속임을 증명하세요.`,
+            en: String.raw`If \(f\) is continuous at \(a\) and \(g\) is continuous at \(f(a)\), prove \(h = g \circ f\) is continuous at \(a\).`,
+          },
+          display: [String.raw`\lvert x - a\rvert < \delta \Rightarrow \lvert f(x) - f(a)\rvert < \eta \Rightarrow \lvert g(f(x)) - g(f(a))\rvert < \varepsilon`],
+          preset: { a: -1, broken: false },
+          presetCaption: {
+            ko: String.raw`\(a = -1\) — 연속성은 합성을 타고 전해집니다: \(\varepsilon \leftarrow \eta \leftarrow \delta\) 사슬.`,
+            en: String.raw`\(a = -1\) — continuity travels through composition: the chain \(\varepsilon \leftarrow \eta \leftarrow \delta\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\varepsilon > 0\)이 주어졌습니다. \(g\)가 \(b = f(a)\)에서 연속이므로, \(\lvert y - b\rvert < \eta\)이면 \(\lvert g(y) - g(b)\rvert < \varepsilon\)인 \(\eta > 0\)이 존재합니다.`,
+                en: String.raw`Let \(\varepsilon > 0\). Since \(g\) is continuous at \(b = f(a)\), there is \(\eta > 0\) with \(\lvert g(y) - g(b)\rvert < \varepsilon\) whenever \(\lvert y - b\rvert < \eta\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`이제 \(f\)의 연속성을 \(\eta\)에 적용합니다: \(\lvert x - a\rvert < \delta\)이면 \(\lvert f(x) - f(a)\rvert < \eta\)인 \(\delta > 0\)이 존재합니다.`,
+                en: String.raw`Now apply the continuity of \(f\) to \(\eta\): there is \(\delta > 0\) with \(\lvert f(x) - f(a)\rvert < \eta\) whenever \(\lvert x - a\rvert < \delta\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\lvert x - a\rvert < \delta\)이면 \(\lvert f(x) - b\rvert < \eta\)이므로 \(\lvert g(f(x)) - g(b)\rvert < \varepsilon\), 즉 \(\lvert h(x) - h(a)\rvert < \varepsilon\)입니다. 따라서 \(h\)는 \(a\)에서 연속입니다.`,
+                en: String.raw`If \(\lvert x - a\rvert < \delta\) then \(\lvert f(x) - b\rvert < \eta\), so \(\lvert g(f(x)) - g(b)\rvert < \varepsilon\), i.e. \(\lvert h(x) - h(a)\rvert < \varepsilon\). Hence \(h\) is continuous at \(a\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`수치 예시: \(g\)가 \(\eta = \frac{\varepsilon}{2}\)를 요구하고 \(f\)가 그 \(\eta\)에 대해 \(\delta = \frac{\eta}{2}\)를 내놓으면, 합성은 \(\delta = \frac{\varepsilon}{4}\)로 동작합니다 — 허용 오차가 사슬을 따라 합성됩니다.`,
+                en: String.raw`Numerically: if \(g\) demands \(\eta = \frac{\varepsilon}{2}\) and \(f\) answers that \(\eta\) with \(\delta = \frac{\eta}{2}\), the composition runs on \(\delta = \frac{\varepsilon}{4}\) — the allowances compose along the chain.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 6,
+      order: 8,
       summary: {
         ko: String.raw`\(x_{n+1}=\frac{x_n+2/x_n}{2}\)의 모든 항은 유리수지만, 극한 \(\sqrt{2}\)는 유리수가 아닙니다. 유리수 집합 \(\mathbb{Q}\)에는 구멍이 있다는 뜻입니다. 무리수임의 엄밀한 증명은 다루지 않고 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every term of \(x_{n+1}=\frac{x_n+2/x_n}{2}\) is rational, yet the limit \(\sqrt{2}\) is not. The rationals \(\mathbb{Q}\) have a hole — shown at the idea level, without a full irrationality proof.`,
@@ -753,7 +1010,7 @@ export const limits: ChapterMeta = {
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 7,
+      order: 9,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -866,9 +1123,146 @@ export const limits: ChapterMeta = {
       ],
     },
     {
+      id: 'monotone-cauchy',
+      title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
+      order: 10,
+      summary: {
+        ko: String.raw`\(a_n = 1 - 2^{-n}\)은 증가하면서 위로 유계이므로 상한 \(1\)에 수렴합니다(단조수렴 정리). 꼬리 지름이 \(0\)으로 줄어드는 모습을 보며, 모든 수렴수열이 코시수열임을 확인합니다.`,
+        en: String.raw`\(a_n = 1 - 2^{-n}\) increases and is bounded above, so it converges to its supremum \(1\) (monotone convergence). Watch the tail diameter shrink to \(0\): every convergent sequence is Cauchy.`,
+      },
+      tex: [
+        String.raw`a_n = 1 - 2^{-n} \uparrow 1`,
+        String.raw`\max_{m,k \geq N} \lvert a_m - a_k\rvert \to 0`,
+      ],
+      prerequisites: ['bolzano-weierstrass'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '보이는 항 개수', en: 'Terms shown' }, min: 1, max: 12, step: 1, init: 8 },
+        { kind: 'slider', key: 'tailN', label: { ko: '꼬리 시작 N', en: 'Tail start N' }, min: 1, max: 10, step: 1, init: 4 },
+      ],
+      problems: [
+        {
+          id: 'mct-example',
+          statement: {
+            ko: String.raw`\(a_n = 1 - \frac{1}{n}\)이 증가수열이며 \(\sup = 1\)임을 보이고, 단조수렴 정리로부터 \(a_n \to 1\)을 결론지으세요.`,
+            en: String.raw`Show \(a_n = 1 - \frac{1}{n}\) is increasing with \(\sup = 1\), and conclude \(a_n \to 1\) from the Monotone Convergence Theorem.`,
+          },
+          display: [String.raw`a_{n+1} - a_n = \frac{1}{n(n+1)} > 0, \qquad \sup a_n = 1`],
+          preset: { n: 8, tailN: 4 },
+          presetCaption: {
+            ko: String.raw`\(n = 8\)항: \(a_8 = 1 - 2^{-8} = 0.99609375\). 문제의 \(1 - 1/n\)도 같은 방식으로 \(1\)에 다가갑니다.`,
+            en: String.raw`\(n = 8\) terms: \(a_8 = 1 - 2^{-8} = 0.99609375\). The problem's \(1 - 1/n\) approaches \(1\) the same way.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`(단조성) \(a_{n+1} - a_n = \left(1 - \frac{1}{n+1}\right) - \left(1 - \frac{1}{n}\right) = \frac{1}{n} - \frac{1}{n+1} = \frac{1}{n(n+1)} > 0\)이므로 증가수열입니다.`,
+                en: String.raw`(Monotone) \(a_{n+1} - a_n = \left(1 - \frac{1}{n+1}\right) - \left(1 - \frac{1}{n}\right) = \frac{1}{n} - \frac{1}{n+1} = \frac{1}{n(n+1)} > 0\), so the sequence increases.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`(유계) 모든 \(n\)에 대해 \(a_n = 1 - \frac{1}{n} < 1\)이므로 \(1\)은 상계입니다. \(u < 1\)인 임의의 실수에 대해 \(1 - \frac{1}{n} > u \iff n > \frac{1}{1-u}\)인데, 아르키메데스 성질에 의해 그런 \(n\)이 존재하므로 \(u\)는 상계가 아닙니다. 따라서 \(\sup a_n = 1\)입니다.`,
+                en: String.raw`(Bounded) \(a_n = 1 - \frac{1}{n} < 1\) for every \(n\), so \(1\) is an upper bound. For any real \(u < 1\), \(1 - \frac{1}{n} > u \iff n > \frac{1}{1-u}\), and such an \(n\) exists by the Archimedean property, so \(u\) is not an upper bound. Hence \(\sup a_n = 1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`단조수렴 정리(인용)에 의해 증가·위로 유계인 수열은 상한으로 수렴하므로, \(a_n \to 1\)입니다.`,
+                en: String.raw`By the Monotone Convergence Theorem (cited), an increasing bounded-above sequence converges to its supremum, so \(a_n \to 1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`수치 확인: \(n = 40\)이면 \(a_{40} = 1 - \frac{1}{40} = 0.975\)로, 이미 극한 \(1\)에서 \(0.025\) 안에 들어옵니다.`,
+                en: String.raw`Numerically: at \(n = 40\), \(a_{40} = 1 - \frac{1}{40} = 0.975\), already within \(0.025\) of the limit \(1\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'cauchy-bounded',
+          statement: {
+            ko: String.raw`모든 코시수열이 유계임을 증명하세요.`,
+            en: String.raw`Prove that every Cauchy sequence is bounded.`,
+          },
+          display: [String.raw`m \geq N \Rightarrow \lvert a_m\rvert \leq \lvert a_N\rvert + 1`],
+          preset: { n: 12, tailN: 6 },
+          presetCaption: {
+            ko: String.raw`꼬리 시작 \(6\) — \(N\) 이후의 꼬리는 반지름 \(1\)짜리 띠 안에 갇힙니다.`,
+            en: String.raw`Tail start \(6\) — past \(N\) the tail is trapped in a band of radius \(1\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\((a_n)\)이 코시수열이라 하자. \(\varepsilon = 1\)에 대해 \(m, n \geq N\)이면 \(\lvert a_m - a_n\rvert < 1\)인 \(N\)이 존재합니다. 이 \(N\)을 고정합니다.`,
+                en: String.raw`Let \((a_n)\) be Cauchy. For \(\varepsilon = 1\) there is \(N\) with \(\lvert a_m - a_n\rvert < 1\) whenever \(m, n \geq N\). Fix this \(N\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(m \geq N\)이면 삼각부등식으로 \(\lvert a_m\rvert \leq \lvert a_N\rvert + \lvert a_m - a_N\rvert < \lvert a_N\rvert + 1\)입니다 — 꼬리 전체가 하나의 수로 묶입니다.`,
+                en: String.raw`For \(m \geq N\), the triangle inequality gives \(\lvert a_m\rvert \leq \lvert a_N\rvert + \lvert a_m - a_N\rvert < \lvert a_N\rvert + 1\) — the whole tail is bound by one number.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`앞부분 \(a_1, \dots, a_{N-1}\)은 유한 개이므로, \(M = \max(\lvert a_1\rvert, \dots, \lvert a_{N-1}\rvert, \lvert a_N\rvert + 1)\)이라 두면 모든 \(n\)에 대해 \(\lvert a_n\rvert \leq M\)입니다. 따라서 \((a_n)\)은 유계입니다.`,
+                en: String.raw`The head \(a_1, \dots, a_{N-1}\) has finitely many terms, so with \(M = \max(\lvert a_1\rvert, \dots, \lvert a_{N-1}\rvert, \lvert a_N\rvert + 1)\) we have \(\lvert a_n\rvert \leq M\) for every \(n\). Hence \((a_n)\) is bounded.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`수치 확인: 이 장면의 수열 \(a_n = 1 - 2^{-n}\)에서는 \(\varepsilon = 1\)에 대해 \(N = 1\)로 충분하고(\(\lvert a_m - a_1\rvert < \frac12 < 1\)), \(M = \lvert a_1\rvert + 1 = 1.5\)가 전체를 묶습니다.`,
+                en: String.raw`Numerically: for this scene's \(a_n = 1 - 2^{-n}\), \(N = 1\) works for \(\varepsilon = 1\) (since \(\lvert a_m - a_1\rvert < \frac12 < 1\)), and \(M = \lvert a_1\rvert + 1 = 1.5\) bounds everything.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'partial-sums-cauchy',
+          statement: {
+            ko: String.raw`부분합 \(s_N = \sum_{k=1}^{N} 2^{-k}\)가 코시수열임을 증명하세요.`,
+            en: String.raw`Prove that the partial sums \(s_N = \sum_{k=1}^{N} 2^{-k}\) form a Cauchy sequence.`,
+          },
+          display: [String.raw`s_N = 1 - 2^{-N}, \qquad \lvert s_m - s_n\rvert = 2^{-n} - 2^{-m} < 2^{-n}`],
+          preset: { n: 8, tailN: 4 },
+          presetCaption: {
+            ko: String.raw`부분합이 바로 이 장면의 수열입니다: \(\sum_{k=1}^{n} 2^{-k} = 1 - 2^{-n}\).`,
+            en: String.raw`The partial sums are exactly this scene's sequence: \(\sum_{k=1}^{n} 2^{-k} = 1 - 2^{-n}\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`등비급수 합: \((1 - \frac12)\sum_{k=1}^{N} 2^{-k} = \sum_{k=1}^{N}(2^{-k} - 2^{-(k+1)}) = \frac12 - 2^{-(N+1)}\) (망원합)이므로, \(s_N = 1 - 2^{-N}\)입니다.`,
+                en: String.raw`Geometric sum: \((1 - \frac12)\sum_{k=1}^{N} 2^{-k} = \sum_{k=1}^{N}(2^{-k} - 2^{-(k+1)}) = \frac12 - 2^{-(N+1)}\) (telescoping), so \(s_N = 1 - 2^{-N}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(m > n\)이면 같은 망원합으로 \(s_m - s_n = \sum_{k=n+1}^{m} 2^{-k} = 2^{-n} - 2^{-m}\)이므로, \(\lvert s_m - s_n\rvert = 2^{-n} - 2^{-m} < 2^{-n}\)입니다.`,
+                en: String.raw`For \(m > n\), the same telescoping gives \(s_m - s_n = \sum_{k=n+1}^{m} 2^{-k} = 2^{-n} - 2^{-m}\), so \(\lvert s_m - s_n\rvert = 2^{-n} - 2^{-m} < 2^{-n}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(2^{-N} < \varepsilon\)인 \(N\)을 잡습니다 (\(N > \log_2 \frac{1}{\varepsilon}\)). 그러면 \(m, n \geq N\)일 때 \(\lvert s_m - s_n\rvert < 2^{-N} < \varepsilon\)이므로 \((s_N)\)은 코시수열입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), choose \(N\) with \(2^{-N} < \varepsilon\) (\(N > \log_2 \frac{1}{\varepsilon}\)). Then \(m, n \geq N\) implies \(\lvert s_m - s_n\rvert < 2^{-N} < \varepsilon\), so \((s_N)\) is Cauchy.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`수치 확인: 꼬리 시작 \(4\), 인덱스 \(\leq 12\)에서 꼬리 지름은 \(2^{-4} - 2^{-12} = 0.0625 - 0.000244140625 = 0.062255859375\) — 장면의 판독값과 일치합니다.`,
+                en: String.raw`Numerically: with tail start \(4\) and indices \(\leq 12\), the tail diameter is \(2^{-4} - 2^{-12} = 0.0625 - 0.000244140625 = 0.062255859375\) — matching the scene's readout.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 8,
+      order: 11,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -980,7 +1374,7 @@ export const limits: ChapterMeta = {
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 9,
+      order: 12,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -1087,9 +1481,133 @@ export const limits: ChapterMeta = {
       ],
     },
     {
+      id: 'evt',
+      title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
+      order: 13,
+      summary: {
+        ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
+        en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
+      },
+      tex: [
+        String.raw`f \text{ continuous on } [a,b] \Rightarrow \exists\, x_{\max}, x_{\min}`,
+        String.raw`f(x) = x^3 - 3x,\quad f(-1) = f(2) = 2,\ f(-2) = f(1) = -2`,
+      ],
+      prerequisites: ['ivt'],
+      controls: [
+        {
+          kind: 'select',
+          key: 'mode',
+          label: { ko: '모드', en: 'Mode' },
+          options: ['closed', 'open-interval', 'discontinuous'],
+          init: 'closed',
+        },
+      ],
+      problems: [
+        {
+          id: 'square-evt',
+          statement: {
+            ko: String.raw`\([0,1]\)에서 \(x^2\)의 최댓값과 최솟값을 구하고, 각각이 어디서 취해지는지 말하세요.`,
+            en: String.raw`Find the maximum and minimum of \(x^2\) on \([0,1]\), and say where each is attained.`,
+          },
+          display: [String.raw`\max_{[0,1]} x^2 = 1\ \text{at } x = 1, \qquad \min_{[0,1]} x^2 = 0\ \text{at } x = 0`],
+          preset: { mode: 'closed' },
+          presetCaption: {
+            ko: String.raw`closed 모드 — 세제곱함수가 양쪽 극값을 모두 취하는 것처럼, \(x^2\)도 \([0,1]\)에서 양쪽을 모두 취합니다.`,
+            en: String.raw`Closed mode — as the cubic attains both extremes, so does \(x^2\) on \([0,1]\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\([0,1]\)에서 \(x^2\)은 증가함수입니다: \(0 \leq x_1 < x_2 \leq 1\)이면 \(x_1^2 < x_2^2\)입니다.`,
+                en: String.raw`\(x^2\) is increasing on \([0,1]\): \(0 \leq x_1 < x_2 \leq 1\) implies \(x_1^2 < x_2^2\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 모든 \(x \in [0,1]\)에 대해 \(0 = 0^2 \leq x^2 \leq 1^2 = 1\)입니다. \(\max = 1\)은 \(x = 1\)에서, \(\min = 0\)은 \(x = 0\)에서 취해집니다.`,
+                en: String.raw`Hence \(0 = 0^2 \leq x^2 \leq 1^2 = 1\) for all \(x \in [0,1]\). The max \(1\) is attained at \(x = 1\); the min \(0\) at \(x = 0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`최댓값 정리(인용)와 일치합니다: \([0,1]\)은 닫힌 구간이고 \(x^2\)은 연속이므로, 양쪽 극값이 존재해야 합니다.`,
+                en: String.raw`Consistent with the Extreme Value Theorem (cited): \([0,1]\) is closed and \(x^2\) is continuous, so both extremes must exist.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'reciprocal-no-max',
+          statement: {
+            ko: String.raw`\((0,1]\)에서 \(f(x) = 1/x\)가 최댓값을 갖지 않음을 증명하고, 어느 가설이 깨졌는지 말하세요.`,
+            en: String.raw`Prove \(f(x) = 1/x\) has no maximum on \((0,1]\); name the hypothesis that fails.`,
+          },
+          display: [String.raw`f\!\left(\frac{1}{M+1}\right) = M + 1 > M \qquad \forall M`],
+          preset: { mode: 'open-interval' },
+          presetCaption: {
+            ko: String.raw`open-interval 모드 — 곡선이 위로 끝없이 빠져나갑니다.`,
+            en: String.raw`Open-interval mode — the curve escapes upward without bound.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(M\)이 최댓값이라 가정합니다. \(M < 0\)이면 \(f(1) = 1 > M\)이므로 이미 모순입니다. \(M \geq 0\)인 경우, \(x = \frac{1}{M+1}\)이라 두면 \(0 < x \leq 1\)이므로 \(x \in (0,1]\)이고, \(f(x) = M + 1 > M\) — 모순입니다.`,
+                en: String.raw`Suppose \(M\) were a maximum. If \(M < 0\), then \(f(1) = 1 > M\), already a contradiction. If \(M \geq 0\), put \(x = \frac{1}{M+1}\): then \(0 < x \leq 1\), so \(x \in (0,1]\), and \(f(x) = M + 1 > M\) — a contradiction.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 어떤 \(M\)도 상계가 될 수 없고, \(f\)는 위로 비유계이므로 최댓값은 존재하지 않습니다.`,
+                en: String.raw`Hence no \(M\) can be an upper bound: \(f\) is unbounded above, so no maximum exists.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`깨진 가설은 정의역의 닫힘성입니다: \((0,1]\)은 닫힌 구간이 아닙니다. \(x \to 0^+\)로 가면 \(f\)가 발산할 "도망갈 구멍"이 열려 있습니다.`,
+                en: String.raw`The broken hypothesis is the closedness of the domain: \((0,1]\) is not a closed interval. As \(x \to 0^+\) there is an open "escape hole" through which \(f\) diverges.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'jump-no-max',
+          statement: {
+            ko: String.raw`\(f(x) = x\) (\([0,1)\)에서), \(f(1) = 0\)이라 할 때 \(\sup f = 1\)이지만 \(1\)이 취해지지 않음을 증명하고, 어느 가설이 깨졌는지 말하세요.`,
+            en: String.raw`For \(f(x) = x\) on \([0,1)\) with \(f(1) = 0\), prove \(\sup f = 1\) but \(1\) is never attained; name the hypothesis that fails.`,
+          },
+          display: [String.raw`\sup_{[0,1]} f = 1 \notin f([0,1])`],
+          preset: { mode: 'discontinuous' },
+          presetCaption: {
+            ko: String.raw`discontinuous 모드 — 값 \(1\)에 다가서지만 절대 닿지 않습니다.`,
+            en: String.raw`Discontinuous mode — the value \(1\) is approached but never touched.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(x \in [0,1)\)이면 \(f(x) = x < 1\)이고, \(f(1) = 0\)입니다. 따라서 모든 \(x\)에 대해 \(f(x) < 1\) — 값 \(1\)을 취하는 점은 없습니다.`,
+                en: String.raw`For \(x \in [0,1)\), \(f(x) = x < 1\); and \(f(1) = 0\). So \(f(x) < 1\) for every \(x\) — no point takes the value \(1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\sup = 1\): \(1\)은 상계입니다(\(f(x) < 1\)이므로). \(u < 1\)인 임의의 실수에 대해 \(x = \frac{u+1}{2} \in [0,1)\)라 두면 \(f(x) = \frac{u+1}{2} > u\)이므로 \(u\)는 상계가 아닙니다. 따라서 최소상계는 \(1\)입니다.`,
+                en: String.raw`\(\sup = 1\): \(1\) is an upper bound (since \(f(x) < 1\)). For any real \(u < 1\), \(x = \frac{u+1}{2} \in [0,1)\) gives \(f(x) = \frac{u+1}{2} > u\), so \(u\) is not an upper bound. Hence the least upper bound is \(1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`깨진 가설은 \(x = 1\)에서의 연속성입니다: 좌극한은 \(1\)이지만 \(f(1) = 0\)입니다. 닫힌 구간 위에서도 연속성이 빠지면 최댓값이 "도달되지 않는 상한"으로 남을 수 있습니다.`,
+                en: String.raw`The broken hypothesis is continuity at \(x = 1\): the left-hand limit is \(1\) but \(f(1) = 0\). Even on a closed interval, dropping continuity can leave the maximum as an unattained supremum.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 10,
+      order: 14,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
