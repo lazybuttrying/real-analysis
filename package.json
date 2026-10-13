@@ -31,6 +31,21 @@
       "limit": "5.5 kB"
     },
     {
+      "name": "chapter: limits (shell, view kit, all scenes)",
+      "path": [
+        "dist/assets/limits-*.js",
+        "dist/assets/app-*.js",
+        "dist/assets/d3kit-*.js",
+        "dist/assets/epsilonN-*.js",
+        "dist/assets/holes-*.js",
+        "dist/assets/bolzanoWeierstrass-*.js",
+        "dist/assets/cantor-*.js",
+        "dist/assets/ivt-*.js",
+        "dist/assets/uniform-*.js"
+      ],
+      "limit": "12 kB"
+    },
+    {
       "name": "chapter: series (shell, view kit, all scenes)",
       "path": [
         "dist/assets/series-*.js",
@@ -44,7 +59,8 @@
         "dist/assets/wallis-*.js",
         "dist/assets/stirling-*.js",
         "dist/assets/grandi-*.js",
-        "dist/assets/zeta4-*.js"
+        "dist/assets/zeta4-*.js",
+        "dist/assets/app-*.js"
       ],
       "limit": "26 kB"
     },

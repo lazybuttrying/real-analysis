@@ -48,11 +48,12 @@ if (parsed.lang === undefined) {
       h(
         'ul',
         {},
-        ...catalog.map((chapter) =>
+        ...catalog.map((chapter, index) =>
           h(
             'li',
             {},
-            h('a', { href: chapterUrl(BASE, lang, chapter.id) }, localize(chapter.title, lang)),
+            // Chapter numbers are automatic: the catalog order is the numbering.
+            h('a', { href: chapterUrl(BASE, lang, chapter.id) }, `${index + 1}. ${localize(chapter.title, lang)}`),
             ' — ',
             summarySpan(localize(chapter.summary, lang)),
           ),

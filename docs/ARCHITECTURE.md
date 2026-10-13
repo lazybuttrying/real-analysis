@@ -69,7 +69,7 @@ real-analysis/
 ## 새 챕터 추가
 
 1. `src/chapters/<id>/`에 `meta.ts`, `loaders.ts`, `entry.ts`, `models/`, `scenes/`를 만든다. (`series`를 복사)
-2. `src/catalog.ts`에 챕터를 한 줄 추가한다.
+2. `src/catalog.ts`에 챕터를 한 줄 추가한다. **배열 순서가 곧 챕터 번호**다. 셸(홈 목록, 챕터 헤더·허브·문서 제목)과 프리렌더는 `catalog`에서의 인덱스로 "1장, 2장…"을 계산해서 표시하므로, 번호를 meta 파일에 저장하지 않는다.
 3. 끝. `<id>/index.html`은 Vite가 시작할 때 생성기가 만든다. 직접 작성한 파일이나 다른 파일이 있는 폴더는 덮어쓰지 않고 오류를 낸다.
 
 ## 구현 상태
@@ -81,6 +81,8 @@ real-analysis/
 - [x] dev/preview에서 `/<챕터>/<씬>/` 직접 접근
 - [x] 컨트롤 ↔ URL 상태, 씬 수명주기, 오류 처리
 - [x] series 챕터 씬 10개 전부 (harmonic 외 basel·leibniz·eseries·telescoping·geometric·wallis·stirling·grandi·zeta4)
+- [x] **limits 챕터(극한과 연속) 씬 6개** (epsilon-n·holes·bolzano-weierstrass·cantor·ivt·uniform). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
+- [x] **챕터 자동 넘버링**: `catalog` 순서 = 표시 번호. `ChapterMeta`에 번호 필드 없음. 홈·허브·헤더·문서 제목·프리렌더 본문 모두 인덱스로 계산
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
 - [x] 의존 방향 검사 (`scripts/check-deps.ts`: `models → view` 금지, `meta.ts` import 제한, three는 threekit만)

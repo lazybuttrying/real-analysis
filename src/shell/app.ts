@@ -66,7 +66,9 @@ function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
 
 function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement, lang: Lang): void {
   const scenes = [...chapter.scenes].sort((a, b) => a.order - b.order);
-  const chapterTitle = localize(chapter.title, lang);
+  // Chapter numbers are automatic: the catalog order is the numbering, never stored in meta files.
+  const chapterNumber = catalog.indexOf(chapter) + 1;
+  const chapterTitle = `${chapterNumber}. ${localize(chapter.title, lang)}`;
 
   const nav = h(
     'nav',

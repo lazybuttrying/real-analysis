@@ -77,25 +77,28 @@ const pages: Page[] = [
         `<p>${escapeHtml(localize(STRINGS.homeIntro, lang))}</p>`,
         '<ul>',
         ...catalog.map(
-          (chapter) =>
-            `<li><a href="${chapterUrl(BASE, lang, chapter.id)}">${escapeHtml(localize(chapter.title, lang))}</a> — ${renderSummaryHtml(localize(chapter.summary, lang))}</li>`,
+          // Chapter numbers are automatic: the catalog order is the numbering.
+          (chapter, index) =>
+            `<li><a href="${chapterUrl(BASE, lang, chapter.id)}">${index + 1}. ${escapeHtml(localize(chapter.title, lang))}</a> — ${renderSummaryHtml(localize(chapter.summary, lang))}</li>`,
         ),
         '</ul>',
       ].join('\n'),
   },
 ];
 
-for (const chapter of catalog) {
+for (const [index, chapter] of catalog.entries()) {
+  // Chapter numbers are automatic: the catalog order is the numbering.
+  const chapterNumber = index + 1;
   pages.push({
     segments: (lang) => [lang, chapter.id],
     url: (lang) => chapterUrl(BASE, lang, chapter.id),
-    title: (lang) => `${localize(chapter.title, lang)} | ${SITE_NAME}`,
+    title: (lang) => `${chapterNumber}. ${localize(chapter.title, lang)} | ${SITE_NAME}`,
     description: (lang) => stripInlineMath(localize(chapter.summary, lang)),
     template: chapter.id,
     formulas: hasInlineMath(chapter.summary) || chapter.scenes.some((scene) => hasInlineMath(scene.summary)),
     body: (lang) =>
       [
-        `<h1>${escapeHtml(localize(chapter.title, lang))}</h1>`,
+        `<h1>${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</h1>`,
         `<p>${renderSummaryHtml(localize(chapter.summary, lang))}</p>`,
         '<ul>',
         ...[...chapter.scenes]
@@ -123,7 +126,7 @@ for (const chapter of catalog) {
           ...(scene.tex ?? []).map(
             (formula) => `<div class="tex-block">${katex.renderToString(formula, { displayMode: true, throwOnError: false })}</div>`,
           ),
-          `<p><a href="${chapterUrl(BASE, lang, chapter.id)}">${escapeHtml(localize(chapter.title, lang))}</a></p>`,
+          `<p><a href="${chapterUrl(BASE, lang, chapter.id)}">${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</a></p>`,
         ].join('\n'),
     });
   }

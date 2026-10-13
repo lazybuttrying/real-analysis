@@ -1,4 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { epsilonNTail, epsilonNModel, sequenceKey, type EpsilonNData } from '../src/chapters/limits/models/epsilonN';
+import { babylonian, holesModel, type HolesData } from '../src/chapters/limits/models/holes';
+import { bolzanoWeierstrass } from '../src/chapters/limits/models/bolzanoWeierstrass';
+import { cantorModel, cantorStages, type CantorData } from '../src/chapters/limits/models/cantor';
+import { ivtData } from '../src/chapters/limits/models/ivt';
+import { uniformData, uniformModel, type UniformData } from '../src/chapters/limits/models/uniform';
 import { baselModel, baselPartialSums, LIMIT as BASEL_LIMIT } from '../src/chapters/series/models/basel';
 import { eSeriesRace, eseriesModel } from '../src/chapters/series/models/eseries';
 import { geometricFill } from '../src/chapters/series/models/geometric';
@@ -165,5 +171,102 @@ describe('zeta4 model', () => {
     expect(zeta3Approx()).toBeCloseTo(1.2020569, 6);
     const pattern = zeta4PartialSums(4).pattern;
     expect(pattern.find((entry) => entry.odd)?.value).toBeCloseTo(1.2020569, 6);
+  });
+});
+
+describe('epsilon-n model', () => {
+  it('finds the first N with the whole tail inside the epsilon band', () => {
+    expect(epsilonNTail('inv', 0.1).firstN).toBe(10);
+    expect(epsilonNTail('alt', 0.1).firstN).toBe(10);
+    // In floating point |9/10 − 1| = 0.0999… < 0.1, so the computed tail fits from N = 8.
+    expect(epsilonNTail('frac', 0.1).firstN).toBe(8);
+  });
+
+  it('reports null when 80 terms are not enough', () => {
+    expect(epsilonNTail('inv', 0.001).firstN).toBeNull();
+  });
+
+  it('maps the select options to sequences and reads state', () => {
+    expect(sequenceKey('n / (n+1)')).toBe('frac');
+    expect(sequenceKey('(unknown)')).toBe('inv');
+    const viaModel = epsilonNModel.compute({ seq: '1/n', epsilon: 0.1 }) as EpsilonNData;
+    expect(viaModel.firstN).toBe(10);
+    expect(viaModel.limit).toBe(0);
+  });
+});
+
+describe('holes model', () => {
+  it('converges quadratically to sqrt(2) with exact rational terms', () => {
+    const steps = babylonian(5);
+    expect(steps).toHaveLength(6);
+    expect(steps[0]?.value).toBe(1);
+    expect(steps[1]?.p).toBe(3n);
+    expect(steps[1]?.q).toBe(2n);
+    expect(steps[5]?.error).toBeLessThan(1e-8);
+    expect(steps[5]?.value).toBeCloseTo(Math.SQRT2, 12);
+  });
+
+  it('compute() clamps the iteration count', () => {
+    const viaModel = holesModel.compute({ n: 4 }) as HolesData;
+    expect(viaModel.steps).toHaveLength(5);
+    expect(viaModel.n).toBe(4);
+  });
+});
+
+describe('bolzano-weierstrass model', () => {
+  it('nests intervals of length 2^-k and keeps the subsequence inside', () => {
+    const data = bolzanoWeierstrass(7, 4);
+    expect(data.intervals).toHaveLength(5);
+    data.intervals.forEach((interval, k) => {
+      expect(interval.b - interval.a).toBeCloseTo(2 ** -k, 12);
+    });
+    const final = data.intervals[4];
+    expect(final).toBeDefined();
+    for (const x of data.subsequence) {
+      expect(x).toBeGreaterThanOrEqual(final!.a);
+      expect(x).toBeLessThanOrEqual(final!.b);
+    }
+    expect(data.subsequence.length).toBeGreaterThan(0);
+  });
+});
+
+describe('cantor model', () => {
+  it('has 2^n pieces of length 3^-n at stage n', () => {
+    const stages = cantorStages(8);
+    expect(stages[8]).toHaveLength(256);
+    const viaModel = cantorModel.compute({ stage: 8 }) as CantorData;
+    expect(viaModel.totalLength).toBeCloseTo((2 / 3) ** 8, 10);
+    expect(viaModel.stages).toHaveLength(9);
+  });
+});
+
+describe('ivt model', () => {
+  it('locates the crossing by bisection', () => {
+    const cubic = ivtData('cubic', 0.5);
+    expect(cubic.c).toBe(0);
+    expect(Math.abs(cubic.xi - 0.6823278038280193)).toBeLessThan(1e-9);
+    const sine = ivtData('sine', 0.5);
+    expect(sine.c).toBe(0.5);
+    expect(Math.abs(sine.xi - Math.PI / 6)).toBeLessThan(1e-9);
+  });
+
+  it('maps the 0–100 slider onto [f(a), f(b)]', () => {
+    const data = ivtData('cubic', 0.25);
+    expect(data.c).toBeCloseTo(-0.5, 12);
+  });
+});
+
+describe('uniform model', () => {
+  it('keeps the sup norm at 1 while the tube is escaped near x = 1', () => {
+    const data = uniformData(8, 0.2);
+    expect(data.supNorm).toBeGreaterThan(0.97);
+    expect(data.supNorm).toBeLessThanOrEqual(1);
+    expect(data.escapeX).toBeCloseTo(0.8179, 3);
+  });
+
+  it('compute() reads state with sane defaults', () => {
+    const viaModel = uniformModel.compute({ n: 8, eps: 0.2 }) as UniformData;
+    expect(viaModel.n).toBe(8);
+    expect(viaModel.epsilon).toBe(0.2);
   });
 });
