@@ -17,9 +17,497 @@ export const limits: ChapterMeta = {
   },
   scenes: [
     {
+      id: 'sets',
+      title: { ko: '집합과 함수', en: 'Sets and Functions' },
+      order: 1,
+      summary: {
+        ko: String.raw`집합의 연산 \(A \cup B\), \(A \cap B\), \(A^c\)와 드모르간 법칙, 그리고 단사·전사·전단사를 그림으로 확인합니다.`,
+        en: String.raw`See set operations \(A \cup B\), \(A \cap B\), \(A^c\), De Morgan's laws, and injective / surjective / bijective maps as pictures.`,
+      },
+      tex: [
+        String.raw`(A \cup B)^c = A^c \cap B^c`,
+        String.raw`f \text{ bijective} \iff \exists g: g \circ f = \mathrm{id}`,
+      ],
+      controls: [
+        {
+          kind: 'select',
+          key: 'op',
+          label: { ko: '집합 연산', en: 'Set operation' },
+          options: ['union', 'intersection', 'complement', 'difference', 'symdiff'],
+          init: 'union',
+        },
+        {
+          kind: 'select',
+          key: 'fnmode',
+          label: { ko: '함수 모양', en: 'Map shape' },
+          options: ['injective', 'surjective', 'bijective', 'neither'],
+          init: 'bijective',
+        },
+      ],
+      problems: [
+        {
+          id: 'demorgan',
+          statement: {
+            ko: String.raw`\((A \cup B)^c = A^c \cap B^c\)임을 원소로 직접 증명하세요.`,
+            en: String.raw`Prove \((A \cup B)^c = A^c \cap B^c\) element by element.`,
+          },
+          display: [String.raw`x \in (A \cup B)^c \iff x \notin A \cup B \iff x \notin A \text{ and } x \notin B \iff x \in A^c \cap B^c`],
+          preset: { op: 'union', fnmode: 'bijective' },
+          presetCaption: {
+            ko: String.raw`합집합이 켜진 벤 다이어그램 — 여집합을 씌우면 바깥 영역만 남습니다.`,
+            en: String.raw`Venn diagram with the union lit — complementing leaves only the outside region.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`원소 \(x\)를 잡습니다. 여집합의 정의에 의해 \(x \in (A \cup B)^c \iff x \notin A \cup B\)입니다.`,
+                en: String.raw`Take an element \(x\). By the definition of complement, \(x \in (A \cup B)^c \iff x \notin A \cup B\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(x \notin A \cup B \iff \lnot(x \in A \lor x \in B)\)입니다. 명제논리의 드모르간 법칙에 의해 이는 \(\lnot(x \in A) \land \lnot(x \in B)\), 즉 \((x \notin A) \land (x \notin B)\)와 동치입니다.`,
+                en: String.raw`\(x \notin A \cup B \iff \lnot(x \in A \lor x \in B)\). By the propositional De Morgan's law this is \(\lnot(x \in A) \land \lnot(x \in B)\), i.e. \((x \notin A) \land (x \notin B)\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\((x \notin A) \land (x \notin B) \iff x \in A^c \land x \in B^c \iff x \in A^c \cap B^c\)입니다. \(x\)가 임의였으므로 \((A \cup B)^c = A^c \cap B^c\)입니다.`,
+                en: String.raw`\((x \notin A) \land (x \notin B) \iff x \in A^c \land x \in B^c \iff x \in A^c \cap B^c\). Since \(x\) was arbitrary, \((A \cup B)^c = A^c \cap B^c\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'bijective-inverse',
+          statement: {
+            ko: String.raw`\(f: A \to B\)가 전단사 \(\iff\) 양쪽 역함수 \(g: B \to A\) (\(g \circ f = \mathrm{id}_A\), \(f \circ g = \mathrm{id}_B\))가 존재함을 증명하세요.`,
+            en: String.raw`Prove \(f: A \to B\) is bijective iff a two-sided inverse \(g: B \to A\) exists.`,
+          },
+          preset: { op: 'intersection', fnmode: 'bijective' },
+          presetCaption: {
+            ko: String.raw`전단사 모드 — 모든 점이 정확히 한 번씩 연결됩니다.`,
+            en: String.raw`Bijective mode — every dot is hit exactly once.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`(⇒) \(b \in B\)마다 \(f(a) = b\)인 \(a\)가 존재합니다(전사). 단사이므로 그 \(a\)는 유일합니다. 이를 \(g(b)\)라 정의하면 \(g: B \to A\)입니다.`,
+                en: String.raw`(⇒) For each \(b \in B\) there is an \(a\) with \(f(a) = b\) (surjective), and by injectivity that \(a\) is unique. Call it \(g(b)\); this defines \(g: B \to A\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(g(f(a)) = a\)인 이유는 \(f(a)\)에 대응하는 유일한 원소가 \(a\) 자신이므로, 그리고 \(f(g(b)) = b\)인 이유는 \(g(b)\)의 정의 그대로입니다.`,
+                en: String.raw`\(g(f(a)) = a\) because the unique element mapping to \(f(a)\) is \(a\) itself; and \(f(g(b)) = b\) is exactly the definition of \(g(b)\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`(⇐) 그런 \(g\)가 존재한다고 하자. \(f(a_1) = f(a_2)\)이면 양변에 \(g\)를 적용해 \(a_1 = g(f(a_1)) = g(f(a_2)) = a_2\) — 단사입니다. 한편 \(b \in B\)에 대해 \(a = g(b)\)라 두면 \(f(a) = f(g(b)) = b\) — 전사입니다. 따라서 \(f\)는 전단사입니다.`,
+                en: String.raw`(⇐) Suppose such a \(g\) exists. If \(f(a_1) = f(a_2)\), applying \(g\) gives \(a_1 = g(f(a_1)) = g(f(a_2)) = a_2\) — injective. And for \(b \in B\), putting \(a = g(b)\) gives \(f(a) = f(g(b)) = b\) — surjective. Hence \(f\) is bijective.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'inclusion-exclusion',
+          statement: {
+            ko: String.raw`유한집합에 대해 \(\lvert A \cup B\rvert = \lvert A\rvert + \lvert B\rvert - \lvert A \cap B\rvert\)임을 증명하고, \(\lvert A\rvert=5\), \(\lvert B\rvert=4\), \(\lvert A\cap B\rvert=2\)일 때를 계산하세요.`,
+            en: String.raw`Prove \(\lvert A \cup B\rvert = \lvert A\rvert + \lvert B\rvert - \lvert A \cap B\rvert\) for finite sets, and evaluate it for \(\lvert A\rvert=5\), \(\lvert B\rvert=4\), \(\lvert A\cap B\rvert=2\).`,
+          },
+          display: [String.raw`\lvert A \cup B\rvert = 5 + 4 - 2 = 7`],
+          preset: { op: 'union', fnmode: 'injective' },
+          presetCaption: {
+            ko: String.raw`\(\lvert A\rvert=5\), \(\lvert B\rvert=4\), 겹치는 부분 \(2\) — 합집합은 \(7\).`,
+            en: String.raw`\(\lvert A\rvert=5\), \(\lvert B\rvert=4\), overlap \(2\) — the union has \(7\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(A \cup B\)는 서로소인 세 조각 \(A \setminus B\), \(B \setminus A\), \(A \cap B\)의 분리합집합입니다.`,
+                en: String.raw`\(A \cup B\) is the disjoint union of the three pairwise-disjoint pieces \(A \setminus B\), \(B \setminus A\), and \(A \cap B\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\lvert A \rvert = \lvert A \setminus B \rvert + \lvert A \cap B \rvert\), \(\lvert B \rvert = \lvert B \setminus A \rvert + \lvert A \cap B \rvert\)입니다 (둘 다 분리합집합).`,
+                en: String.raw`\(\lvert A \rvert = \lvert A \setminus B \rvert + \lvert A \cap B \rvert\) and \(\lvert B \rvert = \lvert B \setminus A \rvert + \lvert A \cap B \rvert\) (both are disjoint unions).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`두 식을 더하면 \(\lvert A \rvert + \lvert B \rvert = \lvert A \cup B \rvert + \lvert A \cap B \rvert\) — 겹치는 부분이 두 번 세어졌습니다. 정리하면 \(\lvert A \cup B \rvert = \lvert A \rvert + \lvert B \rvert - \lvert A \cap B \rvert\)입니다.`,
+                en: String.raw`Adding the two equations gives \(\lvert A \rvert + \lvert B \rvert = \lvert A \cup B \rvert + \lvert A \cap B \rvert\) — the overlap was counted twice. Rearranging yields \(\lvert A \cup B \rvert = \lvert A \rvert + \lvert B \rvert - \lvert A \cap B \rvert\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\lvert A \rvert = 5\), \(\lvert B \rvert = 4\), \(\lvert A \cap B \rvert = 2\)를 대입하면 \(\lvert A \cup B \rvert = 5 + 4 - 2 = 7\)입니다.`,
+                en: String.raw`Substituting \(\lvert A \rvert = 5\), \(\lvert B \rvert = 4\), \(\lvert A \cap B \rvert = 2\) gives \(\lvert A \cup B \rvert = 5 + 4 - 2 = 7\).`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'supremum',
+      title: { ko: '상한과 완비성', en: 'The Supremum Axiom' },
+      order: 2,
+      summary: {
+        ko: String.raw`위로 유계인 집합은 가장 작은 상한 \(\sup S\)를 갖습니다 — 실수의 빈틈을 메우는 공리, 유리수의 구멍 장면의 짝꿍입니다.`,
+        en: String.raw`Every bounded-above set has a least upper bound \(\sup S\) — the axiom filling the gaps in the rationals, twin of the rational-holes scene.`,
+      },
+      tex: [String.raw`\sup\left\{1-\frac{1}{n}\right\} = 1`, String.raw`S \ne \varnothing \text{ bounded above } \Rightarrow \sup S \text{ exists}`],
+      controls: [
+        {
+          kind: 'select',
+          key: 'set',
+          label: { ko: '집합', en: 'Set' },
+          options: ['one-minus', 'sqrt2'],
+          init: 'one-minus',
+        },
+        {
+          kind: 'slider',
+          key: 'bound',
+          label: { ko: '상한 후보', en: 'Upper-bound candidate' },
+          min: 0.5,
+          max: 2,
+          step: 0.01,
+          init: 1.4,
+        },
+      ],
+      problems: [
+        {
+          id: 'sup-one-minus',
+          statement: {
+            ko: String.raw`\(S = \left\{1 - \frac{1}{n} : n \geq 1\right\}\)에 대해 \(\sup S = 1\)임을 증명하세요. (\(1 \notin S\)임에 유의하세요.)`,
+            en: String.raw`Prove \(\sup S = 1\) for \(S = \left\{1 - \frac{1}{n} : n \geq 1\right\}\). (Note \(1 \notin S\).)`,
+          },
+          display: [String.raw`\sup\left\{1-\frac{1}{n}\right\} = 1 \notin S`],
+          preset: { set: 'one-minus', bound: 1.2 },
+          presetCaption: {
+            ko: String.raw`상한 후보 \(1.2\) — 참 상한 \(1\)보다 \(0.2\) 큽니다.`,
+            en: String.raw`Candidate \(1.2\) — \(0.2\) above the true supremum \(1\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`모든 \(n\)에 대해 \(1 - \frac{1}{n} < 1\)이므로, \(1\)은 \(S\)의 상계입니다.`,
+                en: String.raw`Since \(1 - \frac{1}{n} < 1\) for every \(n\), \(1\) is an upper bound of \(S\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(u < 1\)인 임의의 실수를 잡습니다. \(1 - \frac{1}{n} > u\)는 \(\frac{1}{n} < 1 - u\), 즉 \(n > \frac{1}{1-u}\)와 동치입니다. 아르키메데스 성질에 의해 그런 \(n\)이 존재하므로 \(u\)는 상계가 아닙니다.`,
+                en: String.raw`Take any real \(u < 1\). The inequality \(1 - \frac{1}{n} > u\) is equivalent to \(\frac{1}{n} < 1 - u\), i.e. \(n > \frac{1}{1-u}\). By the Archimedean property such an \(n\) exists, so \(u\) is not an upper bound.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 \(1\)보다 작은 상계는 없고, \(1\)은 가장 작은 상계입니다: \(\sup S = 1\). 참고로 \(n = 1\)일 때 원소는 \(0\)이므로 \(1\) 자체는 \(S\)에 속하지 않습니다 — 상한은 집합의 원소일 필요가 없습니다.`,
+                en: String.raw`So there is no upper bound below \(1\): \(1\) is the least upper bound, \(\sup S = 1\). For reference, the \(n = 1\) term is \(0\), so \(1 \notin S\) — a supremum need not belong to the set.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'sup-sum',
+          statement: {
+            ko: String.raw`위로 유계인 공집합이 아닌 \(A, B \subset \mathbb{R}\)에 대해 \(\sup(A+B) = \sup A + \sup B\)임을 증명하세요.`,
+            en: String.raw`Prove \(\sup(A+B) = \sup A + \sup B\) for nonempty bounded-above \(A, B \subset \mathbb{R}\).`,
+          },
+          preset: { set: 'one-minus', bound: 1.5 },
+          presetCaption: {
+            ko: String.raw`상한 후보 \(1.5\)에서 참 상한으로 조여옵니다.`,
+            en: String.raw`Tightening the candidate \(1.5\) down to the true supremum.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`(≤) 모든 \(a \in A\), \(b \in B\)에 대해 \(a + b \leq \sup A + \sup B\)이므로, \(\sup A + \sup B\)는 \(A + B\)의 상계입니다. 따라서 \(\sup(A+B) \leq \sup A + \sup B\)입니다.`,
+                en: String.raw`(≤) For all \(a \in A\) and \(b \in B\), \(a + b \leq \sup A + \sup B\), so \(\sup A + \sup B\) is an upper bound of \(A + B\). Hence \(\sup(A+B) \leq \sup A + \sup B\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`(≥) \(\varepsilon > 0\)을 잡습니다. \(a > \sup A - \frac{\varepsilon}{2}\)인 \(a \in A\)와 \(b > \sup B - \frac{\varepsilon}{2}\)인 \(b \in B\)를 고를 수 있습니다(상한의 정의). 그러면 \(a + b > \sup A + \sup B - \varepsilon\)이므로 \(\sup(A+B) \geq \sup A + \sup B - \varepsilon\)입니다.`,
+                en: String.raw`(≥) Let \(\varepsilon > 0\). We can choose \(a \in A\) with \(a > \sup A - \frac{\varepsilon}{2}\) and \(b \in B\) with \(b > \sup B - \frac{\varepsilon}{2}\) (definition of supremum). Then \(a + b > \sup A + \sup B - \varepsilon\), so \(\sup(A+B) \geq \sup A + \sup B - \varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\varepsilon\)이 임의였으므로 \(\sup(A+B) \geq \sup A + \sup B\)입니다. 두 부등식을 합쳐 \(\sup(A+B) = \sup A + \sup B\)를 얻습니다.`,
+                en: String.raw`Since \(\varepsilon\) was arbitrary, \(\sup(A+B) \geq \sup A + \sup B\). Combining the two inequalities gives \(\sup(A+B) = \sup A + \sup B\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'sqrt2-exists',
+          statement: {
+            ko: String.raw`완비성 공리로 \(s = \sup\{x \in \mathbb{Q} : x \geq 0, x^2 < 2\}\)가 존재함을 받아들이고, \(s^2 = 2\)임을 검증하세요. (존재 자체의 증명은 아이디어 수준으로 둡니다.)`,
+            en: String.raw`Accept from completeness that \(s = \sup\{x \in \mathbb{Q} : x \geq 0, x^2 < 2\}\) exists, and verify \(s^2 = 2\). (The existence step is idea-level.)`,
+          },
+          display: [String.raw`s^2 < 2 \Rightarrow \text{contradiction},\quad s^2 > 2 \Rightarrow \text{contradiction}`],
+          preset: { set: 'sqrt2', bound: 1.5 },
+          presetCaption: {
+            ko: String.raw`\(\sqrt{2} \approx 1.4142\) — 유리수 절단값들이 구멍을 향해 다가갑니다.`,
+            en: String.raw`\(\sqrt{2} \approx 1.4142\) — rational truncations approach the hole.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`(보조정리 — 인용) 유리수 \(\mathbb{Q}\)는 \(\mathbb{R}\)에서 조밀합니다: 실수의 모든 열린 구간 안에는 유리수가 존재합니다.`,
+                en: String.raw`(Lemma — cited) The rationals \(\mathbb{Q}\) are dense in \(\mathbb{R}\): every open interval of reals contains a rational number.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(S = \{x \in \mathbb{Q} : x \geq 0, x^2 < 2\}\)는 공집합이 아니고(\(1 \in S\)), 위로 유계입니다(예: \(2\)가 상계). 완비성 공리에 의해 \(s = \sup S\)가 존재합니다.`,
+                en: String.raw`\(S = \{x \in \mathbb{Q} : x \geq 0, x^2 < 2\}\) is nonempty (\(1 \in S\)) and bounded above (e.g. \(2\) is an upper bound). By the completeness axiom, \(s = \sup S\) exists.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(s^2 < 2\)라 가정합니다. \(\varepsilon = 2 - s^2 > 0\)이라 두면, 보조정리에 의해 \(s < q < s + \frac{\varepsilon}{2(s+1)}\)인 유리수 \(q\)가 있습니다. 그러면 \(q^2 - s^2 = (q-s)(q+s) < \varepsilon\)이므로 \(q^2 < s^2 + \varepsilon = 2\) — 즉 \(q \in S\)인데 \(q > s\)이므로 \(s\)가 상한이라는 데 모순입니다.`,
+                en: String.raw`Suppose \(s^2 < 2\). Put \(\varepsilon = 2 - s^2 > 0\). By the lemma there is a rational \(q\) with \(s < q < s + \frac{\varepsilon}{2(s+1)}\). Then \(q^2 - s^2 = (q-s)(q+s) < \varepsilon\), so \(q^2 < s^2 + \varepsilon = 2\) — i.e. \(q \in S\) with \(q > s\), contradicting that \(s\) is an upper bound.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(s^2 > 2\)라 가정합니다. \(\delta = s^2 - 2 > 0\)이라 두면, 보조정리에 의해 \(s - \frac{\delta}{2s} < r < s\)인 유리수 \(r\)이 있습니다. 그러면 \(s^2 - r^2 = (s-r)(s+r) < \delta\)이므로 \(r^2 > s^2 - \delta = 2\) — 즉 \(r\)은 \(s\)보다 작은 \(S\)의 상계이므로 \(s\)가 가장 작은 상한이라는 데 모순입니다.`,
+                en: String.raw`Suppose \(s^2 > 2\). Put \(\delta = s^2 - 2 > 0\). By the lemma there is a rational \(r\) with \(s - \frac{\delta}{2s} < r < s\). Then \(s^2 - r^2 = (s-r)(s+r) < \delta\), so \(r^2 > s^2 - \delta = 2\) — i.e. \(r\) is an upper bound of \(S\) smaller than \(s\), contradicting that \(s\) is the least upper bound.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 \(s^2 = 2\)입니다. 완비성 공리가 유리수의 '구멍'을 메워 \(\sqrt{2}\)에 해당하는 실수를 만들어냈습니다.`,
+                en: String.raw`Hence \(s^2 = 2\). The completeness axiom fills the hole in the rationals, producing the real number that is \(\sqrt{2}\).`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'countable',
+      title: { ko: '가산과 비가산', en: 'Countable vs Uncountable' },
+      order: 3,
+      summary: {
+        ko: String.raw`유리수는 한 줄로 나열할 수 있지만 실수는 그럴 수 없습니다 — 칸토어의 대각선 논법으로 확인합니다.`,
+        en: String.raw`The rationals fit into a single list; the reals do not — verified by Cantor's diagonal argument.`,
+      },
+      tex: [String.raw`\mathbb{Q} = \{q_1, q_2, \dots\}`, String.raw`(0,1) \text{ is uncountable}`],
+      controls: [
+        {
+          kind: 'select',
+          key: 'panel',
+          label: { ko: '장면', en: 'Panel' },
+          options: ['rationals', 'diagonal'],
+          init: 'rationals',
+        },
+        { kind: 'slider', key: 'n', label: { ko: '나열 개수', en: 'Listed count' }, min: 1, max: 64, step: 1, init: 20 },
+      ],
+      problems: [
+        {
+          id: 'integers-countable',
+          statement: {
+            ko: String.raw`\(\mathbb{Z}\)가 가산임을 명시적 나열 \(0, 1, -1, 2, -2, \dots\)로 증명하세요.`,
+            en: String.raw`Prove \(\mathbb{Z}\) is countable via the explicit enumeration \(0, 1, -1, 2, -2, \dots\).`,
+          },
+          display: [String.raw`a_0 = 0,\quad a_{2k-1} = k,\quad a_{2k} = -k\ \ (k \geq 1)`],
+          preset: { panel: 'rationals', n: 20 },
+          presetCaption: {
+            ko: String.raw`유리수 나열과 같은 대각선 아이디어 — 정수부터 시작합니다.`,
+            en: String.raw`The same diagonal idea as the rationals — starting with the integers.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(a_0 = 0\), \(k \geq 1\)에 대해 \(a_{2k-1} = k\), \(a_{2k} = -k\)라 두면 모든 정수가 정확히 한 번씩 등장합니다: \(m = 0\)은 \(a_0\)으로, \(m \geq 1\)은 \(a_{2m-1}\)로, \(m < 0\)은 \(a_{-2m}\)으로 나타납니다.`,
+                en: String.raw`With \(a_0 = 0\), \(a_{2k-1} = k\) and \(a_{2k} = -k\) for \(k \geq 1\), every integer appears exactly once: \(m = 0\) as \(a_0\), \(m \geq 1\) as \(a_{2m-1}\), and \(m < 0\) as \(a_{-2m}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 \(n \mapsto a_n\)은 \(\mathbb{N} \to \mathbb{Z}\)의 전단사이며, \(\mathbb{Z}\)는 가산입니다.`,
+                en: String.raw`Hence \(n \mapsto a_n\) is a bijection \(\mathbb{N} \to \mathbb{Z}\), so \(\mathbb{Z}\) is countable.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'interval-uncountable',
+          statement: {
+            ko: String.raw`\((0,1)\)이 비가산임을 칸토어의 대각선 논법으로 증명하세요.`,
+            en: String.raw`Prove \((0,1)\) is uncountable by Cantor's diagonal argument.`,
+          },
+          display: [String.raw`x_n = \begin{cases} 5 & r_n\text{'s }n\text{th digit} \ne 5 \\ 6 & \text{otherwise} \end{cases}`],
+          preset: { panel: 'diagonal', n: 8 },
+          presetCaption: {
+            ko: String.raw`대각선을 뒤집어 만든 수열은 목록에 있을 수 없습니다.`,
+            en: String.raw`The flipped diagonal cannot be anywhere in the list.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\((0,1)\)의 원소를 \(r_1, r_2, \dots\)로 빠짐없이 나열할 수 있다고 가정합니다. 각 \(r_n\)은 무한한 \(9\)로 끝나지 않는 소수 전개를 유일하게 가지므로, 그 \(n\)번째 자리수가 잘 정의됩니다.`,
+                en: String.raw`Suppose the elements of \((0,1)\) could be fully enumerated as \(r_1, r_2, \dots\). Each \(r_n\) has a unique decimal expansion not ending in infinite \(9\)s, so its \(n\)-th digit is well defined.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(x\)의 \(n\)번째 자리수를 "\(r_n\)의 \(n\)번째 자리수가 \(5\)가 아니면 \(5\), 그렇지 않으면 \(6\)"으로 정합니다. 그러면 \(x \in (0,1)\)이지만, 모든 \(n\)에 대해 \(n\)번째 자리수가 다르므로 \(x \ne r_n\)입니다 — 모순입니다.`,
+                en: String.raw`Define \(x\) digit by digit: its \(n\)-th digit is \(5\) when \(r_n\)'s \(n\)-th digit is not \(5\), and \(6\) otherwise. Then \(x \in (0,1)\), but \(x \ne r_n\) for every \(n\) since they differ at digit \(n\) — a contradiction.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 \((0,1)\)의 나열은 존재하지 않습니다: \((0,1)\)은 비가산입니다.`,
+                en: String.raw`Hence no enumeration of \((0,1)\) exists: \((0,1)\) is uncountable.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'countable-union',
+          statement: {
+            ko: String.raw`가산 집합들의 가산 합집합이 가산임을 대각선 나열의 아이디어로 설명하세요. (엄밀한 증명은 생략하고 아이디어 수준으로 둡니다.)`,
+            en: String.raw`Explain at idea level why a countable union of countable sets is countable, via diagonal enumeration. (Idea level; full proof omitted.)`,
+          },
+          preset: { panel: 'rationals', n: 64 },
+          presetCaption: {
+            ko: String.raw`\(n=64\): 격자를 대각선으로 훑는 바로 그 방법입니다.`,
+            en: String.raw`\(n=64\): the same diagonal sweep of the grid.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`[스케치] \(A_1, A_2, \dots\)를 무한 격자의 행으로 배열합니다. 유리수를 나열할 때와 똑같이 대각선 순서로 훑으면, 각 원소는 언젠가 유한한 대각선 위치에서 등장합니다.`,
+                en: String.raw`[Sketch] Arrange \(A_1, A_2, \dots\) as the rows of an infinite grid. Sweeping it in diagonal order — exactly as for the rationals — every element shows up at some finite diagonal position.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`[스케치] 이는 아이디어 수준의 설명입니다: 엄밀한 증명에는 중복 원소를 다루는 주의가 필요합니다.`,
+                en: String.raw`[Sketch] This is an idea-level explanation; the full proof needs care with duplicate elements.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'groups-fields',
+      title: { ko: '군과 체', en: 'Groups vs Fields' },
+      order: 4,
+      summary: {
+        ko: String.raw`군은 되돌릴 수 있는 움직임(결합·항등원·역원), 체는 사칙연산이 되는 세계입니다. 부분군 판정법과 \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\)의 차이를 봅니다.`,
+        en: String.raw`A group is reversible moves (associativity, identity, inverses); a field is a world where all four operations work. Includes the subgroup test and \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\).`,
+      },
+      tex: [
+        String.raw`(a+b)+c = a+(b+c),\ \ \exists\,0,\ \ \forall a\,\exists(-a)`,
+        String.raw`a(b+c) = ab+ac,\qquad 2\mathbb{Z} \le \mathbb{Z},\ \ \mathbb{Q} \le \mathbb{R}`,
+      ],
+      controls: [
+        {
+          kind: 'select',
+          key: 'table',
+          label: { ko: '곱셈표', en: 'Table' },
+          options: ['z6', 'z5'],
+          init: 'z6',
+        },
+      ],
+      problems: [
+        {
+          id: 'z-additive-group',
+          statement: {
+            ko: String.raw`\((\mathbb{Z}, +)\)가 군임을 세 공리로 확인하세요.`,
+            en: String.raw`Check that \((\mathbb{Z}, +)\) is a group from the three axioms.`,
+          },
+          display: [String.raw`0 \in \mathbb{Z},\qquad a + (-a) = 0`],
+          preset: { table: 'z5' },
+          presetCaption: {
+            ko: String.raw`\((\mathbb{Z}_5, \times)\) 표 — 덧셈군 \((\mathbb{Z},+)\)도 같은 세 공리를 만족합니다.`,
+            en: String.raw`The \((\mathbb{Z}_5, \times)\) table — the additive group \((\mathbb{Z},+)\) satisfies the same three axioms.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`닫힘: 두 정수의 합은 정수입니다. 결합법칙은 정수의 덧셈이 이미 만족하므로 그대로 이어받습니다.`,
+                en: String.raw`Closure: the sum of two integers is an integer. Associativity is inherited from integer addition.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`항등원은 \(0 \in \mathbb{Z}\)이며 \(a + 0 = a\)입니다. \(a\)의 역원은 \(-a \in \mathbb{Z}\)이며 \(a + (-a) = 0\)을 만족합니다.`,
+                en: String.raw`The identity is \(0 \in \mathbb{Z}\) with \(a + 0 = a\). The inverse of \(a\) is \(-a \in \mathbb{Z}\), satisfying \(a + (-a) = 0\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'z-mult-not-group',
+          statement: {
+            ko: String.raw`\((\mathbb{Z}, \times)\)가 군이 아님을 증명하세요.`,
+            en: String.raw`Prove \((\mathbb{Z}, \times)\) is not a group.`,
+          },
+          display: [String.raw`2x = 1 \Rightarrow x = \frac{1}{2} \notin \mathbb{Z}`],
+          preset: { table: 'z6' },
+          presetCaption: {
+            ko: String.raw`\((\mathbb{Z}_6, \times)\) 표 — \(2\)의 역원이 없습니다.`,
+            en: String.raw`The \((\mathbb{Z}_6, \times)\) table — 2 has no inverse.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`곱셈에 대한 항등원은 \(1\)이어야 합니다 (\(1 \cdot a = a\)이므로).`,
+                en: String.raw`The multiplicative identity would have to be \(1\), since \(1 \cdot a = a\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(2\)의 역원이 존재하려면 \(2x = 1\)인 \(x \in \mathbb{Z}\)가 있어야 하지만, \(x = \frac{1}{2} \notin \mathbb{Z}\)이므로 역원 공리가 깨집니다. 따라서 \((\mathbb{Z}, \times)\)는 군이 아닙니다.`,
+                en: String.raw`An inverse of \(2\) would need \(x \in \mathbb{Z}\) with \(2x = 1\), but \(x = \frac{1}{2} \notin \mathbb{Z}\). So the inverse axiom fails, and \((\mathbb{Z}, \times)\) is not a group.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'a-times-zero',
+          statement: {
+            ko: String.raw`모든 체에서 \(a \cdot 0 = 0\)임을 공리로부터 증명하세요.`,
+            en: String.raw`Prove \(a \cdot 0 = 0\) in any field, from the axioms.`,
+          },
+          display: [String.raw`a \cdot 0 = a \cdot (0 + 0) = a \cdot 0 + a \cdot 0`],
+          preset: { table: 'z6' },
+          presetCaption: {
+            ko: String.raw`덧셈군의 소거법칙이 핵심입니다.`,
+            en: String.raw`Cancellation in the additive group is the key.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`분배법칙에 의해 \(a \cdot 0 = a \cdot (0 + 0) = a \cdot 0 + a \cdot 0\)입니다.`,
+                en: String.raw`By distributivity, \(a \cdot 0 = a \cdot (0 + 0) = a \cdot 0 + a \cdot 0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`양변에 \(-(a \cdot 0)\)을 더하면 (덧셈에 대한 역원이 존재하므로) \(0 = a \cdot 0\)을 얻습니다.`,
+                en: String.raw`Adding \(-(a \cdot 0)\) to both sides (additive inverses exist) gives \(0 = a \cdot 0\).`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'epsilon-n',
       title: { ko: 'ε-N 극한', en: 'The ε–N Definition' },
-      order: 1,
+      order: 5,
       summary: {
         ko: String.raw`\(\varepsilon\) 띠를 좁혀도 수열의 꼬리가 전부 그 안에 들어가는 순간을 확인합니다. 그때의 \(N\)이 바로 \(\forall\varepsilon>0\ \exists N\)의 \(N\)입니다.`,
         en: String.raw`Watch the moment the whole tail of a sequence fits inside the \(\varepsilon\)-band. That \(N\) is exactly the \(N\) in \(\forall\varepsilon>0\ \exists N\).`,
@@ -140,7 +628,7 @@ export const limits: ChapterMeta = {
     {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 2,
+      order: 6,
       summary: {
         ko: String.raw`\(x_{n+1}=\frac{x_n+2/x_n}{2}\)의 모든 항은 유리수지만, 극한 \(\sqrt{2}\)는 유리수가 아닙니다. 유리수 집합 \(\mathbb{Q}\)에는 구멍이 있다는 뜻입니다. 무리수임의 엄밀한 증명은 다루지 않고 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every term of \(x_{n+1}=\frac{x_n+2/x_n}{2}\) is rational, yet the limit \(\sqrt{2}\) is not. The rationals \(\mathbb{Q}\) have a hole — shown at the idea level, without a full irrationality proof.`,
@@ -265,7 +753,7 @@ export const limits: ChapterMeta = {
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 3,
+      order: 7,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -380,7 +868,7 @@ export const limits: ChapterMeta = {
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 4,
+      order: 8,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -492,7 +980,7 @@ export const limits: ChapterMeta = {
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 5,
+      order: 9,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -601,7 +1089,7 @@ export const limits: ChapterMeta = {
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 6,
+      order: 10,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
