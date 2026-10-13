@@ -345,9 +345,128 @@ export const series: ChapterMeta = {
       ],
     },
     {
+      id: 'tests',
+      title: { ko: '수렴 판정법 도구상자', en: 'Convergence Tests Toolbox' },
+      order: 4,
+      summary: {
+        ko: String.raw`비율 \(r_k = a_{k+1}/a_k\)가 극한 \(L < 1\)로 모이면 급수가 수렴합니다 — 두 급수에서 비율이 \(0\)과 \(\frac{1}{2}\)로 내려가는 모습을, 비교 판정법에서는 \(\frac{1}{k^2+1}\)이 \(\frac{1}{k^2}\) 아래에 깔리는 모습을 확인합니다.`,
+        en: String.raw`When the ratio \(r_k = a_{k+1}/a_k\) settles to a limit \(L < 1\), the series converges — watch the ratios dive to \(0\) and \(\frac{1}{2}\) in two series, and \(\frac{1}{k^2+1}\) tuck itself under \(\frac{1}{k^2}\) for the comparison test.`,
+      },
+      tex: [
+        String.raw`r_k=\frac{a_{k+1}}{a_k}\to L<1\ \Rightarrow\ \sum a_k\ \text{converges}`,
+        String.raw`\frac{1}{k^2+1}<\frac{1}{k^2},\quad\sum_{k=1}^{\infty}\frac{1}{k^2}=\frac{\pi^2}{6}`,
+      ],
+      prerequisites: ['leibniz'],
+      controls: [
+        { kind: 'select', key: 'series', label: { ko: '급수', en: 'Series' }, options: ['factorial', 'n-over-2n', 'inv-square-plus'], init: 'factorial' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 30, step: 1, init: 12 },
+      ],
+      problems: [
+        {
+          id: 'ratio-factorial',
+          statement: {
+            ko: String.raw`비율 판정법을 진술하고, \(\sum_{k=1}^{\infty}\frac{1}{k!}\)가 수렴함을 증명하세요.`,
+            en: String.raw`State the ratio test and prove \(\sum_{k=1}^{\infty}\frac{1}{k!}\) converges.`,
+          },
+          display: [String.raw`r_k=\frac{a_{k+1}}{a_k}=\frac{1}{k+1}\to 0<1`],
+          preset: { series: 'factorial', n: 12 },
+          presetCaption: {
+            ko: String.raw`\(n = 12\): \(r_{12} = 1/13 \approx 0.0769\) — 0을 향해 빠르게 떨어집니다.`,
+            en: String.raw`\(n = 12\): \(r_{12} = 1/13 \approx 0.0769\) — diving toward 0.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`비율 판정법: \(a_k > 0\)이고 \(r_k = \frac{a_{k+1}}{a_k} \to L < 1\)이면 \(\sum a_k\)는 수렴합니다. 실제로 \(L < \rho < 1\)인 \(\rho\)를 잡으면 충분히 큰 \(k\)에서 \(r_k \le \rho\)이므로, \(a_{k+1} \le \rho a_k\)가 반복되어 꼬리가 수렴하는 기하급수 \(\sum \rho^k\) 아래에 깔립니다.`,
+                en: String.raw`Ratio test: if \(a_k > 0\) and \(r_k = \frac{a_{k+1}}{a_k} \to L < 1\), then \(\sum a_k\) converges. Indeed, picking \(\rho\) with \(L < \rho < 1\), eventually \(r_k \le \rho\), so \(a_{k+1} \le \rho a_k\) iterates and the tail sits under the convergent geometric series \(\sum \rho^k\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(a_k = \frac{1}{k!}\)이면 \(r_k = \frac{k!}{(k+1)!} = \frac{1}{k+1} \to 0\)입니다: \(r_1 = \frac{1}{2}, r_2 = \frac{1}{3}, r_3 = \frac{1}{4}, r_4 = \frac{1}{5}, r_5 = \frac{1}{6}\).`,
+                en: String.raw`For \(a_k = \frac{1}{k!}\), \(r_k = \frac{k!}{(k+1)!} = \frac{1}{k+1} \to 0\): \(r_1 = \frac{1}{2}, r_2 = \frac{1}{3}, r_3 = \frac{1}{4}, r_4 = \frac{1}{5}, r_5 = \frac{1}{6}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(L = 0 < 1\)이므로 비율 판정법으로 수렴합니다. (합은 \(e - 1 \approx 1.71828\)입니다 — \(k = 0\)인 항이 \(1\)이므로.)`,
+                en: String.raw`Since \(L = 0 < 1\), the ratio test gives convergence. (The sum is \(e - 1 \approx 1.71828\) — the \(k = 0\) term is \(1\).)`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'ratio-n-over-2n',
+          statement: {
+            ko: String.raw`\(\sum_{k=1}^{\infty}\frac{k}{2^k}\)가 비율 판정법으로 수렴함을 증명하세요.`,
+            en: String.raw`Prove \(\sum_{k=1}^{\infty}\frac{k}{2^k}\) converges via the ratio test.`,
+          },
+          display: [String.raw`r_k=\frac{k+1}{2k}\to\frac{1}{2}<1`],
+          preset: { series: 'n-over-2n', n: 12 },
+          presetCaption: {
+            ko: String.raw`\(n = 12\): \(r_{12} = 13/24 \approx 0.5417\) — \(\frac{1}{2}\)를 향해 내려갑니다.`,
+            en: String.raw`\(n = 12\): \(r_{12} = 13/24 \approx 0.5417\) — descending toward \(\frac{1}{2}\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(a_k = \frac{k}{2^k} > 0\)입니다. \(r_k = \frac{a_{k+1}}{a_k} = \frac{k+1}{2^{k+1}}\cdot\frac{2^k}{k} = \frac{k+1}{2k}\)입니다.`,
+                en: String.raw`\(a_k = \frac{k}{2^k} > 0\). \(r_k = \frac{a_{k+1}}{a_k} = \frac{k+1}{2^{k+1}}\cdot\frac{2^k}{k} = \frac{k+1}{2k}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\frac{k+1}{2k} = \frac{1}{2}+\frac{1}{2k} \to \frac{1}{2}\)입니다: \(r_1 = 1, r_2 = \frac{3}{4}, r_3 = \frac{2}{3}, r_4 = \frac{5}{8}, r_5 = \frac{3}{5}\)에서 시작해 \(\frac{1}{2}\)로 내려갑니다.`,
+                en: String.raw`\(\frac{k+1}{2k} = \frac{1}{2}+\frac{1}{2k} \to \frac{1}{2}\): starting from \(r_1 = 1, r_2 = \frac{3}{4}, r_3 = \frac{2}{3}, r_4 = \frac{5}{8}, r_5 = \frac{3}{5}\) and descending toward \(\frac{1}{2}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(L = \frac{1}{2} < 1\)이므로 비율 판정법으로 수렴합니다. (합이 \(2\)라는 것은 기하급수 장면에서 보였습니다.)`,
+                en: String.raw`Since \(L = \frac{1}{2} < 1\), the ratio test gives convergence. (That the sum is \(2\) was shown in the geometric scene.)`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'comparison',
+          statement: {
+            ko: String.raw`비교 판정법을 진술하고, \(\sum_{k=1}^{\infty}\frac{1}{k^2+1}\)의 수렴을 증명하세요.`,
+            en: String.raw`State the comparison test and prove \(\sum_{k=1}^{\infty}\frac{1}{k^2+1}\) converges.`,
+          },
+          display: [String.raw`\frac{1}{k^2+1}<\frac{1}{k^2},\qquad\sum_{k=1}^{\infty}\frac{1}{k^2}=\frac{\pi^2}{6}`],
+          preset: { series: 'inv-square-plus', n: 12 },
+          presetCaption: {
+            ko: String.raw`\(n = 12\): 모든 막대에서 \(\frac{1}{k^2+1} < \frac{1}{k^2}\) — 수렴하는 급수 아래에 깔리므로 수렴합니다.`,
+            en: String.raw`\(n = 12\): \(\frac{1}{k^2+1} < \frac{1}{k^2}\) at every bar — tucked under a convergent series, so it converges.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`비교 판정법: \(0 \le a_k \le b_k\)이고 \(\sum b_k\)가 수렴하면 \(\sum a_k\)도 수렴합니다 — 부분합이 단조증가하면서 \(\sum b_k\)의 합으로 유계이기 때문입니다.`,
+                en: String.raw`Comparison test: if \(0 \le a_k \le b_k\) and \(\sum b_k\) converges, then \(\sum a_k\) converges — its partial sums increase and are bounded by the sum of \(\sum b_k\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`모든 \(k \ge 1\)에서 분모가 더 크므로 \(\frac{1}{k^2+1} < \frac{1}{k^2}\)입니다.`,
+                en: String.raw`Since the denominator is larger, \(\frac{1}{k^2+1} < \frac{1}{k^2}\) for every \(k \ge 1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\sum_{k=1}^{\infty}\frac{1}{k^2} = \frac{\pi^2}{6}\)은 수렴합니다 (바젤 장면의 결과). 따라서 비교 판정법으로 \(\sum_{k=1}^{\infty}\frac{1}{k^2+1}\)도 수렴합니다.`,
+                en: String.raw`\(\sum_{k=1}^{\infty}\frac{1}{k^2} = \frac{\pi^2}{6}\) converges (the Basel scene's result). Hence \(\sum_{k=1}^{\infty}\frac{1}{k^2+1}\) converges by comparison.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'eseries',
       title: { ko: 'e로 가는 두 길', en: 'Two Roads to e' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`복리 \((1+\frac{1}{n})^n\)과 급수 \(\sum_{k=0}^{\infty} \frac{1}{k!}\)가 \(e\)에 다가가는 속도를 견주어 확인합니다. 팩토리얼 급수가 압도적으로 빠릅니다.`,
         en: String.raw`Compare how fast compound growth \((1+\frac{1}{n})^n\) and the series \(\sum_{k=0}^{\infty} \frac{1}{k!}\) approach \(e\). The factorial series wins by a landslide.`,
@@ -459,7 +578,7 @@ export const series: ChapterMeta = {
     {
       id: 'telescoping',
       title: { ko: '망원급수', en: 'Telescoping Series' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`각 항을 \(\frac{1}{n} - \frac{1}{n+1}\)로 쪼개면 이웃끼리 서로 지워지고 처음의 1과 사라져 가는 꼬리만 남는 모습을 확인합니다.`,
         en: String.raw`Split each term into \(\frac{1}{n} - \frac{1}{n+1}\) and the neighbors cancel each other, leaving only the very first 1 and a vanishing tail.`,
@@ -574,7 +693,7 @@ export const series: ChapterMeta = {
     {
       id: 'geometric',
       title: { ko: '기하급수: 정사각형 채우기', en: 'Geometric Series: Filling the Square' },
-      order: 6,
+      order: 7,
       summary: {
         ko: '단위 정사각형을 남은 부분의 절반씩 채워 나가면 빈틈이 매 단계 절반으로 줄며 합이 1이 되는 모습을 확인합니다.',
         en: 'Fill a unit square by always taking half of what remains: the gap halves at every step and the total becomes 1.',
@@ -680,7 +799,7 @@ export const series: ChapterMeta = {
     {
       id: 'wallis',
       title: { ko: '월리스 곱', en: 'Wallis Product' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`유리수 인수들을 하나씩 곱해 나갈수록 실행 곱이 \(\frac{\pi}{2}\) 위아래로 흔들리며 조여드는 모습을 확인합니다.`,
         en: String.raw`Multiply the rational factors in one at a time and watch the running product swing above and below \(\frac{\pi}{2}\), closing in as the swings shrink.`,
@@ -792,7 +911,7 @@ export const series: ChapterMeta = {
     {
       id: 'stirling',
       title: { ko: '스털링 근사', en: "Stirling's Approximation" },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`로그 눈금에서 \(n!\)와 스털링 근사가 거의 겹쳐지고 상대오차가 대략 \(\frac{1}{12n}\)으로 줄어드는 모습을 확인합니다. \(\pi\)가 들어오는 경로는 아이디어 수준에서만 짚습니다.`,
         en: String.raw`On a log scale, \(n!\) and the Stirling approximation nearly coincide, and the relative error shrinks like \(\frac{1}{12n}\). Where \(\pi\) enters is only sketched at the idea level.`,
@@ -904,7 +1023,7 @@ export const series: ChapterMeta = {
     {
       id: 'grandi',
       title: { ko: '그란디 급수', en: 'Grandi Series' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`부분합이 1과 0을 영원히 오가므로 이 급수에는 합이 없습니다. \(\frac{1}{2}\)는 부분합들의 평균(체사로 평균)일 뿐, 급수의 합이 아닙니다.`,
         en: String.raw`The partial sums bounce between 1 and 0 forever, so this series has no sum. \(\frac{1}{2}\) is only the average of the partial sums (the Cesàro mean), not a sum of the series.`,
@@ -1016,7 +1135,7 @@ export const series: ChapterMeta = {
     {
       id: 'zeta4',
       title: { ko: 'ζ(4)와 짝수 거듭제곱', en: 'ζ(4) and Even Powers' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`\(\frac{1}{n^4}\)의 부분합이 \(\frac{\pi^4}{90}\)에 빠르게 닿는 모습과, 짝수 거듭제곱마다 \(\zeta\)값이 \(\pi\)의 거듭제곱으로 닫히는 패턴을 확인합니다.`,
         en: String.raw`The partial sums of \(\frac{1}{n^4}\) reach \(\frac{\pi^4}{90}\) quickly — and at every even power, the \(\zeta\) value closes into a power of \(\pi\).`,
@@ -1131,7 +1250,7 @@ export const series: ChapterMeta = {
     {
       id: 'rearrangement',
       title: { ko: '재배열 정리', en: 'Rearranging Changes the Sum' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`조건수렴 급수는 순서를 바꾸면 합이 바뀝니다 — \(\ln 2 \approx 0.6931\)이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로. 라이프니츠 장면의 짝꿍입니다.`,
         en: String.raw`Reordering a conditionally convergent series changes its sum — \(\ln 2 \approx 0.6931\) becomes \(\frac{3}{2}\ln 2 \approx 1.0397\). Twin of the Leibniz scene.`,
@@ -1241,9 +1360,128 @@ export const series: ChapterMeta = {
       ],
     },
     {
+      id: 'absolute',
+      title: { ko: '절대수렴 정리', en: 'Absolute Convergence' },
+      order: 13,
+      summary: {
+        ko: String.raw`절댓값을 씌운 급수가 수렴하면 원래 급수도 수렴합니다 — 두 부분합 곡선 \(S_n\)과 \(T_n\)이 함께 안착하는 모습과, 조화급수처럼 절댓값은 발산해도 부호 덕분에 수렴하는 경우를 견주어 확인합니다.`,
+        en: String.raw`If the absolute-value series converges, so does the original — compare the two partial-sum walks \(S_n\) and \(T_n\) settling together against the harmonic-like case where the signs rescue a divergent absolute series.`,
+      },
+      tex: [
+        String.raw`\sum|a_k|\ \text{converges}\ \Rightarrow\ \sum a_k\ \text{converges}`,
+        String.raw`\sum_{k=1}^{\infty}\frac{(-1)^k}{k^2}=-\frac{\pi^2}{12},\quad\sum_{k=1}^{\infty}\frac{(-1)^k}{k}=-\ln 2`,
+      ],
+      prerequisites: ['rearrangement'],
+      controls: [
+        { kind: 'select', key: 'series', label: { ko: '급수', en: 'Series' }, options: ['abs', 'cond'], init: 'abs' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 200, step: 1, init: 60 },
+      ],
+      problems: [
+        {
+          id: 'abs-square',
+          statement: {
+            ko: String.raw`\(\sum_{k=1}^{\infty}\frac{(-1)^k}{k^2}\)가 절대수렴함을 증명하세요.`,
+            en: String.raw`Prove \(\sum_{k=1}^{\infty}\frac{(-1)^k}{k^2}\) converges absolutely.`,
+          },
+          display: [String.raw`\sum_{k=1}^{\infty}\left|\frac{(-1)^k}{k^2}\right|=\sum_{k=1}^{\infty}\frac{1}{k^2}=\frac{\pi^2}{6}<\infty`],
+          preset: { series: 'abs', n: 60 },
+          presetCaption: {
+            ko: String.raw`\(n = 60\): \(S_{60} \approx -0.82233\), \(T_{60} \approx 1.62841\) — 절댓값 급수가 \(\pi^2/6 \approx 1.64493\) 아래에서 수렴합니다.`,
+            en: String.raw`\(n = 60\): \(S_{60} \approx -0.82233\), \(T_{60} \approx 1.62841\) — the absolute series converges below \(\pi^2/6 \approx 1.64493\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\left|\frac{(-1)^k}{k^2}\right| = \frac{1}{k^2}\)입니다.`,
+                en: String.raw`\(\left|\frac{(-1)^k}{k^2}\right| = \frac{1}{k^2}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(\sum_{k=1}^{\infty}\frac{1}{k^2} = \frac{\pi^2}{6} \approx 1.64493\)은 수렴합니다 (바젤 장면의 결과).`,
+                en: String.raw`\(\sum_{k=1}^{\infty}\frac{1}{k^2} = \frac{\pi^2}{6} \approx 1.64493\) converges (the Basel scene's result).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 원래 급수는 절대수렴합니다. 참고로 합은 \(-\frac{\pi^2}{12} \approx -0.822467\)이고, \(n = 60\)에서 \(S_{60} \approx -0.82233\)으로 소수 셋째 자리까지 맞습니다.`,
+                en: String.raw`Hence the series converges absolutely. Its sum is \(-\frac{\pi^2}{12} \approx -0.822467\); at \(n = 60\), \(S_{60} \approx -0.82233\) already agrees to three decimals.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'abs-implies-conv',
+          statement: {
+            ko: String.raw`절대수렴하면 수렴함을 코시 판정법으로 증명하세요.`,
+            en: String.raw`Prove via the Cauchy criterion that absolute convergence implies convergence.`,
+          },
+          display: [String.raw`\left|\sum_{k=n+1}^{m}a_k\right|\le\sum_{k=n+1}^{m}|a_k|<\varepsilon`],
+          preset: { series: 'abs', n: 60 },
+          presetCaption: {
+            ko: String.raw`\(n = 60\): 절댓값 부분합 \(T_n\)이 코시 수열이므로 \(S_n\)도 코시 수열입니다.`,
+            en: String.raw`\(n = 60\): since the absolute partial sums \(T_n\) are Cauchy, so are \(S_n\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\sum |a_k|\)가 수렴한다고 가정합니다. 부분합 \(U_m = \sum_{k=1}^{m}|a_k|\)는 수렴하므로 코시 수열입니다: \(\varepsilon > 0\)마다 \(m > n \ge N\)이면 \(|U_m - U_n| = \sum_{k=n+1}^{m}|a_k| < \varepsilon\)인 \(N\)이 존재합니다.`,
+                en: String.raw`Assume \(\sum |a_k|\) converges. Its partial sums \(U_m = \sum_{k=1}^{m}|a_k|\) converge, hence are Cauchy: for every \(\varepsilon > 0\) there is an \(N\) such that \(m > n \ge N\) implies \(|U_m - U_n| = \sum_{k=n+1}^{m}|a_k| < \varepsilon\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`원래 급수의 부분합 \(S_m\)에 대해, 삼각부등식으로 \(|S_m - S_n| = \left|\sum_{k=n+1}^{m}a_k\right| \le \sum_{k=n+1}^{m}|a_k| < \varepsilon\)입니다. 따라서 \((S_n)\)도 코시 수열입니다.`,
+                en: String.raw`For the original partial sums \(S_m\), the triangle inequality gives \(|S_m - S_n| = \left|\sum_{k=n+1}^{m}a_k\right| \le \sum_{k=n+1}^{m}|a_k| < \varepsilon\). Hence \((S_n)\) is Cauchy too.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`실수는 완비적입니다 — 모든 코시 수열이 수렴합니다 (상한 장면의 완비성 공리, 극한 챕터). 따라서 \(\sum a_k\)는 수렴합니다.`,
+                en: String.raw`\(\mathbb{R}\) is complete — every Cauchy sequence converges (the completeness axiom from the supremum scene, limits chapter). Hence \(\sum a_k\) converges.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'conditional',
+          statement: {
+            ko: String.raw`\(\sum_{k=1}^{\infty}\frac{(-1)^k}{k}\)가 조건수렴함을 증명하세요.`,
+            en: String.raw`Prove \(\sum_{k=1}^{\infty}\frac{(-1)^k}{k}\) converges conditionally.`,
+          },
+          display: [String.raw`\sum_{k=1}^{\infty}\left|\frac{(-1)^k}{k}\right|=\sum_{k=1}^{\infty}\frac{1}{k}=\infty,\quad\text{but}\ \sum_{k=1}^{\infty}\frac{(-1)^k}{k}\ \text{converges}`],
+          preset: { series: 'cond', n: 60 },
+          presetCaption: {
+            ko: String.raw`\(n = 60\): \(S_{60} \approx -0.68488\)은 \(-\ln 2 \approx -0.69315\)로 가지만, \(T_{60} = H_{60} \approx 4.67987\)은 끝없이 자랍니다.`,
+            en: String.raw`\(n = 60\): \(S_{60} \approx -0.68488\) heads to \(-\ln 2 \approx -0.69315\), while \(T_{60} = H_{60} \approx 4.67987\) grows without bound.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\sum \left|\frac{(-1)^k}{k}\right| = \sum \frac{1}{k}\)는 조화급수이므로 발산합니다 (조화 장면의 오레스메 증명). \(n = 60\)에서 이미 \(T_{60} = H_{60} \approx 4.67987\)입니다.`,
+                en: String.raw`\(\sum \left|\frac{(-1)^k}{k}\right| = \sum \frac{1}{k}\) is the harmonic series, hence diverges (the Oresme proof in the harmonic scene). At \(n = 60\) already \(T_{60} = H_{60} \approx 4.67987\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`한편 \(b_k = \frac{1}{k} \downarrow 0\)이므로 교대급수 판정법으로 \(\sum \frac{(-1)^k}{k}\)는 수렴합니다 (라이프니츠 장면의 교대급수 추정). 합은 \(-\ln 2 \approx -0.693147\)이며, \(S_{60} \approx -0.68488\)입니다.`,
+                en: String.raw`But \(b_k = \frac{1}{k} \downarrow 0\), so the alternating series test gives convergence of \(\sum \frac{(-1)^k}{k}\) (the alternating-series estimate from the Leibniz scene). The sum is \(-\ln 2 \approx -0.693147\), and \(S_{60} \approx -0.68488\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`수렴하지만 절대수렴하지 않으므로 조건수렴입니다 — 이것이 바로 재배열이 합을 바꿀 수 있는 경우입니다.`,
+                en: String.raw`It converges but not absolutely — conditional convergence, exactly the case where rearrangement can change the sum.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'improper',
       title: { ko: '이상적분', en: 'Improper Integrals' },
-      order: 12,
+      order: 14,
       summary: {
         ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
         en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,
