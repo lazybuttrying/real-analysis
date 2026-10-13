@@ -1,6 +1,7 @@
 import type { ChapterMeta } from './contracts.ts';
 import { limits } from './chapters/limits/meta.ts';
 import { series } from './chapters/series/meta.ts';
+import { calculus } from './chapters/calculus/meta.ts';
 
 /**
  * The single source of truth that collects every chapter's meta. (Pure data — three, d3, and the DOM must not be pulled in)
@@ -12,4 +13,4 @@ import { series } from './chapters/series/meta.ts';
  * never stored in any meta file. (Limits comes first, matching the textbooks:
  * limits precede series in both Kim, Kim & Gye and Tao.)
  */
-export const catalog: readonly ChapterMeta[] = [limits, series];
+export const catalog: readonly ChapterMeta[] = [limits, series, calculus];

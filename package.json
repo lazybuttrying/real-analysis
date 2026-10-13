@@ -65,6 +65,23 @@
       "limit": "26 kB"
     },
     {
+      "name": "chapter: calculus (shell, view kit, all scenes)",
+      "path": [
+        "dist/assets/calculus-*.js",
+        "dist/assets/app-*.js",
+        "dist/assets/d3kit-*.js",
+        "dist/assets/mvt-*.js",
+        "dist/assets/taylor-*.js",
+        "dist/assets/riemann-*.js",
+        "dist/assets/ftc-*.js",
+        "dist/assets/newton-*.js",
+        "dist/assets/banach-*.js",
+        "dist/assets/fourier-*.js",
+        "dist/assets/lebesgue-*.js"
+      ],
+      "limit": "16 kB"
+    },
+    {
       "name": "vendor: d3",
       "path": "dist/assets/vendor-d3-*.js",
       "limit": "25 kB"
