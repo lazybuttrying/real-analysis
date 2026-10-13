@@ -17,9 +17,123 @@ export const calculus: ChapterMeta = {
   },
   scenes: [
     {
+      id: 'diffcont',
+      title: { ko: '미분가능 ⇒ 연속', en: 'Differentiable Implies Continuous' },
+      order: 1,
+      summary: {
+        ko: String.raw`미분가능하면 연속이지만, 역은 성립하지 않습니다 — \(|x|\)의 모서리를 확대해도 펴지지 않는 것을 보세요. 미분 장면들의 첫걸음입니다.`,
+        en: String.raw`Differentiable implies continuous, but not conversely — zoom into the corner of \(|x|\) and it never flattens. The first step of the differentiation scenes.`,
+      },
+      tex: [
+        String.raw`f'(a) = \lim_{h \to 0}\frac{f(a+h)-f(a)}{h}`,
+        String.raw`\lim_{h \to 0} f(a+h) = f(a)`,
+      ],
+      controls: [
+        { kind: 'slider', key: 'zoom', label: { ko: '확대', en: 'Zoom' }, min: 1, max: 8, step: 1, init: 1 },
+      ],
+      problems: [
+        {
+          id: 'three-line-proof',
+          statement: {
+            ko: String.raw`\(f\)가 \(a\)에서 미분가능하면 \(a\)에서 연속임을 세 줄로 증명하세요.`,
+            en: String.raw`Prove in three lines: if \(f\) is differentiable at \(a\), it is continuous at \(a\).`,
+          },
+          display: [
+            String.raw`f(a+h) - f(a) = \frac{f(a+h)-f(a)}{h} \cdot h \to f'(a) \cdot 0 = 0`,
+          ],
+          preset: { zoom: 1 },
+          presetCaption: {
+            ko: String.raw`\(|x|\) 전체 모습 — 증명의 핵심은 차분 몫에 \(h\)를 곱하는 트릭입니다.`,
+            en: String.raw`The full \(|x|\) — the proof's trick is multiplying the difference quotient by \(h\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(h \neq 0\)일 때 \(f(a+h) - f(a) = \frac{f(a+h)-f(a)}{h} \cdot h\)입니다 — 0이 아닌 수로 나누고 다시 곱하는 것은 아무것도 바꾸지 않습니다.`,
+                en: String.raw`For \(h \neq 0\), \(f(a+h) - f(a) = \frac{f(a+h)-f(a)}{h} \cdot h\) — dividing by a nonzero number and multiplying back changes nothing.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(h \to 0\)으로 보내면 꺾쇠 안의 차분 몫은 \(f'(a)\)로, 뒤의 \(h\)는 \(0\)으로 수렴하므로, 곱은 \(f'(a) \cdot 0 = 0\)으로 수렴합니다.`,
+                en: String.raw`As \(h \to 0\), the bracketed difference quotient tends to \(f'(a)\) and the trailing \(h\) tends to \(0\), so the product tends to \(f'(a) \cdot 0 = 0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 \(\lim_{h \to 0} f(a+h) = f(a)\)입니다 — 이것이 \(a\)에서의 연속성의 정의이므로, \(f\)는 \(a\)에서 연속입니다.`,
+                en: String.raw`Hence \(\lim_{h \to 0} f(a+h) = f(a)\) — the definition of continuity at \(a\), so \(f\) is continuous at \(a\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'abs-not-differentiable',
+          statement: {
+            ko: String.raw`\(f(x) = \lvert x\rvert\)가 \(x = 0\)에서 미분가능하지 않음을 증명하세요.`,
+            en: String.raw`Prove \(f(x) = \lvert x\rvert\) is not differentiable at \(x = 0\).`,
+          },
+          display: [
+            String.raw`\frac{|h|}{h} = \begin{cases} 1 & h > 0 \\ -1 & h < 0 \end{cases}`,
+          ],
+          preset: { zoom: 4 },
+          presetCaption: {
+            ko: String.raw`4단계 확대 — 왼쪽 기울기 \(-1\), 오른쪽 \(+1\)이 그대로입니다.`,
+            en: String.raw`Zoom level 4 — left slope \(-1\), right slope \(+1\), unchanged.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`차분 몫은 \(\frac{f(0+h)-f(0)}{h} = \frac{|h|}{h}\)이고, \(h > 0\)일 때 \(1\), \(h < 0\)일 때 \(-1\)입니다.`,
+                en: String.raw`The difference quotient is \(\frac{f(0+h)-f(0)}{h} = \frac{|h|}{h}\), which equals \(1\) for \(h > 0\) and \(-1\) for \(h < 0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 우극한은 \(1\), 좌극한은 \(-1\)로 서로 다르므로, 양쪽 극한 — 즉 도함수 — 은 존재하지 않습니다.`,
+                en: String.raw`So the right-hand limit is \(1\) and the left-hand limit is \(-1\); they differ, hence the two-sided limit — the derivative — does not exist.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`확대해도 모서리가 펴지지 않는 것이 바로 이 때문입니다: 어느 배율에서든 왼쪽 기울기 \(-1\), 오른쪽 기울기 \(+1\)이 그대로 유지됩니다.`,
+                en: String.raw`That is why the corner never flattens under zoom: at every magnification the left slope stays \(-1\) and the right slope stays \(+1\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'weierstrass-exists',
+          statement: {
+            ko: String.raw`모든 점에서 연속이지만 어떤 점에서도 미분가능하지 않은 함수가 존재함을 (정리로) 서술하세요. 증명은 생략하고 아이디어 수준으로 둡니다.`,
+            en: String.raw`State (as a theorem) that a function exists which is continuous everywhere but differentiable nowhere. Idea level; proof omitted.`,
+          },
+          preset: { zoom: 8 },
+          presetCaption: {
+            ko: String.raw`8단계 확대 — \(|x|\)의 모서리 하나가 아니라, 이런 모서리가 모든 점에 있습니다.`,
+            en: String.raw`Zoom level 8 — not one corner of \(|x|\), but such a corner at every point.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`바이어슈트라스 정리: 모든 점에서 연속이지만 어떤 점에서도 미분가능하지 않은 함수가 존재합니다. 고전적인 예는 \(0 < a < 1\), \(ab > 1 + \frac{3\pi}{2}\)인 \(\sum_{n=0}^{\infty} a^n \cos(b^n \pi x)\) 형태의 급수입니다.`,
+                en: String.raw`Weierstrass's theorem: there exists a function continuous at every point yet differentiable at none. A classic example is a series of the form \(\sum_{n=0}^{\infty} a^n \cos(b^n \pi x)\) with \(0 < a < 1\) and \(ab > 1 + \frac{3\pi}{2}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`아이디어: 연속함수들의 균등수렴 극한은 연속이므로 전체 연속성이 확보되지만, 각 점마다 뾰족한 파형이 차분 몫을 무너뜨려 어느 점에서도 도함수가 존재하지 않습니다. 증명은 생략합니다 — 알려진 결과로 받아들입니다.`,
+                en: String.raw`The idea: a uniform limit of continuous functions is continuous, which secures continuity everywhere, but at each point the jagged waves defeat every difference quotient, so no derivative exists anywhere. No proof is given — this is stated as a known result.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'mvt',
       title: { ko: '평균값 정리', en: 'The Secant Meets Its Parallel Tangent' },
-      order: 1,
+      order: 2,
       summary: {
         ko: String.raw`기울기가 \(\frac{f(b)-f(a)}{b-a}\)인 할선과 평행한 접선이 곡선 위에 반드시 존재합니다. \(\xi\)를 움직여보세요.`,
         en: String.raw`Somewhere on the curve, a tangent is parallel to the secant of slope \(\frac{f(b)-f(a)}{b-a}\). Drag \(\xi\) to find it.`,
@@ -128,7 +242,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'taylor',
       title: { ko: '테일러 근사', en: 'Polynomials Hugging the Curve' },
-      order: 2,
+      order: 3,
       summary: {
         ko: String.raw`\(\sin x\) 위에 매클로린 다항식 \(T_n(x)\)을 겹쳐봅니다. 차수를 올리면 곡선에 달라붙습니다.`,
         en: String.raw`Lay the Maclaurin polynomial \(T_n(x)\) over \(\sin x\). Raise the degree and watch it hug the curve.`,
@@ -249,7 +363,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'riemann',
       title: { ko: '리만합 스퀴즈', en: 'Upper and Lower Sums Close In' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`\(f(x) = x^2\) 아래에 직사각형을 채워봅니다. 아래합과 위합이 \(\frac{1}{3}\)을 양쪽에서 조여옵니다.`,
         en: String.raw`Fill rectangles under \(f(x) = x^2\). The lower and upper sums squeeze \(\frac{1}{3}\) from both sides.`,
@@ -361,7 +475,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'ftc',
       title: { ko: '미적분 기본정리', en: "The Area Function's Derivative Is the Function" },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`넓이함수 \(A(x) = \int_a^x f(t)\,dt\)의 기울기를 재보면 \(f(x)\)와 일치합니다. \(x\)를 움직여보세요.`,
         en: String.raw`Measure the slope of the area function \(A(x) = \int_a^x f(t)\,dt\) — it equals \(f(x)\). Drag \(x\).`,
@@ -464,7 +578,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'newton',
       title: { ko: '뉴턴법', en: 'Riding Tangents to the Root' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`접선을 타고 내려가면 근에 닿습니다. 오차의 정확한 자릿수가 매 단계 두 배가 됩니다.`,
         en: String.raw`Ride the tangent down to the root. The number of correct digits doubles each step.`,
@@ -580,7 +694,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'banach',
       title: { ko: '바나흐 고정점', en: 'The Contraction Cobweb' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`\(y = x\)와 \(y = f(x)\) 사이를 오가는 거미줄이 한 점으로 빨려듭니다. 오차는 \(q^n\)으로 줄어듭니다.`,
         en: String.raw`The cobweb between \(y = x\) and \(y = f(x)\) gets sucked into one point. The error shrinks like \(q^n\).`,
@@ -696,7 +810,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'fourier',
       title: { ko: '푸리에 정사각파', en: 'The Ringing That Never Dies' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`정사각파에 사인파를 겹쳐봅니다. 점프점 옆의 울림은 \(N\)을 키워도 사라지지 않습니다.`,
         en: String.raw`Layer sine waves onto a square wave. The ringing beside each jump never dies out, no matter how large \(N\) gets.`,
@@ -808,7 +922,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
