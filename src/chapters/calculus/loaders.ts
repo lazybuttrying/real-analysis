@@ -4,7 +4,9 @@ import type { SceneLoader } from '../../contracts';
 export const loaders: Readonly<Record<string, SceneLoader>> = {
   diffcont: () => import('./scenes/diffCont').then((module) => module.default),
   mvt: () => import('./scenes/mvt').then((module) => module.default),
+  'cauchy-mvt': () => import('./scenes/cauchyMvt').then((module) => module.default),
   taylor: () => import('./scenes/taylor').then((module) => module.default),
+  'taylor-thm': () => import('./scenes/taylorThm').then((module) => module.default),
   riemann: () => import('./scenes/riemann').then((module) => module.default),
   ftc: () => import('./scenes/ftc').then((module) => module.default),
   newton: () => import('./scenes/newton').then((module) => module.default),

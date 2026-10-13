@@ -240,9 +240,133 @@ export const calculus: ChapterMeta = {
       ],
     },
     {
+      id: 'cauchy-mvt',
+      title: { ko: '코시 평균값 정리', en: "Cauchy's Mean Value Theorem" },
+      order: 3,
+      summary: {
+        ko: String.raw`매개곡선 \((g(t), f(t))\) 위에 할선과 평행한 접선이 존재합니다. \(f(t) = t^2\), \(g(t) = t^3\)인 경우 그 점은 \(\xi = 14/9\)입니다.`,
+        en: String.raw`On the parametric curve \((g(t), f(t))\) a tangent parallel to the chord exists. For \(f(t) = t^2\), \(g(t) = t^3\) it sits at \(\xi = 14/9\).`,
+      },
+      tex: [
+        String.raw`\frac{f'(\xi)}{g'(\xi)} = \frac{f(b)-f(a)}{g(b)-g(a)}`,
+        String.raw`\xi = \frac{14}{9} \approx 1.556`,
+      ],
+      prerequisites: ['mvt'],
+      controls: [
+        { kind: 'slider', key: 'xi', label: { ko: 'ξ 위치', en: 'ξ position' }, min: 1, max: 2, step: 0.01, init: 1.56 },
+      ],
+      problems: [
+        {
+          id: 'mvt-is-special-case',
+          statement: {
+            ko: String.raw`보통의 평균값 정리가 \(g(x) = x\)인 경우의 코시 평균값 정리임을 증명하세요.`,
+            en: String.raw`Prove the ordinary Mean Value Theorem is Cauchy's theorem with \(g(x) = x\).`,
+          },
+          display: [
+            String.raw`\frac{f(b)-f(a)}{g(b)-g(a)} = \frac{f'(\xi)}{g'(\xi)} \xrightarrow{g(x)=x} f'(\xi) = \frac{f(b)-f(a)}{b-a}`,
+          ],
+          preset: { xi: 1.56 },
+          presetCaption: {
+            ko: String.raw`\(\xi = 14/9 \approx 1.56\): 접선 비율 \(2/(3\xi) = 3/7\)이 할선 기울기와 일치합니다.`,
+            en: String.raw`\(\xi = 14/9 \approx 1.56\): the tangent ratio \(2/(3\xi) = 3/7\) matches the chord slope.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`코시 평균값 정리: \(f, g\)가 \([a, b]\)에서 연속, \((a, b)\)에서 미분가능하고 \(g' \neq 0\)이면, 어떤 \(\xi \in (a, b)\)에 대해 \(\frac{f(b)-f(a)}{g(b)-g(a)} = \frac{f'(\xi)}{g'(\xi)}\)입니다.`,
+                en: String.raw`Cauchy's theorem: if \(f, g\) are continuous on \([a, b]\), differentiable on \((a, b)\) with \(g' \neq 0\), then some \(\xi \in (a, b)\) satisfies \(\frac{f(b)-f(a)}{g(b)-g(a)} = \frac{f'(\xi)}{g'(\xi)}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(g(x) = x\)를 대입하면 \(g(b) - g(a) = b - a\), \(g'(\xi) = 1\)이므로 식은 \(\frac{f(b)-f(a)}{b-a} = \frac{f'(\xi)}{1} = f'(\xi)\)이 됩니다.`,
+                en: String.raw`Substituting \(g(x) = x\) gives \(g(b) - g(a) = b - a\) and \(g'(\xi) = 1\), so the formula becomes \(\frac{f(b)-f(a)}{b-a} = \frac{f'(\xi)}{1} = f'(\xi)\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`이것이 바로 보통의 평균값 정리입니다 — 코시 형태에서 \(g(x) = x\)를 택한 특수 경우입니다.`,
+                en: String.raw`That is exactly the ordinary Mean Value Theorem — the Cauchy form with the special choice \(g(x) = x\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'sin-x-over-x',
+          statement: {
+            ko: String.raw`코시 평균값 정리로 \(\lim_{x \to 0}\frac{\sin x}{x} = 1\)을 증명하세요.`,
+            en: String.raw`Prove \(\lim_{x \to 0}\frac{\sin x}{x} = 1\) with Cauchy's Mean Value Theorem.`,
+          },
+          display: [
+            String.raw`\frac{\sin x - \sin 0}{x - 0} = \frac{\cos \xi_x}{1}, \quad 0 < \xi_x < x \;\Rightarrow\; \cos \xi_x \to 1`,
+          ],
+          preset: { xi: 1.56 },
+          presetCaption: {
+            ko: String.raw`\(\xi = 14/9 \approx 1.56\) — 비율이 할선 기울기 \(\frac37\)와 일치하는 정리점입니다.`,
+            en: String.raw`\(\xi = 14/9 \approx 1.56\) — the theorem point where the ratio equals the chord slope \(\frac37\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(x > 0\)일 때 \(\frac{\sin x}{x} = \frac{\sin x - \sin 0}{x - 0}\)입니다. \(f(t) = \sin t\), \(g(t) = t\)에 구간 \([0, x]\)에서 코시 평균값 정리를 적용하면 (\(g' = 1 \neq 0\)) 어떤 \(\xi_x \in (0, x)\)에 대해 \(\frac{\sin x - \sin 0}{x - 0} = \frac{\cos \xi_x}{1} = \cos \xi_x\)입니다.`,
+                en: String.raw`For \(x > 0\), \(\frac{\sin x}{x} = \frac{\sin x - \sin 0}{x - 0}\). Applying Cauchy's theorem to \(f(t) = \sin t\), \(g(t) = t\) on \([0, x]\) (with \(g' = 1 \neq 0\)), some \(\xi_x \in (0, x)\) gives \(\frac{\sin x - \sin 0}{x - 0} = \frac{\cos \xi_x}{1} = \cos \xi_x\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(0 < \xi_x < x\)이므로 \(x \to 0^+\)일 때 조임으로 \(\xi_x \to 0\)입니다. \(\cos\)는 연속이므로 (미분가능 ⇒ 연속) \(\cos \xi_x \to \cos 0 = 1\)입니다.`,
+                en: String.raw`Since \(0 < \xi_x < x\), squeezing gives \(\xi_x \to 0\) as \(x \to 0^+\). Cosine is continuous (differentiable implies continuous), so \(\cos \xi_x \to \cos 0 = 1\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(x < 0\)일 때는 \([x, 0]\) 구간에 같은 정리를 적용하면 \(\xi_x \in (x, 0)\)을 얻고 마찬가지로 \(\cos \xi_x \to 1\)입니다. 따라서 \(\lim_{x \to 0}\frac{\sin x}{x} = 1\)입니다.`,
+                en: String.raw`For \(x < 0\), the same theorem on \([x, 0]\) yields \(\xi_x \in (x, 0)\) and likewise \(\cos \xi_x \to 1\). Hence \(\lim_{x \to 0}\frac{\sin x}{x} = 1\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'exp-squared-limit',
+          statement: {
+            ko: String.raw`\(\lim_{x \to 0}\frac{e^x - 1 - x}{x^2} = \frac12\)를 코시 평균값 정리를 두 번 써서 증명하세요. (\(0/0\) 가정을 명시하세요.)`,
+            en: String.raw`Prove \(\lim_{x \to 0}\frac{e^x - 1 - x}{x^2} = \frac12\) by applying Cauchy's theorem twice. (State the \(0/0\) hypotheses.)`,
+          },
+          display: [
+            String.raw`\frac{e^x-1-x}{x^2} = \frac{e^{\xi}-1}{2\xi} = \frac{e^{\xi_2}}{2} \xrightarrow{x \to 0^+} \frac12`,
+          ],
+          preset: { xi: 1.56 },
+          presetCaption: {
+            ko: String.raw`\(\xi = 14/9 \approx 1.56\) — 정리점이 하나뿐인 이유를 보세요: 비율 \(2/(3t)\)가 단조감소하기 때문입니다.`,
+            en: String.raw`\(\xi = 14/9 \approx 1.56\) — note there is only one theorem point, because the ratio \(2/(3t)\) is strictly decreasing.`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(f(x) = e^x - 1 - x\), \(g(x) = x^2\)라 두면 \(f(0) = g(0) = 0\)이고, \([0, x]\)(\(x > 0\))에서 연속, \((0, x)\)에서 미분가능하며 \(g'(t) = 2t \neq 0\)입니다.`,
+                en: String.raw`Put \(f(x) = e^x - 1 - x\) and \(g(x) = x^2\): then \(f(0) = g(0) = 0\), both are continuous on \([0, x]\) (for \(x > 0\)), differentiable on \((0, x)\), and \(g'(t) = 2t \neq 0\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`코시 평균값 정리에 의해 어떤 \(\xi \in (0, x)\)에 대해 \(\frac{f(x)}{g(x)} = \frac{f'(\xi)}{g'(\xi)} = \frac{e^{\xi}-1}{2\xi}\)입니다. 다시 \(f_1(t) = e^t - 1\), \(g_1(t) = 2t\)에 \([0, \xi]\)에서 적용하면 (\(f_1(0) = g_1(0) = 0\), \(g_1' = 2 \neq 0\)) 어떤 \(\xi_2 \in (0, \xi)\)에 대해 \(\frac{e^{\xi}-1}{2\xi} = \frac{e^{\xi_2}}{2}\)를 얻습니다.`,
+                en: String.raw`Cauchy's theorem gives \(\frac{f(x)}{g(x)} = \frac{f'(\xi)}{g'(\xi)} = \frac{e^{\xi}-1}{2\xi}\) for some \(\xi \in (0, x)\). Applying it again to \(f_1(t) = e^t - 1\), \(g_1(t) = 2t\) on \([0, \xi]\) (with \(f_1(0) = g_1(0) = 0\) and \(g_1' = 2 \neq 0\)) yields \(\frac{e^{\xi}-1}{2\xi} = \frac{e^{\xi_2}}{2}\) for some \(\xi_2 \in (0, \xi)\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(0 < \xi_2 < \xi < x\)이므로 \(x \to 0^+\)일 때 \(\xi_2 \to 0\)이고, \(e^t\)의 연속성에 의해 \(e^{\xi_2} \to 1\)입니다. 따라서 비율은 \(\frac12\)로 수렴합니다. \(x < 0\)도 \([x, 0]\)에서 같은 논리로 성립하므로 \(\lim_{x \to 0}\frac{e^x-1-x}{x^2} = \frac12\)입니다.`,
+                en: String.raw`Since \(0 < \xi_2 < \xi < x\), \(x \to 0^+\) forces \(\xi_2 \to 0\), and continuity of \(e^t\) gives \(e^{\xi_2} \to 1\). So the ratio tends to \(\frac12\). The same argument on \([x, 0]\) covers \(x < 0\), hence \(\lim_{x \to 0}\frac{e^x-1-x}{x^2} = \frac12\).`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'taylor',
       title: { ko: '테일러 근사', en: 'Polynomials Hugging the Curve' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`\(\sin x\) 위에 매클로린 다항식 \(T_n(x)\)을 겹쳐봅니다. 차수를 올리면 곡선에 달라붙습니다.`,
         en: String.raw`Lay the Maclaurin polynomial \(T_n(x)\) over \(\sin x\). Raise the degree and watch it hug the curve.`,
@@ -361,9 +485,128 @@ export const calculus: ChapterMeta = {
       ],
     },
     {
+      id: 'taylor-thm',
+      title: { ko: '테일러 정리: 나머지 상한', en: "Taylor's Theorem: The Remainder Envelope" },
+      order: 5,
+      summary: {
+        ko: String.raw`오차 \(R_n(x)\)는 띠 \(T_n(x) \pm |x|^{n+1}/(n+1)!\) 안에 갇힙니다. \(n\)을 키우면 띠가 0으로 쪼그라듭니다.`,
+        en: String.raw`The error \(R_n(x)\) is trapped in the band \(T_n(x) \pm |x|^{n+1}/(n+1)!\). Raise \(n\) and the band shrinks to zero.`,
+      },
+      tex: [String.raw`f(x) = T_n(x) + R_n(x), \quad |R_n(x)| \le \frac{|x|^{n+1}}{(n+1)!}`],
+      prerequisites: ['taylor'],
+      controls: [
+        { kind: 'slider', key: 'degree', label: { ko: '차수 n', en: 'Degree n' }, min: 0, max: 9, step: 1, init: 5 },
+      ],
+      problems: [
+        {
+          id: 'exp-remainder-bound',
+          statement: {
+            ko: String.raw`\(e^x\)의 3차 테일러 다항식으로 \(e\)를 근사하고, 라그랑주 나머지 상한 \(\frac{e}{24} \approx 0.1133\)이 실제 오차를 덮는지 확인하세요.`,
+            en: String.raw`Approximate \(e\) with the degree-3 Taylor polynomial of \(e^x\), and check the Lagrange bound \(\frac{e}{24} \approx 0.1133\) covers the true error.`,
+          },
+          display: [
+            String.raw`T_3(1) = \frac{8}{3} \approx 2.6667, \quad |R_3(1)| \le \frac{e}{24} \approx 0.1133, \quad e - \frac{8}{3} \approx 0.0516`,
+          ],
+          preset: { degree: 3 },
+          presetCaption: {
+            ko: String.raw`\(n = 3\): \(\sin\)의 \(T_3\) 위에서, 같은 나머지 논리가 \(e^x\)에 \(\frac{e}{24} \approx 0.1133\) 상한을 줍니다.`,
+            en: String.raw`\(n = 3\): over the \(T_3\) of \(\sin\), the same remainder argument gives \(e^x\) the bound \(\frac{e}{24} \approx 0.1133\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(e^x\)의 모든 도함수는 \(e^x\)이므로 \(f^{(k)}(0) = 1\)입니다. 따라서 \(T_3(x) = 1 + x + \frac{x^2}{2} + \frac{x^3}{6}\)이고, \(T_3(1) = 1 + 1 + \frac12 + \frac16 = \frac83 \approx 2.6667\)입니다.`,
+                en: String.raw`Every derivative of \(e^x\) is \(e^x\), so \(f^{(k)}(0) = 1\). Hence \(T_3(x) = 1 + x + \frac{x^2}{2} + \frac{x^3}{6}\) and \(T_3(1) = 1 + 1 + \frac12 + \frac16 = \frac83 \approx 2.6667\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`테일러 정리(라그랑주 나머지)에 의해 어떤 \(c \in (0, 1)\)에 대해 \(R_3(1) = \frac{e^c}{4!} \cdot 1^4\)입니다. \(e^c \le e\)이므로 \(|R_3(1)| \le \frac{e}{24} \approx 0.1133\)입니다.`,
+                en: String.raw`By Taylor's theorem (Lagrange remainder), \(R_3(1) = \frac{e^c}{4!} \cdot 1^4\) for some \(c \in (0, 1)\). Since \(e^c \le e\), \(|R_3(1)| \le \frac{e}{24} \approx 0.1133\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`실제 오차는 \(e - \frac83 \approx 0.0516 < 0.1133\)으로 상한 안에 들어갑니다 — 나머지의 상한은 안전한 과대평가입니다.`,
+                en: String.raw`The true error is \(e - \frac83 \approx 0.0516 < 0.1133\), inside the bound — a remainder bound is a safe overestimate.`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'sin-converges-everywhere',
+          statement: {
+            ko: String.raw`\(\sin x\)의 나머지 상한 \(\frac{|x|^{n+1}}{(n+1)!} \to 0\)임을 이용해 매클로린 급수가 모든 \(x\)에서 \(\sin x\)로 수렴함을 증명하세요.`,
+            en: String.raw`Use the remainder bound \(\frac{|x|^{n+1}}{(n+1)!} \to 0\) to prove the Maclaurin series of \(\sin x\) converges to \(\sin x\) for every \(x\).`,
+          },
+          display: [
+            String.raw`|R_n(x)| \le \frac{|x|^{n+1}}{(n+1)!} \xrightarrow{n \to \infty} 0 \quad \text{for every fixed } x`,
+          ],
+          preset: { degree: 9 },
+          presetCaption: {
+            ko: String.raw`\(n = 9\): \([-\pi, \pi]\)에서 띠의 반폭이 \(\pi^{10}/10! \approx 0.0258\)까지 좁혀집니다.`,
+            en: String.raw`\(n = 9\): on \([-\pi, \pi]\) the envelope's half-width narrows to \(\pi^{10}/10! \approx 0.0258\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(\sin\)의 모든 도함수는 \(\pm\sin\) 또는 \(\pm\cos\)이므로 \(|f^{(n+1)}(c)| \le 1\)입니다. 라그랑주 나머지는 \(R_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!}x^{n+1}\)이므로 \(|R_n(x)| \le \frac{|x|^{n+1}}{(n+1)!}\)입니다.`,
+                en: String.raw`Every derivative of \(\sin\) is \(\pm\sin\) or \(\pm\cos\), so \(|f^{(n+1)}(c)| \le 1\). The Lagrange remainder is \(R_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!}x^{n+1}\), hence \(|R_n(x)| \le \frac{|x|^{n+1}}{(n+1)!}\).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`고정된 \(x\)에 대해 분자는 거듭제곱, 분모는 팩토리얼이므로 \(n \to \infty\)일 때 \(\frac{|x|^{n+1}}{(n+1)!} \to 0\)입니다 — 팩토리얼이 거듭제곱을 이깁니다.`,
+                en: String.raw`For fixed \(x\) the numerator is a power and the denominator a factorial, so \(\frac{|x|^{n+1}}{(n+1)!} \to 0\) as \(n \to \infty\) — the factorial beats the power.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`따라서 \(|T_n(x) - \sin x| \to 0\), 즉 매클로린 급수가 모든 \(x\)에서 \(\sin x\)로 수렴합니다.`,
+                en: String.raw`Hence \(|T_n(x) - \sin x| \to 0\): the Maclaurin series converges to \(\sin x\) for every \(x\).`,
+              },
+            },
+          ],
+        },
+        {
+          id: 'taylor-uniqueness',
+          statement: {
+            ko: String.raw`\(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\)가 항별 미분 가능하면 \(c_k = \frac{f^{(k)}(a)}{k!}\)임을 증명하세요 (테일러 계수의 유일성).`,
+            en: String.raw`If \(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\) can be differentiated termwise, prove \(c_k = \frac{f^{(k)}(a)}{k!}\) (uniqueness of Taylor coefficients).`,
+          },
+          display: [String.raw`f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k \;\Rightarrow\; c_j = \frac{f^{(j)}(a)}{j!}`],
+          preset: { degree: 5 },
+          presetCaption: {
+            ko: String.raw`\(n = 5\): \(T_5(x) = x - x^3/6 + x^5/120\)의 계수가 \(\frac{f^{(k)}(0)}{k!}\)와 일치합니다.`,
+            en: String.raw`\(n = 5\): the coefficients of \(T_5(x) = x - x^3/6 + x^5/120\) match \(\frac{f^{(k)}(0)}{k!}\).`,
+          },
+          proof: [
+            {
+              text: {
+                ko: String.raw`\(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\)가 \(a\) 근처에서 수렴하고 항별 미분이 가능하다고 가정합니다.`,
+                en: String.raw`Assume \(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\) converges near \(a\) and can be differentiated term by term.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(j\)번 미분하면 \(f^{(j)}(x) = \sum_{k=j}^{\infty} k(k-1)\cdots(k-j+1)\,c_k\,(x-a)^{k-j}\)입니다 (\(k < j\)인 항은 미분 과정에서 사라집니다).`,
+                en: String.raw`Differentiating \(j\) times gives \(f^{(j)}(x) = \sum_{k=j}^{\infty} k(k-1)\cdots(k-j+1)\,c_k\,(x-a)^{k-j}\) (terms with \(k < j\) vanish in the differentiation).`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`\(x = a\)를 대입하면 \(k > j\)인 항은 \((x-a)^{k-j}\) 때문에 모두 0이 되고, \(k = j\) 항만 남아 \(f^{(j)}(a) = j!\,c_j\), 즉 \(c_j = \frac{f^{(j)}(a)}{j!}\)입니다 — 테일러 계수는 유일합니다.`,
+                en: String.raw`Setting \(x = a\) kills every term with \(k > j\) via \((x-a)^{k-j}\); only \(k = j\) survives, giving \(f^{(j)}(a) = j!\,c_j\), i.e. \(c_j = \frac{f^{(j)}(a)}{j!}\) — the Taylor coefficients are unique.`,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: 'riemann',
       title: { ko: '리만합 스퀴즈', en: 'Upper and Lower Sums Close In' },
-      order: 4,
+      order: 6,
       summary: {
         ko: String.raw`\(f(x) = x^2\) 아래에 직사각형을 채워봅니다. 아래합과 위합이 \(\frac{1}{3}\)을 양쪽에서 조여옵니다.`,
         en: String.raw`Fill rectangles under \(f(x) = x^2\). The lower and upper sums squeeze \(\frac{1}{3}\) from both sides.`,
@@ -475,7 +718,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'ftc',
       title: { ko: '미적분 기본정리', en: "The Area Function's Derivative Is the Function" },
-      order: 5,
+      order: 7,
       summary: {
         ko: String.raw`넓이함수 \(A(x) = \int_a^x f(t)\,dt\)의 기울기를 재보면 \(f(x)\)와 일치합니다. \(x\)를 움직여보세요.`,
         en: String.raw`Measure the slope of the area function \(A(x) = \int_a^x f(t)\,dt\) — it equals \(f(x)\). Drag \(x\).`,
@@ -578,7 +821,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'newton',
       title: { ko: '뉴턴법', en: 'Riding Tangents to the Root' },
-      order: 6,
+      order: 8,
       summary: {
         ko: String.raw`접선을 타고 내려가면 근에 닿습니다. 오차의 정확한 자릿수가 매 단계 두 배가 됩니다.`,
         en: String.raw`Ride the tangent down to the root. The number of correct digits doubles each step.`,
@@ -694,7 +937,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'banach',
       title: { ko: '바나흐 고정점', en: 'The Contraction Cobweb' },
-      order: 7,
+      order: 9,
       summary: {
         ko: String.raw`\(y = x\)와 \(y = f(x)\) 사이를 오가는 거미줄이 한 점으로 빨려듭니다. 오차는 \(q^n\)으로 줄어듭니다.`,
         en: String.raw`The cobweb between \(y = x\) and \(y = f(x)\) gets sucked into one point. The error shrinks like \(q^n\).`,
@@ -810,7 +1053,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'fourier',
       title: { ko: '푸리에 정사각파', en: 'The Ringing That Never Dies' },
-      order: 8,
+      order: 10,
       summary: {
         ko: String.raw`정사각파에 사인파를 겹쳐봅니다. 점프점 옆의 울림은 \(N\)을 키워도 사라지지 않습니다.`,
         en: String.raw`Layer sine waves onto a square wave. The ringing beside each jump never dies out, no matter how large \(N\) gets.`,
@@ -922,7 +1165,7 @@ export const calculus: ChapterMeta = {
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 9,
+      order: 11,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
