@@ -344,3 +344,222 @@ describe('problems: every number stated in the 18 proofs', () => {
     expect(Math.abs(Math.sin(35489))).toBeLessThanOrEqual(1);
   });
 });
+
+describe('series problems', () => {
+  it('harmonic/oresme: S_{2^10} is above the Oresme bound 1 + 10/2', () => {
+    const data = harmonicPartialSums(1024);
+    expect(data.final.sum).toBeGreaterThanOrEqual(6);
+    expect(data.final.sum).toBeCloseTo(7.5092, 3);
+  });
+
+  it('harmonic/p-series: the integral comparison bound holds for p = 2', () => {
+    let s = 0;
+    for (let k = 1; k <= 1000; k++) s += 1 / (k * k);
+    expect(s).toBeLessThanOrEqual(1 + 1 / (2 - 1));
+    expect(s).toBeCloseTo(1.6439, 3);
+  });
+
+  it('basel/tail-bound: R_20 < 1/20', () => {
+    const data = baselPartialSums(20);
+    const tail = data.limit - data.sum;
+    expect(tail).toBeGreaterThan(0);
+    expect(tail).toBeLessThan(1 / 20);
+    expect(tail).toBeCloseTo(0.0488, 3);
+  });
+
+  it('basel/even-terms and odd-terms: the pi^2/24 and pi^2/8 identities', () => {
+    let even = 0;
+    for (let n = 1; n <= 2000; n++) even += 1 / (2 * n) ** 2;
+    expect(even).toBeCloseTo((Math.PI * Math.PI) / 24, 3);
+    let odd = 0;
+    for (let k = 0; k < 2000; k++) odd += 1 / (2 * k + 1) ** 2;
+    expect(odd).toBeCloseTo((Math.PI * Math.PI) / 8, 3);
+  });
+
+  it('leibniz/remainder: |S_12 - pi/4| <= 1/25', () => {
+    const data = leibnizPartialSums(12);
+    expect(Math.abs(data.sum - Math.PI / 4)).toBeLessThanOrEqual(1 / 25);
+  });
+
+  it('leibniz/three-decimals: the N >= 1000 threshold arithmetic', () => {
+    expect(1 / 2001).toBeLessThan(0.0005);
+    expect(1 / 1999).toBeGreaterThan(0.0005);
+  });
+
+  it('leibniz/arctan: the power series at x = 1 approaches pi/4', () => {
+    let s = 0;
+    for (let k = 0; k < 2000; k++) s += (k % 2 === 0 ? 1 : -1) / (2 * k + 1);
+    expect(s).toBeCloseTo(Math.PI / 4, 3);
+  });
+
+  it('eseries/irrational: 2 < e < 3 from the series bounds', () => {
+    const data = eSeriesRace(30);
+    expect(data.seriesValue).toBeGreaterThan(2);
+    expect(data.seriesValue).toBeLessThan(3);
+  });
+
+  it('eseries/remainder: R_10 < 1/(10 * 10!)', () => {
+    const data = eSeriesRace(10);
+    const remainder = Math.E - data.seriesValue;
+    expect(remainder).toBeGreaterThan(0);
+    expect(remainder).toBeLessThan(1 / (10 * 3628800));
+    expect(remainder).toBeGreaterThan(2.7e-8);
+    expect(remainder).toBeCloseTo(2.7312661e-8, 13);
+  });
+
+  it('eseries/compound: (1 + 1/30)^30 < series partial sum < e', () => {
+    const data = eSeriesRace(30);
+    expect(data.compoundValue).toBeLessThan(data.seriesValue);
+    expect(Math.abs(data.seriesValue - Math.E)).toBeLessThan(1e-12);
+    expect(data.compoundValue).toBeLessThan(Math.E);
+  });
+
+  it('telescoping/partial-sums: S_24 = 24/25', () => {
+    const data = telescopingPairs(24);
+    expect(data.sum).toBeCloseTo(24 / 25, 12);
+    expect(data.tail).toBeCloseTo(1 / 25, 12);
+  });
+
+  it('telescoping/shifted: the partial sums tend to 3/4', () => {
+    let s = 0;
+    for (let n = 1; n <= 5000; n++) s += 1 / (n * (n + 2));
+    expect(s).toBeCloseTo(0.75, 3);
+  });
+
+  it('telescoping/sqrt-diverges: partial sums equal sqrt(N+1) - 1', () => {
+    for (const N of [10, 100, 1000]) {
+      let s = 0;
+      for (let n = 1; n <= N; n++) s += Math.sqrt(n + 1) - Math.sqrt(n);
+      expect(s).toBeCloseTo(Math.sqrt(N + 1) - 1, 6);
+    }
+  });
+
+  it('geometric/finite-formula: (1 - r^{N+1})/(1 - r) matches direct summation', () => {
+    const r = 0.5;
+    const N = 12;
+    let direct = 0;
+    for (let k = 0; k <= N; k++) direct += r ** k;
+    expect(direct).toBeCloseTo((1 - r ** (N + 1)) / (1 - r), 12);
+  });
+
+  it('geometric/nine-nines: 9 * (1/10)/(1 - 1/10) = 1', () => {
+    expect(9 * ((1 / 10) / (1 - 1 / 10))).toBeCloseTo(1, 12);
+  });
+
+  it('geometric/n-over-2n: the partial sums tend to 2', () => {
+    let s = 0;
+    for (let n = 1; n <= 200; n++) s += n / 2 ** n;
+    expect(s).toBeCloseTo(2, 6);
+  });
+
+  it('wallis/reduction: the recurrence gives I_2 = pi/4 and I_4 = 3pi/16', () => {
+    const I: number[] = [Math.PI / 2, 1];
+    const at = (n: number): number => {
+      const v = I[n];
+      if (v === undefined) throw new Error('missing I_n');
+      return v;
+    };
+    for (let n = 2; n <= 13; n++) I[n] = ((n - 1) / n) * at(n - 2);
+    expect(at(2)).toBeCloseTo(Math.PI / 4, 12);
+    expect(at(4)).toBeCloseTo((3 * Math.PI) / 16, 12);
+    // The recurrence reproduces direct numeric integration of sin^6.
+    let numeric = 0;
+    const steps = 200000;
+    const h = Math.PI / 2 / steps;
+    for (let i = 0; i < steps; i++) numeric += Math.sin((i + 0.5) * h) ** 6 * h;
+    expect(at(6)).toBeCloseTo(numeric, 4);
+  });
+
+  it('wallis/to-wallis: (pi/2)/W_n equals I_{2n}/I_{2n+1} and tends to 1', () => {
+    const I: number[] = [Math.PI / 2, 1];
+    const at = (n: number): number => {
+      const v = I[n];
+      if (v === undefined) throw new Error('missing I_n');
+      return v;
+    };
+    for (let n = 2; n <= 13; n++) I[n] = ((n - 1) / n) * at(n - 2);
+    for (const n of [1, 3, 6]) {
+      const W = wallisProduct(n).product;
+      expect(Math.PI / 2 / W).toBeCloseTo(at(2 * n) / at(2 * n + 1), 12);
+    }
+    expect(at(12) / at(13)).toBeCloseTo(1, 1);
+    expect(wallisProduct(12).product).toBeCloseTo(Math.PI / 2, 1);
+  });
+
+  it('wallis/numerics: P_5 is exactly 65536/43659', () => {
+    let num = 1n;
+    let den = 1n;
+    for (let k = 1; k <= 5; k++) {
+      const n = BigInt(k);
+      num *= 2n * n * (2n * n);
+      den *= (2n * n - 1n) * (2n * n + 1n);
+    }
+    expect(num * 43659n).toBe(65536n * den);
+    expect(Number(num) / Number(den)).toBeCloseTo(1.50109, 4);
+  });
+
+  it('stirling/check-10: relative error near 1/120', () => {
+    const data = stirlingTable(10);
+    expect(data.fact).toBeCloseTo(3628800, 6);
+    expect(data.relErr).toBeCloseTo(0.008296, 5);
+    expect(Math.abs(data.relErr - 1 / 120)).toBeLessThan(0.0001);
+  });
+
+  it('stirling/central-binomial: C(2n,n) is close to 4^n/sqrt(pi n)', () => {
+    const choose = (n: number, k: number): number => {
+      let c = 1;
+      for (let i = 0; i < k; i++) c = (c * (n - i)) / (i + 1);
+      return c;
+    };
+    for (const n of [10, 20, 50]) {
+      const exact = choose(2 * n, n);
+      const approx = 4 ** n / Math.sqrt(Math.PI * n);
+      expect(Math.abs(exact - approx) / exact).toBeLessThan(0.05);
+    }
+  });
+
+  it('grandi/diverges: partial sums alternate 1, 0', () => {
+    const data = grandiSums(16);
+    data.sums.forEach((s, i) => {
+      expect(s).toBe((i + 1) % 2 === 1 ? 1 : 0);
+    });
+  });
+
+  it('grandi/cesaro: sigma_16 is exactly 1/2', () => {
+    const data = grandiSums(16);
+    expect(data.cesaroMean).toBe(0.5);
+  });
+
+  it('zeta4/odd-terms: the odd fourth powers sum to pi^4/96', () => {
+    let odd = 0;
+    for (let k = 0; k < 2000; k++) odd += 1 / (2 * k + 1) ** 4;
+    expect(odd).toBeCloseTo(Math.PI ** 4 / 96, 3);
+  });
+
+  it('zeta4/tail-bound: R_8 < 1/1536', () => {
+    const data = zeta4PartialSums(8);
+    const tail = data.limit - data.sum;
+    expect(tail).toBeGreaterThan(0);
+    expect(tail).toBeLessThan(1 / 1536);
+    expect(tail).toBeCloseTo(0.000539, 5);
+  });
+
+  it('zeta4/even-pattern: the Bernoulli formula gives the three values', () => {
+    const factorial = (m: number): number => {
+      let f = 1;
+      for (let i = 2; i <= m; i++) f *= i;
+      return f;
+    };
+    const bernoulli: Record<number, number> = { 2: 1 / 6, 4: -1 / 30, 6: 1 / 42 };
+    const expected: Record<number, number> = { 2: Math.PI ** 2 / 6, 4: Math.PI ** 4 / 90, 6: Math.PI ** 6 / 945 };
+    for (const p of [2, 4, 6]) {
+      const n = p / 2;
+      const b = bernoulli[p];
+      const e = expected[p];
+      if (b === undefined || e === undefined) throw new Error('test table incomplete');
+      const value = (((-1) ** (n + 1) * b * (2 * Math.PI) ** p) / (2 * factorial(2 * n)));
+      expect(value).toBeCloseTo(e, 9);
+      expect(zetaEven(p).value).toBeCloseTo(e, 12);
+    }
+  });
+});
