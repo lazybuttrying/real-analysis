@@ -1,9 +1,23 @@
 import './style.css';
 import { catalog } from './catalog';
-import { localize } from './contracts';
+import { localize, stripInlineMath } from './contracts';
 import { chapterUrl, fallbackLang, homeUrl, parsePath } from './paths';
 import { h } from './shell/dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './shell/i18n';
+
+/**
+ * A span holding a summary: the delimiter-stripped text shows immediately, and
+ * once the tex module arrives the \(...\) spans are replaced by inline KaTeX.
+ */
+function summarySpan(text: string): HTMLSpanElement {
+  const span = h('span', {}, stripInlineMath(text));
+  if (text.includes('\\(')) {
+    import('./shell/tex')
+      .then((module) => module.renderRichText(span, text))
+      .catch((error: unknown) => console.error(error));
+  }
+  return span;
+}
 
 const BASE = import.meta.env.BASE_URL;
 const root = document.getElementById('app');
@@ -39,7 +53,8 @@ if (parsed.lang === undefined) {
             'li',
             {},
             h('a', { href: chapterUrl(BASE, lang, chapter.id) }, localize(chapter.title, lang)),
-            ` — ${localize(chapter.summary, lang)}`,
+            ' — ',
+            summarySpan(localize(chapter.summary, lang)),
           ),
         ),
       ),

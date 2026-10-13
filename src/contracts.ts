@@ -23,6 +23,40 @@ export function localize(text: LocalizedText, lang: Lang): string {
   return text[lang];
 }
 
+/**
+ * A piece of a rich-text string (summaries): either plain prose, or TeX source
+ * that appeared between \( and \) delimiters.
+ */
+export type RichTextSegment = { kind: 'text'; text: string } | { kind: 'math'; tex: string };
+
+const INLINE_MATH_PATTERN = /\\\(([\s\S]*?)\\\)/g;
+
+/**
+ * Splits a summary into plain-text and inline-math segments. Text without
+ * delimiters yields a single text segment; an unmatched \( stays plain text.
+ */
+export function splitInlineMath(text: string): RichTextSegment[] {
+  const segments: RichTextSegment[] = [];
+  let last = 0;
+  for (const match of text.matchAll(INLINE_MATH_PATTERN)) {
+    if (match.index > last) segments.push({ kind: 'text', text: text.slice(last, match.index) });
+    segments.push({ kind: 'math', tex: match[1] ?? '' });
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) segments.push({ kind: 'text', text: text.slice(last) });
+  return segments;
+}
+
+/**
+ * Plain-text form of a summary for places that cannot render math (meta
+ * descriptions): the \( \) delimiters are removed, the TeX source stays.
+ */
+export function stripInlineMath(text: string): string {
+  return splitInlineMath(text)
+    .map((segment) => (segment.kind === 'math' ? segment.tex : segment.text))
+    .join('');
+}
+
 export type ControlSpec =
   | { kind: 'slider'; key: string; label: LocalizedText; min: number; max: number; step: number; init: number }
   | { kind: 'toggle'; key: string; label: LocalizedText; init: boolean }
@@ -69,7 +103,11 @@ export interface SceneMeta {
   id: string;
   title: LocalizedText;
   order: number;
-  /** Used in the meta description and the first paragraph of the body. */
+  /**
+   * Used in the meta description and the first paragraph of the body.
+   * May embed inline TeX between \( and \); renderers turn those spans into
+   * KaTeX, and plain-text contexts strip the delimiters (see stripInlineMath).
+   */
   summary: LocalizedText;
   /** Key formulas (TeX) to prerender. */
   tex?: readonly string[];
@@ -82,6 +120,7 @@ export interface ChapterMeta {
   /** URL path and folder name. Lowercase letters, digits, and hyphens. */
   id: string;
   title: LocalizedText;
+  /** Same inline-TeX convention as SceneMeta.summary. */
   summary: LocalizedText;
   scenes: readonly SceneMeta[];
 }

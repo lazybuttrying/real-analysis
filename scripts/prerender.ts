@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
-import { LANGS, localize, type Lang } from '../src/contracts.ts';
+import { LANGS, localize, splitInlineMath, stripInlineMath, type Lang } from '../src/contracts.ts';
 import { chapterUrl, homeUrl, sceneUrl } from '../src/paths.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -14,6 +14,8 @@ import { STRINGS } from '../src/shell/i18n.ts';
  * dist/<lang>/... by reusing the built entry HTML (so the pages reference the
  * same hashed scripts/styles and still boot the SPA, which then takes over
  * #app), and adds sitemap.xml, 404.html, and robots.txt.
+ * Summaries in the static body are rendered with inline KaTeX for their
+ * \(...\) spans; meta descriptions carry the delimiter-stripped plain text.
  *
  * Self-checks fail the build when a scene lacks a title or summary in either
  * language, or when two pages would share a <title> within one language.
@@ -32,6 +34,21 @@ const BASE = normalizeBase(process.env.SITE_BASE ?? '/real-analysis/');
 
 const escapeHtml = (text: string): string =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/**
+ * Static body form of a summary: text segments are HTML-escaped, and each
+ * \(...\) span is rendered with KaTeX (inline mode), mirroring the client's
+ * renderRichText. Meta descriptions use stripInlineMath instead.
+ */
+const renderSummaryHtml = (text: string): string =>
+  splitInlineMath(text)
+    .map((segment) =>
+      segment.kind === 'math' ? katex.renderToString(segment.tex, { displayMode: false, throwOnError: false }) : escapeHtml(segment.text),
+    )
+    .join('');
+
+/** True when any language's form of the text embeds inline math (the page then needs the KaTeX stylesheet). */
+const hasInlineMath = (text: { ko: string; en: string }): boolean => LANGS.some((lang) => localize(text, lang).includes('\\('));
 
 interface Page {
   /** Path segments below dist/, e.g. ['en', 'series', 'grandi'] */
@@ -53,6 +70,7 @@ const pages: Page[] = [
     title: () => SITE_NAME,
     description: (lang) => localize(STRINGS.homeIntro, lang),
     template: 'home',
+    formulas: catalog.some((chapter) => hasInlineMath(chapter.summary)),
     body: (lang) =>
       [
         `<h1>${SITE_NAME}</h1>`,
@@ -60,7 +78,7 @@ const pages: Page[] = [
         '<ul>',
         ...catalog.map(
           (chapter) =>
-            `<li><a href="${chapterUrl(BASE, lang, chapter.id)}">${escapeHtml(localize(chapter.title, lang))}</a> — ${escapeHtml(localize(chapter.summary, lang))}</li>`,
+            `<li><a href="${chapterUrl(BASE, lang, chapter.id)}">${escapeHtml(localize(chapter.title, lang))}</a> — ${renderSummaryHtml(localize(chapter.summary, lang))}</li>`,
         ),
         '</ul>',
       ].join('\n'),
@@ -72,18 +90,19 @@ for (const chapter of catalog) {
     segments: (lang) => [lang, chapter.id],
     url: (lang) => chapterUrl(BASE, lang, chapter.id),
     title: (lang) => `${localize(chapter.title, lang)} | ${SITE_NAME}`,
-    description: (lang) => localize(chapter.summary, lang),
+    description: (lang) => stripInlineMath(localize(chapter.summary, lang)),
     template: chapter.id,
+    formulas: hasInlineMath(chapter.summary) || chapter.scenes.some((scene) => hasInlineMath(scene.summary)),
     body: (lang) =>
       [
         `<h1>${escapeHtml(localize(chapter.title, lang))}</h1>`,
-        `<p>${escapeHtml(localize(chapter.summary, lang))}</p>`,
+        `<p>${renderSummaryHtml(localize(chapter.summary, lang))}</p>`,
         '<ul>',
         ...[...chapter.scenes]
           .sort((a, b) => a.order - b.order)
           .map(
             (scene) =>
-              `<li><a href="${sceneUrl(BASE, lang, chapter.id, scene.id)}">${escapeHtml(localize(scene.title, lang))}</a> — ${escapeHtml(localize(scene.summary, lang))}</li>`,
+              `<li><a href="${sceneUrl(BASE, lang, chapter.id, scene.id)}">${escapeHtml(localize(scene.title, lang))}</a> — ${renderSummaryHtml(localize(scene.summary, lang))}</li>`,
           ),
         '</ul>',
       ].join('\n'),
@@ -94,13 +113,13 @@ for (const chapter of catalog) {
       segments: (lang) => [lang, chapter.id, scene.id],
       url: (lang) => sceneUrl(BASE, lang, chapter.id, scene.id),
       title: (lang) => `${localize(scene.title, lang)} | ${SITE_NAME}`,
-      description: (lang) => localize(scene.summary, lang),
+      description: (lang) => stripInlineMath(localize(scene.summary, lang)),
       template: chapter.id,
-      formulas: (scene.tex?.length ?? 0) > 0,
+      formulas: (scene.tex?.length ?? 0) > 0 || hasInlineMath(scene.summary),
       body: (lang) =>
         [
           `<h1>${escapeHtml(localize(scene.title, lang))}</h1>`,
-          `<p>${escapeHtml(localize(scene.summary, lang))}</p>`,
+          `<p>${renderSummaryHtml(localize(scene.summary, lang))}</p>`,
           ...(scene.tex ?? []).map(
             (formula) => `<div class="tex-block">${katex.renderToString(formula, { displayMode: true, throwOnError: false })}</div>`,
           ),

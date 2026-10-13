@@ -1,6 +1,6 @@
 import '../style.css';
 import { catalog } from '../catalog';
-import { localize, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
+import { localize, stripInlineMath, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { chapterUrl, fallbackLang, homeUrl, parsePath, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
@@ -38,8 +38,22 @@ function sceneLink(lang: Lang, chapter: ChapterMeta, scene: SceneMeta): HTMLAnch
   return h('a', { href: sceneUrl(BASE, lang, chapter.id, scene.id), 'data-spa': '', 'data-scene': scene.id }, localize(scene.title, lang));
 }
 
+/**
+ * A span holding a summary: the delimiter-stripped text shows immediately, and
+ * once the tex module arrives the \(...\) spans are replaced by inline KaTeX.
+ */
+function summarySpan(text: string): HTMLSpanElement {
+  const span = h('span', {}, stripInlineMath(text));
+  if (text.includes('\\(')) {
+    import('./tex')
+      .then((module) => module.renderRichText(span, text))
+      .catch((error: unknown) => console.error(error));
+  }
+  return span;
+}
+
 function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
-  target.replaceChildren(h('h1', {}, localize(scene.title, lang)), h('p', {}, localize(scene.summary, lang)));
+  target.replaceChildren(h('h1', {}, localize(scene.title, lang)), h('p', {}, summarySpan(localize(scene.summary, lang))));
 
   const tex = scene.tex;
   if (!tex || tex.length === 0) return;
@@ -104,8 +118,8 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
     hub.replaceChildren(
       h('h1', {}, chapterTitle),
       ...(notice ? [h('p', { role: 'alert' }, notice)] : []),
-      h('p', {}, localize(chapter.summary, lang)),
-      h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene), ` — ${localize(scene.summary, lang)}`))),
+      h('p', {}, summarySpan(localize(chapter.summary, lang))),
+      h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene), ' — ', summarySpan(localize(scene.summary, lang))))),
     );
     markActive(undefined);
   };

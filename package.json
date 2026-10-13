@@ -19,7 +19,7 @@
     {
       "name": "home entry",
       "path": "dist/assets/home-*.js",
-      "limit": "0.6 kB"
+      "limit": "0.9 kB"
     },
     {
       "name": "shared shell chunks",
