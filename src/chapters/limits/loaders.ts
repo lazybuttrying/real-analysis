@@ -7,9 +7,13 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   countable: () => import('./scenes/countable').then((module) => module.default),
   'groups-fields': () => import('./scenes/groupsFields').then((module) => module.default),
   'epsilon-n': () => import('./scenes/epsilonN').then((module) => module.default),
+  epsdelta: () => import('./scenes/epsdelta').then((module) => module.default),
+  continuity: () => import('./scenes/continuity').then((module) => module.default),
   holes: () => import('./scenes/holes').then((module) => module.default),
   'bolzano-weierstrass': () => import('./scenes/bolzanoWeierstrass').then((module) => module.default),
+  'monotone-cauchy': () => import('./scenes/monotoneCauchy').then((module) => module.default),
   cantor: () => import('./scenes/cantor').then((module) => module.default),
   ivt: () => import('./scenes/ivt').then((module) => module.default),
+  evt: () => import('./scenes/evt').then((module) => module.default),
   uniform: () => import('./scenes/uniform').then((module) => module.default),
 };

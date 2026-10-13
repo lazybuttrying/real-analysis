@@ -41,9 +41,13 @@
         "dist/assets/bolzanoWeierstrass-*.js",
         "dist/assets/cantor-*.js",
         "dist/assets/ivt-*.js",
-        "dist/assets/uniform-*.js"
+        "dist/assets/uniform-*.js",
+        "dist/assets/epsdelta-*.js",
+        "dist/assets/continuity-*.js",
+        "dist/assets/monotoneCauchy-*.js",
+        "dist/assets/evt-*.js"
       ],
-      "limit": "12 kB"
+      "limit": "18 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",
@@ -60,6 +64,8 @@
         "dist/assets/stirling-*.js",
         "dist/assets/grandi-*.js",
         "dist/assets/zeta4-*.js",
+        "dist/assets/tests-*.js",
+        "dist/assets/absolute-*.js",
         "dist/assets/app-*.js"
       ],
       "limit": "26 kB"
@@ -77,9 +83,11 @@
         "dist/assets/newton-*.js",
         "dist/assets/banach-*.js",
         "dist/assets/fourier-*.js",
-        "dist/assets/lebesgue-*.js"
+        "dist/assets/lebesgue-*.js",
+        "dist/assets/cauchyMvt-*.js",
+        "dist/assets/taylorThm-*.js"
       ],
-      "limit": "16 kB"
+      "limit": "17 kB"
     },
     {
       "name": "vendor: d3",

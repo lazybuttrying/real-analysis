@@ -81,10 +81,10 @@ real-analysis/
 - [x] dev/preview에서 `/<챕터>/<씬>/` 직접 접근
 - [x] 컨트롤 ↔ URL 상태, 씬 수명주기, 오류 처리
 - [x] series 챕터 씬 10개 전부 (harmonic 외 basel·leibniz·eseries·telescoping·geometric·wallis·stirling·grandi·zeta4)
-- [x] **limits 챕터(극한과 연속) 씬 10개** (집합·함수, 상한·완비성, 가산·비가산, 군·체(부분군·부분체 포함)를 앞에 추가한 뒤 epsilon-n·holes·bolzano-weierstrass·cantor·ivt·uniform). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
-- [x] **series 챕터 씬 12개** (기존 10개 + 재배열 정리·이상적분(꼬리/특이점 두 종류) 추가)
-- [x] **calculus 챕터(미분과 적분) 씬 9개** (미분가능⇒연속을 맨 앞에 추가한 뒤 mvt·taylor·riemann·ftc·newton·banach·fourier·lebesgue). `catalog`에서 세 번째로 두어 3장으로 표시된다. (김김계 『해석개론』 4–5·8–10장, Tao Analysis I/II 목차 참고)
-- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 31씬·93문제. 증명에 등장하는 수치는 전부 vitest로 검증
+- [x] **limits 챕터(극한과 연속) 씬 14개** (기존 10개 + 엄밀 정의·정리 4개: ε-δ 정의(epsilon-n 뒤), 연속의 정의(ε-δ 뒤), 단조수열·코시수열(bolzano-weierstrass 뒤), 최대최소 정리(ivt 뒤)). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
+- [x] **series 챕터 씬 14개** (기존 12개 + 수렴 판정법(leibniz 뒤), 절대수렴 정리(rearrangement 뒤) 추가)
+- [x] **calculus 챕터(미분과 적분) 씬 11개** (기존 9개 + 코시 평균값 정리(mvt 뒤), 테일러 정리(taylor 뒤) 추가). `catalog`에서 세 번째로 두어 3장으로 표시된다. (김김계 『해석개론』 4–5·8–10장, Tao Analysis I/II 목차 참고)
+- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 39씬·117문제. 증명에 등장하는 수치는 전부 vitest로 검증
 - [x] **챕터 자동 넘버링**: `catalog` 순서 = 표시 번호. `ChapterMeta`에 번호 필드 없음. 홈·허브·헤더·문서 제목·프리렌더 본문 모두 인덱스로 계산
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
