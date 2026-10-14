@@ -12,6 +12,7 @@
 | 번들 | 챕터별 entry, 공유 vendor 청크(d3, three, katex), 씬은 동적 import |
 | 챕터 entry | 챕터가 5개 이상이므로 `<챕터>/index.html`은 `catalog`에서 생성(`scripts/gen-entries.ts`), 생성물은 `.gitignore` |
 | 라우팅 | 경로 URL(`/<언어>/<챕터>/<씬>/`), 챕터 간은 풀 페이지 이동, 챕터 안은 `pushState` |
+| 씬 페이저 | 씬 하단 이전/다음 버튼 — 전체 39씬 읽기 순서대로, 챕터 경계를 넘어 이동(챕터 안은 SPA, 챕터 간은 풀 페이지 이동). 프리렌더 정적 HTML에도 포함 |
 | 언어 | 한국어·영어 둘 다, URL 접두사(`/ko/`·`/en/`), 헤더 KO \| EN 전환, 프리렌더 hreflang |
 | 상태 | `ControlSpec`이 컨트롤 상태와 URL 쿼리(`?n=500&logX=0`)의 단일 원천. 기본값은 URL에서 생략 |
 | SEO | 씬별 프리렌더(제목, 요약, 본문, KaTeX), sitemap, canonical, 챕터 허브 페이지 |

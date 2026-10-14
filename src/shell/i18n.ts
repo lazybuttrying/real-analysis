@@ -33,6 +33,8 @@ export const STRINGS = {
   },
   problemsHeading: { ko: '예제', en: 'Examples & Exercises' },
   showProof: { ko: '증명 보기', en: 'Show proof' },
+  prevScene: { ko: '이전', en: 'Previous' },
+  nextScene: { ko: '다음', en: 'Next' },
 } satisfies Record<string, LocalizedText>;
 
 export type StringKey = keyof typeof STRINGS;

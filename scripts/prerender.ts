@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
-import { LANGS, localize, splitInlineMath, stripInlineMath, type Lang, type SceneMeta } from '../src/contracts.ts';
+import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { chapterUrl, homeUrl, sceneUrl } from '../src/paths.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -78,6 +78,28 @@ ${(problem.display ?? []).map(renderDisplayHtml).join('\n')}
     })
     .join('\n');
   return `<section class="problems"><h2>${escapeHtml(localize(STRINGS.problemsHeading, lang))}</h2>\n${cards}\n</section>`;
+};
+
+/** Every scene in reading order, across chapters — the static pager walks this list. */
+const readingOrder: ReadonlyArray<{ chapter: ChapterMeta; scene: SceneMeta }> = catalog.flatMap((chapter) =>
+  [...chapter.scenes].sort((a, b) => a.order - b.order).map((scene) => ({ chapter, scene })),
+);
+
+/** Static previous/next scene footer for a scene page (works with zero JS). */
+const renderPagerHtml = (chapterId: string, sceneId: string, lang: Lang): string => {
+  const position = readingOrder.findIndex((entry) => entry.chapter.id === chapterId && entry.scene.id === sceneId);
+  const link = (entry: { chapter: ChapterMeta; scene: SceneMeta }, rel: 'prev' | 'next'): string => {
+    const label = escapeHtml(localize(rel === 'prev' ? STRINGS.prevScene : STRINGS.nextScene, lang));
+    const title = escapeHtml(localize(entry.scene.title, lang));
+    const text = rel === 'prev' ? `&larr; ${label}: ${title}` : `${label}: ${title} &rarr;`;
+    return `<a href="${sceneUrl(BASE, lang, entry.chapter.id, entry.scene.id)}" rel="${rel}" aria-label="${text}">${text}</a>`;
+  };
+  const parts: string[] = [];
+  const prev = position > 0 ? readingOrder[position - 1] : undefined;
+  const next = position >= 0 && position < readingOrder.length - 1 ? readingOrder[position + 1] : undefined;
+  if (prev) parts.push(link(prev, 'prev'));
+  if (next) parts.push(link(next, 'next'));
+  return parts.length > 0 ? `<nav class="scene-pager">${parts.join('')}</nav>` : '';
 };
 
 interface Page {
@@ -155,6 +177,7 @@ for (const [index, chapter] of catalog.entries()) {
           `<p>${renderSummaryHtml(localize(scene.summary, lang))}</p>`,
           ...(scene.tex ?? []).map((formula) => renderDisplayHtml(formula)),
           renderProblemsHtml(scene, lang),
+          renderPagerHtml(chapter.id, scene.id, lang),
           `<p><a href="${chapterUrl(BASE, lang, chapter.id)}">${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</a></p>`,
         ].join('\n'),
     });

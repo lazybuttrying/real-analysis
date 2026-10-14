@@ -163,6 +163,30 @@ main.home {
   color: var(--bound);
 }
 
+/* Previous/next scene footer on scene pages */
+.scene-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.scene-pager a {
+  text-decoration: none;
+  max-width: 45%;
+}
+
+.scene-pager a:hover {
+  text-decoration: underline;
+}
+
+.scene-pager a[rel='next'] {
+  margin-left: auto;
+  text-align: right;
+}
+
 /* Problems (examples/exercises) section on scene pages */
 .problems {
   margin-top: 2rem;

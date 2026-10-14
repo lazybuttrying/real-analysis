@@ -38,6 +38,32 @@ function sceneLink(lang: Lang, chapter: ChapterMeta, scene: SceneMeta): HTMLAnch
   return h('a', { href: sceneUrl(BASE, lang, chapter.id, scene.id), 'data-spa': '', 'data-scene': scene.id }, localize(scene.title, lang));
 }
 
+interface ReadingEntry {
+  chapter: ChapterMeta;
+  scene: SceneMeta;
+}
+
+/** Every scene in reading order, across chapters. The pager walks this list. */
+const readingOrder: readonly ReadingEntry[] = catalog.flatMap((chapter) =>
+  [...chapter.scenes].sort((a, b) => a.order - b.order).map((scene) => ({ chapter, scene })),
+);
+
+function pagerLink(lang: Lang, currentChapterId: string, entry: ReadingEntry, rel: 'prev' | 'next'): HTMLAnchorElement {
+  const label = tr(lang, rel === 'prev' ? 'prevScene' : 'nextScene');
+  const title = localize(entry.scene.title, lang);
+  const arrow = rel === 'prev' ? '←' : '→';
+  const text = rel === 'prev' ? `${arrow} ${label}: ${title}` : `${label}: ${title} ${arrow}`;
+  // Same-chapter links stay in the SPA; cross-chapter links are plain
+  // navigations (the SPA router only knows the current chapter).
+  const attrs: Record<string, string> = {
+    href: sceneUrl(BASE, lang, entry.chapter.id, entry.scene.id),
+    rel,
+    'aria-label': text,
+  };
+  if (entry.chapter.id === currentChapterId) attrs['data-spa'] = '';
+  return h('a', attrs, text);
+}
+
 /**
  * A span holding a summary: the delimiter-stripped text shows immediately, and
  * once the tex module arrives the \(...\) spans are replaced by inline KaTeX.
@@ -181,7 +207,8 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
   const hostEl = h('div', { class: 'scene-host' });
   const controlsEl = h('div', { class: 'controls' });
   const textEl = h('article', { class: 'scene-text' });
-  const sceneView = h('section', { class: 'scene-view' }, hostEl, controlsEl, textEl);
+  const pagerEl = h('nav', { class: 'scene-pager', 'aria-label': tr(lang, 'tocLabel') });
+  const sceneView = h('section', { class: 'scene-view' }, hostEl, controlsEl, textEl, pagerEl);
 
   root.classList.add('chapter');
   root.replaceChildren(
@@ -232,6 +259,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
     sceneHost.dispose();
     disposeProblems();
     sceneView.hidden = true;
+    pagerEl.hidden = true;
     hub.hidden = false;
     document.title = `${chapterTitle} | Real Analysis`;
     hub.replaceChildren(
@@ -267,6 +295,19 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
     renderProblems(textEl, scene, lang, loader, (dispose) => {
       problemDisposers.push(dispose);
     });
+
+    // Previous/next scene footer: walks the whole reading order, across chapters.
+    const position = readingOrder.findIndex((entry) => entry.chapter.id === chapter.id && entry.scene.id === scene.id);
+    pagerEl.replaceChildren();
+    if (position > 0) {
+      const prev = readingOrder[position - 1];
+      if (prev) pagerEl.append(pagerLink(lang, chapter.id, prev, 'prev'));
+    }
+    if (position >= 0 && position < readingOrder.length - 1) {
+      const next = readingOrder[position + 1];
+      if (next) pagerEl.append(pagerLink(lang, chapter.id, next, 'next'));
+    }
+    pagerEl.hidden = false;
   };
 
   const route = (): void => {
