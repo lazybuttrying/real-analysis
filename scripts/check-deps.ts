@@ -7,8 +7,10 @@ import { fileURLToPath } from 'node:url';
  *
  *  1. models/ imports nothing from d3, three, the view kits, or the shell
  *     (pure computation — it must stay movable to a Worker and testable in Node).
- *  2. meta.ts imports types only (every page's navigation and the build scripts read it;
- *     a runtime import would drag heavy code into every bundle).
+ *  2. meta.ts imports types plus its own ./problems/* sibling data modules only
+ *     (pure data — no code, models, views, or shell). Every page's navigation
+ *     and the build scripts read meta.ts; a runtime import of anything heavier
+ *     would drag that code into every bundle.
  *  3. 'three' is imported only in src/view/threekit.ts (the single 3D boundary,
  *     so vendor-three loads only for 3D scenes).
  *  4. Chapter code reaches the shell only through its entry.ts (the wiring point),
@@ -99,8 +101,11 @@ for (const file of files) {
     if (inModels && (isD3(ref.spec) || isThree(ref.spec) || targetsViewOrShell)) {
       violations.push({ file: rel, rule: 'models stay pure', detail: `imports '${ref.spec}'` });
     }
-    if (base === 'meta.ts' && !ref.typeOnly) {
-      violations.push({ file: rel, rule: 'meta.ts imports types only', detail: `imports '${ref.spec}' as a value` });
+    // meta.ts may import types and its own ./problems/* sibling data modules
+    // (pure data). Anything else as a value would drag code into every bundle.
+    const isProblemsDataImport = base === 'meta.ts' && ref.spec.startsWith('./problems/');
+    if (base === 'meta.ts' && !ref.typeOnly && !isProblemsDataImport) {
+      violations.push({ file: rel, rule: 'meta.ts imports types and problems-data only', detail: `imports '${ref.spec}' as a value` });
     }
     if (isThree(ref.spec) && rel !== 'view/threekit.ts') {
       violations.push({ file: rel, rule: 'three only in view/threekit.ts', detail: `imports '${ref.spec}'` });
@@ -119,7 +124,7 @@ for (const file of files) {
       violations.push({ file: rel, rule: 'only catalog.ts aggregates chapters', detail: `imports '${ref.spec}'` });
     }
     if (ref.dynamic && base === 'meta.ts') {
-      violations.push({ file: rel, rule: 'meta.ts imports types only', detail: `dynamically imports '${ref.spec}'` });
+      violations.push({ file: rel, rule: 'meta.ts imports types and problems-data only', detail: `dynamically imports '${ref.spec}'` });
     }
   }
 }

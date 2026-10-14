@@ -12,7 +12,7 @@
 | 번들 | 챕터별 entry, 공유 vendor 청크(d3, three, katex), 씬은 동적 import |
 | 챕터 entry | 챕터가 5개 이상이므로 `<챕터>/index.html`은 `catalog`에서 생성(`scripts/gen-entries.ts`), 생성물은 `.gitignore` |
 | 라우팅 | 경로 URL(`/<언어>/<챕터>/<씬>/`), 챕터 간은 풀 페이지 이동, 챕터 안은 `pushState` |
-| 씬 페이저 | 씬 하단 이전/다음 버튼 — 전체 39씬 읽기 순서대로, 챕터 경계를 넘어 이동(챕터 안은 SPA, 챕터 간은 풀 페이지 이동). 프리렌더 정적 HTML에도 포함 |
+| 씬 페이저 | 씬 하단 이전/다음 버튼 — 전체 41씬 읽기 순서대로, 챕터 경계를 넘어 이동(챕터 안은 SPA, 챕터 간은 풀 페이지 이동). 프리렌더 정적 HTML에도 포함 |
 | 언어 | 한국어·영어 둘 다, URL 접두사(`/ko/`·`/en/`), 헤더 KO \| EN 전환, 프리렌더 hreflang |
 | 상태 | `ControlSpec`이 컨트롤 상태와 URL 쿼리(`?n=500&logX=0`)의 단일 원천. 기본값은 URL에서 생략 |
 | SEO | 씬별 프리렌더(제목, 요약, 본문, KaTeX), sitemap, canonical, 챕터 허브 페이지 |
@@ -38,7 +38,8 @@ real-analysis/
     ├── view/                   d3kit.ts, threekit.ts, richtext.ts(씬용 KaTeX 리치텍스트 — shell import 금지 규칙 때문에 shell/tex.ts와 분리)
     ├── math/                   순수 수치 함수 (Kahan 합산, 로그 간격 샘플링 등)
     └── chapters/series/
-        ├── meta.ts             ChapterMeta + SceneMeta[] (타입 외 import 금지)
+        ├── meta.ts             ChapterMeta + SceneMeta[] (타입 + ./problems/* 데이터 import만 허용)
+        ├── problems/           씬별 예제/연습 데이터 모듈 (순수 데이터, 코드 없음) — meta.ts가 import
         ├── loaders.ts          씬 id → () => import('./scenes/…')
         ├── entry.ts            shell과 loaders 연결
         ├── models/             순수 계산
@@ -62,7 +63,7 @@ real-analysis/
 ## 규칙
 
 1. `models/`는 d3, three, DOM을 import 하지 않는다. (Worker로 옮기거나 Node에서 테스트하기 위해)
-2. `meta.ts`는 `import type` 외에는 아무것도 import 하지 않는다. 모든 페이지의 내비게이션과 빌드 스크립트가 읽으므로 three가 딸려오면 모든 챕터 번들이 무거워진다.
+2. `meta.ts`는 `import type`과 같은 챕터의 `./problems/*` 순수 데이터 모듈 외에는 아무것도 import 하지 않는다. 모든 페이지의 내비게이션과 빌드 스크립트가 읽으므로 three 같은 코드가 딸려오면 모든 챕터 번들이 무거워진다. (배경: `meta.ts` 단일 파일이 GitHub push payload 한도(~128KB)를 넘겨서, 씬별 문제 데이터는 `src/chapters/<id>/problems/<scene-id>.ts`로 분리했다. 내용은 바이트 단위로 동일.)
 3. Node가 직접 읽는 모듈(`vite.config.ts`, `scripts/`, `catalog.ts`, `meta.ts`, `contracts.ts`, `paths.ts`, `state.ts`)은 상대 import에 `.ts` 확장자를 붙인다. (Vite의 `configLoader: 'native'` 대비, 이후 프리렌더 스크립트도 같은 모듈을 읽는다)
 4. three는 3D 씬 파일에서만 import 한다. 그래야 `vendor-three`가 3D 씬에 들어갈 때만 로드된다.
 5. 챕터 id는 소문자, 숫자, 하이픈만 쓰고 `src`, `docs`, `assets` 같은 예약어는 쓸 수 없다. (`.gitignore`에 `/<id>/`가 등록되므로 생성기가 검증한다)
@@ -82,10 +83,10 @@ real-analysis/
 - [x] dev/preview에서 `/<챕터>/<씬>/` 직접 접근
 - [x] 컨트롤 ↔ URL 상태, 씬 수명주기, 오류 처리
 - [x] series 챕터 씬 10개 전부 (harmonic 외 basel·leibniz·eseries·telescoping·geometric·wallis·stirling·grandi·zeta4)
-- [x] **limits 챕터(극한과 연속) 씬 14개** (기존 10개 + 엄밀 정의·정리 4개: ε-δ 정의(epsilon-n 뒤), 연속의 정의(ε-δ 뒤), 단조수열·코시수열(bolzano-weierstrass 뒤), 최대최소 정리(ivt 뒤)). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
+- [x] **limits 챕터(극한과 연속) 씬 16개** (기존 14개 + 열린집합과 닫힌집합(continuity 뒤), 폐포와 유계(opensets 뒤)). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
 - [x] **series 챕터 씬 14개** (기존 12개 + 수렴 판정법(leibniz 뒤), 절대수렴 정리(rearrangement 뒤) 추가)
 - [x] **calculus 챕터(미분과 적분) 씬 11개** (기존 9개 + 코시 평균값 정리(mvt 뒤), 테일러 정리(taylor 뒤) 추가). `catalog`에서 세 번째로 두어 3장으로 표시된다. (김김계 『해석개론』 4–5·8–10장, Tao Analysis I/II 목차 참고)
-- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 39씬·117문제. 증명에 등장하는 수치는 전부 vitest로 검증
+- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 41씬·123문제. 증명에 등장하는 수치는 전부 vitest로 검증
 - [x] **챕터 자동 넘버링**: `catalog` 순서 = 표시 번호. `ChapterMeta`에 번호 필드 없음. 홈·허브·헤더·문서 제목·프리렌더 본문 모두 인덱스로 계산
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
