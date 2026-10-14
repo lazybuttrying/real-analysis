@@ -44,10 +44,12 @@
         "dist/assets/uniform-*.js",
         "dist/assets/epsdelta-*.js",
         "dist/assets/continuity-*.js",
+        "dist/assets/opensets-*.js",
+        "dist/assets/closure-*.js",
         "dist/assets/monotoneCauchy-*.js",
         "dist/assets/evt-*.js"
       ],
-      "limit": "18 kB"
+      "limit": "24 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",
