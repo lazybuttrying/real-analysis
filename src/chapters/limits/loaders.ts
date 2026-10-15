@@ -6,6 +6,8 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   supremum: () => import('./scenes/supremum').then((module) => module.default),
   countable: () => import('./scenes/countable').then((module) => module.default),
   'groups-fields': () => import('./scenes/groupsFields').then((module) => module.default),
+  'vector-spaces': () => import('./scenes/vectorSpaces').then((module) => module.default),
+  'dimension-rank': () => import('./scenes/dimensionRank').then((module) => module.default),
   'epsilon-n': () => import('./scenes/epsilonN').then((module) => module.default),
   epsdelta: () => import('./scenes/epsdelta').then((module) => module.default),
   continuity: () => import('./scenes/continuity').then((module) => module.default),

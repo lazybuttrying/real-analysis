@@ -221,6 +221,8 @@ describe('limits chapter meta: the two new scenes', () => {
       'supremum',
       'countable',
       'groups-fields',
+      'vector-spaces',
+      'dimension-rank',
       'epsilon-n',
       'epsdelta',
       'continuity',
@@ -236,7 +238,7 @@ describe('limits chapter meta: the two new scenes', () => {
       'evt',
       'uniform',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
   });
 
   it('chains the prerequisites', () => {

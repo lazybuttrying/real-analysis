@@ -48,10 +48,12 @@
         "dist/assets/closure-*.js",
         "dist/assets/metricSpaces-*.js",
         "dist/assets/uniformContinuity-*.js",
+        "dist/assets/vectorSpaces-*.js",
+        "dist/assets/dimensionRank-*.js",
         "dist/assets/monotoneCauchy-*.js",
         "dist/assets/evt-*.js"
       ],
-      "limit": "27 kB"
+      "limit": "31 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",

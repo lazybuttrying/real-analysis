@@ -273,6 +273,8 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'supremum',
       'countable',
       'groups-fields',
+      'vector-spaces',
+      'dimension-rank',
       'epsilon-n',
       'epsdelta',
       'continuity',
@@ -288,11 +290,13 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'evt',
       'uniform',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
   });
 
   it('sets the new scenes prerequisites', () => {
     const byId = Object.fromEntries(limits.scenes.map((s) => [s.id, s]));
+    expect(byId['vector-spaces']?.prerequisites).toEqual(['groups-fields']);
+    expect(byId['dimension-rank']?.prerequisites).toEqual(['vector-spaces']);
     expect(byId['epsdelta']?.prerequisites).toEqual(['epsilon-n']);
     expect(byId['continuity']?.prerequisites).toEqual(['epsdelta']);
     expect(byId['monotone-cauchy']?.prerequisites).toEqual(['bolzano-weierstrass']);
