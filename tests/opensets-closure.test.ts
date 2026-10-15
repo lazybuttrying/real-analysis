@@ -230,6 +230,7 @@ describe('limits chapter meta: the two new scenes', () => {
       'opensets',
       'closure',
       'metric-spaces',
+      'sequence-spaces',
       'holes',
       'bolzano-weierstrass',
       'monotone-cauchy',
@@ -238,7 +239,7 @@ describe('limits chapter meta: the two new scenes', () => {
       'evt',
       'uniform',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]);
   });
 
   it('chains the prerequisites', () => {
@@ -247,10 +248,11 @@ describe('limits chapter meta: the two new scenes', () => {
     expect(byId['opensets']?.prerequisites).toEqual(['continuity']);
     expect(byId['closure']?.prerequisites).toEqual(['opensets']);
     expect(byId['metric-spaces']?.prerequisites).toEqual(['closure']);
+    expect(byId['sequence-spaces']?.prerequisites).toEqual(['metric-spaces']);
   });
 
   it('gives each new scene exactly 3 problems with non-empty proofs', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces']) {
+    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces']) {
       const scene = limits.scenes.find((s) => s.id === id);
       expect(scene?.problems).toHaveLength(3);
       for (const problem of scene?.problems ?? []) {
@@ -264,7 +266,7 @@ describe('limits chapter meta: the two new scenes', () => {
   });
 
   it('uses only declared control keys with valid values in every new problem preset', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces']) {
+    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces']) {
       const scene = limits.scenes.find((s) => s.id === id);
       expect(scene).toBeDefined();
       for (const problem of scene?.problems ?? []) {

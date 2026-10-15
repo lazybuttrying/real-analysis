@@ -14,6 +14,7 @@ import { problems as ivtProblems } from './problems/ivt';
 import { problems as metricSpacesProblems } from './problems/metric-spaces';
 import { problems as monotoneCauchyProblems } from './problems/monotone-cauchy';
 import { problems as opensetsProblems } from './problems/opensets';
+import { problems as sequenceSpacesProblems } from './problems/sequence-spaces';
 import { problems as setsProblems } from './problems/sets';
 import { problems as supremumProblems } from './problems/supremum';
 import { problems as uniformProblems } from './problems/uniform';
@@ -319,9 +320,30 @@ problems: closureProblems,
       problems: metricSpacesProblems,
     },
     {
+      id: 'sequence-spaces',
+      title: { ko: '수열공간과 함수공간', en: 'Sequence and Function Spaces' },
+      order: 14,
+      summary: {
+        ko: String.raw`\(\ell^1, \ell^2, \ell^\infty\)와 \(C[0,1]\) — 점별 연산으로는 벡터공간이고, 노름 \(\|x - y\|\)로는 거리공간입니다. 노름공간이 두 세계를 잇는 다리입니다. \(x_n = 1/n^\alpha\)로 포함관계 \(\ell^1 \subset \ell^2 \subset \ell^\infty\)를 눈으로 확인합니다. \(\ell^p\)와 \(C[0,1]\)이 완비(바나흐 공간)라는 것은 알려진 정리로만 언급합니다.`,
+        en: String.raw`\(\ell^1, \ell^2, \ell^\infty\) and \(C[0,1]\) — vector spaces under pointwise operations, metric spaces via the norm \(\|x - y\|\). A normed space bridges both worlds. Watch the inclusion chain \(\ell^1 \subset \ell^2 \subset \ell^\infty\) through \(x_n = 1/n^\alpha\). Completeness of \(\ell^p\) and \(C[0,1]\) (Banach spaces) is stated as a known theorem only.`,
+      },
+      tex: [
+        String.raw`\ell^1 = \{x : \sum |x_n| < \infty\}, \quad \ell^2 = \{x : \sum |x_n|^2 < \infty\}, \quad \ell^\infty = \{x : \sup |x_n| < \infty\}`,
+        String.raw`\|x\|_1 = \sum |x_n|, \quad \|x\|_2 = \left(\sum |x_n|^2\right)^{1/2}, \quad \|x\|_\infty = \sup_n |x_n|`,
+        String.raw`\ell^1 \subset \ell^2 \subset \ell^\infty, \qquad d(x, y) = \|x - y\|`,
+      ],
+      prerequisites: ['metric-spaces'],
+      controls: [
+        { kind: 'select', key: 'view', label: { ko: '보기', en: 'View' }, options: ['balls', 'sequence'], init: 'balls' },
+        { kind: 'select', key: 'p', label: { ko: '노름 p', en: 'Norm p' }, options: ['1', '2', 'inf'], init: '2' },
+        { kind: 'slider', key: 'alpha', label: { ko: '지수 α', en: 'Exponent α' }, min: 0.2, max: 2, step: 0.05, init: 1 },
+      ],
+problems: sequenceSpacesProblems,
+    },
+    {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`\(x_{n+1}=\frac{x_n+2/x_n}{2}\)의 모든 항은 유리수지만, 극한 \(\sqrt{2}\)는 유리수가 아닙니다. 유리수 집합 \(\mathbb{Q}\)에는 구멍이 있다는 뜻입니다. 무리수임의 엄밀한 증명은 다루지 않고 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every term of \(x_{n+1}=\frac{x_n+2/x_n}{2}\) is rational, yet the limit \(\sqrt{2}\) is not. The rationals \(\mathbb{Q}\) have a hole — shown at the idea level, without a full irrationality proof.`,
@@ -333,7 +355,7 @@ problems: holesProblems,
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 15,
+      order: 16,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -348,7 +370,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 16,
+      order: 17,
       summary: {
         ko: String.raw`\(a_n = 1 - 2^{-n}\)은 증가하면서 위로 유계이므로 상한 \(1\)에 수렴합니다(단조수렴 정리). 꼬리 지름이 \(0\)으로 줄어드는 모습을 보며, 모든 수렴수열이 코시수열임을 확인합니다.`,
         en: String.raw`\(a_n = 1 - 2^{-n}\) increases and is bounded above, so it converges to its supremum \(1\) (monotone convergence). Watch the tail diameter shrink to \(0\): every convergent sequence is Cauchy.`,
@@ -367,7 +389,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 17,
+      order: 18,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -379,7 +401,7 @@ problems: cantorProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 18,
+      order: 19,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -394,7 +416,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 19,
+      order: 20,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -418,7 +440,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,

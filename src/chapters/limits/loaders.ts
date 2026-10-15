@@ -15,6 +15,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   opensets: () => import('./scenes/opensets').then((module) => module.default),
   closure: () => import('./scenes/closure').then((module) => module.default),
   'metric-spaces': () => import('./scenes/metricSpaces').then((module) => module.default),
+  'sequence-spaces': () => import('./scenes/sequenceSpaces').then((module) => module.default),
   holes: () => import('./scenes/holes').then((module) => module.default),
   'bolzano-weierstrass': () => import('./scenes/bolzanoWeierstrass').then((module) => module.default),
   'monotone-cauchy': () => import('./scenes/monotoneCauchy').then((module) => module.default),

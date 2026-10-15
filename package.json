@@ -47,13 +47,15 @@
         "dist/assets/opensets-*.js",
         "dist/assets/closure-*.js",
         "dist/assets/metricSpaces-*.js",
+        "dist/assets/sequenceSpaces-*.js",
         "dist/assets/uniformContinuity-*.js",
         "dist/assets/vectorSpaces-*.js",
         "dist/assets/dimensionRank-*.js",
+        "dist/assets/sequenceSpaces-*.js",
         "dist/assets/monotoneCauchy-*.js",
         "dist/assets/evt-*.js"
       ],
-      "limit": "31 kB"
+      "limit": "33 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",
