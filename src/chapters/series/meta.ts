@@ -7,6 +7,7 @@ import { problems as grandiProblems } from './problems/grandi';
 import { problems as harmonicProblems } from './problems/harmonic';
 import { problems as improperProblems } from './problems/improper';
 import { problems as leibnizProblems } from './problems/leibniz';
+import { problems as powerSeriesProblems } from './problems/power-series';
 import { problems as rearrangementProblems } from './problems/rearrangement';
 import { problems as stirlingProblems } from './problems/stirling';
 import { problems as telescopingProblems } from './problems/telescoping';
@@ -91,9 +92,29 @@ problems: leibnizProblems,
 problems: testsProblems,
     },
     {
+      id: 'power-series',
+      title: { ko: '멱급수와 수렴반경', en: 'Power Series and Radius of Convergence' },
+      order: 5,
+      summary: {
+        ko: String.raw`멱급수 \(\sum a_n x^n\)은 반경 \(R\) 안에서는 절대 수렴하고 밖에서는 발산합니다 — 세 가지 전형적인 급수로 수렴반경을 확인하고, 경계 \(\lvert x\rvert = R\)은 점마다 따로 판정합니다.`,
+        en: String.raw`A power series \(\sum a_n x^n\) converges absolutely inside its radius \(R\) and diverges outside — watch three archetypal series pin down their radii, and see why the boundary \(\lvert x\rvert = R\) must be decided case by case.`,
+      },
+      tex: [
+        String.raw`\frac{1}{R}=\limsup_{n\to\infty}\lvert a_n\rvert^{1/n}`,
+        String.raw`\sum_{n=0}^{\infty}\frac{x^n}{n!}\ \text{has}\ R=\infty,\quad \sum_{n=0}^{\infty}n!\,x^n\ \text{has}\ R=0,\quad \sum_{n=0}^{\infty}x^n\ \text{has}\ R=1`,
+      ],
+      prerequisites: ['tests'],
+      controls: [
+        { kind: 'select', key: 'series', label: { ko: '급수', en: 'Series' }, options: ['exp', 'factorial', 'geom'], init: 'exp' },
+        { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -3, max: 3, step: 0.1, init: 1 },
+        { kind: 'slider', key: 'n', label: { ko: '항의 개수 N', en: 'Terms N' }, min: 1, max: 30, step: 1, init: 15 },
+      ],
+      problems: powerSeriesProblems,
+    },
+    {
       id: 'eseries',
       title: { ko: 'e로 가는 두 길', en: 'Two Roads to e' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`복리 \((1+\frac{1}{n})^n\)과 급수 \(\sum_{k=0}^{\infty} \frac{1}{k!}\)가 \(e\)에 다가가는 속도를 견주어 확인합니다. 팩토리얼 급수가 압도적으로 빠릅니다.`,
         en: String.raw`Compare how fast compound growth \((1+\frac{1}{n})^n\) and the series \(\sum_{k=0}^{\infty} \frac{1}{k!}\) approach \(e\). The factorial series wins by a landslide.`,
@@ -105,7 +126,7 @@ problems: eseriesProblems,
     {
       id: 'telescoping',
       title: { ko: '망원급수', en: 'Telescoping Series' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`각 항을 \(\frac{1}{n} - \frac{1}{n+1}\)로 쪼개면 이웃끼리 서로 지워지고 처음의 1과 사라져 가는 꼬리만 남는 모습을 확인합니다.`,
         en: String.raw`Split each term into \(\frac{1}{n} - \frac{1}{n+1}\) and the neighbors cancel each other, leaving only the very first 1 and a vanishing tail.`,
@@ -120,7 +141,7 @@ problems: telescopingProblems,
     {
       id: 'geometric',
       title: { ko: '기하급수: 정사각형 채우기', en: 'Geometric Series: Filling the Square' },
-      order: 7,
+      order: 8,
       summary: {
         ko: '단위 정사각형을 남은 부분의 절반씩 채워 나가면 빈틈이 매 단계 절반으로 줄며 합이 1이 되는 모습을 확인합니다.',
         en: 'Fill a unit square by always taking half of what remains: the gap halves at every step and the total becomes 1.',
@@ -132,7 +153,7 @@ problems: geometricProblems,
     {
       id: 'wallis',
       title: { ko: '월리스 곱', en: 'Wallis Product' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`유리수 인수들을 하나씩 곱해 나갈수록 실행 곱이 \(\frac{\pi}{2}\) 위아래로 흔들리며 조여드는 모습을 확인합니다.`,
         en: String.raw`Multiply the rational factors in one at a time and watch the running product swing above and below \(\frac{\pi}{2}\), closing in as the swings shrink.`,
@@ -144,7 +165,7 @@ problems: wallisProblems,
     {
       id: 'stirling',
       title: { ko: '스털링 근사', en: "Stirling's Approximation" },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`로그 눈금에서 \(n!\)와 스털링 근사가 거의 겹쳐지고 상대오차가 대략 \(\frac{1}{12n}\)으로 줄어드는 모습을 확인합니다. \(\pi\)가 들어오는 경로는 아이디어 수준에서만 짚습니다.`,
         en: String.raw`On a log scale, \(n!\) and the Stirling approximation nearly coincide, and the relative error shrinks like \(\frac{1}{12n}\). Where \(\pi\) enters is only sketched at the idea level.`,
@@ -156,7 +177,7 @@ problems: stirlingProblems,
     {
       id: 'grandi',
       title: { ko: '그란디 급수', en: 'Grandi Series' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`부분합이 1과 0을 영원히 오가므로 이 급수에는 합이 없습니다. \(\frac{1}{2}\)는 부분합들의 평균(체사로 평균)일 뿐, 급수의 합이 아닙니다.`,
         en: String.raw`The partial sums bounce between 1 and 0 forever, so this series has no sum. \(\frac{1}{2}\) is only the average of the partial sums (the Cesàro mean), not a sum of the series.`,
@@ -168,7 +189,7 @@ problems: grandiProblems,
     {
       id: 'zeta4',
       title: { ko: 'ζ(4)와 짝수 거듭제곱', en: 'ζ(4) and Even Powers' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`\(\frac{1}{n^4}\)의 부분합이 \(\frac{\pi^4}{90}\)에 빠르게 닿는 모습과, 짝수 거듭제곱마다 \(\zeta\)값이 \(\pi\)의 거듭제곱으로 닫히는 패턴을 확인합니다.`,
         en: String.raw`The partial sums of \(\frac{1}{n^4}\) reach \(\frac{\pi^4}{90}\) quickly — and at every even power, the \(\zeta\) value closes into a power of \(\pi\).`,
@@ -183,7 +204,7 @@ problems: zeta4Problems,
     {
       id: 'rearrangement',
       title: { ko: '재배열 정리', en: 'Rearranging Changes the Sum' },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`조건수렴 급수는 순서를 바꾸면 합이 바뀝니다 — \(\ln 2 \approx 0.6931\)이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로. 라이프니츠 장면의 짝꿍입니다.`,
         en: String.raw`Reordering a conditionally convergent series changes its sum — \(\ln 2 \approx 0.6931\) becomes \(\frac{3}{2}\ln 2 \approx 1.0397\). Twin of the Leibniz scene.`,
@@ -196,7 +217,7 @@ problems: rearrangementProblems,
     {
       id: 'absolute',
       title: { ko: '절대수렴 정리', en: 'Absolute Convergence' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`절댓값을 씌운 급수가 수렴하면 원래 급수도 수렴합니다 — 두 부분합 곡선 \(S_n\)과 \(T_n\)이 함께 안착하는 모습과, 조화급수처럼 절댓값은 발산해도 부호 덕분에 수렴하는 경우를 견주어 확인합니다.`,
         en: String.raw`If the absolute-value series converges, so does the original — compare the two partial-sum walks \(S_n\) and \(T_n\) settling together against the harmonic-like case where the signs rescue a divergent absolute series.`,
@@ -215,7 +236,7 @@ problems: absoluteProblems,
     {
       id: 'improper',
       title: { ko: '이상적분', en: 'Improper Integrals' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
         en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,

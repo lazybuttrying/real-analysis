@@ -12,7 +12,7 @@
 | 번들 | 챕터별 entry, 공유 vendor 청크(d3, three, katex), 씬은 동적 import |
 | 챕터 entry | 챕터가 5개 이상이므로 `<챕터>/index.html`은 `catalog`에서 생성(`scripts/gen-entries.ts`), 생성물은 `.gitignore` |
 | 라우팅 | 경로 URL(`/<언어>/<챕터>/<씬>/`), 챕터 간은 풀 페이지 이동, 챕터 안은 `pushState` |
-| 씬 페이저 | 씬 하단 이전/다음 버튼 — 전체 41씬 읽기 순서대로, 챕터 경계를 넘어 이동(챕터 안은 SPA, 챕터 간은 풀 페이지 이동). 프리렌더 정적 HTML에도 포함 |
+| 씬 페이저 | 씬 하단 이전/다음 버튼 — 전체 45씬 읽기 순서대로, 챕터 경계를 넘어 이동(챕터 안은 SPA, 챕터 간은 풀 페이지 이동). 프리렌더 정적 HTML에도 포함 |
 | 언어 | 한국어·영어 둘 다, URL 접두사(`/ko/`·`/en/`), 헤더 KO \| EN 전환, 프리렌더 hreflang |
 | 상태 | `ControlSpec`이 컨트롤 상태와 URL 쿼리(`?n=500&logX=0`)의 단일 원천. 기본값은 URL에서 생략 |
 | SEO | 씬별 프리렌더(제목, 요약, 본문, KaTeX), sitemap, canonical, 챕터 허브 페이지 |
@@ -83,10 +83,10 @@ real-analysis/
 - [x] dev/preview에서 `/<챕터>/<씬>/` 직접 접근
 - [x] 컨트롤 ↔ URL 상태, 씬 수명주기, 오류 처리
 - [x] series 챕터 씬 10개 전부 (harmonic 외 basel·leibniz·eseries·telescoping·geometric·wallis·stirling·grandi·zeta4)
-- [x] **limits 챕터(극한과 연속) 씬 16개** (기존 14개 + 열린집합과 닫힌집합(continuity 뒤), 폐포와 유계(opensets 뒤)). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
-- [x] **series 챕터 씬 14개** (기존 12개 + 수렴 판정법(leibniz 뒤), 절대수렴 정리(rearrangement 뒤) 추가)
-- [x] **calculus 챕터(미분과 적분) 씬 11개** (기존 9개 + 코시 평균값 정리(mvt 뒤), 테일러 정리(taylor 뒤) 추가). `catalog`에서 세 번째로 두어 3장으로 표시된다. (김김계 『해석개론』 4–5·8–10장, Tao Analysis I/II 목차 참고)
-- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 41씬·123문제. 증명에 등장하는 수치는 전부 vitest로 검증
+- [x] **limits 챕터(극한과 연속) 씬 18개** (기존 16개 + 균등연속(continuity 뒤), 거리공간(closure 뒤)). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
+- [x] **series 챕터 씬 15개** (기존 14개 + 멱급수와 수렴반경(tests 뒤) 추가)
+- [x] **calculus 챕터(미분과 적분) 씬 12개** (기존 11개 + 르베그 측도(lebesgue 앞) 추가). `catalog`에서 세 번째로 두어 3장으로 표시된다. (김김계 『해석개론』 4–5·8–10장, Tao Analysis I/II 목차 참고)
+- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 45씬·135문제. 증명에 등장하는 수치는 전부 vitest로 검증
 - [x] **챕터 자동 넘버링**: `catalog` 순서 = 표시 번호. `ChapterMeta`에 번호 필드 없음. 홈·허브·헤더·문서 제목·프리렌더 본문 모두 인덱스로 계산
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)

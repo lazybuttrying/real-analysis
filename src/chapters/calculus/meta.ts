@@ -5,6 +5,7 @@ import { problems as diffcontProblems } from './problems/diffcont';
 import { problems as fourierProblems } from './problems/fourier';
 import { problems as ftcProblems } from './problems/ftc';
 import { problems as lebesgueProblems } from './problems/lebesgue';
+import { problems as measureProblems } from './problems/measure';
 import { problems as mvtProblems } from './problems/mvt';
 import { problems as newtonProblems } from './problems/newton';
 import { problems as riemannProblems } from './problems/riemann';
@@ -210,9 +211,26 @@ problems: banachProblems,
 problems: fourierProblems,
     },
     {
+      id: 'measure',
+      title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
+      order: 11,
+      summary: {
+        ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
+        en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
+      },
+      tex: [String.raw`m^*(A) = \inf \sum \ell(I_n)`, String.raw`m^*(\mathbb{Q}\cap[0,1]) = 0`],
+      prerequisites: ['riemann'],
+      controls: [
+        { kind: 'select', key: 'target', label: { ko: '대상 집합', en: 'Target set' }, options: ['singleton', 'rationals', 'interval'], init: 'rationals' },
+        { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.01, max: 0.5, step: 0.01, init: 0.1 },
+        { kind: 'slider', key: 'K', label: { ko: '유리수 개수 K', en: 'Rationals K' }, min: 1, max: 64, step: 1, init: 16 },
+      ],
+      problems: measureProblems,
+    },
+    {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
