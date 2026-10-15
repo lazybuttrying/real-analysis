@@ -3,6 +3,7 @@ import { problems as bolzanoWeierstrassProblems } from './problems/bolzano-weier
 import { problems as cantorProblems } from './problems/cantor';
 import { problems as closureProblems } from './problems/closure';
 import { problems as continuityProblems } from './problems/continuity';
+import { problems as constructionProblems } from './problems/construction';
 import { problems as countableProblems } from './problems/countable';
 import { problems as dimensionRankProblems } from './problems/dimension-rank';
 import { problems as epsdeltaProblems } from './problems/epsdelta';
@@ -353,9 +354,28 @@ problems: sequenceSpacesProblems,
 problems: holesProblems,
     },
     {
+      id: 'construction',
+      title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
+      order: 16,
+      summary: {
+        ko: String.raw`실수란 유리수 코시수열의 동치류입니다. \(\sqrt{2}\)의 소수점 자릿수를 늘려 가면 유리수 항들이 구멍으로 모여듭니다 — 그 모임 자체가 실수 \(\sqrt{2}\)입니다. 완비성의 정체는 이 구성에 있습니다.`,
+        en: String.raw`A real number is an equivalence class of Cauchy sequences of rationals. Lengthening the decimal expansion of \(\sqrt{2}\) marches rational terms into the hole — the march itself is the real number \(\sqrt{2}\). Completeness is what this construction buys.`,
+      },
+      tex: [
+        String.raw`(x_n) \sim (y_n) \iff x_n - y_n \to 0`,
+        String.raw`\sqrt{2} = [(1, 1.4, 1.41, 1.414, \dots)]`,
+      ],
+      prerequisites: ['holes'],
+      controls: [
+        { kind: 'select', key: 'seq', label: { ko: '수열', en: 'Sequence' }, options: ['decimal', 'newton'], init: 'decimal' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 1, max: 6, step: 1, init: 4 },
+      ],
+problems: constructionProblems,
+    },
+    {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 16,
+      order: 17,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -370,7 +390,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 17,
+      order: 18,
       summary: {
         ko: String.raw`\(a_n = 1 - 2^{-n}\)은 증가하면서 위로 유계이므로 상한 \(1\)에 수렴합니다(단조수렴 정리). 꼬리 지름이 \(0\)으로 줄어드는 모습을 보며, 모든 수렴수열이 코시수열임을 확인합니다.`,
         en: String.raw`\(a_n = 1 - 2^{-n}\) increases and is bounded above, so it converges to its supremum \(1\) (monotone convergence). Watch the tail diameter shrink to \(0\): every convergent sequence is Cauchy.`,
@@ -389,7 +409,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 18,
+      order: 19,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -401,7 +421,7 @@ problems: cantorProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 19,
+      order: 20,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -416,7 +436,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -440,7 +460,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 21,
+      order: 22,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,

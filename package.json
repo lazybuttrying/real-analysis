@@ -38,6 +38,7 @@
         "dist/assets/d3kit-*.js",
         "dist/assets/epsilonN-*.js",
         "dist/assets/holes-*.js",
+        "dist/assets/construction-*.js",
         "dist/assets/bolzanoWeierstrass-*.js",
         "dist/assets/cantor-*.js",
         "dist/assets/ivt-*.js",
@@ -55,7 +56,7 @@
         "dist/assets/monotoneCauchy-*.js",
         "dist/assets/evt-*.js"
       ],
-      "limit": "33 kB"
+      "limit": "35 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",

@@ -232,6 +232,7 @@ describe('limits chapter meta: the two new scenes', () => {
       'metric-spaces',
       'sequence-spaces',
       'holes',
+      'construction',
       'bolzano-weierstrass',
       'monotone-cauchy',
       'cantor',
@@ -239,7 +240,7 @@ describe('limits chapter meta: the two new scenes', () => {
       'evt',
       'uniform',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
   });
 
   it('chains the prerequisites', () => {
@@ -249,10 +250,11 @@ describe('limits chapter meta: the two new scenes', () => {
     expect(byId['closure']?.prerequisites).toEqual(['opensets']);
     expect(byId['metric-spaces']?.prerequisites).toEqual(['closure']);
     expect(byId['sequence-spaces']?.prerequisites).toEqual(['metric-spaces']);
+    expect(byId['construction']?.prerequisites).toEqual(['holes']);
   });
 
   it('gives each new scene exactly 3 problems with non-empty proofs', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces']) {
+    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction']) {
       const scene = limits.scenes.find((s) => s.id === id);
       expect(scene?.problems).toHaveLength(3);
       for (const problem of scene?.problems ?? []) {
@@ -266,7 +268,7 @@ describe('limits chapter meta: the two new scenes', () => {
   });
 
   it('uses only declared control keys with valid values in every new problem preset', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces']) {
+    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction']) {
       const scene = limits.scenes.find((s) => s.id === id);
       expect(scene).toBeDefined();
       for (const problem of scene?.problems ?? []) {
