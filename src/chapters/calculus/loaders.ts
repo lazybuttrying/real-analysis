@@ -12,5 +12,6 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   newton: () => import('./scenes/newton').then((module) => module.default),
   banach: () => import('./scenes/banach').then((module) => module.default),
   fourier: () => import('./scenes/fourier').then((module) => module.default),
+  measure: () => import('./scenes/measure').then((module) => module.default),
   lebesgue: () => import('./scenes/lebesgue').then((module) => module.default),
 };

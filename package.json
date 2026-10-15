@@ -46,10 +46,12 @@
         "dist/assets/continuity-*.js",
         "dist/assets/opensets-*.js",
         "dist/assets/closure-*.js",
+        "dist/assets/metricSpaces-*.js",
+        "dist/assets/uniformContinuity-*.js",
         "dist/assets/monotoneCauchy-*.js",
         "dist/assets/evt-*.js"
       ],
-      "limit": "24 kB"
+      "limit": "27 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",
@@ -67,6 +69,7 @@
         "dist/assets/grandi-*.js",
         "dist/assets/zeta4-*.js",
         "dist/assets/tests-*.js",
+        "dist/assets/powerSeries-*.js",
         "dist/assets/absolute-*.js",
         "dist/assets/app-*.js"
       ],
@@ -85,11 +88,12 @@
         "dist/assets/newton-*.js",
         "dist/assets/banach-*.js",
         "dist/assets/fourier-*.js",
+        "dist/assets/measure-*.js",
         "dist/assets/lebesgue-*.js",
         "dist/assets/cauchyMvt-*.js",
         "dist/assets/taylorThm-*.js"
       ],
-      "limit": "17 kB"
+      "limit": "20 kB"
     },
     {
       "name": "vendor: d3",
