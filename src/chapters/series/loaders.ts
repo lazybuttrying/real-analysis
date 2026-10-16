@@ -6,6 +6,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   basel: () => import('./scenes/basel').then((module) => module.default),
   leibniz: () => import('./scenes/leibniz').then((module) => module.default),
   tests: () => import('./scenes/tests').then((module) => module.default),
+  condensation: () => import('./scenes/condensation').then((module) => module.default),
   'power-series': () => import('./scenes/powerSeries').then((module) => module.default),
   eseries: () => import('./scenes/eseries').then((module) => module.default),
   telescoping: () => import('./scenes/telescoping').then((module) => module.default),

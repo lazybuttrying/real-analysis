@@ -5,6 +5,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   diffcont: () => import('./scenes/diffCont').then((module) => module.default),
   mvt: () => import('./scenes/mvt').then((module) => module.default),
   'cauchy-mvt': () => import('./scenes/cauchyMvt').then((module) => module.default),
+  lhopital: () => import('./scenes/lhopital').then((module) => module.default),
   taylor: () => import('./scenes/taylor').then((module) => module.default),
   'taylor-thm': () => import('./scenes/taylorThm').then((module) => module.default),
   convex: () => import('./scenes/convex').then((module) => module.default),
