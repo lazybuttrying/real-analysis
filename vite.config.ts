@@ -37,11 +37,16 @@ function chapterFallback(): Plugin {
     if (pathname.startsWith(BASE) && !/\.[a-z0-9]+$/i.test(pathname)) {
       const segments = pathname.slice(BASE.length).split('/').filter(Boolean);
       const [first, second] = segments;
-      const chapter = first !== undefined && LANG_SEGMENTS.has(first) ? second : first;
-      if (chapter !== undefined && chapterIds.includes(chapter)) {
-        req.url = `${BASE}${chapter}/index.html${query}`;
-      } else if (first !== undefined && LANG_SEGMENTS.has(first) && second === undefined) {
+      // The glossary page lives on the home entry.
+      if (first === 'glossary' || (first !== undefined && LANG_SEGMENTS.has(first) && second === 'glossary')) {
         req.url = `${BASE}index.html${query}`;
+      } else {
+        const chapter = first !== undefined && LANG_SEGMENTS.has(first) ? second : first;
+        if (chapter !== undefined && chapterIds.includes(chapter)) {
+          req.url = `${BASE}${chapter}/index.html${query}`;
+        } else if (first !== undefined && LANG_SEGMENTS.has(first) && second === undefined) {
+          req.url = `${BASE}index.html${query}`;
+        }
       }
     }
     next();

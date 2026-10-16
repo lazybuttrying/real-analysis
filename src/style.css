@@ -71,6 +71,132 @@ main.home {
   color: var(--fg);
 }
 
+/* Header search box, present in the header of every page */
+.header-search {
+  display: inline-flex;
+}
+
+.site-search {
+  position: relative;
+}
+
+.site-search input[type='search'] {
+  width: 11rem;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 50;
+  min-width: 16rem;
+  max-width: 22rem;
+  max-height: 24rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.search-results li[role='option'] a {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: baseline;
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.search-results li[role='option'][aria-selected='true'] a,
+.search-results li[role='option'] a:hover {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.search-kind {
+  font-size: 0.75rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 4px;
+  white-space: nowrap;
+}
+
+.search-label {
+  font-weight: 600;
+}
+
+.search-context {
+  flex-basis: 100%;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.search-empty {
+  padding: 8px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.glossary-link {
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Glossary page */
+main.glossary {
+  max-width: 48rem;
+}
+
+.glossary-filter {
+  width: 100%;
+  padding: 8px 12px;
+  margin: 8px 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+}
+
+.glossary-chapter {
+  margin-bottom: 24px;
+}
+
+.glossary-chapter h2 a {
+  text-decoration: none;
+}
+
+.glossary-term {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+
+.glossary-term h3 {
+  margin: 0 0 4px;
+}
+
+.glossary-term p {
+  margin: 4px 0;
+}
+
+.glossary-scene-link {
+  font-size: 0.875rem;
+}
+
 /* Chapter page layout */
 #app.chapter {
   display: grid;

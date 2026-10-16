@@ -35,6 +35,17 @@ export const STRINGS = {
   showProof: { ko: '증명 보기', en: 'Show proof' },
   prevScene: { ko: '이전', en: 'Previous' },
   nextScene: { ko: '다음', en: 'Next' },
+  searchPlaceholder: { ko: '검색', en: 'Search' },
+  searchLabel: { ko: '사이트 검색', en: 'Search the site' },
+  searchNoResults: { ko: '검색 결과가 없습니다', en: 'No results' },
+  searchSceneKind: { ko: '씬', en: 'Scene' },
+  searchTermKind: { ko: '용어', en: 'Term' },
+  glossary: { ko: '용어 사전', en: 'Glossary' },
+  glossaryIntro: {
+    ko: '씬에서 등장한 핵심 용어를 챕터별로 모았다. 각 용어는 처음 소개된 씬으로 연결된다.',
+    en: 'Key terms from the scenes, grouped by chapter. Each term links to the scene where it is introduced.',
+  },
+  glossaryFilterPlaceholder: { ko: '용어 검색…', en: 'Filter terms…' },
 } satisfies Record<string, LocalizedText>;
 
 export type StringKey = keyof typeof STRINGS;

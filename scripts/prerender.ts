@@ -4,7 +4,9 @@ import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
-import { chapterUrl, homeUrl, sceneUrl } from '../src/paths.ts';
+import { glossary } from '../src/glossary.ts';
+import { chapterUrl, glossaryUrl, homeUrl, sceneUrl } from '../src/paths.ts';
+import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
 /**
@@ -115,6 +117,42 @@ interface Page {
   formulas?: boolean;
 }
 
+/** chapterId/sceneId -> the scene, for glossary scene-link labels. */
+const sceneOf = new Map<string, SceneMeta>();
+for (const chapter of catalog) {
+  for (const scene of chapter.scenes) sceneOf.set(`${chapter.id}/${scene.id}`, scene);
+}
+
+/** Static body of the glossary page: terms grouped by chapter in catalog order. */
+const renderGlossaryHtml = (lang: Lang): string => {
+  const sections = catalog
+    .map((chapter, chapterIndex) => {
+      const terms = glossary.filter((entry) => entry.chapterId === chapter.id);
+      if (terms.length === 0) return '';
+      const items = terms
+        .map((entry) => {
+          const scene = sceneOf.get(`${entry.chapterId}/${entry.sceneId}`);
+          const sceneLabel = scene ? localize(scene.title, lang) : entry.sceneId;
+          return `<article class="glossary-term" id="term-${entry.id}">
+<h3>${escapeHtml(stripInlineMath(localize(entry.term, lang)))}</h3>
+<p>${renderSummaryHtml(localize(entry.definition, lang))}</p>
+<p class="glossary-scene-link"><a href="${sceneUrl(BASE, lang, entry.chapterId, entry.sceneId)}">${escapeHtml(sceneLabel)}</a></p>
+</article>`;
+        })
+        .join('\n');
+      return `<section class="glossary-chapter">
+<h2>${chapterIndex + 1}. ${escapeHtml(localize(chapter.title, lang))}</h2>
+${items}
+</section>`;
+    })
+    .join('\n');
+  return [
+    `<h1>${escapeHtml(localize(STRINGS.glossary, lang))}</h1>`,
+    `<p>${escapeHtml(localize(STRINGS.glossaryIntro, lang))}</p>`,
+    sections,
+  ].join('\n');
+};
+
 const pages: Page[] = [
   {
     segments: (lang) => [lang],
@@ -134,6 +172,7 @@ const pages: Page[] = [
             `<li><a href="${chapterUrl(BASE, lang, chapter.id)}">${index + 1}. ${escapeHtml(localize(chapter.title, lang))}</a> — ${renderSummaryHtml(localize(chapter.summary, lang))}</li>`,
         ),
         '</ul>',
+        `<p><a href="${glossaryUrl(BASE, lang)}">${escapeHtml(localize(STRINGS.glossary, lang))}</a></p>`,
       ].join('\n'),
   },
 ];
@@ -184,6 +223,16 @@ for (const [index, chapter] of catalog.entries()) {
   }
 }
 
+pages.push({
+  segments: (lang) => [lang, 'glossary'],
+  url: (lang) => glossaryUrl(BASE, lang),
+  title: (lang) => `${localize(STRINGS.glossary, lang)} | ${SITE_NAME}`,
+  description: (lang) => localize(STRINGS.glossaryIntro, lang),
+  template: 'home',
+  formulas: glossary.some((entry) => hasInlineMath(entry.definition) || hasInlineMath(entry.term)),
+  body: renderGlossaryHtml,
+});
+
 function selfCheck(): string[] {
   const problems: string[] = [];
   for (const chapter of catalog) {
@@ -224,6 +273,27 @@ function selfCheck(): string[] {
     }
     for (const [title, count] of seen) {
       if (count > 1) problems.push(`duplicate <title> in ${lang}: "${title}" (${count} pages)`);
+    }
+  }
+  // Glossary entries: unique ids, real chapter/scene links, non-empty text in
+  // both languages, and well-formed math delimiters (\(...\) only, never $...$).
+  const seenTermIds = new Set<string>();
+  for (const entry of glossary) {
+    if (seenTermIds.has(entry.id)) problems.push(`glossary has a duplicate term id '${entry.id}'`);
+    seenTermIds.add(entry.id);
+    const scene = sceneOf.get(`${entry.chapterId}/${entry.sceneId}`);
+    if (!scene) problems.push(`glossary term '${entry.id}' links to unknown scene '${entry.chapterId}/${entry.sceneId}'`);
+    for (const lang of LANGS) {
+      for (const [field, text] of [
+        ['term', localize(entry.term, lang)],
+        ['definition', localize(entry.definition, lang)],
+      ] as const) {
+        if (!text.trim()) problems.push(`glossary term '${entry.id}' has an empty ${field} (${lang})`);
+        if (text.includes('$')) problems.push(`glossary term '${entry.id}' uses a $ delimiter in ${field} (${lang})`);
+        const opens = (text.match(/\\\(/g) ?? []).length;
+        const closes = (text.match(/\\\)/g) ?? []).length;
+        if (opens !== closes) problems.push(`glossary term '${entry.id}' has unbalanced \\(...\\) in ${field} (${lang})`);
+      }
     }
   }
   return problems;
@@ -366,8 +436,14 @@ function main(): void {
   writeFileSync(join(DIST, 'sitemap.xml'), sitemapXml());
   writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}${BASE}sitemap.xml\n`);
 
+  // Client-side search index, one JSON file per language. The shell fetches it
+  // lazily on first search input, so no page bundle pays for it up front.
+  for (const lang of LANGS) {
+    writeFileSync(join(DIST, `search-index.${lang}.json`), JSON.stringify(buildSearchIndex(lang)));
+  }
+
   console.log(
-    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes), sitemap.xml (${written} URLs), 404.html, robots.txt`,
+    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
   );
 }
 

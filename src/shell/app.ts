@@ -1,12 +1,13 @@
 import '../style.css';
 import { catalog } from '../catalog';
 import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
-import { chapterUrl, fallbackLang, homeUrl, parsePath, sceneUrl, withLang } from '../paths';
+import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './i18n';
 import { SceneHost } from './scene-host';
+import { mountSearch } from './search';
 
 const BASE = import.meta.env.BASE_URL;
 const URL_SYNC_DELAY_MS = 200;
@@ -211,17 +212,21 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
   const sceneView = h('section', { class: 'scene-view' }, hostEl, controlsEl, textEl, pagerEl);
 
   root.classList.add('chapter');
+  const headerSearch = h('span', { class: 'header-search' });
   root.replaceChildren(
     h(
       'header',
       {},
       h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
       h('a', { href: chapterUrl(BASE, lang, chapter.id), 'data-spa': '' }, chapterTitle),
+      h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
+      headerSearch,
       langSwitcher(lang, (target) => `${withLang(BASE, parsePath(BASE, location.pathname), target)}${location.search}`),
     ),
     nav,
     h('main', {}, hub, sceneView),
   );
+  mountSearch(headerSearch, lang);
 
   const sceneHost = new SceneHost(hostEl, lang);
   let urlSyncTimer: number | undefined;

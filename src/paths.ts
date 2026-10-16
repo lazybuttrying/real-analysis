@@ -21,9 +21,13 @@ export const chapterUrl = (base: string, lang: Lang, chapterId: string): string 
 export const sceneUrl = (base: string, lang: Lang, chapterId: string, sceneId: string): string =>
   `${base}${lang}/${chapterId}/${sceneId}/`;
 
+/** The glossary page: /<lang>/glossary/ */
+export const glossaryUrl = (base: string, lang: Lang): string => `${base}${lang}/glossary/`;
+
 /** The same page in another language: only the lang segment changes, chapter/scene/query are kept. */
 export function withLang(base: string, parsed: ParsedPath, lang: Lang): string {
   if (parsed.chapterId === undefined) return homeUrl(base, lang);
+  if (parsed.chapterId === 'glossary') return glossaryUrl(base, lang);
   if (parsed.sceneId === undefined) return chapterUrl(base, lang, parsed.chapterId);
   return sceneUrl(base, lang, parsed.chapterId, parsed.sceneId);
 }
