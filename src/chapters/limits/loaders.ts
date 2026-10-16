@@ -24,4 +24,5 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   ivt: () => import('./scenes/ivt').then((module) => module.default),
   evt: () => import('./scenes/evt').then((module) => module.default),
   uniform: () => import('./scenes/uniform').then((module) => module.default),
+  'weierstrass-approx': () => import('./scenes/weierstrassApprox').then((module) => module.default),
 };

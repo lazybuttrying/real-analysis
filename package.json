@@ -54,9 +54,10 @@
         "dist/assets/dimensionRank-*.js",
         "dist/assets/sequenceSpaces-*.js",
         "dist/assets/monotoneCauchy-*.js",
-        "dist/assets/evt-*.js"
+        "dist/assets/evt-*.js",
+        "dist/assets/weierstrassApprox-*.js"
       ],
-      "limit": "35 kB"
+      "limit": "38 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",
@@ -75,10 +76,11 @@
         "dist/assets/zeta4-*.js",
         "dist/assets/tests-*.js",
         "dist/assets/powerSeries-*.js",
+        "dist/assets/gamma-*.js",
         "dist/assets/absolute-*.js",
         "dist/assets/app-*.js"
       ],
-      "limit": "26 kB"
+      "limit": "28 kB"
     },
     {
       "name": "chapter: calculus (shell, view kit, all scenes)",
@@ -96,9 +98,10 @@
         "dist/assets/measure-*.js",
         "dist/assets/lebesgue-*.js",
         "dist/assets/cauchyMvt-*.js",
-        "dist/assets/taylorThm-*.js"
+        "dist/assets/taylorThm-*.js",
+        "dist/assets/convex-*.js"
       ],
-      "limit": "20 kB"
+      "limit": "22 kB"
     },
     {
       "name": "vendor: d3",
