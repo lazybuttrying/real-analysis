@@ -269,6 +269,9 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
   it('has the final 18-scene order sequence', () => {
     const ids = limits.scenes.map((s) => s.id);
     expect(ids).toEqual([
+      'natural-numbers',
+      'binomial',
+      'integers-rationals',
       'sets',
       'supremum',
       'countable',
@@ -293,11 +296,13 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'uniform',
       'weierstrass-approx',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
   });
 
   it('sets the new scenes prerequisites', () => {
     const byId = Object.fromEntries(limits.scenes.map((s) => [s.id, s]));
+    expect(byId['binomial']?.prerequisites).toEqual(['natural-numbers']);
+    expect(byId['integers-rationals']?.prerequisites).toEqual(['natural-numbers']);
     expect(byId['weierstrass-approx']?.prerequisites).toEqual(['uniform']);
     expect(byId['vector-spaces']?.prerequisites).toEqual(['groups-fields']);
     expect(byId['dimension-rank']?.prerequisites).toEqual(['vector-spaces']);

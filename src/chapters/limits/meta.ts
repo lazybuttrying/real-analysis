@@ -1,5 +1,6 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { problems as bolzanoWeierstrassProblems } from './problems/bolzano-weierstrass';
+import { problems as binomialProblems } from './problems/binomial';
 import { problems as cantorProblems } from './problems/cantor';
 import { problems as closureProblems } from './problems/closure';
 import { problems as continuityProblems } from './problems/continuity';
@@ -12,8 +13,10 @@ import { problems as evtProblems } from './problems/evt';
 import { problems as groupsFieldsProblems } from './problems/groups-fields';
 import { problems as holesProblems } from './problems/holes';
 import { problems as ivtProblems } from './problems/ivt';
+import { problems as integersRationalsProblems } from './problems/integers-rationals';
 import { problems as metricSpacesProblems } from './problems/metric-spaces';
 import { problems as monotoneCauchyProblems } from './problems/monotone-cauchy';
+import { problems as naturalNumbersProblems } from './problems/natural-numbers';
 import { problems as opensetsProblems } from './problems/opensets';
 import { problems as sequenceSpacesProblems } from './problems/sequence-spaces';
 import { problems as setsProblems } from './problems/sets';
@@ -41,9 +44,74 @@ export const limits: ChapterMeta = {
   },
   scenes: [
     {
+      id: 'natural-numbers',
+      title: { ko: '자연수와 귀납법', en: 'Natural Numbers and Induction' },
+      order: 1,
+      summary: {
+        ko: String.raw`자연수는 페아노 공리에서 출발한다: \(P(1)\)과 \(P(k) \Rightarrow P(k+1)\)이면 모든 자연수 \(n\)에 대해 \(P(n)\)이 성립한다 — 덧셈과 곱셈도 귀납적으로 정의되며, 이 원리 하나로 무한히 많은 명제를 한 번에 증명한다.`,
+        en: String.raw`The natural numbers start from the Peano axioms: \(P(1)\) plus \(P(k) \Rightarrow P(k+1)\) yields \(P(n)\) for every natural number \(n\) — addition and multiplication are also defined recursively, and this one principle proves infinitely many statements at once.`,
+      },
+      tex: [
+        String.raw`P(1) \land (P(k) \Rightarrow P(k+1)) \Rightarrow \forall n \in \mathbb{N},\; P(n)`,
+        String.raw`\sum_{k=1}^{n} k = \frac{n(n+1)}{2}`,
+        String.raw`(1+x)^n \geq 1 + nx \quad (x > -1)`,
+        String.raw`2^n > n`,
+      ],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '도미노 개수', en: 'Domino count' }, min: 1, max: 10, step: 1, init: 6 },
+      ],
+      problems: naturalNumbersProblems,
+    },
+    {
+      id: 'binomial',
+      title: { ko: '이항정리', en: 'The Binomial Theorem' },
+      order: 2,
+      summary: {
+        ko: String.raw`이항정리 \((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\)를 귀납법으로 증명한다 — 파스칼의 항등식 \(\binom{n}{k}+\binom{n}{k-1}=\binom{n+1}{k}\)이 귀납 단계를 이루고, 파스칼 삼각형의 행 \(n\)을 눈으로 확인한다.`,
+        en: String.raw`The binomial theorem \((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\) proved by induction — Pascal's identity \(\binom{n}{k}+\binom{n}{k-1}=\binom{n+1}{k}\) is the inductive step, and row \(n\) of Pascal's triangle is drawn live.`,
+      },
+      tex: [
+        String.raw`(x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k`,
+        String.raw`\binom{n}{k}+\binom{n}{k-1}=\binom{n+1}{k}`,
+        String.raw`\sum_{k=0}^{n}\binom{n}{k} = 2^n`,
+      ],
+      prerequisites: ['natural-numbers'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '선택된 행', en: 'Selected row' }, min: 0, max: 8, step: 1, init: 4 },
+      ],
+      problems: binomialProblems,
+    },
+    {
+      id: 'integers-rationals',
+      title: { ko: '정수와 유리수', en: 'Integers and Rationals' },
+      order: 3,
+      summary: {
+        ko: String.raw`정수는 자연수 순서쌍의 동치류 \((a,b)\sim(c,d)\iff a+d=b+c\), 유리수는 정수 순서쌍의 동치류 \((a,b)\sim(c,d)\iff ad=bc\)로 얻어진다. "동치류로 수를 만든다"는 기술은 유리수에서 실수를 만들 때 다시 등장한다.`,
+        en: String.raw`Integers arise as equivalence classes of natural pairs with \((a,b)\sim(c,d)\iff a+d=b+c\), and rationals as classes of integer pairs with \((a,b)\sim(c,d)\iff ad=bc\). The "numbers as equivalence classes" trick returns when the reals are built from the rationals.`,
+      },
+      tex: [
+        String.raw`(a,b)\sim(c,d)\iff a+d=b+c`,
+        String.raw`(a,b)\sim(c,d)\iff ad=bc`,
+        String.raw`p<q \implies p<\frac{p+q}{2}<q`,
+        String.raw`\frac{a}{b}\cdot\frac{b}{a}=1`,
+      ],
+      prerequisites: ['natural-numbers'],
+      controls: [
+        {
+          kind: 'select',
+          key: 'set',
+          label: { ko: '수 집합', en: 'Number set' },
+          options: ['naturals', 'integers', 'rationals'],
+          init: 'rationals',
+        },
+        { kind: 'slider', key: 'denom', label: { ko: '최대 분모', en: 'Max denominator' }, min: 1, max: 8, step: 1, init: 4 },
+      ],
+      problems: integersRationalsProblems,
+    },
+    {
       id: 'sets',
       title: { ko: '집합과 함수', en: 'Sets and Functions' },
-      order: 1,
+      order: 4,
       summary: {
         ko: String.raw`집합의 연산 \(A \cup B\), \(A \cap B\), \(A^c\)와 드모르간 법칙, 그리고 단사·전사·전단사를 그림으로 확인합니다.`,
         en: String.raw`See set operations \(A \cup B\), \(A \cap B\), \(A^c\), De Morgan's laws, and injective / surjective / bijective maps as pictures.`,
@@ -73,7 +141,7 @@ problems: setsProblems,
     {
       id: 'supremum',
       title: { ko: '상한과 완비성', en: 'The Supremum Axiom' },
-      order: 2,
+      order: 5,
       summary: {
         ko: String.raw`위로 유계인 집합은 가장 작은 상한 \(\sup S\)를 갖습니다 — 실수의 빈틈을 메우는 공리, 유리수의 구멍 장면의 짝꿍입니다.`,
         en: String.raw`Every bounded-above set has a least upper bound \(\sup S\) — the axiom filling the gaps in the rationals, twin of the rational-holes scene.`,
@@ -102,7 +170,7 @@ problems: supremumProblems,
     {
       id: 'countable',
       title: { ko: '가산과 비가산', en: 'Countable vs Uncountable' },
-      order: 3,
+      order: 6,
       summary: {
         ko: String.raw`유리수는 한 줄로 나열할 수 있지만 실수는 그럴 수 없습니다 — 칸토어의 대각선 논법으로 확인합니다.`,
         en: String.raw`The rationals fit into a single list; the reals do not — verified by Cantor's diagonal argument.`,
@@ -123,7 +191,7 @@ problems: countableProblems,
     {
       id: 'groups-fields',
       title: { ko: '군과 체', en: 'Groups vs Fields' },
-      order: 4,
+      order: 7,
       summary: {
         ko: String.raw`군은 되돌릴 수 있는 움직임(결합·항등원·역원), 체는 사칙연산이 되는 세계입니다. 부분군 판정법과 \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\)의 차이를 봅니다.`,
         en: String.raw`A group is reversible moves (associativity, identity, inverses); a field is a world where all four operations work. Includes the subgroup test and \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\).`,
@@ -146,7 +214,7 @@ problems: groupsFieldsProblems,
     {
       id: 'vector-spaces',
       title: { ko: '벡터공간과 동형', en: 'Vector Spaces and Isomorphism' },
-      order: 5,
+      order: 8,
       summary: {
         ko: String.raw`벡터공간은 체 위의 아벨군에 스칼라곱을 얹은 구조입니다 — \(\mathbb{R}^n\), 수열공간, 연속함수공간은 포장만 다를 뿐 같은 구조입니다. 계수 \((a, b)\)를 움직이면 직선 \(y = a+bx\)와 점 \((a, b)\)가 함께 움직입니다.`,
         en: String.raw`A vector space is an abelian group over a field with scalar multiplication — \(\mathbb{R}^n\), sequence spaces, and spaces of continuous functions are the same structure in different packaging. Move \((a, b)\) and the line \(y = a+bx\) and the point \((a, b)\) move together.`,
@@ -165,7 +233,7 @@ problems: vectorSpacesProblems,
     {
       id: 'dimension-rank',
       title: { ko: '차원과 랭크', en: 'Dimension and Rank' },
-      order: 6,
+      order: 9,
       summary: {
         ko: String.raw`동형이 "같은 구조"라면, 차원과 랭크는 그 구조의 크기를 재는 자입니다. 격자가 행렬에 눌려 펴지는 모습을 보며 \(\dim\ker T + \mathrm{rank}\,T = \dim V\)를 확인합니다.`,
         en: String.raw`If isomorphism means "same structure", dimension and rank measure its size. Watch the grid get squeezed by a matrix and verify \(\dim\ker T + \mathrm{rank}\,T = \dim V\).`,
@@ -189,7 +257,7 @@ problems: dimensionRankProblems,
     {
       id: 'epsilon-n',
       title: { ko: 'ε-N 극한', en: 'The ε–N Definition' },
-      order: 7,
+      order: 10,
       summary: {
         ko: String.raw`\(\varepsilon\) 띠를 좁혀도 수열의 꼬리가 전부 그 안에 들어가는 순간을 확인합니다. 그때의 \(N\)이 바로 \(\forall\varepsilon>0\ \exists N\)의 \(N\)입니다.`,
         en: String.raw`Watch the moment the whole tail of a sequence fits inside the \(\varepsilon\)-band. That \(N\) is exactly the \(N\) in \(\forall\varepsilon>0\ \exists N\).`,
@@ -210,7 +278,7 @@ problems: epsilonNProblems,
     {
       id: 'epsdelta',
       title: { ko: 'ε-δ 정의', en: 'The ε–δ Definition' },
-      order: 8,
+      order: 11,
       summary: {
         ko: String.raw`함수의 극한 \(\lim_{x\to a} f(x) = L\)의 엄밀한 뜻: \(\varepsilon\) 띠를 아무리 좁혀도, \(a\) 근처의 \(\delta\) 띠 안에서는 \(f\)가 그 띠 안에 머뭅니다. \(f(x)=2x\), \(a=1\), \(L=2\)에서 \(\delta=\varepsilon/2\)를 확인합니다.`,
         en: String.raw`The rigorous meaning of \(\lim_{x\to a} f(x) = L\): no matter how narrow the \(\varepsilon\)-band, there is a \(\delta\)-band around \(a\) where \(f\) stays inside it. Check \(\delta = \varepsilon/2\) for \(f(x) = 2x\), \(a = 1\), \(L = 2\).`,
@@ -226,7 +294,7 @@ problems: epsdeltaProblems,
     {
       id: 'continuity',
       title: { ko: '연속의 정의', en: 'The Definition of Continuity' },
-      order: 9,
+      order: 12,
       summary: {
         ko: String.raw`\(f\)가 \(a\)에서 연속이란 \(\lim_{x\to a} f(x) = f(a)\)인 것 — 극한값과 함수값이 일치해야 합니다. 점 \(a\)를 움직여 보고, broken 모드에서는 한 점의 값을 들어 올려 정의가 깨지는 모습을 확인합니다.`,
         en: String.raw`\(f\) is continuous at \(a\) when \(\lim_{x\to a} f(x) = f(a)\) — the limit and the value must agree. Move the point \(a\); in broken mode the value at one point is lifted and the definition breaks.`,
@@ -245,7 +313,7 @@ problems: continuityProblems,
     {
       id: 'uniform-continuity',
       title: { ko: '균등연속', en: 'Uniform Continuity' },
-      order: 10,
+      order: 13,
       summary: {
         ko: String.raw`균등연속에서는 하나의 \(\delta\)가 모든 점 \(x\)에서 통한다 — \(\delta\)는 \(\varepsilon\)에만 의존하고 \(x\)에는 의존하지 않는다. \(f(x) = x^2\)에서는 \(x\)가 커질수록 필요한 \(\delta\)가 줄어들어 \(\mathbb{R}\) 전체를 감당하는 \(\delta\)가 없음을 직접 확인해 보자.`,
         en: String.raw`Uniform continuity demands one \(\delta\) that works at every point \(x\) — \(\delta\) may depend on \(\varepsilon\) alone, never on \(x\). Watch the required \(\delta\) shrink as \(x\) grows for \(f(x) = x^2\), so no single \(\delta\) covers all of \(\mathbb{R}\).`,
@@ -265,7 +333,7 @@ problems: continuityProblems,
     {
       id: 'opensets',
       title: { ko: '열린집합과 닫힌집합', en: 'Open and Closed Sets' },
-      order: 11,
+      order: 14,
       summary: {
         ko: String.raw`집합 \(U\)가 열려 있다는 것은 모든 점이 내점이라는 뜻 — 각 점을 \(\varepsilon\)-공으로 감쌀 수 있습니다. 수직선 위에서 점 \(x\)와 \(\varepsilon\)을 움직이며 공이 집합 안에 들어가는지 확인합니다.`,
         en: String.raw`A set \(U\) is open when every point is an interior point — each point can be wrapped in an \(\varepsilon\)-ball. Move the point \(x\) and the radius \(\varepsilon\) on the line and watch whether the ball stays inside.`,
@@ -285,7 +353,7 @@ problems: opensetsProblems,
     {
       id: 'closure',
       title: { ko: '폐포와 유계', en: 'Closure and Boundedness' },
-      order: 12,
+      order: 15,
       summary: {
         ko: String.raw`집합 \(A\) 위에 바를 그으면 폐포 \(\overline{A}\) — 빠져나간 극한점들을 빨아들인 집합입니다. 닫힘 ⟺ 극한점을 다 품음 ⟺ 폐포와 같음, 그리고 닫힘 + 유계 ⟺ 컴팩트(하이네-보렐)의 돌림노래를 확인합니다.`,
         en: String.raw`Drawing a bar over \(A\) gives the closure \(\overline{A}\) — the set with its escaped limit points pulled back in. Follow the round-song: closed ⟺ contains its limit points ⟺ equals its closure, and closed + bounded ⟺ compact (Heine-Borel).`,
@@ -304,7 +372,7 @@ problems: closureProblems,
     {
       id: 'metric-spaces',
       title: { ko: '거리공간', en: 'Metric Spaces' },
-      order: 13,
+      order: 16,
       summary: {
         ko: String.raw`거리를 공리화하면 \(\varepsilon\)-공이 일반화됩니다 — 열린 공 \(B(c, r)\)의 모양은 거리 \(d\)에 달려 있습니다. 유클리드 거리의 원판, 최대 노름의 정사각형, 그리고 극단적인 예시인 이산 거리를 비교합니다.`,
         en: String.raw`Axiomatizing distance generalizes the \(\varepsilon\)-ball — the shape of an open ball \(B(c, r)\) depends on the metric \(d\). Compare the Euclidean disk, the max-norm square, and the extreme discrete metric.`,
@@ -324,7 +392,7 @@ problems: closureProblems,
     {
       id: 'sequence-spaces',
       title: { ko: '수열공간과 함수공간', en: 'Sequence and Function Spaces' },
-      order: 14,
+      order: 17,
       summary: {
         ko: String.raw`\(\ell^1, \ell^2, \ell^\infty\)와 \(C[0,1]\) — 점별 연산으로는 벡터공간이고, 노름 \(\|x - y\|\)로는 거리공간입니다. 노름공간이 두 세계를 잇는 다리입니다. \(x_n = 1/n^\alpha\)로 포함관계 \(\ell^1 \subset \ell^2 \subset \ell^\infty\)를 눈으로 확인합니다. \(\ell^p\)와 \(C[0,1]\)이 완비(바나흐 공간)라는 것은 알려진 정리로만 언급합니다.`,
         en: String.raw`\(\ell^1, \ell^2, \ell^\infty\) and \(C[0,1]\) — vector spaces under pointwise operations, metric spaces via the norm \(\|x - y\|\). A normed space bridges both worlds. Watch the inclusion chain \(\ell^1 \subset \ell^2 \subset \ell^\infty\) through \(x_n = 1/n^\alpha\). Completeness of \(\ell^p\) and \(C[0,1]\) (Banach spaces) is stated as a known theorem only.`,
@@ -345,7 +413,7 @@ problems: sequenceSpacesProblems,
     {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 15,
+      order: 18,
       summary: {
         ko: String.raw`\(x_{n+1}=\frac{x_n+2/x_n}{2}\)의 모든 항은 유리수지만, 극한 \(\sqrt{2}\)는 유리수가 아닙니다. 유리수 집합 \(\mathbb{Q}\)에는 구멍이 있다는 뜻입니다. 무리수임의 엄밀한 증명은 다루지 않고 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every term of \(x_{n+1}=\frac{x_n+2/x_n}{2}\) is rational, yet the limit \(\sqrt{2}\) is not. The rationals \(\mathbb{Q}\) have a hole — shown at the idea level, without a full irrationality proof.`,
@@ -357,7 +425,7 @@ problems: holesProblems,
     {
       id: 'construction',
       title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
-      order: 16,
+      order: 19,
       summary: {
         ko: String.raw`실수란 유리수 코시수열의 동치류입니다. \(\sqrt{2}\)의 소수점 자릿수를 늘려 가면 유리수 항들이 구멍으로 모여듭니다 — 그 모임 자체가 실수 \(\sqrt{2}\)입니다. 완비성의 정체는 이 구성에 있습니다.`,
         en: String.raw`A real number is an equivalence class of Cauchy sequences of rationals. Lengthening the decimal expansion of \(\sqrt{2}\) marches rational terms into the hole — the march itself is the real number \(\sqrt{2}\). Completeness is what this construction buys.`,
@@ -376,7 +444,7 @@ problems: constructionProblems,
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 17,
+      order: 20,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -391,7 +459,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 18,
+      order: 21,
       summary: {
         ko: String.raw`\(a_n = 1 - 2^{-n}\)은 증가하면서 위로 유계이므로 상한 \(1\)에 수렴합니다(단조수렴 정리). 꼬리 지름이 \(0\)으로 줄어드는 모습을 보며, 모든 수렴수열이 코시수열임을 확인합니다.`,
         en: String.raw`\(a_n = 1 - 2^{-n}\) increases and is bounded above, so it converges to its supremum \(1\) (monotone convergence). Watch the tail diameter shrink to \(0\): every convergent sequence is Cauchy.`,
@@ -410,7 +478,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 19,
+      order: 22,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -422,7 +490,7 @@ problems: cantorProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 20,
+      order: 23,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -437,7 +505,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 21,
+      order: 24,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -461,7 +529,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 22,
+      order: 25,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
@@ -479,7 +547,7 @@ problems: uniformProblems,
     {
       id: 'weierstrass-approx',
       title: { ko: '바이어슈트라스 근사정리', en: 'Weierstrass Approximation Theorem' },
-      order: 23,
+      order: 26,
       summary: {
         ko: String.raw`\([0,1]\) 위의 연속함수는 다항식으로 균등하게 근사됩니다 — 번스타인 다항식 \(B_n(f)\)가 \(f\)에 다가가는 모습을 \(n\)을 키우며 확인합니다. 수렴 증명의 세부 추정은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every continuous function on \([0,1]\) is uniformly approximable by polynomials — watch the Bernstein polynomials \(B_n(f)\) close in on \(f\) as \(n\) grows. The fine estimates of the convergence proof are sketched at the idea level.`,

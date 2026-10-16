@@ -22,6 +22,86 @@ export interface GlossaryEntry {
 export const glossary: readonly GlossaryEntry[] = [
   // ---------------------------------------------------------------- limits
   {
+    id: 'natural-number',
+    term: { ko: '자연수', en: 'natural number' },
+    definition: {
+      ko: String.raw`\(1, 2, 3, \dots\) — 페아노 공리에서 출발하는 수 세기의 기본 단위.`,
+      en: String.raw`\(1, 2, 3, \dots\) — the basic unit of counting, axiomatized by Peano.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'natural-numbers',
+  },
+  {
+    id: 'mathematical-induction',
+    term: { ko: '수학적 귀납법', en: 'mathematical induction' },
+    definition: {
+      ko: String.raw`\(P(1)\)과 \(P(k) \Rightarrow P(k+1)\)로부터 모든 자연수 \(n\)에 대한 \(P(n)\)을 얻는 증명 원리 — 도미노가 차례로 쓰러지듯.`,
+      en: String.raw`The proof principle getting \(P(n)\) for every natural \(n\) from \(P(1)\) and \(P(k) \Rightarrow P(k+1)\) — like dominoes falling in turn.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'natural-numbers',
+  },
+  {
+    id: 'peano-axioms',
+    term: { ko: '페아노 공리', en: 'Peano axioms' },
+    definition: {
+      ko: String.raw`자연수를 정의하는 다섯 공리 — \(1\)의 존재, 후계자 함수, 귀납법 공리 등. 덧셈과 곱셈도 여기서 귀납적으로 정의된다.`,
+      en: String.raw`The five axioms defining the naturals — existence of \(1\), the successor function, the induction axiom, and more. Addition and multiplication are defined recursively from them.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'natural-numbers',
+  },
+  {
+    id: 'binomial-coefficient',
+    term: { ko: '이항계수', en: 'binomial coefficient' },
+    definition: {
+      ko: String.raw`\(\binom{n}{k} = \frac{n!}{k!(n-k)!}\) — \(n\)개 중 \(k\)개를 고르는 경우의 수. 파스칼의 항등식 \(\binom{n}{k}+\binom{n}{k-1}=\binom{n+1}{k}\)를 만족한다.`,
+      en: String.raw`\(\binom{n}{k} = \frac{n!}{k!(n-k)!}\) — the number of ways to choose \(k\) from \(n\). Satisfies Pascal's identity \(\binom{n}{k}+\binom{n}{k-1}=\binom{n+1}{k}\).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'binomial',
+  },
+  {
+    id: 'binomial-theorem',
+    term: { ko: '이항정리', en: 'binomial theorem' },
+    definition: {
+      ko: String.raw`\((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\) — 귀납법으로 증명되며, 파스칼의 항등식이 귀납 단계를 이룬다.`,
+      en: String.raw`\((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\) — proved by induction, with Pascal's identity as the inductive step.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'binomial',
+  },
+  {
+    id: 'integer',
+    term: { ko: '정수', en: 'integer' },
+    definition: {
+      ko: String.raw`\(\dots, -2, -1, 0, 1, 2, \dots\) — 자연수 순서쌍의 동치류 \((a,b)\sim(c,d)\iff a+d=b+c\)로 구성되는 수 ("\(a-b\)").`,
+      en: String.raw`\(\dots, -2, -1, 0, 1, 2, \dots\) — built as equivalence classes of natural pairs with \((a,b)\sim(c,d)\iff a+d=b+c\) (the number "\(a-b\)").`,
+    },
+    chapterId: 'limits',
+    sceneId: 'integers-rationals',
+  },
+  {
+    id: 'rational-number',
+    term: { ko: '유리수', en: 'rational number' },
+    definition: {
+      ko: String.raw`\(\frac{a}{b}\) (\(b \ne 0\)) — 정수 순서쌍의 동치류 \((a,b)\sim(c,d)\iff ad=bc\)로 구성되며, 체(field)를 이룬다.`,
+      en: String.raw`\(\frac{a}{b}\) (\(b \ne 0\)) — built as equivalence classes of integer pairs with \((a,b)\sim(c,d)\iff ad=bc\); they form a field.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'integers-rationals',
+  },
+  {
+    id: 'equivalence-class',
+    term: { ko: '동치류', en: 'equivalence class' },
+    definition: {
+      ko: String.raw`동치 관계로 서로 동치인 원소들의 모임 — 정수·유리수·실수를 "만드는" 기술의 핵심.`,
+      en: String.raw`The set of elements equivalent under an equivalence relation — the key technique for "building" the integers, rationals, and reals.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'integers-rationals',
+  },
+  {
     id: 'set',
     term: { ko: '집합', en: 'set' },
     definition: {

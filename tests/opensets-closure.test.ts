@@ -217,6 +217,9 @@ describe('limits chapter meta: the two new scenes', () => {
   it('inserts opensets and closure right after continuity', () => {
     const ids = limits.scenes.map((s) => s.id);
     expect(ids).toEqual([
+      'natural-numbers',
+      'binomial',
+      'integers-rationals',
       'sets',
       'supremum',
       'countable',
@@ -241,11 +244,13 @@ describe('limits chapter meta: the two new scenes', () => {
       'uniform',
       'weierstrass-approx',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
   });
 
   it('chains the prerequisites', () => {
     const byId = Object.fromEntries(limits.scenes.map((s) => [s.id, s]));
+    expect(byId['binomial']?.prerequisites).toEqual(['natural-numbers']);
+    expect(byId['integers-rationals']?.prerequisites).toEqual(['natural-numbers']);
     expect(byId['weierstrass-approx']?.prerequisites).toEqual(['uniform']);
     expect(byId['uniform-continuity']?.prerequisites).toEqual(['continuity']);
     expect(byId['opensets']?.prerequisites).toEqual(['continuity']);
@@ -256,7 +261,7 @@ describe('limits chapter meta: the two new scenes', () => {
   });
 
   it('gives each new scene exactly 3 problems with non-empty proofs', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction']) {
+    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction', 'natural-numbers', 'binomial', 'integers-rationals']) {
       const scene = limits.scenes.find((s) => s.id === id);
       expect(scene?.problems).toHaveLength(3);
       for (const problem of scene?.problems ?? []) {
@@ -270,7 +275,7 @@ describe('limits chapter meta: the two new scenes', () => {
   });
 
   it('uses only declared control keys with valid values in every new problem preset', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction']) {
+    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction', 'natural-numbers', 'binomial', 'integers-rationals']) {
       const scene = limits.scenes.find((s) => s.id === id);
       expect(scene).toBeDefined();
       for (const problem of scene?.problems ?? []) {
