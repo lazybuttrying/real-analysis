@@ -12,6 +12,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   geometric: () => import('./scenes/geometric').then((module) => module.default),
   wallis: () => import('./scenes/wallis').then((module) => module.default),
   stirling: () => import('./scenes/stirling').then((module) => module.default),
+  gamma: () => import('./scenes/gamma').then((module) => module.default),
   grandi: () => import('./scenes/grandi').then((module) => module.default),
   zeta4: () => import('./scenes/zeta4').then((module) => module.default),
   rearrangement: () => import('./scenes/rearrangement').then((module) => module.default),

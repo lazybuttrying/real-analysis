@@ -21,6 +21,7 @@ import { problems as supremumProblems } from './problems/supremum';
 import { problems as uniformProblems } from './problems/uniform';
 import { problems as uniformContinuityProblems } from './problems/uniform-continuity';
 import { problems as vectorSpacesProblems } from './problems/vector-spaces';
+import { problems as weierstrassApproxProblems } from './problems/weierstrass-approx';
 
 /**
  * Pure data. Imports types plus the chapter's per-scene problems data modules
@@ -474,6 +475,25 @@ problems: evtProblems,
         { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.05, max: 0.5, step: 0.01, init: 0.2 },
       ],
 problems: uniformProblems,
+    },
+    {
+      id: 'weierstrass-approx',
+      title: { ko: '바이어슈트라스 근사정리', en: 'Weierstrass Approximation Theorem' },
+      order: 23,
+      summary: {
+        ko: String.raw`\([0,1]\) 위의 연속함수는 다항식으로 균등하게 근사됩니다 — 번스타인 다항식 \(B_n(f)\)가 \(f\)에 다가가는 모습을 \(n\)을 키우며 확인합니다. 수렴 증명의 세부 추정은 아이디어 수준에서만 봅니다.`,
+        en: String.raw`Every continuous function on \([0,1]\) is uniformly approximable by polynomials — watch the Bernstein polynomials \(B_n(f)\) close in on \(f\) as \(n\) grows. The fine estimates of the convergence proof are sketched at the idea level.`,
+      },
+      tex: [
+        String.raw`B_n(f)(x) = \sum_{k=0}^{n} f\!\left(\frac{k}{n}\right) \binom{n}{k} x^k (1-x)^{n-k}`,
+        String.raw`f \in C[0,1] \implies \|B_n(f) - f\|_\infty \to 0`,
+      ],
+      prerequisites: ['uniform'],
+      controls: [
+        { kind: 'select', key: 'fn', label: { ko: '함수 f', en: 'Function f' }, options: ['one', 'id', 'abs', 'square', 'sin'], init: 'abs' },
+        { kind: 'slider', key: 'n', label: { ko: '차수 n', en: 'Degree n' }, min: 1, max: 60, step: 1, init: 10 },
+      ],
+problems: weierstrassApproxProblems,
     },
   ],
 };
