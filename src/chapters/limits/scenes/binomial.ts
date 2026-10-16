@@ -122,18 +122,24 @@ function createBinomialScene(): Scene<BinomialData> {
     });
 
     const row = rows[n] ?? [];
+    const rowLabel = localize({ ko: '행', en: 'row' }, lang);
     g.append('text')
       .attr('x', 8)
       .attr('y', height - 58)
       .attr('fill', 'currentColor')
       .attr('font-size', 12)
-      .text(`row ${n}: ${row.join('  ')}`);
+      .text(`${rowLabel} ${n}: ${row.join('  ')}`);
     g.append('text')
       .attr('x', 8)
       .attr('y', height - 38)
       .attr('fill', 'currentColor')
       .attr('font-size', 12)
-      .text(`sum C(${n}, k) = ${rowSum} = 2^${n}`);
+      .text(
+        localize(
+          { ko: `합 C(${n}, k) = ${rowSum} = 2^${n}`, en: `sum C(${n}, k) = ${rowSum} = 2^${n}` },
+          lang,
+        ),
+      );
     g.append('text')
       .attr('x', 8)
       .attr('y', height - 16)
