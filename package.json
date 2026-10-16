@@ -55,9 +55,12 @@
         "dist/assets/sequenceSpaces-*.js",
         "dist/assets/monotoneCauchy-*.js",
         "dist/assets/evt-*.js",
-        "dist/assets/weierstrassApprox-*.js"
+        "dist/assets/weierstrassApprox-*.js",
+        "dist/assets/naturalNumbers-*.js",
+        "dist/assets/binomial-*.js",
+        "dist/assets/integersRationals-*.js"
       ],
-      "limit": "38 kB"
+      "limit": "42 kB"
     },
     {
       "name": "chapter: series (shell, view kit, all scenes)",

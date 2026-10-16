@@ -2,6 +2,9 @@ import type { SceneLoader } from '../../contracts';
 
 /** Scene id → dynamic import. Scene code (including d3) is split into separate chunks at this boundary. */
 export const loaders: Readonly<Record<string, SceneLoader>> = {
+  'natural-numbers': () => import('./scenes/naturalNumbers').then((module) => module.default),
+  binomial: () => import('./scenes/binomial').then((module) => module.default),
+  'integers-rationals': () => import('./scenes/integersRationals').then((module) => module.default),
   sets: () => import('./scenes/sets').then((module) => module.default),
   supremum: () => import('./scenes/supremum').then((module) => module.default),
   countable: () => import('./scenes/countable').then((module) => module.default),

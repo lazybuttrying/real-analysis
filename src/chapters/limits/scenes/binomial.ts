@@ -1,0 +1,201 @@
+import {
+  defineScene,
+  localize,
+  stripInlineMath,
+  type ControlState,
+  type Lang,
+  type Scene,
+} from '../../../contracts';
+import { createChart, type Chart } from '../../../view/d3kit';
+import { binomialModel, type BinomialData } from '../models/binomial';
+
+/**
+ * Pascal's triangle, rows 0..n, with the selected row highlighted.
+ * The facts strip shows the selected row's entries and their sum 2^n;
+ * the verdict states the binomial theorem, proved by induction with
+ * Pascal's identity as the inductive step.
+ */
+
+interface RichSlot {
+  el: HTMLElement;
+  seq: number;
+  text: string;
+}
+
+function makeSlot(el: HTMLElement): RichSlot {
+  return { el, seq: 0, text: '' };
+}
+
+function setRich(slot: RichSlot, text: string): void {
+  if (slot.text === text) return;
+  slot.text = text;
+  const id = ++slot.seq;
+  slot.el.textContent = stripInlineMath(text);
+  if (text.includes('\\(')) {
+    import('../../../view/richtext')
+      .then((module) => {
+        if (slot.seq === id) module.renderRichText(slot.el, text);
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+      });
+  }
+}
+
+function factsText(data: BinomialData, lang: Lang): string {
+  const { n, rows, rowSum } = data;
+  const row = rows[n] ?? [];
+  const entries = row.map(String).join(' ');
+  return localize(
+    {
+      ko: String.raw`선택된 행 \(n = ${n}\): \(\binom{${n}}{k}\) \(= ${entries}\) — 합 \(\sum_{k=0}^{${n}}\binom{${n}}{k} = ${rowSum} = 2^{${n}}\).`,
+      en: String.raw`Selected row \(n = ${n}\): \(\binom{${n}}{k}\) \(= ${entries}\) — sum \(\sum_{k=0}^{${n}}\binom{${n}}{k} = ${rowSum} = 2^{${n}}\).`,
+    },
+    lang,
+  );
+}
+
+function verdictText(lang: Lang): string {
+  return localize(
+    {
+      ko: String.raw`이항정리: \((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\) — 귀납법으로 증명되며, 파스칼의 항등식 \(\binom{n}{k}+\binom{n}{k-1}=\binom{n+1}{k}\)이 귀납 단계를 만든다.`,
+      en: String.raw`The binomial theorem: \((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\) — proved by induction, where Pascal's identity \(\binom{n}{k}+\binom{n}{k-1}=\binom{n+1}{k}\) is the inductive step.`,
+    },
+    lang,
+  );
+}
+
+function createBinomialScene(): Scene<BinomialData> {
+  let chart: Chart | undefined;
+  let hostEl: HTMLElement | undefined;
+  let factsSlot: RichSlot | undefined;
+  let verdictSlot: RichSlot | undefined;
+  let lang: Lang = 'ko';
+  let last: { data: BinomialData; state: ControlState } | undefined;
+
+  const draw = (): void => {
+    if (!chart || !last) return;
+    const { data } = last;
+    const { g, width, height } = chart;
+    const { n, rows, highlight, rowSum } = data;
+    g.selectAll('*').remove();
+
+    const rowCount = rows.length;
+    const spacingX = Math.min(64, width / (n + 2));
+    const rowH = Math.min(38, (height - 130) / Math.max(1, rowCount));
+    const top = 14;
+    const cx = width / 2;
+
+    rows.forEach((row, r) => {
+      const y = top + r * rowH + rowH / 2;
+      const isSel = r === highlight;
+      if (isSel) {
+        const halfW = ((row.length - 1) / 2) * spacingX + spacingX * 0.55;
+        g.append('rect')
+          .attr('x', cx - halfW)
+          .attr('y', y - rowH * 0.42)
+          .attr('width', halfW * 2)
+          .attr('height', rowH * 0.84)
+          .attr('rx', 9)
+          .attr('fill', 'var(--accent)')
+          .attr('opacity', 0.14);
+      }
+      g.append('text')
+        .attr('x', 6)
+        .attr('y', y + 4)
+        .attr('font-size', 11)
+        .attr('fill', 'currentColor')
+        .attr('opacity', isSel ? 0.9 : 0.45)
+        .attr('font-weight', isSel ? 700 : 400)
+        .text(`n=${r}`);
+      row.forEach((value, k) => {
+        g.append('text')
+          .attr('x', cx + (k - (row.length - 1) / 2) * spacingX)
+          .attr('y', y + 5)
+          .attr('text-anchor', 'middle')
+          .attr('font-size', isSel ? 15 : 12)
+          .attr('font-weight', isSel ? 700 : 400)
+          .attr('fill', isSel ? 'var(--accent)' : 'currentColor')
+          .attr('opacity', isSel ? 1 : 0.8)
+          .text(String(value));
+      });
+    });
+
+    const row = rows[n] ?? [];
+    g.append('text')
+      .attr('x', 8)
+      .attr('y', height - 58)
+      .attr('fill', 'currentColor')
+      .attr('font-size', 12)
+      .text(`row ${n}: ${row.join('  ')}`);
+    g.append('text')
+      .attr('x', 8)
+      .attr('y', height - 38)
+      .attr('fill', 'currentColor')
+      .attr('font-size', 12)
+      .text(`sum C(${n}, k) = ${rowSum} = 2^${n}`);
+    g.append('text')
+      .attr('x', 8)
+      .attr('y', height - 16)
+      .attr('font-size', 12)
+      .style('fill', 'var(--accent)')
+      .text(
+        localize(
+          { ko: '파스칼 항등식이 귀납 단계를 만든다', en: "Pascal's identity is the induction step" },
+          lang,
+        ),
+      );
+
+    if (factsSlot && verdictSlot) {
+      setRich(factsSlot, factsText(data, lang));
+      setRich(verdictSlot, verdictText(lang));
+    }
+  };
+
+  return {
+    mount(host, pageLang) {
+      lang = pageLang;
+      hostEl = host;
+      host.style.display = 'flex';
+      host.style.flexDirection = 'column';
+
+      const chartWrap = document.createElement('div');
+      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
+      const strips = document.createElement('div');
+      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      const facts = document.createElement('div');
+      facts.style.fontWeight = '600';
+      const verdict = document.createElement('div');
+      verdict.style.fontWeight = '600';
+      strips.append(facts, verdict);
+      host.append(chartWrap, strips);
+
+      factsSlot = makeSlot(facts);
+      verdictSlot = makeSlot(verdict);
+      chart = createChart(chartWrap);
+    },
+    render(data, state) {
+      last = { data, state };
+      draw();
+    },
+    resize(width, height) {
+      chart?.setSize(width, height);
+      draw();
+    },
+    dispose() {
+      chart?.destroy();
+      chart = undefined;
+      factsSlot = undefined;
+      verdictSlot = undefined;
+      if (hostEl) {
+        hostEl.replaceChildren();
+        hostEl.style.display = '';
+        hostEl.style.flexDirection = '';
+        hostEl = undefined;
+      }
+      last = undefined;
+    },
+  };
+}
+
+export default defineScene<BinomialData>({ model: binomialModel, createScene: createBinomialScene });
