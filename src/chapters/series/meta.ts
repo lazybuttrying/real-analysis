@@ -1,6 +1,7 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { problems as absoluteProblems } from './problems/absolute';
 import { problems as baselProblems } from './problems/basel';
+import { problems as dirichletTestProblems } from './problems/dirichlet-test';
 import { problems as eseriesProblems } from './problems/eseries';
 import { problems as gammaProblems } from './problems/gamma';
 import { problems as geometricProblems } from './problems/geometric';
@@ -8,6 +9,7 @@ import { problems as grandiProblems } from './problems/grandi';
 import { problems as harmonicProblems } from './problems/harmonic';
 import { problems as improperProblems } from './problems/improper';
 import { problems as leibnizProblems } from './problems/leibniz';
+import { problems as mTestProblems } from './problems/m-test';
 import { problems as powerSeriesProblems } from './problems/power-series';
 import { problems as rearrangementProblems } from './problems/rearrangement';
 import { problems as stirlingProblems } from './problems/stirling';
@@ -251,9 +253,46 @@ problems: rearrangementProblems,
 problems: absoluteProblems,
     },
     {
+      id: 'dirichlet-test',
+      title: { ko: '디리클레 판정법', en: "Dirichlet's Test" },
+      order: 16,
+      summary: {
+        ko: String.raw`부분합이 \(1/|\sin(x/2)|\) 안에 갇혀 흔들리는 \(\sin(kx)\)와 \(0\)으로 가라앉는 \(1/n\)이 만나 \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴합니다 — 디리클레 판정법.`,
+        en: String.raw`The partial sums of \(\sin(kx)\) wobble, trapped inside \(1/|\sin(x/2)|\), and the \(1/n\) weight sinking to \(0\) tames them into the convergent series \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\) — Dirichlet's test.`,
+      },
+      tex: [
+        String.raw`\sum_{k=1}^{N}\sin(kx) = \frac{\sin\frac{Nx}{2}\,\sin\frac{(N+1)x}{2}}{\sin\frac{x}{2}},\quad \left|\sum_{k=1}^{N}\sin(kx)\right| \le \frac{1}{|\sin(x/2)|}`,
+        String.raw`\sum_{n=1}^{\infty}\frac{\sin(nx)}{n} = \frac{\pi-x}{2},\quad x \in (0, 2\pi)`,
+      ],
+      prerequisites: ['tests'],
+      controls: [
+        { kind: 'slider', key: 'terms', label: { ko: '부분합 항 수', en: 'Partial sum terms' }, min: 1, max: 80, step: 1, init: 30 },
+        { kind: 'slider', key: 'x', label: { ko: 'x 값', en: 'x value' }, min: 0.2, max: 3.0, step: 0.01, init: 1.0 },
+      ],
+      problems: dirichletTestProblems,
+    },
+    {
+      id: 'm-test',
+      title: { ko: 'M-판정법', en: 'The Weierstrass M-Test' },
+      order: 17,
+      summary: {
+        ko: String.raw`각 항을 모든 \(x\)에서 누르는 수열 \(M_n\)이 있으면 급수는 균등수렴합니다 — \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\), \(\sum M_n = \frac{\pi^2}{6}\)이므로 부분합 오차 띠가 전체 \(x\) 구간에서 한꺼번에 좁아집니다.`,
+        en: String.raw`If a majorant \(M_n\) dominates every term at all \(x\) and \(\sum M_n\) converges, the series converges uniformly — here \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\) and \(\sum M_n = \frac{\pi^2}{6}\), so the partial-sum error band tightens across the whole \(x\)-interval at once.`,
+      },
+      tex: [
+        String.raw`|f_n(x)| \le M_n\ \forall x,\quad \sum M_n<\infty\ \Rightarrow\ \sum f_n\ \text{converges uniformly}`,
+        String.raw`\sup_x|S(x)-S_N(x)| \le \sum_{k>N}\frac{1}{k^2},\quad N=8:\ \approx 0.1175`,
+      ],
+      prerequisites: ['tests'],
+      controls: [
+        { kind: 'slider', key: 'terms', label: { ko: '부분합 항 수', en: 'Partial sum terms' }, min: 1, max: 40, step: 1, init: 8 },
+      ],
+      problems: mTestProblems,
+    },
+    {
       id: 'improper',
       title: { ko: '이상적분', en: 'Improper Integrals' },
-      order: 16,
+      order: 18,
       summary: {
         ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
         en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,

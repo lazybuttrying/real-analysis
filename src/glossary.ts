@@ -451,6 +451,26 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'limits',
     sceneId: 'weierstrass-approx',
   },
+  {
+    id: 'limsup',
+    term: { ko: '상극한', en: 'limit superior' },
+    definition: {
+      ko: String.raw`꼬리들의 상한 \\(\\sup_{n \\ge N} a_n\\)이 \\(N \\to \\infty\\)일 때 모이는 값. 수열의 가장 큰 집적점이다.`,
+      en: String.raw`The value the tail suprema \\(\\sup_{n \\ge N} a_n\\) settle to as \\(N \\to \\infty\\) — the largest cluster point of the sequence.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'limsup-liminf',
+  },
+  {
+    id: 'liminf',
+    term: { ko: '하극한', en: 'limit inferior' },
+    definition: {
+      ko: String.raw`꼬리들의 하한 \\(\\inf_{n \\ge N} a_n\\)이 \\(N \\to \\infty\\)일 때 모이는 값. 수열의 가장 작은 집적점이다.`,
+      en: String.raw`The value the tail infima \\(\\inf_{n \\ge N} a_n\\) settle to as \\(N \\to \\infty\\) — the smallest cluster point of the sequence.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'limsup-liminf',
+  },
   // ---------------------------------------------------------------- series
   {
     id: 'harmonic-series',
@@ -671,6 +691,26 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'series',
     sceneId: 'improper',
+  },
+  {
+    id: 'm-test',
+    term: { ko: 'M-판정법', en: 'Weierstrass M-test' },
+    definition: {
+      ko: String.raw`\\(|f_n(x)| \\le M_n\\)이고 \\(\\sum M_n\\)이 수렴하면 \\(\\sum f_n\\)은 균등수렴한다.`,
+      en: String.raw`If \\(|f_n(x)| \\le M_n\\) for all \\(x\\) and \\(\\sum M_n\\) converges, then \\(\\sum f_n\\) converges uniformly.`,
+    },
+    chapterId: 'series',
+    sceneId: 'm-test',
+  },
+  {
+    id: 'dirichlet-test',
+    term: { ko: '디리클레 판정법', en: "Dirichlet's test" },
+    definition: {
+      ko: String.raw`\\((a_n)\\)의 부분합이 유계이고 \\((b_n)\\)이 0으로 단조 감소하면 \\(\\sum a_n b_n\\)이 수렴한다.`,
+      en: String.raw`If the partial sums of \\((a_n)\\) are bounded and \\((b_n)\\) decreases to 0, then \\(\\sum a_n b_n\\) converges.`,
+    },
+    chapterId: 'series',
+    sceneId: 'dirichlet-test',
   },
   // -------------------------------------------------------------- calculus
   {
