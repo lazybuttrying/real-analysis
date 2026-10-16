@@ -511,7 +511,37 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'limits',
     sceneId: 'limsup-liminf',
   },
+  {
+    id: 'stolz-cesaro-theorem',
+    term: { ko: '체자로 정리', en: 'Stolz–Cesàro theorem' },
+    definition: {
+      ko: String.raw`수열 버전 로피탈: \((b_n)\)이 엄격히 증가하고 무한대로 발산하며 차분 비율 \(\frac{a_{n+1}-a_n}{b_{n+1}-b_n}\)이 \(L\)로 수렴하면 \(\frac{a_n}{b_n}\)도 \(L\)로 수렴한다.`,
+      en: String.raw`The sequence l'Hôpital: if \((b_n)\) is strictly increasing and unbounded and the difference ratio \(\frac{a_{n+1}-a_n}{b_{n+1}-b_n}\) tends to \(L\), so does \(\frac{a_n}{b_n}\).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'stolz-cesaro',
+  },
   // ---------------------------------------------------------------- series
+  {
+    id: 'abel-theorem',
+    term: { ko: '아벨 정리', en: "Abel's theorem" },
+    definition: {
+      ko: String.raw`\(\sum a_n \to S\)이면 \(\lim_{x\to 1^{-}}\sum a_n x^n = S\) — 멱급수의 경계값이 보통 합을 복원한다.`,
+      en: String.raw`If \(\sum a_n \to S\) then \(\lim_{x\to 1^{-}}\sum a_n x^n = S\) — the boundary value of the power series recovers the ordinary sum.`,
+    },
+    chapterId: 'series',
+    sceneId: 'abel-theorem',
+  },
+  {
+    id: 'abel-sum',
+    term: { ko: '아벨 합', en: 'Abel sum' },
+    definition: {
+      ko: String.raw`\(\lim_{x\to 1^{-}}\sum a_n x^n\)이 존재할 때의 값. 발산급수에도 값을 붙일 수 있으나 급수의 "합"은 아니다 — 그란디 급수의 Abel 합은 \(1/2\).`,
+      en: String.raw`The value of \(\lim_{x\to 1^{-}}\sum a_n x^n\) when it exists. Assigns values to divergent series, but is never "the sum" — the Abel sum of Grandi's series is \(1/2\).`,
+    },
+    chapterId: 'series',
+    sceneId: 'abel-theorem',
+  },
   {
     id: 'harmonic-series',
     term: { ko: '조화급수', en: 'harmonic series' },
@@ -763,6 +793,56 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'dirichlet-test',
   },
   // -------------------------------------------------------------- calculus
+  {
+    id: 'darboux-theorem',
+    term: { ko: '다르부 정리', en: "Darboux's theorem" },
+    definition: {
+      ko: String.raw`도함수는 불연속이어도 중간값 성질을 갖는다 — \(f'(a) < c < f'(b)\)이면 \(\xi \in (a,b)\)가 있어 \(f'(\xi) = c\).`,
+      en: String.raw`A derivative has the intermediate value property even when discontinuous — if \(f'(a) < c < f'(b)\) then some \(\xi \in (a,b)\) has \(f'(\xi) = c\).`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'darboux',
+  },
+  {
+    id: 'darboux-property',
+    term: { ko: '다르부 성질', en: 'Darboux property' },
+    definition: {
+      ko: String.raw`연속이 아니어도 중간값 성질을 갖는 성질. 도함수들의 전형적인 예이다.`,
+      en: String.raw`The intermediate value property without continuity — derivatives are the canonical examples.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'darboux',
+  },
+  {
+    id: 'fermat-lemma',
+    term: { ko: '페르마 내부 극값 보조정리', en: "Fermat's interior-extremum lemma" },
+    definition: {
+      ko: String.raw`내부 점 \(c\)에서 극대·극소를 갖고 미분가능하면 \(f'(c) = 0\). 다르부 정리의 증명에 쓰인다.`,
+      en: String.raw`An interior local max/min where \(f\) is differentiable forces \(f'(c) = 0\). Used to prove Darboux's theorem.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'darboux',
+  },
+  {
+    id: 'heaviside-step',
+    term: { ko: '헤비사이드 계단함수', en: 'Heaviside step function' },
+    definition: {
+      ko: String.raw`\(x < 0\)에서 0, \(x \ge 0\)에서 1인 함수. 점프 불연속이라 어떤 함수의 도함수도 될 수 없다.`,
+      en: String.raw`0 for \(x < 0\), 1 for \(x \ge 0\). Its jump discontinuity means it can never be anyone's derivative.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'darboux',
+  },
+  {
+    id: 'jump-discontinuity',
+    term: { ko: '점프 불연속', en: 'jump discontinuity' },
+    definition: {
+      ko: String.raw`좌극한과 우극한이 모두 존재하지만 서로 다른 불연속. 도함수에서는 불가능하다.`,
+      en: String.raw`Left and right limits both exist but differ. Impossible in a derivative.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'darboux',
+  },
   {
     id: 'differentiable',
     term: { ko: '미분가능', en: 'differentiable' },

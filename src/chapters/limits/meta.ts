@@ -23,6 +23,7 @@ import { problems as naturalNumbersProblems } from './problems/natural-numbers';
 import { problems as opensetsProblems } from './problems/opensets';
 import { problems as sequenceSpacesProblems } from './problems/sequence-spaces';
 import { problems as setsProblems } from './problems/sets';
+import { problems as stolzCesaroProblems } from './problems/stolz-cesaro';
 import { problems as supremumProblems } from './problems/supremum';
 import { problems as uniformProblems } from './problems/uniform';
 import { problems as uniformContinuityProblems } from './problems/uniform-continuity';
@@ -539,9 +540,27 @@ problems: monotoneCauchyProblems,
       problems: limsupLiminfProblems,
     },
     {
+      id: 'stolz-cesaro',
+      title: { ko: '체자로 정리', en: 'Stolz–Cesàro Theorem' },
+      order: 25,
+      summary: {
+        ko: String.raw`수열 버전 로피탈: \((b_n)\)이 엄격히 증가하며 무한대로 발산하고 \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\)이면 \(\lim \frac{a_n}{b_n} = L\). \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\)에서 차분 비율이 먼저, 전체 비율이 뒤따라 \(\frac{1}{3}\)에 모이는 것을 보세요.`,
+        en: String.raw`The sequence version of l'Hôpital: if \((b_n)\) is strictly increasing and unbounded and \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\), then \(\lim \frac{a_n}{b_n} = L\). Watch the difference ratio settle at \(\frac{1}{3}\) first and the full ratio follow for \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\).`,
+      },
+      tex: [
+        String.raw`\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L \implies \lim \frac{a_n}{b_n} = L`,
+        String.raw`\lim_{n\to\infty}\frac{1^2+\cdots+n^2}{n^3} = \frac{1}{3}`,
+      ],
+      prerequisites: ['limsup-liminf', 'monotone-cauchy'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '항 개수', en: 'Terms shown' }, min: 10, max: 300, step: 1, init: 60 },
+      ],
+      problems: stolzCesaroProblems,
+    },
+    {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 25,
+      order: 26,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -553,7 +572,7 @@ problems: cantorProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 26,
+      order: 27,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -568,7 +587,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 27,
+      order: 28,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -592,7 +611,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 28,
+      order: 29,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
@@ -610,7 +629,7 @@ problems: uniformProblems,
     {
       id: 'weierstrass-approx',
       title: { ko: '바이어슈트라스 근사정리', en: 'Weierstrass Approximation Theorem' },
-      order: 29,
+      order: 30,
       summary: {
         ko: String.raw`\([0,1]\) 위의 연속함수는 다항식으로 균등하게 근사됩니다 — 번스타인 다항식 \(B_n(f)\)가 \(f\)에 다가가는 모습을 \(n\)을 키우며 확인합니다. 수렴 증명의 세부 추정은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every continuous function on \([0,1]\) is uniformly approximable by polynomials — watch the Bernstein polynomials \(B_n(f)\) close in on \(f\) as \(n\) grows. The fine estimates of the convergence proof are sketched at the idea level.`,
