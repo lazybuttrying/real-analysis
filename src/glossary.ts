@@ -312,6 +312,46 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'metric-spaces',
   },
   {
+    id: 'compact-set',
+    term: { ko: '컴팩트 집합', en: 'compact set' },
+    definition: {
+      ko: String.raw`닫혀 있고 유계인 집합 (실수에서는 하이네–보렐 정리). 모든 수열이 집합 안에서 수렴하는 부분수열을 갖는다.`,
+      en: String.raw`A closed and bounded set (Heine–Borel in \(\mathbb{R}\)); every sequence has a subsequence converging inside the set.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'compact',
+  },
+  {
+    id: 'heine-borel',
+    term: { ko: '하이네–보렐 정리', en: 'Heine–Borel theorem' },
+    definition: {
+      ko: String.raw`실수 집합이 컴팩트인 것은 닫혀 있고 유계인 것과 동치이다.`,
+      en: String.raw`A set of reals is compact if and only if it is closed and bounded.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'compact',
+  },
+  {
+    id: 'complete-metric-space',
+    term: { ko: '완비 거리공간', en: 'complete metric space' },
+    definition: {
+      ko: String.raw`모든 코시 수열이 공간 안의 점으로 수렴하는 거리공간.`,
+      en: String.raw`A metric space where every Cauchy sequence converges to a point of the space.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'contraction',
+  },
+  {
+    id: 'fixed-point',
+    term: { ko: '고정점', en: 'fixed point' },
+    definition: {
+      ko: String.raw`\(Tx = x\)를 만족하는 점. 완비 거리공간의 수축사상은 유일한 고정점을 갖는다.`,
+      en: String.raw`A point with \(Tx = x\); a contraction on a complete metric space has a unique one.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'contraction',
+  },
+  {
     id: 'norm',
     term: { ko: '노름', en: 'norm' },
     definition: {
@@ -531,6 +571,16 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'series',
     sceneId: 'tests',
+  },
+  {
+    id: 'condensation-test',
+    term: { ko: '코시 응축 판정법', en: 'Cauchy condensation test' },
+    definition: {
+      ko: String.raw`감소하는 \(a_n \ge 0\)에 대해 \(\sum a_n\)과 \(\sum 2^n a_{2^n}\)은 수렴성을 공유한다.`,
+      en: String.raw`For decreasing \(a_n \ge 0\), \(\sum a_n\) and \(\sum 2^n a_{2^n}\) share convergence.`,
+    },
+    chapterId: 'series',
+    sceneId: 'condensation',
   },
   {
     id: 'power-series',
@@ -882,5 +932,15 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'calculus',
     sceneId: 'lebesgue',
+  },
+  {
+    id: 'lhopital-rule',
+    term: { ko: '로피탈 정리', en: "L'Hôpital's rule" },
+    definition: {
+      ko: String.raw`\(0/0\)이나 \(\infty/\infty\) 꼴의 극한은 분자·분모를 각각 미분한 극한과 같다.`,
+      en: String.raw`A \(0/0\) or \(\infty/\infty\) limit equals the limit of the differentiated numerator over denominator.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'lhopital',
   },
 ];
