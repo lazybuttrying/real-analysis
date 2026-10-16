@@ -8,6 +8,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   tests: () => import('./scenes/tests').then((module) => module.default),
   condensation: () => import('./scenes/condensation').then((module) => module.default),
   'power-series': () => import('./scenes/powerSeries').then((module) => module.default),
+  'abel-theorem': () => import('./scenes/abelTheorem').then((module) => module.default),
   eseries: () => import('./scenes/eseries').then((module) => module.default),
   telescoping: () => import('./scenes/telescoping').then((module) => module.default),
   geometric: () => import('./scenes/geometric').then((module) => module.default),

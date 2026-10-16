@@ -26,6 +26,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'bolzano-weierstrass': () => import('./scenes/bolzanoWeierstrass').then((module) => module.default),
   'monotone-cauchy': () => import('./scenes/monotoneCauchy').then((module) => module.default),
   'limsup-liminf': () => import('./scenes/limsupLiminf').then((module) => module.default),
+  'stolz-cesaro': () => import('./scenes/stolzCesaro').then((module) => module.default),
   cantor: () => import('./scenes/cantor').then((module) => module.default),
   ivt: () => import('./scenes/ivt').then((module) => module.default),
   evt: () => import('./scenes/evt').then((module) => module.default),
