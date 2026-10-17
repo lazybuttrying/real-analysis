@@ -21,6 +21,7 @@ import { problems as integersRationalsProblems } from './problems/integers-ratio
 import { problems as limsupLiminfProblems } from './problems/limsup-liminf';
 import { problems as metricSpacesProblems } from './problems/metric-spaces';
 import { problems as monotoneCauchyProblems } from './problems/monotone-cauchy';
+import { monotoneDiscontinuitiesProblems } from './problems/monotone-discontinuities';
 import { problems as naturalNumbersProblems } from './problems/natural-numbers';
 import { problems as opensetsProblems } from './problems/opensets';
 import { problems as sequenceSpacesProblems } from './problems/sequence-spaces';
@@ -317,9 +318,28 @@ problems: epsdeltaProblems,
 problems: continuityProblems,
     },
     {
+      id: 'monotone-discontinuities',
+      title: { ko: '단조함수의 불연속점', en: 'Discontinuities of Monotone Functions' },
+      order: 13,
+      summary: {
+        ko: String.raw`단조함수는 모든 점에서 좌극한과 우극한을 가지므로, 불연속점은 모두 점프입니다. 점프 크기가 \(1/n\)을 넘는 점은 유한 개뿐이므로, 불연속점은 아무리 많아도 가산 개입니다.`,
+        en: String.raw`A monotone function has left and right limits everywhere, so every discontinuity is a jump. Only finitely many jumps can exceed \(1/n\), so the discontinuities are at most countable — no matter how many there are.`,
+      },
+      tex: [
+        String.raw`f(x-) = \sup_{t<x} f(t), \qquad f(x+) = \inf_{t>x} f(t)`,
+        String.raw`\#\{x : f(x+) - f(x-) > 1/n\} \le n\,(f(b) - f(a))`,
+      ],
+      prerequisites: ['continuity'],
+      controls: [
+        { kind: 'slider', key: 'terms', label: { ko: '유리수 점프 수', en: 'Rational jumps' }, min: 1, max: 60, step: 1, init: 24 },
+        { kind: 'slider', key: 'n', label: { ko: '임계값 분모 n (1/n)', en: 'Threshold denominator n (1/n)' }, min: 1, max: 32, step: 1, init: 4 },
+      ],
+problems: monotoneDiscontinuitiesProblems,
+    },
+    {
       id: 'uniform-continuity',
       title: { ko: '균등연속', en: 'Uniform Continuity' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`균등연속에서는 하나의 \(\delta\)가 모든 점 \(x\)에서 통한다 — \(\delta\)는 \(\varepsilon\)에만 의존하고 \(x\)에는 의존하지 않는다. \(f(x) = x^2\)에서는 \(x\)가 커질수록 필요한 \(\delta\)가 줄어들어 \(\mathbb{R}\) 전체를 감당하는 \(\delta\)가 없음을 직접 확인해 보자.`,
         en: String.raw`Uniform continuity demands one \(\delta\) that works at every point \(x\) — \(\delta\) may depend on \(\varepsilon\) alone, never on \(x\). Watch the required \(\delta\) shrink as \(x\) grows for \(f(x) = x^2\), so no single \(\delta\) covers all of \(\mathbb{R}\).`,
@@ -339,7 +359,7 @@ problems: continuityProblems,
     {
       id: 'opensets',
       title: { ko: '열린집합과 닫힌집합', en: 'Open and Closed Sets' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`집합 \(U\)가 열려 있다는 것은 모든 점이 내점이라는 뜻 — 각 점을 \(\varepsilon\)-공으로 감쌀 수 있습니다. 수직선 위에서 점 \(x\)와 \(\varepsilon\)을 움직이며 공이 집합 안에 들어가는지 확인합니다.`,
         en: String.raw`A set \(U\) is open when every point is an interior point — each point can be wrapped in an \(\varepsilon\)-ball. Move the point \(x\) and the radius \(\varepsilon\) on the line and watch whether the ball stays inside.`,
@@ -359,7 +379,7 @@ problems: opensetsProblems,
     {
       id: 'closure',
       title: { ko: '폐포와 유계', en: 'Closure and Boundedness' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`집합 \(A\) 위에 바를 그으면 폐포 \(\overline{A}\) — 빠져나간 극한점들을 빨아들인 집합입니다. 닫힘 ⟺ 극한점을 다 품음 ⟺ 폐포와 같음, 그리고 닫힘 + 유계 ⟺ 컴팩트(하이네-보렐)의 돌림노래를 확인합니다.`,
         en: String.raw`Drawing a bar over \(A\) gives the closure \(\overline{A}\) — the set with its escaped limit points pulled back in. Follow the round-song: closed ⟺ contains its limit points ⟺ equals its closure, and closed + bounded ⟺ compact (Heine-Borel).`,
@@ -378,7 +398,7 @@ problems: closureProblems,
     {
       id: 'compact',
       title: { ko: '컴팩트 집합', en: 'Compact Sets' },
-      order: 16,
+      order: 17,
       summary: {
         ko: String.raw`컴팩트 \(\iff\) 닫힘 + 유계(하이네–보렐): \([0,1]\)은 열린 커버의 처음 6개 구간으로 덮이지만, \((0,1]\)은 0 근처의 틈 때문에, \([0,\infty)\)는 무한대의 꼬리 때문에 유한 부분커버를 갖지 않습니다. 볼차노–바이어슈트라스의 수열 버전은 완전히 증명하고, 열린 커버 정의의 동치성은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Compact \(\iff\) closed + bounded (Heine–Borel): \([0,1]\) is covered by the first 6 intervals of its open cover, while \((0,1]\) fails at the gap near 0 and \([0,\infty)\) fails at the infinite tail. Sequential compactness via Bolzano–Weierstrass is proved in full; the open-cover definition's equivalence is shown at the idea level.`,
@@ -398,7 +418,7 @@ problems: closureProblems,
     {
       id: 'metric-spaces',
       title: { ko: '거리공간', en: 'Metric Spaces' },
-      order: 17,
+      order: 18,
       summary: {
         ko: String.raw`거리를 공리화하면 \(\varepsilon\)-공이 일반화됩니다 — 열린 공 \(B(c, r)\)의 모양은 거리 \(d\)에 달려 있습니다. 유클리드 거리의 원판, 최대 노름의 정사각형, 그리고 극단적인 예시인 이산 거리를 비교합니다.`,
         en: String.raw`Axiomatizing distance generalizes the \(\varepsilon\)-ball — the shape of an open ball \(B(c, r)\) depends on the metric \(d\). Compare the Euclidean disk, the max-norm square, and the extreme discrete metric.`,
@@ -418,7 +438,7 @@ problems: closureProblems,
     {
       id: 'contraction',
       title: { ko: '축소사상 원리', en: 'Contraction Mapping Principle' },
-      order: 18,
+      order: 19,
       summary: {
         ko: String.raw`수축사상 \(d(Tx,Ty) \le q\,d(x,y)\) (\(q<1\))은 완비 거리공간에서 유일한 고정점을 갖습니다 — 피카르 반복 \(x_{n+1} = Tx_n\)은 오차공 \(\frac{q^n}{1-q}|x_1-x_0|\)과 함께 조여듭니다. \(T(x) = x/2\) on \((0,1]\)은 완비성이 왜 필수적인지 보여줍니다: 수축사상이지만 고정점이 없습니다.`,
         en: String.raw`A contraction \(d(Tx,Ty) \le q\,d(x,y)\) (\(q<1\)) on a complete metric space has a unique fixed point — the Picard iterates \(x_{n+1} = Tx_n\) tighten inside the error ball \(\frac{q^n}{1-q}|x_1-x_0|\). \(T(x) = x/2\) on \((0,1]\) shows why completeness is essential: a contraction with no fixed point.`,
@@ -439,7 +459,7 @@ problems: closureProblems,
     {
       id: 'sequence-spaces',
       title: { ko: '수열공간과 함수공간', en: 'Sequence and Function Spaces' },
-      order: 19,
+      order: 20,
       summary: {
         ko: String.raw`\(\ell^1, \ell^2, \ell^\infty\)와 \(C[0,1]\) — 점별 연산으로는 벡터공간이고, 노름 \(\|x - y\|\)로는 거리공간입니다. 노름공간이 두 세계를 잇는 다리입니다. \(x_n = 1/n^\alpha\)로 포함관계 \(\ell^1 \subset \ell^2 \subset \ell^\infty\)를 눈으로 확인합니다. \(\ell^p\)와 \(C[0,1]\)이 완비(바나흐 공간)라는 것은 알려진 정리로만 언급합니다.`,
         en: String.raw`\(\ell^1, \ell^2, \ell^\infty\) and \(C[0,1]\) — vector spaces under pointwise operations, metric spaces via the norm \(\|x - y\|\). A normed space bridges both worlds. Watch the inclusion chain \(\ell^1 \subset \ell^2 \subset \ell^\infty\) through \(x_n = 1/n^\alpha\). Completeness of \(\ell^p\) and \(C[0,1]\) (Banach spaces) is stated as a known theorem only.`,
@@ -460,7 +480,7 @@ problems: sequenceSpacesProblems,
     {
       id: 'cauchy-schwarz',
       title: { ko: '코시-슈바르츠 부등식', en: 'Cauchy\u2013Schwarz Inequality' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — 내적의 절댓값은 노름의 곱을 넘지 않습니다. \(0 \le \|x-ty\|^2\)의 판별식으로 증명하고, 등호는 두 벡터가 평행할 때만 성립합니다.`,
         en: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — the inner product never exceeds the product of the norms. Proved from the discriminant of \(0 \le \|x-ty\|^2\); equality holds exactly for parallel vectors.`,
@@ -479,7 +499,7 @@ problems: sequenceSpacesProblems,
     {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 21,
+      order: 22,
       summary: {
         ko: String.raw`\(x_{n+1}=\frac{x_n+2/x_n}{2}\)의 모든 항은 유리수지만, 극한 \(\sqrt{2}\)는 유리수가 아닙니다. 유리수 집합 \(\mathbb{Q}\)에는 구멍이 있다는 뜻입니다. 무리수임의 엄밀한 증명은 다루지 않고 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every term of \(x_{n+1}=\frac{x_n+2/x_n}{2}\) is rational, yet the limit \(\sqrt{2}\) is not. The rationals \(\mathbb{Q}\) have a hole — shown at the idea level, without a full irrationality proof.`,
@@ -491,7 +511,7 @@ problems: holesProblems,
     {
       id: 'construction',
       title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
-      order: 22,
+      order: 23,
       summary: {
         ko: String.raw`실수란 유리수 코시수열의 동치류입니다. \(\sqrt{2}\)의 소수점 자릿수를 늘려 가면 유리수 항들이 구멍으로 모여듭니다 — 그 모임 자체가 실수 \(\sqrt{2}\)입니다. 완비성의 정체는 이 구성에 있습니다.`,
         en: String.raw`A real number is an equivalence class of Cauchy sequences of rationals. Lengthening the decimal expansion of \(\sqrt{2}\) marches rational terms into the hole — the march itself is the real number \(\sqrt{2}\). Completeness is what this construction buys.`,
@@ -510,7 +530,7 @@ problems: constructionProblems,
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 23,
+      order: 24,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -525,7 +545,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 24,
+      order: 25,
       summary: {
         ko: String.raw`\(a_n = 1 - 2^{-n}\)은 증가하면서 위로 유계이므로 상한 \(1\)에 수렴합니다(단조수렴 정리). 꼬리 지름이 \(0\)으로 줄어드는 모습을 보며, 모든 수렴수열이 코시수열임을 확인합니다.`,
         en: String.raw`\(a_n = 1 - 2^{-n}\) increases and is bounded above, so it converges to its supremum \(1\) (monotone convergence). Watch the tail diameter shrink to \(0\): every convergent sequence is Cauchy.`,
@@ -544,7 +564,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'limsup-liminf',
       title: { ko: '상극한과 하극한', en: 'Lim sup and Lim inf' },
-      order: 25,
+      order: 26,
       summary: {
         ko: String.raw`꼬리들의 상한과 하한이 모이는 곳: \(a_n = (-1)^n(1+1/n)\)에서 \(\limsup a_n = 1\), \(\liminf a_n = -1\). \(\limsup a_n = \liminf a_n \iff \lim a_n\) 존재.`,
         en: String.raw`Where the suprema and infima of tails settle: for \(a_n = (-1)^n(1+1/n)\), \(\limsup a_n = 1\) and \(\liminf a_n = -1\). \(\limsup a_n = \liminf a_n \iff \lim a_n\) exists.`,
@@ -563,7 +583,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'stolz-cesaro',
       title: { ko: '체자로 정리', en: 'Stolz–Cesàro Theorem' },
-      order: 26,
+      order: 27,
       summary: {
         ko: String.raw`수열 버전 로피탈: \((b_n)\)이 엄격히 증가하며 무한대로 발산하고 \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\)이면 \(\lim \frac{a_n}{b_n} = L\). \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\)에서 차분 비율이 먼저, 전체 비율이 뒤따라 \(\frac{1}{3}\)에 모이는 것을 보세요.`,
         en: String.raw`The sequence version of l'Hôpital: if \((b_n)\) is strictly increasing and unbounded and \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\), then \(\lim \frac{a_n}{b_n} = L\). Watch the difference ratio settle at \(\frac{1}{3}\) first and the full ratio follow for \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\).`,
@@ -581,7 +601,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 27,
+      order: 28,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -593,7 +613,7 @@ problems: cantorProblems,
     {
       id: 'cantor-function',
       title: { ko: '칸토어 함수', en: 'The Cantor Function' },
-      order: 28,
+      order: 29,
       summary: {
         ko: String.raw`악마의 계단: 연속이고 단조롭게 \(0\)에서 \(1\)로 오르지만, 여집합 구간에서는 상수라서 \(f' = 0\)인 점들의 전체 길이가 \(1\)입니다. \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — 미적분학 기본정리가 "거의 모든 곳에서 미분가능"보다 더 강한 것을 요구하는 이유입니다.`,
         en: String.raw`The Devil's staircase: continuous and nondecreasing from \(0\) to \(1\), yet constant on every complementary interval, so \(f' = 0\) on a set of total length \(1\). \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — why the FTC needs more than differentiability almost everywhere.`,
@@ -611,7 +631,7 @@ problems: cantorProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 29,
+      order: 30,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -626,7 +646,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 30,
+      order: 31,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -650,7 +670,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 31,
+      order: 32,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
@@ -668,7 +688,7 @@ problems: uniformProblems,
     {
       id: 'weierstrass-approx',
       title: { ko: '바이어슈트라스 근사정리', en: 'Weierstrass Approximation Theorem' },
-      order: 32,
+      order: 33,
       summary: {
         ko: String.raw`\([0,1]\) 위의 연속함수는 다항식으로 균등하게 근사됩니다 — 번스타인 다항식 \(B_n(f)\)가 \(f\)에 다가가는 모습을 \(n\)을 키우며 확인합니다. 수렴 증명의 세부 추정은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every continuous function on \([0,1]\) is uniformly approximable by polynomials — watch the Bernstein polynomials \(B_n(f)\) close in on \(f\) as \(n\) grows. The fine estimates of the convergence proof are sketched at the idea level.`,

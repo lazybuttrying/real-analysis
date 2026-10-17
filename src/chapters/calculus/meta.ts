@@ -1,5 +1,6 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { problems as banachProblems } from './problems/banach';
+import { boundedVariationProblems } from './problems/bounded-variation';
 import { problems as cauchyMvtProblems } from './problems/cauchy-mvt';
 import { problems as convexProblems } from './problems/convex';
 import { problems as darbouxProblems } from './problems/darboux';
@@ -236,9 +237,34 @@ problems: riemannProblems,
 problems: ftcProblems,
     },
     {
+      id: 'bounded-variation',
+      title: { ko: '유계변동 함수', en: 'Functions of Bounded Variation' },
+      order: 12,
+      summary: {
+        ko: String.raw`분할을 잘게 쪼갤 때 \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\)이 유한한 상한 안에 머무르면 유계변동 — 단조함수는 전부 해당하고, \(x\sin(1/x)\)처럼 0 근처에서 끝없이 출렁이면 탈락합니다.`,
+        en: String.raw`A function has bounded variation when \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\) stays under a finite ceiling as partitions refine — every monotone function qualifies, while \(x\sin(1/x)\), wiggling endlessly near 0, does not.`,
+      },
+      tex: [
+        String.raw`V_a^b(f) = \sup_P \sum_{i=1}^{n} \lvert f(x_i) - f(x_{i-1})\rvert < \infty`,
+        String.raw`f = g - h, \quad g, h\ \text{increasing (Jordan)}`,
+      ],
+      prerequisites: ['riemann'],
+      controls: [
+        {
+          kind: 'select',
+          key: 'fn',
+          label: { ko: '함수', en: 'Function' },
+          options: ['sine', 'wild'],
+          init: 'sine',
+        },
+        { kind: 'slider', key: 'n', label: { ko: '분할 점 수 n', en: 'Partition points n' }, min: 2, max: 200, step: 1, init: 40 },
+      ],
+problems: boundedVariationProblems,
+    },
+    {
       id: 'newton',
       title: { ko: '뉴턴법', en: 'Riding Tangents to the Root' },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`접선을 타고 내려가면 근에 닿습니다. 오차의 정확한 자릿수가 매 단계 두 배가 됩니다.`,
         en: String.raw`Ride the tangent down to the root. The number of correct digits doubles each step.`,
@@ -260,7 +286,7 @@ problems: newtonProblems,
     {
       id: 'banach',
       title: { ko: '바나흐 고정점', en: 'The Contraction Cobweb' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`\(y = x\)와 \(y = f(x)\) 사이를 오가는 거미줄이 한 점으로 빨려듭니다. 오차는 \(q^n\)으로 줄어듭니다.`,
         en: String.raw`The cobweb between \(y = x\) and \(y = f(x)\) gets sucked into one point. The error shrinks like \(q^n\).`,
@@ -282,7 +308,7 @@ problems: banachProblems,
     {
       id: 'fourier',
       title: { ko: '푸리에 정사각파', en: 'The Ringing That Never Dies' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`정사각파에 사인파를 겹쳐봅니다. 점프점 옆의 울림은 \(N\)을 키워도 사라지지 않습니다.`,
         en: String.raw`Layer sine waves onto a square wave. The ringing beside each jump never dies out, no matter how large \(N\) gets.`,
@@ -294,7 +320,7 @@ problems: fourierProblems,
     {
       id: 'measure',
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
         en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
@@ -311,7 +337,7 @@ problems: fourierProblems,
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 16,
+      order: 17,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,

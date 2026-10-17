@@ -242,6 +242,16 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'continuity',
   },
   {
+    id: 'monotone-discontinuities',
+    term: { ko: '단조함수의 불연속점', en: 'discontinuities of a monotone function' },
+    definition: {
+      ko: String.raw`단조함수의 불연속점은 모두 점프이며, 점프 크기가 \(1/n\)을 넘는 점은 유한 개뿐이므로 불연속점 전체는 가산집합이다.`,
+      en: String.raw`Every discontinuity of a monotone function is a jump; only finitely many jumps exceed \(1/n\), so the discontinuities are at most countable.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'monotone-discontinuities',
+  },
+  {
     id: 'uniform-continuity',
     term: { ko: '균등연속', en: 'uniform continuity' },
     definition: {
@@ -833,6 +843,46 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'dirichlet-test',
   },
   {
+    id: 'abel-test',
+    term: { ko: '아벨 판정법', en: "Abel's test" },
+    definition: {
+      ko: String.raw`\(\sum a_n\)이 수렴하고 \((b_n)\)이 단조·유계이면 \(\sum a_n b_n\)이 수렴한다. 디리클레 판정법과 달리 \((b_n)\)이 0으로 갈 필요가 없다.`,
+      en: String.raw`If \(\sum a_n\) converges and \((b_n)\) is monotone and bounded, then \(\sum a_n b_n\) converges. Unlike Dirichlet's test, \((b_n)\) need not tend to 0.`,
+    },
+    chapterId: 'series',
+    sceneId: 'abel-test',
+  },
+  {
+    id: 'summation-by-parts',
+    term: { ko: '부분합 공식', en: 'summation by parts' },
+    definition: {
+      ko: String.raw`\(\sum_{k=m}^{n} a_k b_k = A_n b_{n+1} - A_{m-1} b_m + \sum_{k=m}^{n} A_k (b_k - b_{k+1})\) — 이산 버전의 부분적분. 아벨 판정법의 증명 엔진이다.`,
+      en: String.raw`\(\sum_{k=m}^{n} a_k b_k = A_n b_{n+1} - A_{m-1} b_m + \sum_{k=m}^{n} A_k (b_k - b_{k+1})\) — the discrete integration by parts; the engine behind Abel's test.`,
+    },
+    chapterId: 'series',
+    sceneId: 'abel-test',
+  },
+  {
+    id: 'raabe-test',
+    term: { ko: '라베 판정법', en: "Raabe's test" },
+    definition: {
+      ko: String.raw`\(L = \lim n(a_n/a_{n+1} - 1)\): \(L > 1\)이면 수렴, \(L < 1\)이면 발산. 비율이 1로 가서 비율 판정법이 침묵할 때 쓰는 판정법.`,
+      en: String.raw`\(L = \lim n(a_n/a_{n+1} - 1)\): converges if \(L > 1\), diverges if \(L < 1\). The test to reach for when the ratio drifts to 1 and the ratio test goes silent.`,
+    },
+    chapterId: 'series',
+    sceneId: 'raabe-test',
+  },
+  {
+    id: 'beta-function',
+    term: { ko: '베타 함수', en: 'beta function' },
+    definition: {
+      ko: String.raw`\(B(p,q) = \int_0^1 t^{p-1}(1-t)^{q-1}\,dt\) \((p, q > 0)\). \(B(p,q) = \Gamma(p)\Gamma(q)/\Gamma(p+q)\)로 감마함수와 이어진다.`,
+      en: String.raw`\(B(p,q) = \int_0^1 t^{p-1}(1-t)^{q-1}\,dt\) \((p, q > 0)\). Linked to the gamma function by \(B(p,q) = \Gamma(p)\Gamma(q)/\Gamma(p+q)\).`,
+    },
+    chapterId: 'series',
+    sceneId: 'beta-function',
+  },
+  {
     id: 'dini-theorem',
     term: { ko: '디니 정리', en: "Dini's theorem" },
     definition: {
@@ -881,6 +931,36 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'series',
     sceneId: 'cauchy-product',
+  },
+  {
+    id: 'euler-product',
+    term: { ko: '오일러 곱 공식', en: 'Euler product' },
+    definition: {
+      ko: String.raw`\(s > 1\)에서 \(\zeta(s) = \prod_p (1-p^{-s})^{-1}\) — 체로 합성수 항을 걸러내면 소수 위의 곱만 남는다.`,
+      en: String.raw`For \(s > 1\), \(\zeta(s) = \prod_p (1-p^{-s})^{-1}\) — sieving out composite terms leaves only the product over primes.`,
+    },
+    chapterId: 'series',
+    sceneId: 'euler-product',
+  },
+  {
+    id: 'kummer-test',
+    term: { ko: '쿰머 판정법', en: "Kummer's test" },
+    definition: {
+      ko: String.raw`\(K_n = p_n a_n/a_{n+1} - p_{n+1}\)이 양수로 머무르면 수렴, 0 이하에 머무르고 \(\sum 1/p_n\)이 발산하면 발산. \(p_n = 1\)은 비율 판정법, \(p_n = n\)은 라베 판정법이다.`,
+      en: String.raw`With \(K_n = p_n a_n/a_{n+1} - p_{n+1}\): convergence if \(K_n\) stays positive, divergence if \(K_n \le 0\) and \(\sum 1/p_n\) diverges. \(p_n = 1\) gives the ratio test, \(p_n = n\) gives Raabe's.`,
+    },
+    chapterId: 'series',
+    sceneId: 'kummer-test',
+  },
+  {
+    id: 'gauss-test',
+    term: { ko: '가우스 판정법', en: "Gauss's test" },
+    definition: {
+      ko: String.raw`\(a_n/a_{n+1} = 1 + h/n + O(1/n^r)\) \((r > 1)\)이면 \(h > 1\)에서 수렴, \(h < 1\)에서 발산 — 쿰머 판정법의 따름정리.`,
+      en: String.raw`If \(a_n/a_{n+1} = 1 + h/n + O(1/n^r)\) \((r > 1)\): converges for \(h > 1\), diverges for \(h < 1\) — a corollary of Kummer's test.`,
+    },
+    chapterId: 'series',
+    sceneId: 'kummer-test',
   },  // -------------------------------------------------------------- calculus
   {
     id: 'darboux-theorem',
@@ -1031,6 +1111,26 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'calculus',
     sceneId: 'ftc',
+  },
+  {
+    id: 'bounded-variation',
+    term: { ko: '유계변동', en: 'bounded variation' },
+    definition: {
+      ko: String.raw`분할을 잘게 쪼개도 \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\)이 유한한 상한 안에 머무르는 성질. 단조함수는 모두 유계변동이다.`,
+      en: String.raw`The sum \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\) stays under a finite ceiling as partitions refine. Every monotone function has bounded variation.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'bounded-variation',
+  },
+  {
+    id: 'jordan-decomposition',
+    term: { ko: '조르당 분해', en: 'Jordan decomposition' },
+    definition: {
+      ko: String.raw`유계변동 함수는 두 증가함수의 차로 쓸 수 있다: \(f = g - h\).`,
+      en: String.raw`A function of bounded variation is the difference of two increasing functions: \(f = g - h\).`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'bounded-variation',
   },
   {
     id: 'newton-method',
