@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * The contraction mapping principle (Banach fixed-point theorem) in the
@@ -75,16 +76,12 @@ export function picardIterates(map: ContractionMap, x0: number, n: number): numb
 }
 
 function clampX0(map: ContractionMap, raw: unknown): number {
-  const v = Number(raw);
-  if (!Number.isFinite(v)) return DEFAULT_X0;
   // The half map only lives on (0, 1]: a start above 1 would leave the space.
-  return map === 'half' ? Math.min(1, Math.max(0.1, v)) : Math.min(3, Math.max(0.1, v));
+  return clampNumber(raw, 0.1, map === 'half' ? 1 : 3, DEFAULT_X0);
 }
 
 function clampN(raw: unknown): number {
-  const v = Number(raw);
-  if (!Number.isFinite(v)) return DEFAULT_ITERATES;
-  return Math.min(MAX_ITERATES, Math.max(MIN_ITERATES, Math.floor(v)));
+  return clampNumber(raw, MIN_ITERATES, MAX_ITERATES, DEFAULT_ITERATES, true);
 }
 
 export interface ContractionData {

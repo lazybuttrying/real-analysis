@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { kummerModel, type KummerData } from '../models/kummerTest';
 
@@ -19,32 +19,6 @@ import { kummerModel, type KummerData } from '../models/kummerTest';
  */
 
 const MARGIN = { top: 48, right: 20, bottom: 40, left: 64 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function pLabel(pKind: KummerData['pKind']): string {
   if (pKind === 'p1') return '1';
@@ -213,8 +187,8 @@ function createKummerTestScene(): Scene<KummerData> {
         ),
       );
 
-    setRich(readoutSlot, readoutText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(readoutSlot, readoutText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -258,8 +232,8 @@ function createKummerTestScene(): Scene<KummerData> {
       strips.append(readout, verdict, seeAlso);
       host.append(chartWrap, strips);
 
-      readoutSlot = makeSlot(readout);
-      verdictSlot = makeSlot(verdict);
+      readoutSlot = createRichSlot(readout);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

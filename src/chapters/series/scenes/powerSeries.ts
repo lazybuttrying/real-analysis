@@ -1,5 +1,6 @@
 import { axisBottom, scaleLinear } from 'd3';
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { powerSeriesModel, type PowerData, type PowerSeriesKind } from '../models/power-series';
 
@@ -13,32 +14,6 @@ import { powerSeriesModel, type PowerData, type PowerSeriesKind } from '../model
 const MARGIN = { top: 64, right: 20, bottom: 44, left: 56 };
 const X_MIN = -3;
 const X_MAX = 3;
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function seriesLabel(series: PowerSeriesKind, lang: Lang): string {
   if (series === 'factorial') return localize({ ko: 'Σ k!x^k', en: 'Σ k!x^k' }, lang);
@@ -221,8 +196,8 @@ function createPowerSeriesScene(): Scene<PowerData> {
       .style('fill', 'var(--bound)')
       .text(`x = ${fmt(x)}`);
 
-    setRich(readoutSlot, readoutText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(readoutSlot, readoutText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -243,8 +218,8 @@ function createPowerSeriesScene(): Scene<PowerData> {
       strips.append(readout, verdict);
       host.append(chartWrap, strips);
 
-      readoutSlot = makeSlot(readout);
-      verdictSlot = makeSlot(verdict);
+      readoutSlot = createRichSlot(readout);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

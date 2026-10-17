@@ -1,4 +1,5 @@
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { dimensionRankModel, type DimensionRankData, type Vec2 } from '../models/dimension-rank';
 
@@ -10,32 +11,6 @@ import { dimensionRankModel, type DimensionRankData, type Vec2 } from '../models
  * first, upgrade when the tex chunk arrives), each strip with its own sequence
  * guard so late arrivals from an older render never overwrite newer text.
  */
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
-
 const KERNEL_RED = 'var(--bound)';
 const IMAGE_BLUE = '#2563eb';
 
@@ -188,9 +163,9 @@ function createDimensionRankScene(): Scene<DimensionRankData> {
     // Origin marker.
     g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 3).attr('fill', 'currentColor');
 
-    setRich(readoutSlot, readoutText(data, lang));
-    setRich(kernelSlot, kernelText(data, lang));
-    setRich(imageSlot, imageText(data, lang));
+    setRichText(readoutSlot, readoutText(data, lang));
+    setRichText(kernelSlot, kernelText(data, lang));
+    setRichText(imageSlot, imageText(data, lang));
   };
 
   return {
@@ -213,9 +188,9 @@ function createDimensionRankScene(): Scene<DimensionRankData> {
       strips.append(readout, kernel, image);
       host.append(chartWrap, strips);
 
-      readoutSlot = makeSlot(readout);
-      kernelSlot = makeSlot(kernel);
-      imageSlot = makeSlot(image);
+      readoutSlot = createRichSlot(readout);
+      kernelSlot = createRichSlot(kernel);
+      imageSlot = createRichSlot(image);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

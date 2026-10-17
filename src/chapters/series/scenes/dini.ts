@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { diniModel, type DiniData } from '../models/dini';
 
@@ -26,32 +26,6 @@ import { diniModel, type DiniData } from '../models/dini';
  */
 
 const MARGIN = { top: 64, right: 20, bottom: 44, left: 56 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function header2Text(data: DiniData, lang: Lang): string {
   const { n, domain } = data;
@@ -239,8 +213,8 @@ function createDiniScene(): Scene<DiniData> {
       .attr('opacity', 0.7)
       .text(legend);
 
-    setRich(factsSlot, factsText(data, lang));
-    setRich(verdictSlot, verdictText(lang));
+    setRichText(factsSlot, factsText(data, lang));
+    setRichText(verdictSlot, verdictText(lang));
   };
 
   return {
@@ -264,8 +238,8 @@ function createDiniScene(): Scene<DiniData> {
       strips.append(facts, verdict, links);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

@@ -1,4 +1,5 @@
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { vectorSpacesModel, type VectorSpacesData } from '../models/vector-spaces';
 
@@ -8,32 +9,6 @@ import { vectorSpacesModel, type VectorSpacesData } from '../models/vector-space
  * arrives). Each strip has its own sequence guard so late arrivals from an
  * older render never overwrite newer text.
  */
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
-
 const LINE_Y_MIN = -4;
 const LINE_Y_MAX = 4;
 const PLANE_HALF = 2.5;
@@ -172,8 +147,8 @@ function createVectorSpacesScene(): Scene<VectorSpacesData> {
     gr.selectAll('*').remove();
     drawPointPanel(gr, chartRight.width, chartRight.height, data);
 
-    setRich(captionSlot, captionText(lang));
-    setRich(equationSlot, equationText(data, lang));
+    setRichText(captionSlot, captionText(lang));
+    setRichText(equationSlot, equationText(data, lang));
   };
 
   const doResize = (): void => {
@@ -220,8 +195,8 @@ function createVectorSpacesScene(): Scene<VectorSpacesData> {
       wrapRight = rightChartDiv;
       chartLeft = createChart(leftChartDiv);
       chartRight = createChart(rightChartDiv);
-      captionSlot = makeSlot(caption);
-      equationSlot = makeSlot(equation);
+      captionSlot = createRichSlot(caption);
+      equationSlot = createRichSlot(equation);
       doResize();
     },
     render(data, state) {

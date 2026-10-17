@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, scaleLinear, type Selection } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { sequenceSpacesModel, term, type SequenceSpacesData } from '../models/sequence-spaces';
 
@@ -17,32 +17,6 @@ import { sequenceSpacesModel, term, type SequenceSpacesData } from '../models/se
  * membership readouts in l^1 / l^2 / l^infinity, showing the inclusion chain
  * l^1 subset l^2 subset l^infinity as alpha shrinks.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function normName(p: SequenceSpacesData['p'], lang: Lang): string {
   if (p === '1') return '\\(\\lVert x\\rVert_1 = \\sum \\lvert x_n\\rvert\\)';
@@ -201,8 +175,8 @@ function createSequenceSpacesScene(): Scene<SequenceSpacesData> {
     const { data } = last;
     if (data.view === 'balls') drawBalls();
     else drawSequence();
-    setRich(factsSlot, factsText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(factsSlot, factsText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -225,8 +199,8 @@ function createSequenceSpacesScene(): Scene<SequenceSpacesData> {
       strips.append(legend, facts, verdict);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`음영 = 단위 공 / 수열의 막대, 마름모 = 원점 — \(\ell^1 \subset \ell^2 \subset \ell^\infty\)`,
@@ -235,8 +209,8 @@ function createSequenceSpacesScene(): Scene<SequenceSpacesData> {
           lang,
         ),
       );
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

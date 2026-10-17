@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, scaleLinear, type Selection } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { metricSpacesModel, type MetricSpacesData } from '../models/metric-spaces';
 
@@ -16,32 +16,6 @@ import { metricSpacesModel, type MetricSpacesData } from '../models/metric-space
  * r <= 1 and jumps to all six points past r = 1. A legend strip names the
  * metric and describes its ball; a verdict strip states the takeaway.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function factsText(data: MetricSpacesData, lang: Lang): string {
   const { metric, r } = data;
@@ -213,8 +187,8 @@ function createMetricSpacesScene(): Scene<MetricSpacesData> {
     g.append('g').attr('transform', `translate(0,${height - 8})`).call(axisBottom(xScale).ticks(8));
     g.append('g').call(axisLeft(yScale).ticks(8));
 
-    setRich(factsSlot, factsText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(factsSlot, factsText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -237,8 +211,8 @@ function createMetricSpacesScene(): Scene<MetricSpacesData> {
       strips.append(legend, facts, verdict);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`음영·강조된 점 = 열린 공 \(B(c, r)\), 마름모 = 중심 \(c\)`,
@@ -247,8 +221,8 @@ function createMetricSpacesScene(): Scene<MetricSpacesData> {
           lang,
         ),
       );
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

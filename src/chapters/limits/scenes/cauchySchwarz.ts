@@ -1,4 +1,5 @@
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { cauchySchwarzModel, type CauchySchwarzData, type Vec2 } from '../models/cauchySchwarz';
 
@@ -12,32 +13,6 @@ import { cauchySchwarzModel, type CauchySchwarzData, type Vec2 } from '../models
  * |x . y| versus ||x|| ||y||; when y is parallel to x the equality case
  * flashes: a halo around y's tip and an equality verdict.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 const X_COLOR = 'var(--accent)';
 const Y_COLOR = 'var(--bound)';
@@ -247,8 +222,8 @@ function createCauchySchwarzScene(): Scene<CauchySchwarzData> {
     }
 
     if (factsSlot && verdictSlot) {
-      setRich(factsSlot, factsText(data, lang));
-      setRich(verdictSlot, verdictText(data, lang));
+      setRichText(factsSlot, factsText(data, lang));
+      setRichText(verdictSlot, verdictText(data, lang));
     }
   };
 
@@ -270,8 +245,8 @@ function createCauchySchwarzScene(): Scene<CauchySchwarzData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       chart = createChart(chartWrap);
     },
     render(data, state) {
