@@ -5,6 +5,7 @@ import { problems as convexProblems } from './problems/convex';
 import { problems as darbouxProblems } from './problems/darboux';
 import { problems as diffcontProblems } from './problems/diffcont';
 import { problems as fourierProblems } from './problems/fourier';
+import { problems as weierstrassFunctionProblems } from './problems/weierstrass-function';
 import { problems as ftcProblems } from './problems/ftc';
 import { problems as lhopitalProblems } from './problems/lhopital';
 import { problems as lebesgueProblems } from './problems/lebesgue';
@@ -128,9 +129,27 @@ problems: cauchyMvtProblems,
       problems: darbouxProblems,
     },
     {
+      id: 'weierstrass-function',
+      title: { ko: '바이어슈트라스 함수', en: 'The Weierstrass Function' },
+      order: 6,
+      summary: {
+        ko: String.raw`\(W(x) = \sum_{n=0}^{\infty} a^n\cos(b^n\pi x)\) — 모든 점에서 연속이지만 어느 점에서도 미분 불가능합니다. M-판정법 장면이 연속성의 엔진이고, 부분합이 늘어날수록 그래프는 가시처럼 뾰족해집니다. 미분 불가능성의 완전한 증명은 아이디어 수준에서만 다룹니다.`,
+        en: String.raw`\(W(x) = \sum_{n=0}^{\infty} a^n\cos(b^n\pi x)\) — continuous everywhere yet differentiable nowhere. The M-test scene powers the continuity argument, and the graph turns thornier as partial sums grow. The full nowhere-differentiability proof is idea-level only.`,
+      },
+      tex: [
+        String.raw`W(x) = \sum_{n=0}^{\infty} a^n\cos(b^n\pi x),\quad 0 < a < 1 < b,\ ab > 1 + \frac{3\pi}{2}`,
+        String.raw`|a^n\cos(b^n\pi x)| \le a^n,\quad \sum a^n < \infty\ \Rightarrow\ W \text{ continuous}`,
+      ],
+      prerequisites: ['darboux'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '부분합 항 수 N', en: 'Partial-sum terms N' }, min: 0, max: 8, step: 1, init: 4 },
+      ],
+      problems: weierstrassFunctionProblems,
+    },
+    {
       id: 'taylor',
       title: { ko: '테일러 근사', en: 'Polynomials Hugging the Curve' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`\(\sin x\) 위에 매클로린 다항식 \(T_n(x)\)을 겹쳐봅니다. 차수를 올리면 곡선에 달라붙습니다.`,
         en: String.raw`Lay the Maclaurin polynomial \(T_n(x)\) over \(\sin x\). Raise the degree and watch it hug the curve.`,
@@ -151,7 +170,7 @@ problems: taylorProblems,
     {
       id: 'taylor-thm',
       title: { ko: '테일러 정리: 나머지 상한', en: "Taylor's Theorem: The Remainder Envelope" },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`오차 \(R_n(x)\)는 띠 \(T_n(x) \pm |x|^{n+1}/(n+1)!\) 안에 갇힙니다. \(n\)을 키우면 띠가 0으로 쪼그라듭니다.`,
         en: String.raw`The error \(R_n(x)\) is trapped in the band \(T_n(x) \pm |x|^{n+1}/(n+1)!\). Raise \(n\) and the band shrinks to zero.`,
@@ -166,7 +185,7 @@ problems: taylorThmProblems,
     {
       id: 'convex',
       title: { ko: '볼록함수', en: 'Convex Functions' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`현이 그래프 위에 뜨면 볼록 — 미분 가능할 때는 \(f'\) 증가와 동치이고, 이계도함수 부호로 판정합니다. 옌센 부등식까지.`,
         en: String.raw`Convex when the chord floats above the graph — for differentiable \(f\) this is the same as \(f'\) increasing, and the second derivative decides it. Up to Jensen's inequality.`,
@@ -186,7 +205,7 @@ problems: convexProblems,
     {
       id: 'riemann',
       title: { ko: '리만합 스퀴즈', en: 'Upper and Lower Sums Close In' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`\(f(x) = x^2\) 아래에 직사각형을 채워봅니다. 아래합과 위합이 \(\frac{1}{3}\)을 양쪽에서 조여옵니다.`,
         en: String.raw`Fill rectangles under \(f(x) = x^2\). The lower and upper sums squeeze \(\frac{1}{3}\) from both sides.`,
@@ -198,7 +217,7 @@ problems: riemannProblems,
     {
       id: 'ftc',
       title: { ko: '미적분 기본정리', en: "The Area Function's Derivative Is the Function" },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`넓이함수 \(A(x) = \int_a^x f(t)\,dt\)의 기울기를 재보면 \(f(x)\)와 일치합니다. \(x\)를 움직여보세요.`,
         en: String.raw`Measure the slope of the area function \(A(x) = \int_a^x f(t)\,dt\) — it equals \(f(x)\). Drag \(x\).`,
@@ -219,7 +238,7 @@ problems: ftcProblems,
     {
       id: 'newton',
       title: { ko: '뉴턴법', en: 'Riding Tangents to the Root' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`접선을 타고 내려가면 근에 닿습니다. 오차의 정확한 자릿수가 매 단계 두 배가 됩니다.`,
         en: String.raw`Ride the tangent down to the root. The number of correct digits doubles each step.`,
@@ -241,7 +260,7 @@ problems: newtonProblems,
     {
       id: 'banach',
       title: { ko: '바나흐 고정점', en: 'The Contraction Cobweb' },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`\(y = x\)와 \(y = f(x)\) 사이를 오가는 거미줄이 한 점으로 빨려듭니다. 오차는 \(q^n\)으로 줄어듭니다.`,
         en: String.raw`The cobweb between \(y = x\) and \(y = f(x)\) gets sucked into one point. The error shrinks like \(q^n\).`,
@@ -263,7 +282,7 @@ problems: banachProblems,
     {
       id: 'fourier',
       title: { ko: '푸리에 정사각파', en: 'The Ringing That Never Dies' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`정사각파에 사인파를 겹쳐봅니다. 점프점 옆의 울림은 \(N\)을 키워도 사라지지 않습니다.`,
         en: String.raw`Layer sine waves onto a square wave. The ringing beside each jump never dies out, no matter how large \(N\) gets.`,
@@ -275,7 +294,7 @@ problems: fourierProblems,
     {
       id: 'measure',
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
         en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
@@ -292,7 +311,7 @@ problems: fourierProblems,
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,

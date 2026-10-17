@@ -20,6 +20,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   zeta4: () => import('./scenes/zeta4').then((module) => module.default),
   rearrangement: () => import('./scenes/rearrangement').then((module) => module.default),
   absolute: () => import('./scenes/absolute').then((module) => module.default),
+  'cauchy-product': () => import('./scenes/cauchyProduct').then((module) => module.default),
   'dirichlet-test': () => import('./scenes/dirichletTest').then((module) => module.default),
   'm-test': () => import('./scenes/mTest').then((module) => module.default),
   dini: () => import('./scenes/dini').then((module) => module.default),

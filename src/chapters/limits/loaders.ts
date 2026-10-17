@@ -29,6 +29,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'limsup-liminf': () => import('./scenes/limsupLiminf').then((module) => module.default),
   'stolz-cesaro': () => import('./scenes/stolzCesaro').then((module) => module.default),
   cantor: () => import('./scenes/cantor').then((module) => module.default),
+  'cantor-function': () => import('./scenes/cantorFunction').then((module) => module.default),
   ivt: () => import('./scenes/ivt').then((module) => module.default),
   evt: () => import('./scenes/evt').then((module) => module.default),
   uniform: () => import('./scenes/uniform').then((module) => module.default),
