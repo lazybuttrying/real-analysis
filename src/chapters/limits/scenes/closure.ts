@@ -2,11 +2,11 @@ import { axisBottom, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { closureModel, type ClosureData, type ClosureKind } from '../models/closure';
 
@@ -15,32 +15,6 @@ import { closureModel, type ClosureData, type ClosureKind } from '../models/clos
  * adds in red, and the bounding interval [-m, m] as a gray band.
  * The round-song: closed <=> contains its limit points <=> equals its closure.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function closureText(kind: ClosureKind, lang: Lang): string {
   switch (kind) {
@@ -181,8 +155,8 @@ function createClosureScene(): Scene<ClosureData> {
 
     g.append('g').attr('transform', `translate(0,${height - 8})`).call(axisBottom(xScale).ticks(10));
 
-    setRich(closureSlot, closureText(kind, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(closureSlot, closureText(kind, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -205,8 +179,8 @@ function createClosureScene(): Scene<ClosureData> {
       strips.append(legend, closureLine, verdict);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`파란색 = 집합 \(A\), 빨간 점 = 폐포가 추가한 극한점, 회색 띠 = \([-M, M]\)`,
@@ -215,8 +189,8 @@ function createClosureScene(): Scene<ClosureData> {
           lang,
         ),
       );
-      closureSlot = makeSlot(closureLine);
-      verdictSlot = makeSlot(verdict);
+      closureSlot = createRichSlot(closureLine);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

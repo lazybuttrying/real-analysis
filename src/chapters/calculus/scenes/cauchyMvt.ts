@@ -1,5 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { cauchyMvtModel, type CauchyMVTData } from '../models/cauchyMvt';
 
@@ -9,32 +10,6 @@ import { cauchyMvtModel, type CauchyMVTData } from '../models/cauchyMvt';
  * 3/7 against the slope ratio f'(xi)/g'(xi) = 2/(3 xi); at the theorem point
  * xi = 14/9 the two agree and the tangent turns parallel to the chord.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function readoutText(data: CauchyMVTData, parallel: boolean, lang: Lang): string {
   const ko = String.raw`할선 기울기 \(\frac{f(2)-f(1)}{g(2)-g(1)} = \frac{3}{7} \approx ${fmt(
@@ -149,7 +124,7 @@ function createCauchyMVTScene(): Scene<CauchyMVTData> {
       .attr('fill', 'currentColor')
       .text(`(g(t), f(t)) = (t^3, t^2), t in [1, 2]`);
 
-    setRich(readoutSlot, readoutText(data, parallel, lang));
+    setRichText(readoutSlot, readoutText(data, parallel, lang));
   };
 
   return {
@@ -168,7 +143,7 @@ function createCauchyMVTScene(): Scene<CauchyMVTData> {
       strips.append(readout);
       host.append(chartWrap, strips);
 
-      readoutSlot = makeSlot(readout);
+      readoutSlot = createRichSlot(readout);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

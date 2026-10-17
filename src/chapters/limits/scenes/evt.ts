@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { evtModel, type EvtData, type EvtSample } from '../models/evt';
 
@@ -15,32 +15,6 @@ import { evtModel, type EvtData, type EvtSample } from '../models/evt';
  * and min. The two counterexamples show why closedness and continuity are
  * both necessary.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function verdictText(data: EvtData, lang: Lang): string {
   if (data.mode === 'open-interval') {
@@ -170,7 +144,7 @@ function createEvtScene(): Scene<EvtData> {
     g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(5));
     g.append('g').call(axisLeft(y).ticks(5));
 
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -191,8 +165,8 @@ function createEvtScene(): Scene<EvtData> {
       strips.append(legend, verdict);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`최댓값 정리: 닫힌 구간 위의 연속함수는 최댓값·최솟값을 모두 취합니다 — 두 가설 중 하나라도 빠지면 거짓이 됩니다`,
@@ -201,7 +175,7 @@ function createEvtScene(): Scene<EvtData> {
           lang,
         ),
       );
-      verdictSlot = makeSlot(verdict);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

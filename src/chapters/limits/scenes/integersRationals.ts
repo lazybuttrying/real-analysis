@@ -2,11 +2,11 @@ import { scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { integersRationalsModel, type IntegersRationalsData } from '../models/integers-rationals';
 
@@ -18,32 +18,6 @@ import { integersRationalsModel, type IntegersRationalsData } from '../models/in
  * class" technique builds the reals from the rationals in the construction
  * scene.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function factsText(data: IntegersRationalsData, lang: Lang): string {
   if (data.set === 'naturals') {
@@ -182,8 +156,8 @@ function createIntegersRationalsScene(): Scene<IntegersRationalsData> {
     }
 
     if (factsSlot && verdictSlot) {
-      setRich(factsSlot, factsText(data, lang));
-      setRich(verdictSlot, verdictText(lang));
+      setRichText(factsSlot, factsText(data, lang));
+      setRichText(verdictSlot, verdictText(lang));
     }
   };
 
@@ -205,8 +179,8 @@ function createIntegersRationalsScene(): Scene<IntegersRationalsData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       chart = createChart(chartWrap);
     },
     render(data, state) {

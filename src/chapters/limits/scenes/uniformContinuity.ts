@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import {
   evaluateFn,
@@ -24,32 +24,6 @@ import {
  */
 
 const X_MAX = 4.5;
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function fnName(kind: FunctionKind): string {
   return kind === 'square' ? 'f(x) = x^2' : 'f(x) = 2x';
@@ -161,8 +135,8 @@ function createUniformContinuityScene(): Scene<UniformContinuityData> {
     g.append('g').attr('transform', `translate(0,${height - 8})`).call(axisBottom(xScale).ticks(9));
     g.append('g').call(axisLeft(yScale).ticks(6));
 
-    setRich(readoutSlot, readoutText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(readoutSlot, readoutText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -185,8 +159,8 @@ function createUniformContinuityScene(): Scene<UniformContinuityData> {
       strips.append(legend, readout, verdict);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`파란 곡선 = 함수 \(f\), 빨간 점 = \((x, f(x))\), 음영 = \(\delta\)-구간 \(\times\) \(\varepsilon\)-띠`,
@@ -195,8 +169,8 @@ function createUniformContinuityScene(): Scene<UniformContinuityData> {
           lang,
         ),
       );
-      readoutSlot = makeSlot(readout);
-      verdictSlot = makeSlot(verdict);
+      readoutSlot = createRichSlot(readout);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

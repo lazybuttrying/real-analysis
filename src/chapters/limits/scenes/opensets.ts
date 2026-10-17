@@ -2,11 +2,11 @@ import { axisBottom, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { opensetsModel, type OpenSetData, type OpenSetKind } from '../models/opensets';
 
@@ -15,32 +15,6 @@ import { opensetsModel, type OpenSetData, type OpenSetKind } from '../models/ope
  * eps-ball: green when the ball stays inside S, red when it leaks out.
  * The verdict line states whether S itself is open, with the reason.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function setName(kind: OpenSetKind): string {
   switch (kind) {
@@ -176,8 +150,8 @@ function createOpensetsScene(): Scene<OpenSetData> {
 
     g.append('g').attr('transform', `translate(0,${height - 8})`).call(axisBottom(xScale).ticks(10));
 
-    setRich(factsSlot, factsText(kind, data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(factsSlot, factsText(kind, data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -200,8 +174,8 @@ function createOpensetsScene(): Scene<OpenSetData> {
       strips.append(legend, facts, verdict);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`파란색 = 집합 \(S\), 음영 = 점 \(x\)의 \(\varepsilon\)-공, 마름모 = 점 \(x\)`,
@@ -210,8 +184,8 @@ function createOpensetsScene(): Scene<OpenSetData> {
           lang,
         ),
       );
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

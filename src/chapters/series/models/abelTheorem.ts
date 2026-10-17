@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Abel's theorem, visualized through Abel summation:
@@ -136,15 +137,11 @@ function parseSeries(raw: unknown): AbelSeriesKey {
 }
 
 function clampX(raw: unknown): number {
-  const v = Number(raw);
-  if (!Number.isFinite(v)) return 0.8;
-  return Math.min(X_MAX, Math.max(0, v));
+  return clampNumber(raw, 0, X_MAX, 0.8);
 }
 
 function clampN(raw: unknown): number {
-  const v = Number(raw);
-  if (!Number.isFinite(v)) return DEFAULT_TERMS;
-  return Math.min(MAX_TERMS, Math.max(MIN_TERMS, Math.floor(v)));
+  return clampNumber(raw, MIN_TERMS, MAX_TERMS, DEFAULT_TERMS, true);
 }
 
 export const abelTheoremModel: SceneModel<AbelData> = {

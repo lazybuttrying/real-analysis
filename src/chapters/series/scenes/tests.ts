@@ -1,5 +1,6 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { testsModel, type TestsData } from '../models/tests';
 
@@ -10,32 +11,6 @@ import { testsModel, type TestsData } from '../models/tests';
 // KaTeX helper like the shell renders summaries.
 
 const MARGIN = { top: 64, right: 20, bottom: 44, left: 56 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function seriesLabel(series: string, lang: Lang): string {
   if (series === 'n-over-2n') return localize({ ko: 'Σ k/2^k', en: 'Σ k/2^k' }, lang);
@@ -198,7 +173,7 @@ function createTestsScene(): Scene<TestsData> {
         .text(localize({ ko: '■ b_k = 1/k² (위에서 누름)', en: '■ b_k = 1/k² (dominating above)' }, lang));
     }
 
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -217,7 +192,7 @@ function createTestsScene(): Scene<TestsData> {
       strips.append(verdict);
       host.append(chartWrap, strips);
 
-      verdictSlot = makeSlot(verdict);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

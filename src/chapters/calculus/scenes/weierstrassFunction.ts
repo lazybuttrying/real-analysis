@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import {
   weierstrassModel,
@@ -24,32 +24,6 @@ import {
  */
 
 const MARGIN = { top: 64, right: 20, bottom: 44, left: 60 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function factsText(data: WeierstrassData, lang: Lang): string {
   const tail = fmt(data.tailBound, 8);
@@ -156,8 +130,8 @@ function createWeierstrassScene(): Scene<WeierstrassData> {
         ),
       );
 
-    setRich(factsSlot, factsText(data, lang));
-    setRich(verdictSlot, verdictText(lang));
+    setRichText(factsSlot, factsText(data, lang));
+    setRichText(verdictSlot, verdictText(lang));
   };
 
   return {
@@ -178,8 +152,8 @@ function createWeierstrassScene(): Scene<WeierstrassData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

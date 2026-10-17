@@ -1,5 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { absoluteModel, type AbsoluteData } from '../models/absolute';
 
@@ -10,32 +11,6 @@ import { absoluteModel, type AbsoluteData } from '../models/absolute';
 // absolutely convergent series, rendered through the shared KaTeX helper.
 
 const MARGIN = { top: 72, right: 20, bottom: 44, left: 56 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function noteText(lang: Lang): string {
   return localize(
@@ -192,7 +167,7 @@ function createAbsoluteScene(): Scene<AbsoluteData> {
       .attr('fill', 'var(--bound)')
       .text(localize({ ko: '— T_n: 절댓값 부분합', en: '— T_n: absolute partial sums' }, lang));
 
-    setRich(noteSlot, noteText(lang));
+    setRichText(noteSlot, noteText(lang));
   };
 
   return {
@@ -210,7 +185,7 @@ function createAbsoluteScene(): Scene<AbsoluteData> {
       strips.append(note);
       host.append(chartWrap, strips);
 
-      noteSlot = makeSlot(note);
+      noteSlot = createRichSlot(note);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },
