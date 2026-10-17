@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { abelTheoremModel, type AbelData } from '../models/abelTheorem';
 
@@ -25,32 +25,6 @@ import { abelTheoremModel, type AbelData } from '../models/abelTheorem';
 const MAIN_MARGIN = { top: 84, right: 20, bottom: 40, left: 60 };
 const SIDE_MARGIN = { top: 40, right: 20, bottom: 30, left: 60 };
 const GOLD = '#d9930d';
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function seriesTitle(series: AbelData['series'], lang: Lang): string {
   return localize(
@@ -232,8 +206,8 @@ function createAbelTheoremScene(): Scene<AbelData> {
         ),
       );
 
-    setRich(factsSlot, factsText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(factsSlot, factsText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   const drawSide = (): void => {
@@ -319,8 +293,8 @@ function createAbelTheoremScene(): Scene<AbelData> {
       strips.append(facts, verdict);
       host.append(chartWrap, sideWrapEl, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       mainWrap = chartWrap;
       sideWrap = sideWrapEl;
       main = createChart(chartWrap, MAIN_MARGIN);

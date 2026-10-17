@@ -1,5 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { raabeModel, type RaabeData } from '../models/raabeTest';
 
@@ -13,32 +14,6 @@ import { raabeModel, type RaabeData } from '../models/raabeTest';
 
 const TOP_MARGIN = { top: 60, right: 20, bottom: 36, left: 56 };
 const BOTTOM_MARGIN = { top: 52, right: 20, bottom: 36, left: 56 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function exampleLabel(example: string, lang: Lang): string {
   if (example === 'log') return localize({ ko: 'a_k = 1/(k(ln k)²)', en: 'a_k = 1/(k(ln k)²)' }, lang);
@@ -260,7 +235,7 @@ function createRaabeScene(): Scene<RaabeData> {
     if (!last || !verdictSlot) return;
     drawTop(last.data);
     drawBottom(last.data);
-    setRich(verdictSlot, verdictText(last.data, lang));
+    setRichText(verdictSlot, verdictText(last.data, lang));
   };
 
   return {
@@ -281,7 +256,7 @@ function createRaabeScene(): Scene<RaabeData> {
       strips.append(verdict);
       host.append(topWrap, bottomWrap, strips);
 
-      verdictSlot = makeSlot(verdict);
+      verdictSlot = createRichSlot(verdict);
       topChart = createChart(topWrap, TOP_MARGIN);
       bottomChart = createChart(bottomWrap, BOTTOM_MARGIN);
     },

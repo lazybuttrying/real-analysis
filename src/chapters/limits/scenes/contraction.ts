@@ -2,11 +2,11 @@ import { axisBottom, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { contractionModel, type ContractionData } from '../models/contraction';
 
@@ -30,32 +30,6 @@ const TICKS: Record<ContractionData['map'], readonly number[]> = {
   affine: [0, 1, 2, 3],
   half: [0, 0.25, 0.5, 0.75, 1],
 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function titleText(data: ContractionData, lang: Lang): string {
   const { map, n } = data;
@@ -298,9 +272,9 @@ function createContractionScene(): Scene<ContractionData> {
         ),
       );
 
-    setRich(titleSlot, titleText(data, lang));
-    setRich(factsSlot, factsText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(titleSlot, titleText(data, lang));
+    setRichText(factsSlot, factsText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -323,9 +297,9 @@ function createContractionScene(): Scene<ContractionData> {
       strips.append(facts, verdict);
       host.append(title, chartWrap, strips);
 
-      titleSlot = makeSlot(title);
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      titleSlot = createRichSlot(title);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

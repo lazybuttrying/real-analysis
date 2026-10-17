@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear, scaleLog } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { lhopitalModel, type LHopitalData } from '../models/lhopital';
 
@@ -19,32 +19,6 @@ import { lhopitalModel, type LHopitalData } from '../models/lhopital';
  */
 
 const MARGIN = { top: 60, right: 20, bottom: 44, left: 60 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function factsText(data: LHopitalData, lang: Lang): string {
   const x = fmt(data.x, 4);
@@ -318,8 +292,8 @@ function createLHopitalScene(): Scene<LHopitalData> {
       .style('fill', 'var(--muted)')
       .text(localize({ ko: '┄ f′(x)/g′(x) 도함수 비율', en: "┄ f′(x)/g′(x) derivative ratio" }, lang));
 
-    setRich(factsSlot, factsText(data, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(factsSlot, factsText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -340,8 +314,8 @@ function createLHopitalScene(): Scene<LHopitalData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

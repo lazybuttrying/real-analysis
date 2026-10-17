@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { ZETA2, eulerProductModel, type EulerProductData } from '../models/eulerProduct';
 
@@ -18,32 +18,6 @@ import { ZETA2, eulerProductModel, type EulerProductData } from '../models/euler
  */
 
 const MARGIN = { top: 48, right: 20, bottom: 40, left: 64 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function readoutText(data: EulerProductData, lang: Lang): string {
   const { k, terms, product, error } = data;
@@ -150,8 +124,8 @@ function createEulerProductScene(): Scene<EulerProductData> {
         .text(localize({ ko: '점선: ζ(2) = π²/6', en: 'Dashed: ζ(2) = π²/6' }, lang));
     }
 
-    setRich(readoutSlot, readoutText(data, lang));
-    setRich(verdictSlot, verdictText(lang));
+    setRichText(readoutSlot, readoutText(data, lang));
+    setRichText(verdictSlot, verdictText(lang));
   };
 
   return {
@@ -184,8 +158,8 @@ function createEulerProductScene(): Scene<EulerProductData> {
       strips.append(readout, verdict, seeAlso);
       host.append(chartWrap, strips);
 
-      readoutSlot = makeSlot(readout);
-      verdictSlot = makeSlot(verdict);
+      readoutSlot = createRichSlot(readout);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },

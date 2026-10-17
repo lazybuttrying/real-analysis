@@ -2,11 +2,11 @@ import { axisBottom, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { compactModel, type CompactData, type CompactKind } from '../models/compact';
 
@@ -24,32 +24,6 @@ import { compactModel, type CompactData, type CompactKind } from '../models/comp
  */
 
 const MARGIN = { top: 76, right: 20, bottom: 44, left: 44 };
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function kindName(kind: CompactKind, lang: Lang): string {
   if (kind === 'closed') return lang === 'ko' ? '[0,1] (닫힘·유계)' : '[0,1] (closed, bounded)';
@@ -349,8 +323,8 @@ function createCompactScene(): Scene<CompactData> {
 
     g.append('g').attr('transform', `translate(0,${axisY})`).call(axisBottom(x).ticks(6));
 
-    setRich(legendSlot, legendText(kind, lang));
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(legendSlot, legendText(kind, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -371,8 +345,8 @@ function createCompactScene(): Scene<CompactData> {
       strips.append(legend, verdict);
       host.append(chartWrap, strips);
 
-      legendSlot = makeSlot(legend);
-      verdictSlot = makeSlot(verdict);
+      legendSlot = createRichSlot(legend);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap, MARGIN);
     },
