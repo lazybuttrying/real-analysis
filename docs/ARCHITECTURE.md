@@ -32,6 +32,7 @@ real-analysis/
     ├── main.ts                 홈 부트스트랩
     ├── contracts.ts            ControlSpec, SceneModel, Scene, SceneMeta, ChapterMeta, defineScene
     ├── catalog.ts              전 챕터 meta 취합 (순수 데이터)
+    ├── learning-paths.ts       학습 경로 데이터 (순수 데이터, glossary.ts와 같은 규칙)
     ├── paths.ts                URL 규칙 (순수)
     ├── state.ts                ControlState ↔ URL 쿼리 (순수)
     ├── shell/                  app.ts(챕터 라우팅), controls.ts, scene-host.ts, tex.ts, dom.ts
@@ -89,11 +90,12 @@ real-analysis/
 - [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 78씬·234문제. 증명에 등장하는 수치는 전부 vitest로 검증
 - [x] **사이트 검색**: 모든 페이지 헤더의 검색창. 빌드(prerender) 시 언어별 `search-index.<lang>.json`을 생성(52개 씬의 제목·요약 + 용어 사전 전체)하고, 셸이 첫 입력 때 lazy fetch로 가져와 부분문자열(대소문자 무시)로 매칭한다. 결과 드롭다운은 씬/용어를 구분해 링크하고, Enter(첫 결과 이동)·Escape(닫기)·방향키를 지원한다. 검색 인덱스는 번들에 포함되지 않아 페이지 무게가 늘지 않는다
 - [x] **용어 사전**: `/ko/glossary/`·`/en/glossary/` 프리렌더 페이지(사이트맵 포함, 홈·헤더에서 링크). `src/glossary.ts`에 92개 용어를 직접 작성(62개 씬 전부 최소 1개 이상, 정의 1–2문장, 한영, `\(...\)` 수식 허용, chapterId+sceneId로 씬에 연결). 챕터별(번호 순) 그룹, 용어별 정의·씬 링크·`#term-<id>` 앵커, 인페이지 필터 제공. 클라이언트 렌더러는 홈 entry에서 동적 import되어 용어 사전 페이지에서만 로드된다
+- [x] **학습 경로**: `/ko/paths/`·`/en/paths/` + `/ko/paths/<id>/`·`/en/paths/<id>/` 프리렌더 페이지(사이트맵 포함, 홈·헤더에서 링크). `src/learning-paths.ts`에 6개 경로를 직접 작성(수 체계 완성하기 9씬·수렴 판정 정복 11씬·미분 9씬·적분 7씬·병리적 함수들 7씬·완비성과 컴팩트 7씬, 순서 고정, chapterId+sceneId로 씬에 연결, 용어 사전과 같은 데이터 규칙). 경로 상세 페이지는 번호 매긴 씬 목록, 각 씬 페이지에는 "이 씬이 포함된 학습 경로" 칩 섹션(해당 없으면 표시 안 함). 클라이언트 렌더러(`src/shell/paths-page.ts`)는 홈 entry에서 동적 import되어 경로 페이지에서만 로드된다. 진도 저장·localStorage 없음, 씬 페이저는 전역 읽기 순서를 그대로 쓴다
 - [x] **챕터 자동 넘버링**: `catalog` 순서 = 표시 번호. `ChapterMeta`에 번호 필드 없음. 홈·허브·헤더·문서 제목·프리렌더 본문 모두 인덱스로 계산
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
 - [x] 의존 방향 검사 (`scripts/check-deps.ts`: `models → view` 금지, `meta.ts` import 제한, three는 threekit만)
-- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 용어 사전 페이지, 언어별 `search-index.<lang>.json`, `sitemap.xml`, `404.html`, `robots.txt`, title 중복·`summary` 비어 있음·용어 사전 무결성 검사
+- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 용어 사전 페이지, 학습 경로 목록·상세 페이지, 언어별 `search-index.<lang>.json`, `sitemap.xml`, `404.html`, `robots.txt`, title 중복·`summary` 비어 있음·용어 사전/학습 경로 무결성 검사
 - [x] CI 검사와 챕터별 번들 예산(`size-limit`), `deploy.yml`에 test → check-deps → build → 프리렌더 검증 → size-limit 반영. PR은 검증만, 배포는 main push에서만
 
 남음 (착수 순서)

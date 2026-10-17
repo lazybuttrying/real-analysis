@@ -5,7 +5,8 @@ import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { glossary } from '../src/glossary.ts';
-import { chapterUrl, glossaryUrl, homeUrl, sceneUrl } from '../src/paths.ts';
+import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
+import { chapterUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -153,6 +154,53 @@ ${items}
   ].join('\n');
 };
 
+/** Static body of the learning paths index: one card per path. */
+const renderPathsIndexHtml = (lang: Lang): string => {
+  const cards = learningPaths
+    .map((path) => {
+      const count = `${path.scenes.length}${localize(STRINGS.pathsSceneCount, lang)}`;
+      return `<article class="path-card">
+<h2><a href="${pathDetailUrl(BASE, lang, path.id)}">${escapeHtml(localize(path.title, lang))}</a></h2>
+<p>${renderSummaryHtml(localize(path.description, lang))}</p>
+<p class="path-card-meta">${escapeHtml(count)}</p>
+</article>`;
+    })
+    .join('\n');
+  return [`<h1>${escapeHtml(localize(STRINGS.paths, lang))}</h1>`, `<p>${escapeHtml(localize(STRINGS.pathsIntro, lang))}</p>`, cards].join('\n');
+};
+
+/** Static body of one learning path: numbered ordered scene list. */
+const renderPathDetailHtml = (path: LearningPath, lang: Lang): string => {
+  const steps = path.scenes
+    .map((step, index) => {
+      const scene = sceneOf.get(`${step.chapterId}/${step.sceneId}`);
+      const chapterIndex = catalog.findIndex((chapter) => chapter.id === step.chapterId);
+      const chapterLabel =
+        scene && chapterIndex >= 0
+          ? ` — ${chapterIndex + 1}. ${escapeHtml(localize(catalog[chapterIndex]?.title ?? { ko: '', en: '' }, lang))}`
+          : '';
+      const sceneLabel = scene ? escapeHtml(localize(scene.title, lang)) : escapeHtml(step.sceneId);
+      return `<li value="${index + 1}"><a href="${sceneUrl(BASE, lang, step.chapterId, step.sceneId)}">${sceneLabel}</a><span class="path-step-chapter">${chapterLabel}</span></li>`;
+    })
+    .join('\n');
+  return [
+    `<p class="path-back"><a href="${pathsUrl(BASE, lang)}">← ${escapeHtml(localize(STRINGS.paths, lang))}</a></p>`,
+    `<h1>${escapeHtml(localize(path.title, lang))}</h1>`,
+    `<p>${renderSummaryHtml(localize(path.description, lang))}</p>`,
+    `<ol class="path-steps">\n${steps}\n</ol>`,
+  ].join('\n');
+};
+
+/** Static "part of these learning paths" chips for a scene page (empty when the scene is in no path). */
+const renderPathChipsHtml = (chapterId: string, sceneId: string, lang: Lang): string => {
+  const containing = learningPaths.filter((path) => path.scenes.some((step) => step.chapterId === chapterId && step.sceneId === sceneId));
+  if (containing.length === 0) return '';
+  const chips = containing
+    .map((path) => `<li><a href="${pathDetailUrl(BASE, lang, path.id)}">${escapeHtml(localize(path.title, lang))}</a></li>`)
+    .join('\n');
+  return `<section class="path-chips"><h2>${escapeHtml(localize(STRINGS.partOfPaths, lang))}</h2>\n<ul>\n${chips}\n</ul></section>`;
+};
+
 const pages: Page[] = [
   {
     segments: (lang) => [lang],
@@ -215,6 +263,7 @@ for (const [index, chapter] of catalog.entries()) {
           `<h1>${escapeHtml(localize(scene.title, lang))}</h1>`,
           `<p>${renderSummaryHtml(localize(scene.summary, lang))}</p>`,
           ...(scene.tex ?? []).map((formula) => renderDisplayHtml(formula)),
+          renderPathChipsHtml(chapter.id, scene.id, lang),
           renderProblemsHtml(scene, lang),
           renderPagerHtml(chapter.id, scene.id, lang),
           `<p><a href="${chapterUrl(BASE, lang, chapter.id)}">${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</a></p>`,
@@ -232,6 +281,28 @@ pages.push({
   formulas: glossary.some((entry) => hasInlineMath(entry.definition) || hasInlineMath(entry.term)),
   body: renderGlossaryHtml,
 });
+
+pages.push({
+  segments: (lang) => [lang, 'paths'],
+  url: (lang) => pathsUrl(BASE, lang),
+  title: (lang) => `${localize(STRINGS.paths, lang)} | ${SITE_NAME}`,
+  description: (lang) => localize(STRINGS.pathsIntro, lang),
+  template: 'home',
+  formulas: learningPaths.some((path) => hasInlineMath(path.description)),
+  body: renderPathsIndexHtml,
+});
+
+for (const path of learningPaths) {
+  pages.push({
+    segments: (lang) => [lang, 'paths', path.id],
+    url: (lang) => pathDetailUrl(BASE, lang, path.id),
+    title: (lang) => `${localize(path.title, lang)} | ${SITE_NAME}`,
+    description: (lang) => stripInlineMath(localize(path.description, lang)),
+    template: 'home',
+    formulas: hasInlineMath(path.description),
+    body: (lang) => renderPathDetailHtml(path, lang),
+  });
+}
 
 function selfCheck(): string[] {
   const problems: string[] = [];
@@ -293,6 +364,34 @@ function selfCheck(): string[] {
         const opens = (text.match(/\\\(/g) ?? []).length;
         const closes = (text.match(/\\\)/g) ?? []).length;
         if (opens !== closes) problems.push(`glossary term '${entry.id}' has unbalanced \\(...\\) in ${field} (${lang})`);
+      }
+    }
+  }
+  // Learning paths: unique ids, real chapter/scene links, non-empty text in
+  // both languages, well-formed math delimiters, no duplicate scenes in a path.
+  const seenPathIds = new Set<string>();
+  for (const path of learningPaths) {
+    if (seenPathIds.has(path.id)) problems.push(`learning path has a duplicate id '${path.id}'`);
+    seenPathIds.add(path.id);
+    if (!/^[a-z][a-z0-9-]*$/.test(path.id)) problems.push(`learning path id '${path.id}' is not kebab-case`);
+    if (path.scenes.length === 0) problems.push(`learning path '${path.id}' has no scenes`);
+    const seenSteps = new Set<string>();
+    for (const step of path.scenes) {
+      const key = `${step.chapterId}/${step.sceneId}`;
+      if (seenSteps.has(key)) problems.push(`learning path '${path.id}' lists scene '${key}' twice`);
+      seenSteps.add(key);
+      if (!sceneOf.has(key)) problems.push(`learning path '${path.id}' links to unknown scene '${key}'`);
+    }
+    for (const lang of LANGS) {
+      for (const [field, text] of [
+        ['title', localize(path.title, lang)],
+        ['description', localize(path.description, lang)],
+      ] as const) {
+        if (!text.trim()) problems.push(`learning path '${path.id}' has an empty ${field} (${lang})`);
+        if (text.includes('$')) problems.push(`learning path '${path.id}' uses a $ delimiter in ${field} (${lang})`);
+        const opens = (text.match(/\\\(/g) ?? []).length;
+        const closes = (text.match(/\\\)/g) ?? []).length;
+        if (opens !== closes) problems.push(`learning path '${path.id}' has unbalanced \\(...\\) in ${field} (${lang})`);
       }
     }
   }
@@ -443,7 +542,7 @@ function main(): void {
   }
 
   console.log(
-    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
+    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
   );
 }
 

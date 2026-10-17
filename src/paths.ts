@@ -24,10 +24,18 @@ export const sceneUrl = (base: string, lang: Lang, chapterId: string, sceneId: s
 /** The glossary page: /<lang>/glossary/ */
 export const glossaryUrl = (base: string, lang: Lang): string => `${base}${lang}/glossary/`;
 
+/** The learning paths index: /<lang>/paths/ */
+export const pathsUrl = (base: string, lang: Lang): string => `${base}${lang}/paths/`;
+
+/** One learning path: /<lang>/paths/<id>/ */
+export const pathDetailUrl = (base: string, lang: Lang, pathId: string): string =>
+  `${base}${lang}/paths/${pathId}/`;
+
 /** The same page in another language: only the lang segment changes, chapter/scene/query are kept. */
 export function withLang(base: string, parsed: ParsedPath, lang: Lang): string {
   if (parsed.chapterId === undefined) return homeUrl(base, lang);
   if (parsed.chapterId === 'glossary') return glossaryUrl(base, lang);
+  if (parsed.chapterId === 'paths') return parsed.sceneId ? pathDetailUrl(base, lang, parsed.sceneId) : pathsUrl(base, lang);
   if (parsed.sceneId === undefined) return chapterUrl(base, lang, parsed.chapterId);
   return sceneUrl(base, lang, parsed.chapterId, parsed.sceneId);
 }

@@ -197,6 +197,76 @@ main.glossary {
   font-size: 0.875rem;
 }
 
+/* Learning paths pages */
+.paths-link {
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+main.paths {
+  max-width: 48rem;
+}
+
+.path-card {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+
+.path-card h2 {
+  margin: 0 0 4px;
+}
+
+.path-card p {
+  margin: 4px 0;
+}
+
+.path-card-meta {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.path-back {
+  font-size: 0.875rem;
+  margin-bottom: 0;
+}
+
+.path-steps li {
+  margin: 6px 0;
+}
+
+.path-step-chapter {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.path-chips {
+  margin: 16px 0;
+}
+
+.path-chips h2 {
+  font-size: 0.875rem;
+  margin: 0 0 8px;
+}
+
+.path-chips ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.path-chips li a {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
 /* Chapter page layout */
 #app.chapter {
   display: grid;

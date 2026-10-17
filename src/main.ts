@@ -1,7 +1,7 @@
 import './style.css';
 import { catalog } from './catalog';
 import { localize, stripInlineMath } from './contracts';
-import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath } from './paths';
+import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathsUrl } from './paths';
 import { h } from './shell/dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './shell/i18n';
 import { mountSearch } from './shell/search';
@@ -40,6 +40,16 @@ if (parsed.lang === undefined) {
     import('./shell/glossary-page')
       .then((module) => module.renderGlossaryPage(root, lang))
       .catch((error: unknown) => console.error(error));
+  } else if (parsed.chapterId === 'paths') {
+    // Same treatment as the glossary: the paths pages live on the home
+    // entry, and their renderer (plus the paths data) loads as a separate
+    // chunk only for these routes. parsed.sceneId is the path id, if any.
+    import('./shell/paths-page')
+      .then((module) => {
+        if (parsed.sceneId) module.renderPathDetailPage(root, lang, parsed.sceneId);
+        else module.renderPathsIndexPage(root, lang);
+      })
+      .catch((error: unknown) => console.error(error));
   } else {
     const headerSearch = h('span', { class: 'header-search' });
     root.replaceChildren(
@@ -47,6 +57,7 @@ if (parsed.lang === undefined) {
         'header',
         { class: 'home-header' },
         h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
+        h('a', { href: pathsUrl(BASE, lang), class: 'paths-link' }, tr(lang, 'paths')),
         h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
         headerSearch,
         langSwitcher(lang, (target) => homeUrl(BASE, target)),
@@ -70,7 +81,7 @@ if (parsed.lang === undefined) {
             ),
           ),
         ),
-        h('p', {}, h('a', { href: glossaryUrl(BASE, lang) }, tr(lang, 'glossary'))),
+        h('p', {}, h('a', { href: pathsUrl(BASE, lang) }, tr(lang, 'paths')), ' · ', h('a', { href: glossaryUrl(BASE, lang) }, tr(lang, 'glossary'))),
       ),
     );
     mountSearch(headerSearch, lang);

@@ -1,7 +1,8 @@
 import '../style.css';
 import { catalog } from '../catalog';
 import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
-import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, sceneUrl, withLang } from '../paths';
+import { learningPaths } from '../learning-paths';
+import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
@@ -219,6 +220,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
       {},
       h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
       h('a', { href: chapterUrl(BASE, lang, chapter.id), 'data-spa': '' }, chapterTitle),
+      h('a', { href: pathsUrl(BASE, lang), class: 'paths-link' }, tr(lang, 'paths')),
       h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
       headerSearch,
       langSwitcher(lang, (target) => `${withLang(BASE, parsePath(BASE, location.pathname), target)}${location.search}`),
@@ -283,6 +285,28 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
     document.title = `${localize(scene.title, lang)} | Real Analysis`;
     markActive(scene.id);
     renderText(textEl, scene, lang);
+
+    // "Part of these learning paths" chips, derived from the paths catalog.
+    // Scenes that belong to no path show nothing.
+    const containing = learningPaths.filter((path) =>
+      path.scenes.some((step) => step.chapterId === chapter.id && step.sceneId === scene.id),
+    );
+    if (containing.length > 0) {
+      textEl.append(
+        h(
+          'section',
+          { class: 'path-chips' },
+          h('h2', {}, tr(lang, 'partOfPaths')),
+          h(
+            'ul',
+            {},
+            ...containing.map((path) =>
+              h('li', {}, h('a', { href: pathDetailUrl(BASE, lang, path.id) }, localize(path.title, lang))),
+            ),
+          ),
+        ),
+      );
+    }
 
     const state = parseState(scene.controls, location.search);
     buildControls(controlsEl, scene.controls, state, lang, (next) => {

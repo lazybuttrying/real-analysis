@@ -46,6 +46,14 @@ export const STRINGS = {
     en: 'Key terms from the scenes, grouped by chapter. Each term links to the scene where it is introduced.',
   },
   glossaryFilterPlaceholder: { ko: '용어 검색…', en: 'Filter terms…' },
+  paths: { ko: '학습 경로', en: 'Learning Paths' },
+  pathsIntro: {
+    ko: '주제별로 엮은 씬들의 guided tour. 순서대로 따라가면 개념이 자연스럽게 쌓인다.',
+    en: 'Guided tours through the scenes, grouped by theme. Follow them in order and the ideas build up naturally.',
+  },
+  pathsSceneCount: { ko: '개의 씬', en: ' scenes' },
+  partOfPaths: { ko: '이 씬이 포함된 학습 경로', en: 'Part of these learning paths' },
+  pathNotFound: { ko: '학습 경로를 찾을 수 없습니다', en: 'Learning path not found' },
 } satisfies Record<string, LocalizedText>;
 
 export type StringKey = keyof typeof STRINGS;
