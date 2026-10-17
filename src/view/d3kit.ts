@@ -61,3 +61,37 @@ export function createChart(host: HTMLElement, margin: Margin = DEFAULT_MARGIN):
   chart.setSize(host.clientWidth || 640, host.clientHeight || 360);
   return chart;
 }
+
+/** The shared scene mount skeleton: a flex-column host with a growing chart
+ * area and a fixed strip below it. Extracted from the 41 scenes that share
+ * this layout byte-for-byte (2026-10-17); scenes with non-standard layouts
+ * (dual charts, title bars, top/bottom strips) keep their own mount code. */
+export interface SceneShell {
+  /** Flex-growing chart container — pass to createChart. */
+  readonly chartWrap: HTMLElement;
+  /** Fixed strip below the chart — populate with scene-specific divs. */
+  readonly strips: HTMLElement;
+  /** Removes all host children and resets the host styles set at mount. */
+  dispose(): void;
+}
+
+/** Builds the SceneShell inside host. Replicates the extracted mount block
+ * exactly: same DOM structure, same styles, same child order. */
+export function createSceneShell(host: HTMLElement): SceneShell {
+  host.style.display = 'flex';
+  host.style.flexDirection = 'column';
+  const chartWrap = document.createElement('div');
+  chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
+  const strips = document.createElement('div');
+  strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+  host.append(chartWrap, strips);
+  return {
+    chartWrap,
+    strips,
+    dispose(): void {
+      host.replaceChildren();
+      host.style.display = '';
+      host.style.flexDirection = '';
+    },
+  };
+}
