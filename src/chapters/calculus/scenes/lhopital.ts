@@ -7,7 +7,7 @@ import {
   type Scene,
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
 import { lhopitalModel, type LHopitalData } from '../models/lhopital';
 
 /**
@@ -64,7 +64,7 @@ function verdictText(data: LHopitalData, lang: Lang): string {
 }
 
 function createLHopitalScene(): Scene<LHopitalData> {
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let chart: Chart | undefined;
   let wrap: HTMLElement | undefined;
   let factsSlot: RichSlot | undefined;
@@ -299,20 +299,14 @@ function createLHopitalScene(): Scene<LHopitalData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const facts = document.createElement('div');
       facts.style.fontWeight = '600';
       const verdict = document.createElement('div');
       verdict.style.fontWeight = '600';
       strips.append(facts, verdict);
-      host.append(chartWrap, strips);
 
       factsSlot = createRichSlot(facts);
       verdictSlot = createRichSlot(verdict);
@@ -334,12 +328,8 @@ function createLHopitalScene(): Scene<LHopitalData> {
       factsSlot = undefined;
       verdictSlot = undefined;
       wrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };

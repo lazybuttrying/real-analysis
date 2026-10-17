@@ -7,7 +7,7 @@ import {
   type Scene,
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
 import { diniModel, type DiniData } from '../models/dini';
 
 /**
@@ -87,7 +87,7 @@ function linksHtml(lang: Lang): string {
 }
 
 function createDiniScene(): Scene<DiniData> {
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let chart: Chart | undefined;
   let wrap: HTMLElement | undefined;
   let factsSlot: RichSlot | undefined;
@@ -220,14 +220,9 @@ function createDiniScene(): Scene<DiniData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const facts = document.createElement('div');
       facts.style.fontWeight = '600';
       const verdict = document.createElement('div');
@@ -236,7 +231,6 @@ function createDiniScene(): Scene<DiniData> {
       links.style.cssText = 'padding-top: 4px;';
       links.innerHTML = linksHtml(lang);
       strips.append(facts, verdict, links);
-      host.append(chartWrap, strips);
 
       factsSlot = createRichSlot(facts);
       verdictSlot = createRichSlot(verdict);
@@ -258,12 +252,8 @@ function createDiniScene(): Scene<DiniData> {
       factsSlot = undefined;
       verdictSlot = undefined;
       wrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };

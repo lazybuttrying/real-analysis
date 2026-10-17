@@ -1,7 +1,7 @@
 import { axisBottom, scaleLinear } from 'd3';
 import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
 import { powerSeriesModel, type PowerData, type PowerSeriesKind } from '../models/power-series';
 
 // A number line from -3 to 3 showing the interval of convergence (-R, R)
@@ -81,7 +81,7 @@ function verdictText(data: PowerData, lang: Lang): string {
 }
 
 function createPowerSeriesScene(): Scene<PowerData> {
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let chart: Chart | undefined;
   let wrap: HTMLElement | undefined;
   let readoutSlot: RichSlot | undefined;
@@ -203,20 +203,14 @@ function createPowerSeriesScene(): Scene<PowerData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const readout = document.createElement('div');
       const verdict = document.createElement('div');
       verdict.style.fontWeight = '600';
       verdict.style.marginTop = '4px';
       strips.append(readout, verdict);
-      host.append(chartWrap, strips);
 
       readoutSlot = createRichSlot(readout);
       verdictSlot = createRichSlot(verdict);
@@ -238,12 +232,8 @@ function createPowerSeriesScene(): Scene<PowerData> {
       readoutSlot = undefined;
       verdictSlot = undefined;
       wrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };
