@@ -521,6 +521,16 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'limits',
     sceneId: 'stolz-cesaro',
   },
+  {
+    id: 'cauchy-schwarz-inequality',
+    term: { ko: '코시-슈바르츠 부등식', en: 'Cauchy–Schwarz inequality' },
+    definition: {
+      ko: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — 내적의 절댓값은 노름의 곱을 넘지 않는다. 등호는 두 벡터가 평행할 때 성립한다.`,
+      en: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — the inner product never exceeds the product of the norms; equality holds exactly for parallel vectors.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'cauchy-schwarz',
+  },
   // ---------------------------------------------------------------- series
   {
     id: 'abel-theorem',
@@ -791,6 +801,36 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'series',
     sceneId: 'dirichlet-test',
+  },
+  {
+    id: 'dini-theorem',
+    term: { ko: '디니 정리', en: "Dini's theorem" },
+    definition: {
+      ko: String.raw`컴팩트 집합 위에서 단조인 연속함수열이 연속인 극한에 점별수렴하면 균등수렴한다.`,
+      en: String.raw`On a compact set, a monotone sequence of continuous functions converging pointwise to a continuous limit converges uniformly.`,
+    },
+    chapterId: 'series',
+    sceneId: 'dini',
+  },
+  {
+    id: 'euler-mascheroni-constant',
+    term: { ko: '오일러-마스케로니 상수', en: 'Euler–Mascheroni constant' },
+    definition: {
+      ko: String.raw`\(\gamma = \lim_{n\to\infty}(H_n - \ln n) \approx 0.5772\) — 조화수와 로그 사이의 간격이 모이는 값.`,
+      en: String.raw`\(\gamma = \lim_{n\to\infty}(H_n - \ln n) \approx 0.5772\) — the value the gap between harmonic numbers and the logarithm settles at.`,
+    },
+    chapterId: 'series',
+    sceneId: 'euler-mascheroni',
+  },
+  {
+    id: 'harmonic-number',
+    term: { ko: '조화수', en: 'harmonic number' },
+    definition: {
+      ko: String.raw`\(H_n = 1 + \frac12 + \cdots + \frac1n\) — 조화급수의 부분합.`,
+      en: String.raw`\(H_n = 1 + \frac12 + \cdots + \frac1n\) — the partial sums of the harmonic series.`,
+    },
+    chapterId: 'series',
+    sceneId: 'euler-mascheroni',
   },
   // -------------------------------------------------------------- calculus
   {

@@ -1,6 +1,7 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { problems as bolzanoWeierstrassProblems } from './problems/bolzano-weierstrass';
 import { problems as binomialProblems } from './problems/binomial';
+import { problems as cauchySchwarzProblems } from './problems/cauchy-schwarz';
 import { problems as cantorProblems } from './problems/cantor';
 import { problems as closureProblems } from './problems/closure';
 import { problems as compactProblems } from './problems/compact';
@@ -456,9 +457,28 @@ problems: closureProblems,
 problems: sequenceSpacesProblems,
     },
     {
+      id: 'cauchy-schwarz',
+      title: { ko: '코시-슈바르츠 부등식', en: 'Cauchy\u2013Schwarz Inequality' },
+      order: 20,
+      summary: {
+        ko: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — 내적의 절댓값은 노름의 곱을 넘지 않습니다. \(0 \le \|x-ty\|^2\)의 판별식으로 증명하고, 등호는 두 벡터가 평행할 때만 성립합니다.`,
+        en: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — the inner product never exceeds the product of the norms. Proved from the discriminant of \(0 \le \|x-ty\|^2\); equality holds exactly for parallel vectors.`,
+      },
+      tex: [
+        String.raw`|\langle x,y\rangle| \le \|x\|\,\|y\|`,
+        String.raw`\|x+y\| \le \|x\|+\|y\|`,
+      ],
+      prerequisites: ['sequence-spaces'],
+      controls: [
+        { kind: 'slider', key: 'angle', label: { ko: '각도 θ', en: 'Angle θ' }, min: 0, max: Math.PI * 2, step: Math.PI / 180, init: 0 },
+        { kind: 'toggle', key: 'showProjection', label: { ko: '정사영 표시', en: 'Show projection' }, init: true },
+      ],
+      problems: cauchySchwarzProblems,
+    },
+    {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`\(x_{n+1}=\frac{x_n+2/x_n}{2}\)의 모든 항은 유리수지만, 극한 \(\sqrt{2}\)는 유리수가 아닙니다. 유리수 집합 \(\mathbb{Q}\)에는 구멍이 있다는 뜻입니다. 무리수임의 엄밀한 증명은 다루지 않고 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every term of \(x_{n+1}=\frac{x_n+2/x_n}{2}\) is rational, yet the limit \(\sqrt{2}\) is not. The rationals \(\mathbb{Q}\) have a hole — shown at the idea level, without a full irrationality proof.`,
@@ -470,7 +490,7 @@ problems: holesProblems,
     {
       id: 'construction',
       title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
-      order: 21,
+      order: 22,
       summary: {
         ko: String.raw`실수란 유리수 코시수열의 동치류입니다. \(\sqrt{2}\)의 소수점 자릿수를 늘려 가면 유리수 항들이 구멍으로 모여듭니다 — 그 모임 자체가 실수 \(\sqrt{2}\)입니다. 완비성의 정체는 이 구성에 있습니다.`,
         en: String.raw`A real number is an equivalence class of Cauchy sequences of rationals. Lengthening the decimal expansion of \(\sqrt{2}\) marches rational terms into the hole — the march itself is the real number \(\sqrt{2}\). Completeness is what this construction buys.`,
@@ -489,7 +509,7 @@ problems: constructionProblems,
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 22,
+      order: 23,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -504,7 +524,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 23,
+      order: 24,
       summary: {
         ko: String.raw`\(a_n = 1 - 2^{-n}\)은 증가하면서 위로 유계이므로 상한 \(1\)에 수렴합니다(단조수렴 정리). 꼬리 지름이 \(0\)으로 줄어드는 모습을 보며, 모든 수렴수열이 코시수열임을 확인합니다.`,
         en: String.raw`\(a_n = 1 - 2^{-n}\) increases and is bounded above, so it converges to its supremum \(1\) (monotone convergence). Watch the tail diameter shrink to \(0\): every convergent sequence is Cauchy.`,
@@ -523,7 +543,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'limsup-liminf',
       title: { ko: '상극한과 하극한', en: 'Lim sup and Lim inf' },
-      order: 24,
+      order: 25,
       summary: {
         ko: String.raw`꼬리들의 상한과 하한이 모이는 곳: \(a_n = (-1)^n(1+1/n)\)에서 \(\limsup a_n = 1\), \(\liminf a_n = -1\). \(\limsup a_n = \liminf a_n \iff \lim a_n\) 존재.`,
         en: String.raw`Where the suprema and infima of tails settle: for \(a_n = (-1)^n(1+1/n)\), \(\limsup a_n = 1\) and \(\liminf a_n = -1\). \(\limsup a_n = \liminf a_n \iff \lim a_n\) exists.`,
@@ -542,7 +562,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'stolz-cesaro',
       title: { ko: '체자로 정리', en: 'Stolz–Cesàro Theorem' },
-      order: 25,
+      order: 26,
       summary: {
         ko: String.raw`수열 버전 로피탈: \((b_n)\)이 엄격히 증가하며 무한대로 발산하고 \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\)이면 \(\lim \frac{a_n}{b_n} = L\). \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\)에서 차분 비율이 먼저, 전체 비율이 뒤따라 \(\frac{1}{3}\)에 모이는 것을 보세요.`,
         en: String.raw`The sequence version of l'Hôpital: if \((b_n)\) is strictly increasing and unbounded and \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\), then \(\lim \frac{a_n}{b_n} = L\). Watch the difference ratio settle at \(\frac{1}{3}\) first and the full ratio follow for \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\).`,
@@ -560,7 +580,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 26,
+      order: 27,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -572,7 +592,7 @@ problems: cantorProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 27,
+      order: 28,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -587,7 +607,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 28,
+      order: 29,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -611,7 +631,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 29,
+      order: 30,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
@@ -629,7 +649,7 @@ problems: uniformProblems,
     {
       id: 'weierstrass-approx',
       title: { ko: '바이어슈트라스 근사정리', en: 'Weierstrass Approximation Theorem' },
-      order: 30,
+      order: 31,
       summary: {
         ko: String.raw`\([0,1]\) 위의 연속함수는 다항식으로 균등하게 근사됩니다 — 번스타인 다항식 \(B_n(f)\)가 \(f\)에 다가가는 모습을 \(n\)을 키우며 확인합니다. 수렴 증명의 세부 추정은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every continuous function on \([0,1]\) is uniformly approximable by polynomials — watch the Bernstein polynomials \(B_n(f)\) close in on \(f\) as \(n\) grows. The fine estimates of the convergence proof are sketched at the idea level.`,
