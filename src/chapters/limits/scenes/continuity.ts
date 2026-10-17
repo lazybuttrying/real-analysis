@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { continuityModel, type ContinuityData, type ContinuitySample } from '../models/continuity';
 
@@ -15,32 +15,6 @@ import { continuityModel, type ContinuityData, type ContinuitySample } from '../
  * jumps to a^2 + 1 while the limit stays a^2, so the epsilon band around the
  * limit no longer captures the marked point: the definition fails.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function verdictText(data: ContinuityData, lang: Lang): string {
   const { a, limitV, funcV, continuous } = data;
@@ -127,7 +101,7 @@ function createContinuityScene(): Scene<ContinuityData> {
     g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
     g.append('g').call(axisLeft(y).ticks(6));
 
-    setRich(verdictSlot, verdictText(data, lang));
+    setRichText(verdictSlot, verdictText(data, lang));
   };
 
   return {
@@ -148,8 +122,8 @@ function createContinuityScene(): Scene<ContinuityData> {
       strips.append(legend, verdict);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`밴드 = 극한 \(\pm 0.5\), 채운 점 = \(f(a)\) (broken 모드에서는 빈 동그라미가 극한 지점)`,
@@ -158,7 +132,7 @@ function createContinuityScene(): Scene<ContinuityData> {
           lang,
         ),
       );
-      verdictSlot = makeSlot(verdict);
+      verdictSlot = createRichSlot(verdict);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

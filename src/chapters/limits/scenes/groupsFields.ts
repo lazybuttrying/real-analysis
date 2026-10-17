@@ -1,4 +1,5 @@
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { groupsFieldsModel, type GroupsFieldsData } from '../models/groupsFields';
 
@@ -8,32 +9,6 @@ import { groupsFieldsModel, type GroupsFieldsData } from '../models/groupsFields
  * arrives). Each strip has its own sequence guard so late arrivals from an
  * older render never overwrite newer text.
  */
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
-
 function verdictText(table: string, lang: Lang): string {
   if (table === 'z5') {
     return localize(
@@ -116,7 +91,7 @@ function createGroupsFieldsScene(): Scene<GroupsFieldsData> {
       }
     }
 
-    setRich(verdictSlot, verdictText(data.table, lang));
+    setRichText(verdictSlot, verdictText(data.table, lang));
   };
 
   return {
@@ -139,9 +114,9 @@ function createGroupsFieldsScene(): Scene<GroupsFieldsData> {
       strips.append(verdict, subgroup, subfield);
       host.append(chartWrap, strips);
 
-      verdictSlot = makeSlot(verdict);
-      setRich(
-        makeSlot(subgroup),
+      verdictSlot = createRichSlot(verdict);
+      setRichText(
+        createRichSlot(subgroup),
         localize(
           {
             ko: String.raw`부분군 판정법: 비어 있지 않고 연산·역원에 닫혀 있으면 부분군 (예: \(2\mathbb{Z} \subset \mathbb{Z}\))`,
@@ -150,8 +125,8 @@ function createGroupsFieldsScene(): Scene<GroupsFieldsData> {
           lang,
         ),
       );
-      setRich(
-        makeSlot(subfield),
+      setRichText(
+        createRichSlot(subfield),
         localize(
           {
             ko: String.raw`부분체: \(\mathbb{Q} \subset \mathbb{R}\)`,

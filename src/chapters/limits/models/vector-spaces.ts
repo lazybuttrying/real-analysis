@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Pure model for the P1 -> R^2 coefficient isomorphism visualization.
@@ -25,8 +26,8 @@ const COEFF_MIN = -2;
 const COEFF_MAX = 2;
 
 function clampCoeff(value: unknown, fallback: number): number {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
-  return Math.min(COEFF_MAX, Math.max(COEFF_MIN, value));
+  if (typeof value !== 'number') return fallback;
+  return clampNumber(value, COEFF_MIN, COEFF_MAX, fallback);
 }
 
 export function vectorSpacesData(a: number, b: number): VectorSpacesData {

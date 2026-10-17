@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Open balls in three metrics on the plane. The eps-ball (x - eps, x + eps)
@@ -66,8 +67,7 @@ export function metricSpacesData(metric: MetricKind, r: number): MetricSpacesDat
 }
 
 function clampR(raw: number): number {
-  if (!Number.isFinite(raw)) return 1;
-  return Math.min(2, Math.max(0.2, raw));
+  return clampNumber(raw, 0.2, 2, 1);
 }
 
 export const metricSpacesModel: SceneModel<MetricSpacesData> = {

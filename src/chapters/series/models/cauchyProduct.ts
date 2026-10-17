@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * The Cauchy product of two series.
@@ -29,9 +30,7 @@ export const N_INIT = 10;
 export const PAIR_INIT: CauchyPair = 'exp';
 
 export function clampN(raw: unknown): number {
-  const z = Number(raw);
-  if (!Number.isFinite(z)) return N_INIT;
-  return Math.min(N_MAX, Math.max(N_MIN, Math.floor(z)));
+  return clampNumber(raw, N_MIN, N_MAX, N_INIT, true);
 }
 
 export function parsePair(raw: unknown): CauchyPair {

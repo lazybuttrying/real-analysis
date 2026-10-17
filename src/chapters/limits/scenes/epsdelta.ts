@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { epsdeltaModel, type EpsDeltaData, type EpsDeltaSample } from '../models/epsdelta';
 
@@ -15,32 +15,6 @@ import { epsdeltaModel, type EpsDeltaData, type EpsDeltaSample } from '../models
  * a horizontal epsilon band around L, a vertical delta band around a,
  * and a grid check that the implication really holds.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function createEpsDeltaScene(): Scene<EpsDeltaData> {
   let hostEl: HTMLElement | undefined;
@@ -104,7 +78,7 @@ function createEpsDeltaScene(): Scene<EpsDeltaData> {
     g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(4));
     g.append('g').call(axisLeft(y).ticks(5));
 
-    setRich(
+    setRichText(
       readoutSlot,
       localize(
         {
@@ -134,8 +108,8 @@ function createEpsDeltaScene(): Scene<EpsDeltaData> {
       strips.append(definition, readout);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(definition),
+      setRichText(
+        createRichSlot(definition),
         localize(
           {
             ko: String.raw`정의: \(\forall\varepsilon > 0\ \exists\delta > 0\) s.t. \(0 < \lvert x - a\rvert < \delta \Rightarrow \lvert f(x) - L\rvert < \varepsilon\) (\(a = 1\), \(L = 2\))`,
@@ -144,7 +118,7 @@ function createEpsDeltaScene(): Scene<EpsDeltaData> {
           lang,
         ),
       );
-      readoutSlot = makeSlot(readout);
+      readoutSlot = createRichSlot(readout);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

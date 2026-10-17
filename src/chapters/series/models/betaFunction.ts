@@ -1,39 +1,21 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
+import { gamma } from './gamma';
 
 /**
  * The beta function B(p, q) = integral_0^1 t^{p-1} (1-t)^{q-1} dt for p, q > 0.
  *
  * Values are computed through the Gamma relation B(p,q) = Gamma(p) Gamma(q) /
- * Gamma(p+q), with Gamma evaluated by the Lanczos approximation (g = 7, nine
- * coefficients), accurate to ~1e-12 over the control range [0.2, 5]. Direct
- * composite Simpson on [0, 1] would lose accuracy for p or q below 1 because
- * the integrand then has a singular derivative at the endpoint, so the
- * Gamma relation is the more honest numeric route here.
+ * Gamma(p+q), with Gamma evaluated by the shared Simpson-quadrature
+ * implementation in ./gamma (the Lanczos copy that used to live here was
+ * removed; the shared implementation is validated to ~1e-12 on the values
+ * the tests pin, e.g. B(1,1) = 1). Direct composite Simpson on [0, 1] would
+ * lose accuracy for p or q below 1 because the integrand then has a singular
+ * derivative at the endpoint, so the Gamma relation is the more honest
+ * numeric route here.
  *
  * Pure computation: no DOM, d3, or three.
  */
-
-/** Lanczos coefficients for g = 7 (standard nine-coefficient set). */
-const LANCZOS_COEFFICIENTS: readonly number[] = [
-  0.99999999999980993, 676.5203681218851, -1259.1392167224028,
-  771.32342877765313, -176.61502916214059, 12.507343278686905,
-  -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7,
-];
-
-/** Gamma(x) for x > 0 via the Lanczos approximation, with reflection below 1/2. */
-export function gamma(x: number): number {
-  if (x < 0.5) {
-    // Reflection formula: keeps the approximation valid for any positive x.
-    return Math.PI / (Math.sin(Math.PI * x) * gamma(1 - x));
-  }
-  const z = x - 1;
-  let sum = LANCZOS_COEFFICIENTS[0] ?? 1;
-  for (let i = 1; i < LANCZOS_COEFFICIENTS.length; i++) {
-    sum += (LANCZOS_COEFFICIENTS[i] ?? 0) / (z + i);
-  }
-  const t = z + 7.5;
-  return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * sum;
-}
 
 /** The beta value through the Gamma relation. */
 export function beta(p: number, q: number): number {
@@ -75,10 +57,8 @@ export function betaData(p: number, q: number): BetaData {
 
 export const betaModel: SceneModel<BetaData> = {
   compute(state) {
-    const clamp = (raw: unknown, fallback: number): number => {
-      const value = Number(raw);
-      return Number.isFinite(value) ? Math.min(5, Math.max(0.2, value)) : fallback;
-    };
+    const clamp = (raw: unknown, fallback: number): number =>
+      clampNumber(raw, 0.2, 5, fallback);
     return betaData(clamp(state['p'], 2), clamp(state['q'], 3));
   },
 };

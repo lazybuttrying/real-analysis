@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Formal epsilon-delta limit of f(x) = 2x at a = 1 (L = 2).
@@ -57,8 +58,7 @@ export function epsDeltaData(epsilon: number): EpsDeltaData {
 }
 
 function clampEpsilon(raw: number): number {
-  if (!Number.isFinite(raw)) return 0.4;
-  return Math.min(1, Math.max(0.05, raw));
+  return clampNumber(raw, 0.05, 1, 0.4);
 }
 
 export const epsdeltaModel: SceneModel<EpsDeltaData> = {

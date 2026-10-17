@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Bounded variation: V_a^b(f) = sup over partitions P of sum_P |f(x_i) - f(x_{i-1})|.
@@ -76,9 +77,7 @@ export const boundedVariationModel: SceneModel<BoundedVariationData> = {
     const rawFn = String(state['fn']);
     const fn: BoundedVariationFn = rawFn === 'wild' ? 'wild' : DEFAULT_FN;
     const raw = Number(state['n']);
-    const n = Number.isFinite(raw)
-      ? Math.min(MAX_N, Math.max(MIN_N, Math.floor(raw)))
-      : DEFAULT_N;
+    const n = clampNumber(raw, MIN_N, MAX_N, DEFAULT_N, true);
     const xs: number[] = [];
     const ys: number[] = [];
     const cumulative: number[] = [];

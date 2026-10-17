@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Closure and boundedness on the number line. For A in {(0,1), (0,1], {1/n}},
@@ -48,8 +49,7 @@ export function closureData(kind: ClosureKind, m: number): ClosureData {
 }
 
 function clampM(raw: number): number {
-  if (!Number.isFinite(raw)) return 1.5;
-  return Math.min(2.5, Math.max(0.5, raw));
+  return clampNumber(raw, 0.5, 2.5, 1.5);
 }
 
 export const closureModel: SceneModel<ClosureData> = {

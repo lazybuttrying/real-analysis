@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * The Cantor function (Devil's staircase) on [0, 1].
@@ -68,9 +69,7 @@ export function cantorFunction(x: number): number {
 }
 
 export function clampStage(raw: unknown): number {
-  const s = Number(raw);
-  if (!Number.isFinite(s)) return STAGE_INIT;
-  return Math.min(STAGE_MAX, Math.max(STAGE_MIN, Math.floor(s)));
+  return clampNumber(raw, STAGE_MIN, STAGE_MAX, STAGE_INIT, true);
 }
 
 /**

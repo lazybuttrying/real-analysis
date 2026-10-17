@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Sequence spaces: the bridge between vector spaces and metric spaces.
@@ -125,8 +126,7 @@ export function unitBallCurve(p: PKind, segments: number): Array<readonly [numbe
 }
 
 function clampAlpha(raw: number): number {
-  if (!Number.isFinite(raw)) return 1;
-  return Math.min(2, Math.max(0.2, raw));
+  return clampNumber(raw, 0.2, 2, 1);
 }
 
 export function sequenceSpacesData(view: ViewKind, p: PKind, alpha: number): SequenceSpacesData {

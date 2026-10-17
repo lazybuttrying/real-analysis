@@ -1,5 +1,6 @@
 import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { taylorThmModel, type TaylorThmData, type TaylorThmSample } from '../models/taylorThm';
 
@@ -9,32 +10,6 @@ import { taylorThmModel, type TaylorThmData, type TaylorThmSample } from '../mod
  * the envelope at pi (the worst point on [-pi, pi]) with the actual maximum
  * error on the grid: the actual error always sits inside the envelope.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function readoutText(data: TaylorThmData, lang: Lang): string {
   const ko = String.raw`상한 \(\frac{\pi^{n+1}}{(n+1)!} \approx ${fmt(data.maxBound, 4)}\), 실제 최대 오차 \(\approx ${fmt(
@@ -99,7 +74,7 @@ function createTaylorThmScene(): Scene<TaylorThmData> {
       .attr('fill', 'currentColor')
       .text(`T_${n}(x)  ±  |x|^${n + 1}/${n + 1}!`);
 
-    setRich(readoutSlot, readoutText(data, lang));
+    setRichText(readoutSlot, readoutText(data, lang));
   };
 
   return {
@@ -118,7 +93,7 @@ function createTaylorThmScene(): Scene<TaylorThmData> {
       strips.append(readout);
       host.append(chartWrap, strips);
 
-      readoutSlot = makeSlot(readout);
+      readoutSlot = createRichSlot(readout);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

@@ -2,11 +2,11 @@ import { line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { convexFn, convexModel, type ConvexData } from '../models/convex';
 
@@ -18,32 +18,6 @@ import { convexFn, convexModel, type ConvexData } from '../models/convex';
  * and the verdict strip records the differentiable characterization:
  * f convex iff f' increasing.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function readoutText(data: ConvexData, lang: Lang): string {
   const label = localize({ ko: '현 − 그래프 최대 간격', en: 'max chord−graph gap' }, lang);
@@ -156,8 +130,8 @@ function createConvexScene(): Scene<ConvexData> {
       .text(readoutText(data, lang));
 
     if (factsSlot && verdictSlot) {
-      setRich(factsSlot, factsText(data, lang));
-      setRich(verdictSlot, verdictText(lang));
+      setRichText(factsSlot, factsText(data, lang));
+      setRichText(verdictSlot, verdictText(lang));
     }
   };
 
@@ -179,8 +153,8 @@ function createConvexScene(): Scene<ConvexData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       chart = createChart(chartWrap);
     },
     render(data, state) {

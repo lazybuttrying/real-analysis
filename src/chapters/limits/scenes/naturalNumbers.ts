@@ -1,11 +1,11 @@
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, type Chart } from '../../../view/d3kit';
 import { naturalNumbersModel, type NaturalNumbersData } from '../models/natural-numbers';
 
@@ -14,32 +14,6 @@ import { naturalNumbersModel, type NaturalNumbersData } from '../models/natural-
  * first domino, shown in accent color; the chain P(k) => P(k+1) means every
  * fallen domino knocks the next one over, so all n dominoes fall.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function factsText(lang: Lang): string {
   return localize(
@@ -146,8 +120,8 @@ function createNaturalNumbersScene(): Scene<NaturalNumbersData> {
       .text(localize({ ko: 'P(1): 먼저 쓰러뜨린다 (기저)', en: 'P(1): knocked over first (base case)' }, lang));
 
     if (factsSlot && verdictSlot) {
-      setRich(factsSlot, factsText(lang));
-      setRich(verdictSlot, verdictText(lang));
+      setRichText(factsSlot, factsText(lang));
+      setRichText(verdictSlot, verdictText(lang));
     }
   };
 
@@ -169,8 +143,8 @@ function createNaturalNumbersScene(): Scene<NaturalNumbersData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       chart = createChart(chartWrap);
     },
     render(data, state) {

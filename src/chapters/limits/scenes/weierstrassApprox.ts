@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { bernsteinModel, type BernsteinData, type BernsteinSample } from '../models/weierstrass-approx';
 
@@ -18,32 +18,6 @@ import { bernsteinModel, type BernsteinData, type BernsteinSample } from '../mod
  * scene states the theorem and sketches the idea (labeled): the basis
  * concentrates its mass near x, and uniform continuity of f does the rest.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function factsText(lang: Lang): string {
   return localize(
@@ -127,9 +101,9 @@ function createWeierstrassScene(): Scene<BernsteinData> {
       .text(`${localize({ ko: '[0, 1] 최대 오차', en: 'max error on [0, 1]' }, lang)} ≈ ${fmt(maxErr, 4)}`);
 
     if (factsSlot && ideaSlot && verdictSlot) {
-      setRich(factsSlot, factsText(lang));
-      setRich(ideaSlot, ideaText(lang));
-      setRich(verdictSlot, verdictText(lang));
+      setRichText(factsSlot, factsText(lang));
+      setRichText(ideaSlot, ideaText(lang));
+      setRichText(verdictSlot, verdictText(lang));
     }
   };
 
@@ -153,9 +127,9 @@ function createWeierstrassScene(): Scene<BernsteinData> {
       strips.append(facts, idea, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      ideaSlot = makeSlot(idea);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      ideaSlot = createRichSlot(idea);
+      verdictSlot = createRichSlot(verdict);
       chart = createChart(chartWrap);
     },
     render(data, state) {

@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Uniform vs pointwise continuity. For f(t) = t^2 the largest admissible
@@ -55,13 +56,12 @@ export function uniformContinuityData(kind: FunctionKind, x: number, eps: number
 }
 
 function clampX(raw: number): number {
-  if (!Number.isFinite(raw)) return 2;
-  return Math.min(4, Math.max(0, raw));
+  return clampNumber(raw, 0, 4, 2);
 }
 
 function clampEps(raw: number): number {
-  if (!Number.isFinite(raw) || raw <= 0) return 0.5;
-  return Math.min(2, Math.max(0.1, raw));
+  if (raw <= 0) return 0.5;
+  return clampNumber(raw, 0.1, 2, 0.5);
 }
 
 export const uniformContinuityModel: SceneModel<UniformContinuityData> = {

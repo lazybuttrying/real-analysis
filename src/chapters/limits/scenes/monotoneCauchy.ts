@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { monotoneCauchyModel, type MonotoneCauchyData } from '../models/monotoneCauchy';
 
@@ -15,32 +15,6 @@ import { monotoneCauchyModel, type MonotoneCauchyData } from '../models/monotone
  * The tail region [tailN, 12] is highlighted and its diameter readout
  * shrinks to 0: the sequence is Cauchy.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function createMonotoneCauchyScene(): Scene<MonotoneCauchyData> {
   let hostEl: HTMLElement | undefined;
@@ -101,7 +75,7 @@ function createMonotoneCauchyScene(): Scene<MonotoneCauchyData> {
       .attr('fill', 'var(--bound)')
       .text(localize({ ko: '상한 1', en: 'sup 1' }, lang));
 
-    setRich(
+    setRichText(
       readoutSlot,
       localize(
         {
@@ -131,8 +105,8 @@ function createMonotoneCauchyScene(): Scene<MonotoneCauchyData> {
       strips.append(legend, readout);
       host.append(chartWrap, strips);
 
-      setRich(
-        makeSlot(legend),
+      setRichText(
+        createRichSlot(legend),
         localize(
           {
             ko: String.raw`\(a_n = 1 - 2^{-n}\) — 단조증가, 위로 유계, 극한 \(\sup = 1\); 꼬리 지름이 \(0\)으로 갑니다`,
@@ -141,7 +115,7 @@ function createMonotoneCauchyScene(): Scene<MonotoneCauchyData> {
           lang,
         ),
       );
-      readoutSlot = makeSlot(readout);
+      readoutSlot = createRichSlot(readout);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

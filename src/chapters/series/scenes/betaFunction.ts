@@ -2,11 +2,11 @@ import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { betaModel, type BetaData } from '../models/betaFunction';
 
@@ -16,32 +16,6 @@ import { betaModel, type BetaData } from '../models/betaFunction';
  * toward t = 0; when p = q the curve is symmetric. The readout ties the slider
  * positions to the value through the bridge B(p,q) = Γ(p)Γ(q)/Γ(p+q).
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 /** Top of the y domain: endpoint spikes for p or q below 1 are clipped here. */
 const Y_MAX = 8;
@@ -121,8 +95,8 @@ function createBetaScene(): Scene<BetaData> {
       );
 
     if (factsSlot && verdictSlot) {
-      setRich(factsSlot, factsText(data, lang));
-      setRich(verdictSlot, verdictText(lang));
+      setRichText(factsSlot, factsText(data, lang));
+      setRichText(verdictSlot, verdictText(lang));
     }
   };
 
@@ -144,8 +118,8 @@ function createBetaScene(): Scene<BetaData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       chart = createChart(chartWrap);
     },
     render(data, state) {

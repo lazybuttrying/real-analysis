@@ -1,5 +1,6 @@
 import { axisBottom, scaleLinear } from 'd3';
-import { defineScene, localize, stripInlineMath, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { measureModel, type MeasureData } from '../models/measure';
 
@@ -10,32 +11,6 @@ import { measureModel, type MeasureData } from '../models/measure';
  * a singleton costs eps (hence 0 in the limit), the rationals cost
  * eps(1 - 2^{-K}) < eps (hence 0 too), and [0,1] itself costs 1.
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function readoutText(data: MeasureData, lang: Lang): string {
   const { target, eps, K, totalLength } = data;
@@ -113,7 +88,7 @@ function createMeasureScene(): Scene<MeasureData> {
           : `${localize({ ko: '대상', en: 'target' }, lang)}: ${target === 'singleton' ? '{0.5}' : '[0,1]'}`,
       );
 
-    setRich(readoutSlot, readoutText(data, lang));
+    setRichText(readoutSlot, readoutText(data, lang));
   };
 
   return {
@@ -132,7 +107,7 @@ function createMeasureScene(): Scene<MeasureData> {
       strips.append(readout);
       host.append(chartWrap, strips);
 
-      readoutSlot = makeSlot(readout);
+      readoutSlot = createRichSlot(readout);
       wrap = chartWrap;
       chart = createChart(chartWrap);
     },

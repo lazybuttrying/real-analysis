@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * The Weierstrass function, live:
@@ -29,9 +30,7 @@ export const N_INIT = 4;
 export const N_POINTS = 2001;
 
 export function clampN(raw: unknown): number {
-  const n = Number(raw);
-  if (!Number.isFinite(n)) return N_INIT;
-  return Math.min(N_MAX, Math.max(N_MIN, Math.floor(n)));
+  return clampNumber(raw, N_MIN, N_MAX, N_INIT, true);
 }
 
 /** The partial sum W_N(x) = sum_{k=0}^{N} a^k cos(b^k pi x). */

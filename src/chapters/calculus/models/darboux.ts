@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Darboux's theorem: derivatives have the intermediate value property, even
@@ -32,15 +33,11 @@ export function gridPoints(zoom: number): number {
 }
 
 export function clampZoom(raw: unknown): number {
-  const z = Number(raw);
-  if (!Number.isFinite(z)) return ZOOM_INIT;
-  return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.floor(z)));
+  return clampNumber(raw, ZOOM_MIN, ZOOM_MAX, ZOOM_INIT, true);
 }
 
 export function clampLevel(raw: unknown): number {
-  const c = Number(raw);
-  if (!Number.isFinite(c)) return LEVEL_INIT;
-  return Math.min(LEVEL_MAX, Math.max(LEVEL_MIN, c));
+  return clampNumber(raw, LEVEL_MIN, LEVEL_MAX, LEVEL_INIT);
 }
 
 export function parseShowF(raw: unknown): boolean {

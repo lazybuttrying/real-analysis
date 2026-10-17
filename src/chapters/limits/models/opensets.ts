@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Open-set checker on the number line. For a chosen set S, a point x and a
@@ -97,13 +98,12 @@ export function openSetData(kind: OpenSetKind, x: number, eps: number): OpenSetD
 }
 
 function clampX(raw: number): number {
-  if (!Number.isFinite(raw)) return 0.5;
-  return Math.min(1.3, Math.max(-0.3, raw));
+  return clampNumber(raw, -0.3, 1.3, 0.5);
 }
 
 function clampEps(raw: number): number {
-  if (!Number.isFinite(raw) || raw <= 0) return 0.2;
-  return Math.min(0.6, Math.max(0.05, raw));
+  if (raw <= 0) return 0.2;
+  return clampNumber(raw, 0.05, 0.6, 0.2);
 }
 
 export const opensetsModel: SceneModel<OpenSetData> = {

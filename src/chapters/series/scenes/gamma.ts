@@ -2,11 +2,11 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import {
   defineScene,
   localize,
-  stripInlineMath,
   type ControlState,
   type Lang,
   type Scene,
 } from '../../../contracts';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, fmt, type Chart } from '../../../view/d3kit';
 import { gammaModel, type GammaData } from '../models/gamma';
 
@@ -18,32 +18,6 @@ import { gammaModel, type GammaData } from '../models/gamma';
  * exactly on the curve at (n, (n−1)!). The dashed marker ties the slider
  * position to the integral value via the recurrence Gamma(x+1) = x·Gamma(x).
  */
-
-interface RichSlot {
-  el: HTMLElement;
-  seq: number;
-  text: string;
-}
-
-function makeSlot(el: HTMLElement): RichSlot {
-  return { el, seq: 0, text: '' };
-}
-
-function setRich(slot: RichSlot, text: string): void {
-  if (slot.text === text) return;
-  slot.text = text;
-  const id = ++slot.seq;
-  slot.el.textContent = stripInlineMath(text);
-  if (text.includes('\\(')) {
-    import('../../../view/richtext')
-      .then((module) => {
-        if (slot.seq === id) module.renderRichText(slot.el, text);
-      })
-      .catch((error: unknown) => {
-        console.error(error);
-      });
-  }
-}
 
 function factsText(data: GammaData, lang: Lang): string {
   return localize(
@@ -136,8 +110,8 @@ function createGammaScene(): Scene<GammaData> {
       .text(`${readout}: Γ(${fmt(data.x, 2)}) ≈ ${fmt(data.value, 6)}`);
 
     if (factsSlot && verdictSlot) {
-      setRich(factsSlot, factsText(data, lang));
-      setRich(verdictSlot, verdictText(lang));
+      setRichText(factsSlot, factsText(data, lang));
+      setRichText(verdictSlot, verdictText(lang));
     }
   };
 
@@ -159,8 +133,8 @@ function createGammaScene(): Scene<GammaData> {
       strips.append(facts, verdict);
       host.append(chartWrap, strips);
 
-      factsSlot = makeSlot(facts);
-      verdictSlot = makeSlot(verdict);
+      factsSlot = createRichSlot(facts);
+      verdictSlot = createRichSlot(verdict);
       chart = createChart(chartWrap);
     },
     render(data, state) {

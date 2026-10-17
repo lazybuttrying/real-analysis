@@ -1,4 +1,5 @@
 import type { ControlState, SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Continuity of x^2 at a movable point a, with a toggleable removable
@@ -51,8 +52,7 @@ export function continuityData(a: number, broken: boolean): ContinuityData {
 }
 
 function clampA(raw: number): number {
-  if (!Number.isFinite(raw)) return 1;
-  return Math.min(2, Math.max(-2, raw));
+  return clampNumber(raw, -2, 2, 1);
 }
 
 export const continuityModel: SceneModel<ContinuityData> = {

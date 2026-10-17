@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * The Banach fixed-point theorem: a contraction f with
@@ -85,7 +86,7 @@ export const banachModel: SceneModel<BanachData> = {
   compute(state) {
     const key = banachFunctionKey(state['fn']);
     const rawX0 = Number(state['x0']);
-    const x0 = Number.isFinite(rawX0) ? Math.min(1, Math.max(0, rawX0)) : 0.5;
+    const x0 = clampNumber(rawX0, 0, 1, 0.5);
     const rawN = Number(state['n']);
     const n = Number.isFinite(rawN) ? rawN : 6;
     return banachData(key, x0, n);
