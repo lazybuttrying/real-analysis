@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   supremumData,
@@ -10,7 +11,7 @@ import {
   type SupremumData,
 } from '../src/chapters/limits/models/supremum';
 
-const compute = (state: ControlState): SupremumData => supremumModel.compute(state) as SupremumData;
+const compute = (state: ControlState): SupremumData => syncCompute(supremumModel, state);
 
 describe('supremum: S = {1 - 1/n}', () => {
   it('has sup 1 and 40 points approaching from below', () => {
@@ -50,7 +51,7 @@ describe('supremum: rational truncations of sqrt(2)', () => {
     expect(points.every((p) => p * p < 2)).toBe(true);
     // The last truncation approaches sqrt(2).
     const last = points.at(-1) ?? Number.NaN;
-    expect(Math.abs(last - Math.SQRT2)).toBeLessThan(1e-6);
+    expectCloseTo(last, Math.SQRT2, 1e-6);
     // Every truncation is below the supremum.
     expect(points.every((p) => p < Math.SQRT2)).toBe(true);
   });

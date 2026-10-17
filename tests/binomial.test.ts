@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   binom,
@@ -9,7 +10,7 @@ import {
   type BinomialData,
 } from '../src/chapters/limits/models/binomial';
 
-const compute = (state: ControlState): BinomialData => binomialModel.compute(state) as BinomialData;
+const compute = (state: ControlState): BinomialData => syncCompute(binomialModel, state);
 
 describe('binomial: binom is the exact multiplicative coefficient', () => {
   it('binom(5,2)=10 and binom(8,4)=70', () => {

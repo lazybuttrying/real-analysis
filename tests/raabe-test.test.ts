@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   DEFAULT_EXAMPLE,
@@ -11,7 +12,7 @@ import {
   type RaabeData,
 } from '../src/chapters/series/models/raabeTest';
 
-const compute = (state: ControlState): RaabeData => raabeModel.compute(state) as RaabeData;
+const compute = (state: ControlState): RaabeData => syncCompute(raabeModel, state);
 
 describe('raabe: central R_k matches the closed form k(6k+5)/(4k^2+4k+1)', () => {
   it('R_1 = 11/9 and R_10 = 650/441 exactly (recurrence vs formula vs exact fraction)', () => {
@@ -31,7 +32,7 @@ describe('raabe: central R_k matches the closed form k(6k+5)/(4k^2+4k+1)', () =>
 
   it('R_k -> 3/2: |R_1000 - 1.5| < 0.01', () => {
     const data = raabeData('central', 1000);
-    expect(Math.abs((data.raabe[999] ?? 0) - 1.5)).toBeLessThan(0.01);
+    expectCloseTo((data.raabe[999] ?? 0), 1.5, 0.01);
     expect(data.limit).toBe(1.5);
   });
 });
@@ -39,7 +40,7 @@ describe('raabe: central R_k matches the closed form k(6k+5)/(4k^2+4k+1)', () =>
 describe('raabe: ordinary ratios hover near 1 (ratio test inconclusive)', () => {
   it('r_k -> 1: |ratio_1000 - 1| < 0.01, and r_1 = 9/20', () => {
     const data = raabeData('central', 1000);
-    expect(Math.abs((data.ratios[999] ?? 0) - 1)).toBeLessThan(0.01);
+    expectCloseTo((data.ratios[999] ?? 0), 1, 0.01);
     expect(data.ratios[0]).toBeCloseTo(9 / 20, 15);
   });
 
@@ -54,14 +55,14 @@ describe('raabe: ordinary ratios hover near 1 (ratio test inconclusive)', () => 
 describe('raabe: log example converges to the boundary 1 for both p', () => {
   it('|R_500 - 1| < 0.4 for p = 2 (numerically R_500 ~ 1.3222)', () => {
     const data = raabeData('log', 500);
-    expect(Math.abs((data.raabe[499] ?? 0) - 1)).toBeLessThan(0.4);
+    expectCloseTo((data.raabe[499] ?? 0), 1, 0.4);
     expect(data.limit).toBe(1);
   });
 
   it('|R_500 - 1| < 0.2 for p = 1 (numerically R_500 ~ 1.1611)', () => {
     const data = raabeData('log', 500);
     expect(data.raabeP1).not.toBeNull();
-    expect(Math.abs(((data.raabeP1 ?? [])[499] ?? 0) - 1)).toBeLessThan(0.2);
+    expectCloseTo(((data.raabeP1 ?? [])[499] ?? 0), 1, 0.2);
   });
 
   it('the log k range starts at k = 2 (ln 1 = 0 is excluded)', () => {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo } from './helpers';
 import {
   ORIG_LIMIT,
   REARR_LIMIT,
@@ -26,20 +27,20 @@ describe('rearrangement model', () => {
 
   it('original partial sums tend to ln 2, stated as 0.6931', () => {
     expect(ORIG_LIMIT).toBe(Math.LN2);
-    expect(Math.abs(Math.LN2 - 0.6931)).toBeLessThan(5e-5);
+    expectCloseTo(Math.LN2, 0.6931, 5e-5);
     const data = rearrangementSums(150);
     expect(data.original).toHaveLength(150);
     // |S_150 - ln 2| < 0.01
-    expect(Math.abs(at(data.original, 149) - Math.LN2)).toBeLessThan(0.01);
+    expectCloseTo(at(data.original, 149), Math.LN2, 0.01);
   });
 
   it('rearranged partial sums tend to (3/2) ln 2, stated as 1.03972', () => {
     expect(REARR_LIMIT).toBe(1.5 * Math.LN2);
-    expect(Math.abs(1.5 * Math.LN2 - 1.03972)).toBeLessThan(5e-5);
+    expectCloseTo(1.5 * Math.LN2, 1.03972, 5e-5);
     const data = rearrangementSums(150);
     expect(data.rearranged).toHaveLength(150);
     // Proof figure: |T_150 - (3/2) ln 2| ≈ 0.0050 < 0.01
-    expect(Math.abs(at(data.rearranged, 149) - 1.5 * Math.LN2)).toBeLessThan(0.01);
+    expectCloseTo(at(data.rearranged, 149), 1.5 * Math.LN2, 0.01);
   });
 
   it('the rearranged error shrinks from n = 150 to n = 300', () => {
@@ -56,7 +57,7 @@ describe('rearrangement model', () => {
       expect(Math.abs(at(data.original, k) - Math.LN2)).toBeLessThanOrEqual(1 / (k + 2) + 1e-12);
     }
     // Proof figure: n = 100 traps the error inside 1/101 ≈ 0.0099.
-    expect(Math.abs(1 / 101 - 0.0099)).toBeLessThan(5e-5);
+    expectCloseTo(1 / 101, 0.0099, 5e-5);
     expect(Math.abs(at(data.original, 99) - Math.LN2)).toBeLessThanOrEqual(1 / 101 + 1e-12);
   });
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   CONTRACTION_Q,
@@ -12,7 +13,7 @@ import {
   type ContractionData,
 } from '../src/chapters/limits/models/contraction';
 
-const compute = (state: ControlState): ContractionData => contractionModel.compute(state) as ContractionData;
+const compute = (state: ControlState): ContractionData => syncCompute(contractionModel, state);
 
 describe('contraction: both maps are contractions with q = 1/2', () => {
   it('contraction constant is 1/2', () => {

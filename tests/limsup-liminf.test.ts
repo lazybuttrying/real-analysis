@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   limsupLiminfModel,
@@ -6,8 +7,7 @@ import {
   type LimsupLiminfData,
 } from '../src/chapters/limits/models/limsupLiminf';
 
-const compute = (state: ControlState): LimsupLiminfData =>
-  limsupLiminfModel.compute(state) as LimsupLiminfData;
+const compute = (state: ControlState): LimsupLiminfData => syncCompute(limsupLiminfModel, state);
 
 describe('limsup-liminf: term values', () => {
   it('a_2 = 1.5 and a_3 = -4/3', () => {

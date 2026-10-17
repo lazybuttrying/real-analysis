@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   GRID_POINTS,
@@ -9,7 +10,7 @@ import {
   type MTestData,
 } from '../src/chapters/series/models/mTest';
 
-const compute = (state: ControlState): MTestData => mTestModel.compute(state) as MTestData;
+const compute = (state: ControlState): MTestData => syncCompute(mTestModel, state);
 
 const partial8 = (): MTestData => compute({ terms: 8 });
 

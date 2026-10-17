@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   bernoulli,
@@ -9,8 +10,7 @@ import {
   type NaturalNumbersData,
 } from '../src/chapters/limits/models/natural-numbers';
 
-const compute = (state: ControlState): NaturalNumbersData =>
-  naturalNumbersModel.compute(state) as NaturalNumbersData;
+const compute = (state: ControlState): NaturalNumbersData => syncCompute(naturalNumbersModel, state);
 
 describe('natural-numbers: sumToN matches the closed form', () => {
   it('sumToN(n) equals n(n+1)/2 for n = 1..20 (loop vs formula)', () => {

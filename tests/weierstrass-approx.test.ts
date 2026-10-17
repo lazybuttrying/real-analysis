@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   bernstein,
@@ -9,8 +10,7 @@ import {
   type BernsteinData,
 } from '../src/chapters/limits/models/weierstrass-approx';
 
-const compute = (state: ControlState): BernsteinData =>
-  bernsteinModel.compute(state) as BernsteinData;
+const compute = (state: ControlState): BernsteinData => syncCompute(bernsteinModel, state);
 
 describe('weierstrass-approx: exact reproduction of degree <= 1', () => {
   it('B_8(1)(0.3) = 1 to machine precision', () => {

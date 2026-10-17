@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   gamma,
@@ -8,8 +9,7 @@ import {
   type GammaData,
 } from '../src/chapters/series/models/gamma';
 
-const compute = (state: ControlState): GammaData =>
-  gammaModel.compute(state) as GammaData;
+const compute = (state: ControlState): GammaData => syncCompute(gammaModel, state);
 
 describe('gamma: Simpson helper is exact on low-degree polynomials', () => {
   it('integrates t^2 on [0, 1] exactly (Simpson is exact through cubics)', () => {
@@ -40,7 +40,7 @@ describe('gamma: the half-integer value (tol 1e-6)', () => {
 
 describe('gamma: the functional equation holds by construction (tol 1e-9)', () => {
   it('satisfies gamma(2.7) = 1.7 * gamma(1.7)', () => {
-    expect(Math.abs(gamma(2.7) - 1.7 * gamma(1.7))).toBeLessThan(1e-9);
+    expectCloseTo(gamma(2.7), 1.7 * gamma(1.7), 1e-9);
   });
 
   it('satisfies Gamma(3.5) = 2.5 * Gamma(2.5) through the model', () => {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   cesaroMeans,
@@ -15,8 +16,7 @@ import {
   type StolzCesaroData,
 } from '../src/chapters/limits/models/stolzCesaro';
 
-const compute = (state: ControlState): StolzCesaroData =>
-  stolzCesaroModel.compute(state) as StolzCesaroData;
+const compute = (state: ControlState): StolzCesaroData => syncCompute(stolzCesaroModel, state);
 
 describe('stolz-cesaro: closed forms', () => {
   it('sumSquares(3) = 14 and sumSquares(100) = 338350', () => {
@@ -70,11 +70,11 @@ describe('stolz-cesaro: model compute', () => {
   it('s_1000 is within 0.001 of 1/3', () => {
     // s_1000 = 1001*2001/(6*10^6) = 1/3 + 0.0005001..., so the
     // difference stays inside the tolerance with room to spare.
-    expect(Math.abs(ratio(1000) - 1 / 3)).toBeLessThan(0.001);
+    expectCloseTo(ratio(1000), 1 / 3, 0.001);
   });
 
   it('r_1000 is within 0.001 of 1/3', () => {
-    expect(Math.abs(diffRatio(1000) - 1 / 3)).toBeLessThan(0.001);
+    expectCloseTo(diffRatio(1000), 1 / 3, 0.001);
   });
 
   it('both ratios approach 1/3 monotonically from above', () => {
@@ -95,7 +95,7 @@ describe('stolz-cesaro: Cesaro mean corollary', () => {
   it('means of a_n -> 2 settle at 2', () => {
     const means = cesaroMeans((n) => 2 + (n % 2 === 0 ? 1 : -1) / n, 1000);
     expect(means).toHaveLength(1000);
-    expect(Math.abs(means[999] as number - 2)).toBeLessThan(0.01);
+    expectCloseTo(means[999] as number, 2, 0.01);
   });
 
   it('means of a constant sequence are exactly that constant', () => {

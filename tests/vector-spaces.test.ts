@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   vectorSpacesData,
@@ -7,8 +8,7 @@ import {
 } from '../src/chapters/limits/models/vector-spaces';
 import { problems } from '../src/chapters/limits/problems/vector-spaces';
 
-const compute = (state: ControlState): VectorSpacesData =>
-  vectorSpacesModel.compute(state) as VectorSpacesData;
+const compute = (state: ControlState): VectorSpacesData => syncCompute(vectorSpacesModel, state);
 
 describe('vector-spaces: compute clamps and defaults', () => {
   it('defaults to a = 1, b = 0.5 on empty state', () => {
