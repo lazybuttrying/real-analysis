@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   cauchySchwarzModel,
@@ -8,8 +9,7 @@ import {
   type CauchySchwarzData,
 } from '../src/chapters/limits/models/cauchySchwarz';
 
-const compute = (state: ControlState): CauchySchwarzData =>
-  cauchySchwarzModel.compute(state) as CauchySchwarzData;
+const compute = (state: ControlState): CauchySchwarzData => syncCompute(cauchySchwarzModel, state);
 
 describe('cauchy-schwarz: helpers', () => {
   it('dot((1, 2), (3, 4)) = 11', () => {

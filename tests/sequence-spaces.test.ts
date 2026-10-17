@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   lpMembership,
@@ -14,7 +15,7 @@ import {
   type SequenceSpacesData,
 } from '../src/chapters/limits/models/sequence-spaces';
 
-const compute = (state: ControlState): SequenceSpacesData => sequenceSpacesModel.compute(state) as SequenceSpacesData;
+const compute = (state: ControlState): SequenceSpacesData => syncCompute(sequenceSpacesModel, state);
 
 describe('sequence-spaces: control parsing', () => {
   it('recognizes the two views', () => {

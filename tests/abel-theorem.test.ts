@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   abelSumGrandi,
@@ -18,7 +19,7 @@ import {
   type AbelData,
 } from '../src/chapters/series/models/abelTheorem';
 
-const compute = (state: ControlState): AbelData => abelTheoremModel.compute(state) as AbelData;
+const compute = (state: ControlState): AbelData => syncCompute(abelTheoremModel, state);
 
 describe('abel-theorem: abelSumGrandi(x) = 1/(1+x)', () => {
   it('at x=0.9 gives 1/1.9 ~ 0.5263', () => {
@@ -51,8 +52,8 @@ describe('abel-theorem: alternating harmonic partial sums -> ln 2', () => {
   it('altHarmonicPartial(100000) is within 1e-4 of ln 2 ~ 0.6931', () => {
     const s = altHarmonicPartial(100000);
     expect(s).toBeCloseTo(Math.LN2, 4);
-    expect(Math.abs(s - Math.LN2)).toBeLessThan(1e-4);
-    expect(Math.abs(s - 0.6931)).toBeLessThan(1e-4);
+    expectCloseTo(s, Math.LN2, 1e-4);
+    expectCloseTo(s, 0.6931, 1e-4);
   });
 
   it('the closed form ln(1+x) is the limit of the power-series partial sums', () => {
@@ -136,7 +137,7 @@ describe('abel-theorem: contrast panel at x = 1', () => {
   it('alt-harmonic side sums settle toward ln 2', () => {
     const data = compute({ series: 'alt-harmonic' });
     const last = data.sideSums[SIDE_K] ?? 0;
-    expect(Math.abs(last - Math.LN2)).toBeLessThan(0.05);
+    expectCloseTo(last, Math.LN2, 0.05);
     // Alternation brackets the limit: consecutive sums straddle ln 2.
     const prev = data.sideSums[SIDE_K - 1] ?? 0;
     expect(Math.sign(last - Math.LN2)).toBe(-Math.sign(prev - Math.LN2));

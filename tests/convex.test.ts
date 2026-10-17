@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   convexData,
@@ -10,8 +11,7 @@ import {
   type ConvexFnKey,
 } from '../src/chapters/calculus/models/convex';
 
-const compute = (state: ControlState): ConvexData =>
-  convexModel.compute(state) as ConvexData;
+const compute = (state: ControlState): ConvexData => syncCompute(convexModel, state);
 
 const KEYS: readonly ConvexFnKey[] = ['square', 'exp', 'abs'];
 const INTERVALS: ReadonlyArray<readonly [number, number]> = [

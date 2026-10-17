@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   equivClass,
@@ -12,8 +13,7 @@ import {
   type IntegersRationalsData,
 } from '../src/chapters/limits/models/integers-rationals';
 
-const compute = (state: ControlState): IntegersRationalsData =>
-  integersRationalsModel.compute(state) as IntegersRationalsData;
+const compute = (state: ControlState): IntegersRationalsData => syncCompute(integersRationalsModel, state);
 
 describe('integers-rationals: intEquiv detects the integer a-b', () => {
   it('intEquiv(3,1,5,3) is true (both mean 2), intEquiv(3,1,4,3) is false', () => {

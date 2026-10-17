@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   blockData,
@@ -11,7 +12,7 @@ import {
   type CondensationData,
 } from '../src/chapters/series/models/condensation';
 
-const compute = (state: ControlState): CondensationData => condensationModel.compute(state) as CondensationData;
+const compute = (state: ControlState): CondensationData => syncCompute(condensationModel, state);
 
 /** Independent block sum: sum_{k=2^n}^{2^{n+1}-1} a_k, no reuse of blockData internals. */
 function naiveBlockSum(series: 'inv-n' | 'inv-n2' | 'inv-n-logn', n: number): number {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   inclusionExclusion,
@@ -11,7 +12,7 @@ import {
   type SetsData,
 } from '../src/chapters/limits/models/sets';
 
-const compute = (state: ControlState): SetsData => setsModel.compute(state) as SetsData;
+const compute = (state: ControlState): SetsData => syncCompute(setsModel, state);
 
 describe('sets: Venn region mapping', () => {
   it('maps each set operation to the correct active regions', () => {

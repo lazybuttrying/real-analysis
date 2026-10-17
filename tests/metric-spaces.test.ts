@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   DISCRETE_POINTS,
@@ -11,7 +12,7 @@ import {
   type MetricSpacesData,
 } from '../src/chapters/limits/models/metric-spaces';
 
-const compute = (state: ControlState): MetricSpacesData => metricSpacesModel.compute(state) as MetricSpacesData;
+const compute = (state: ControlState): MetricSpacesData => syncCompute(metricSpacesModel, state);
 
 describe('metric-spaces: the fixed point set', () => {
   it('has exactly 6 points at the specified coordinates', () => {

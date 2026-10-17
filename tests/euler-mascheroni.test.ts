@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   deltaTerm,
@@ -12,8 +13,7 @@ import {
 } from '../src/chapters/series/models/eulerMascheroni';
 import { eulerMascheroniProblems } from '../src/chapters/series/problems/euler-mascheroni';
 
-const compute = (state: ControlState): EulerMascheroniData =>
-  eulerMascheroniModel.compute(state) as EulerMascheroniData;
+const compute = (state: ControlState): EulerMascheroniData => syncCompute(eulerMascheroniModel, state);
 
 /** Independent harmonic numbers: direct summation, no reuse of model internals. */
 function naiveHarmonic(n: number): number {

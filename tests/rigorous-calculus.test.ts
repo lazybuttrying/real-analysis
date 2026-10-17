@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   CAUCHY_A,
@@ -19,8 +20,7 @@ import {
   taylorThmPoly,
 } from '../src/chapters/calculus/models/taylorThm';
 
-const computeCauchy = (state: ControlState): CauchyMVTData =>
-  cauchyMvtModel.compute(state) as CauchyMVTData;
+const computeCauchy = (state: ControlState): CauchyMVTData => syncCompute(cauchyMvtModel, state);
 
 describe('cauchy-mvt: the 3/7 chord slope and the 14/9 theorem point', () => {
   it('chord slope (f(2)-f(1))/(g(2)-g(1)) = (4-1)/(8-1) = 3/7', () => {
@@ -42,7 +42,7 @@ describe('cauchy-mvt: the 3/7 chord slope and the 14/9 theorem point', () => {
     expect(data.chordSlope).toBeCloseTo(3 / 7, 15);
     expect(data.tangentSlopeRatio).toBeCloseTo(2 / (3 * 1.56), 12);
     // 1.56 is within 0.01 of the true 14/9, so the ratio is close but not exact.
-    expect(Math.abs(data.tangentSlopeRatio - data.chordSlope)).toBeLessThan(0.002);
+    expectCloseTo(data.tangentSlopeRatio, data.chordSlope, 0.002);
     expect(Math.abs(data.tangentSlopeRatio - data.chordSlope)).toBeGreaterThan(0);
     const first = data.curve[0];
     const lastSample = data.curve[data.curve.length - 1];

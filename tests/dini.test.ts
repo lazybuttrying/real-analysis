@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   DEFAULT_N,
@@ -15,7 +16,7 @@ import {
   type DiniData,
 } from '../src/chapters/series/models/dini';
 
-const compute = (state: ControlState): DiniData => diniModel.compute(state) as DiniData;
+const compute = (state: ControlState): DiniData => syncCompute(diniModel, state);
 
 const compact8 = (): DiniData => compute({ n: 8, domain: 'compact' });
 const noncompact20 = (): DiniData => compute({ n: 20, domain: 'noncompact' });

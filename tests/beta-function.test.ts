@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   beta,
@@ -10,8 +11,7 @@ import {
 } from '../src/chapters/series/models/betaFunction';
 import { problems } from '../src/chapters/series/problems/beta-function';
 
-const compute = (state: ControlState): BetaData =>
-  betaModel.compute(state) as BetaData;
+const compute = (state: ControlState): BetaData => syncCompute(betaModel, state);
 
 describe('beta-function: exact values (tol 1e-9)', () => {
   it('gives B(1,1) = 1', () => {
@@ -19,17 +19,17 @@ describe('beta-function: exact values (tol 1e-9)', () => {
   });
 
   it('gives B(2,3) = 1/12', () => {
-    expect(Math.abs(beta(2, 3) - 1 / 12)).toBeLessThan(1e-9);
+    expectCloseTo(beta(2, 3), 1 / 12, 1e-9);
   });
 
   it('gives B(1,3) = 1/3', () => {
-    expect(Math.abs(beta(1, 3) - 1 / 3)).toBeLessThan(1e-9);
+    expectCloseTo(beta(1, 3), 1 / 3, 1e-9);
   });
 });
 
 describe('beta-function: the half-integer value (tol 1e-6)', () => {
   it('gives B(1/2,1/2) = pi', () => {
-    expect(Math.abs(beta(0.5, 0.5) - Math.PI)).toBeLessThan(1e-6);
+    expectCloseTo(beta(0.5, 0.5), Math.PI, 1e-6);
   });
 });
 
@@ -41,13 +41,13 @@ describe('beta-function: symmetry (tol 1e-12)', () => {
 
 describe('beta-function: recurrence (tol 1e-9)', () => {
   it('satisfies B(2,3) = (1/4) * B(1,3)', () => {
-    expect(Math.abs(beta(2, 3) - 0.25 * beta(1, 3))).toBeLessThan(1e-9);
+    expectCloseTo(beta(2, 3), 0.25 * beta(1, 3), 1e-9);
   });
 });
 
 describe('beta-function: model compute', () => {
   it('matches 1/12 for {p:2, q:3} within 1e-9', () => {
-    expect(Math.abs(compute({ p: 2, q: 3 }).value - 1 / 12)).toBeLessThan(1e-9);
+    expectCloseTo(compute({ p: 2, q: 3 }).value, 1 / 12, 1e-9);
   });
 
   it('echoes the p and q from state', () => {

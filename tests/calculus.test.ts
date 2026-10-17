@@ -1,5 +1,6 @@
 
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo } from './helpers';
 import { findMVTPoints, mvtData, mvtFunction, mvtFunctionKey } from '../src/chapters/calculus/models/mvt';
 import { taylorCoefficients, taylorData, taylorFunctionKey, taylorPoly } from '../src/chapters/calculus/models/taylor';
 import { riemannSums } from '../src/chapters/calculus/models/riemann';
@@ -97,10 +98,10 @@ describe('calculus problems', () => {
     const mid = ftcData('square', 0.5);
     expect(mid.x).toBe(1);
     expect(mid.fAtX).toBe(1);
-    expect(Math.abs(mid.numericDerivative - 1)).toBeLessThan(1e-6);
+    expectCloseTo(mid.numericDerivative, 1, 1e-6);
     const sin = ftcData('sin', 1);
     expect(sin.area).toBeCloseTo(2, 9);
-    expect(Math.abs(sin.numericDerivative - sin.fAtX)).toBeLessThan(1e-6);
+    expectCloseTo(sin.numericDerivative, sin.fAtX, 1e-6);
   });
 
   it('newton: Babylonian iterates and the 0-1 cycle', () => {
@@ -133,12 +134,12 @@ describe('calculus problems', () => {
     expect(cos.q).toBeCloseTo(Math.sin(1), 15);
     expect(cos.q).toBeLessThan(1);
     expect(dottieNumber()).toBeCloseTo(0.7390851332, 8);
-    expect(Math.abs(Math.cos(dottieNumber()) - dottieNumber())).toBeLessThan(1e-11);
+    expectCloseTo(Math.cos(dottieNumber()), dottieNumber(), 1e-11);
     const cosData = banachData('cos', 0.5, 20);
     // The a-priori bound holds, and 20 iterations already pin the Dottie number.
     expect(cosData.errors[20] ?? 1).toBeLessThan(cosData.bounds[20] ?? 0);
     expect(cosData.errors[20] ?? 1).toBeLessThan(1e-3);
-    expect(Math.abs((cosData.xs[20] ?? 0) - 0.739085)).toBeLessThan(1e-4);
+    expectCloseTo((cosData.xs[20] ?? 0), 0.739085, 1e-4);
   });
 
   it('fourier: Leibniz link at pi/2 and the Gibbs peak', () => {

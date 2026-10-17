@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   GRID_POINTS,
@@ -17,7 +18,7 @@ import {
 } from '../src/chapters/calculus/models/lhopital';
 import { problems } from '../src/chapters/calculus/problems/lhopital';
 
-const compute = (state: ControlState): LHopitalData => lhopitalModel.compute(state) as LHopitalData;
+const compute = (state: ControlState): LHopitalData => syncCompute(lhopitalModel, state);
 
 describe('lhopital: sliderX maps pos to a log-uniform x', () => {
   it('sin pair: pos 0 is far (1.5), pos 100 is at the limit point (0.0015)', () => {

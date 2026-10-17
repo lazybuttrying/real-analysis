@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   eulerFactor,
@@ -13,8 +14,7 @@ import {
 } from '../src/chapters/series/models/eulerProduct';
 import { eulerProductProblems } from '../src/chapters/series/problems/euler-product';
 
-const compute = (state: ControlState): EulerProductData =>
-  eulerProductModel.compute(state) as EulerProductData;
+const compute = (state: ControlState): EulerProductData => syncCompute(eulerProductModel, state);
 
 /** Independent partial product: direct multiplication, no reuse of model internals. */
 function naiveProduct(k: number): number {
@@ -73,7 +73,7 @@ describe('euler-product: partial products are the intended values', () => {
   it('P_15 is within 0.01 of pi^2/6', () => {
     const p15 = compute({ k: 15 }).product;
     expect(p15).toBeCloseTo(1.6385679630962098, 12);
-    expect(Math.abs(p15 - naiveZeta2())).toBeLessThan(0.01);
+    expectCloseTo(p15, naiveZeta2(), 0.01);
   });
 
   it('eulerFactor is 1/(1 - 1/p^2)', () => {

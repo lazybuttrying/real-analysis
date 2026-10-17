@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   boundedVariationFnValue,
@@ -14,8 +15,7 @@ import {
 } from '../src/chapters/calculus/models/boundedVariation';
 import { boundedVariationProblems } from '../src/chapters/calculus/problems/bounded-variation';
 
-const compute = (state: ControlState): BoundedVariationData =>
-  boundedVariationModel.compute(state) as BoundedVariationData;
+const compute = (state: ControlState): BoundedVariationData => syncCompute(boundedVariationModel, state);
 
 /** Independent variation: fresh uniform-partition walk, no reuse of model internals. */
 function naiveVariation(fn: 'sine' | 'wild', n: number): number {

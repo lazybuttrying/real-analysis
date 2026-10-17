@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo } from './helpers';
 import {
   abelTestModel,
   aTerm,
@@ -52,12 +53,12 @@ describe('weight sequence b_k', () => {
 describe('weighted partial sums settle', () => {
   it('shifted: |S_400 - S_500| is small, S_500 ~= -2.2068', () => {
     expect(tail('shifted', 500)).toBeCloseTo(-2.2068, 3);
-    expect(Math.abs(tail('shifted', 400) - tail('shifted', 500))).toBeLessThan(0.005);
+    expectCloseTo(tail('shifted', 400), tail('shifted', 500), 0.005);
   });
 
   it('scaled: |S_400 - S_500| is small, S_500 ~= -0.2318', () => {
     expect(tail('scaled', 500)).toBeCloseTo(-0.2318, 3);
-    expect(Math.abs(tail('scaled', 400) - tail('scaled', 500))).toBeLessThan(0.01);
+    expectCloseTo(tail('scaled', 400), tail('scaled', 500), 0.01);
   });
 
   it('matches the exact limit -2 ln 2 - pi^2/12 ~= -2.20876 for shifted', () => {
@@ -79,7 +80,7 @@ describe('the a_k factor series converges (Leibniz)', () => {
     const sums = rawPartialSums('scaled', 500);
     const mid = sums[399] ?? NaN;
     const last = sums[499] ?? NaN;
-    expect(Math.abs(mid - last)).toBeLessThan(0.02);
+    expectCloseTo(mid, last, 0.02);
   });
 });
 

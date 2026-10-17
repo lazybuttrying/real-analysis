@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import { absoluteData, absoluteModel, type AbsoluteData } from '../src/chapters/series/models/absolute';
 import { testsData, testsModel, type TestsData } from '../src/chapters/series/models/tests';
 
-const computeTests = (state: ControlState): TestsData => testsModel.compute(state) as TestsData;
-const computeAbsolute = (state: ControlState): AbsoluteData => absoluteModel.compute(state) as AbsoluteData;
+const computeTests = (state: ControlState): TestsData => syncCompute(testsModel, state);
+const computeAbsolute = (state: ControlState): AbsoluteData => syncCompute(absoluteModel, state);
 
 describe('tests: factorial ratio test', () => {
   it('r_1..r_5 = 1/2, 1/3, 1/4, 1/5, 1/6', () => {
@@ -71,7 +72,7 @@ describe('absolute: abs series converges absolutely', () => {
     expect(data.signed[59]).toBeCloseTo(-0.8223304587, 8);
     expect(data.signedLimit).toBeCloseTo((-Math.PI * Math.PI) / 12, 12);
     expect(data.signedLimit).toBeCloseTo(-0.822467, 6);
-    expect(Math.abs((data.signed[59] ?? 0) - data.signedLimit)).toBeLessThan(0.001);
+    expectCloseTo((data.signed[59] ?? 0), data.signedLimit, 0.001);
   });
 
   it('T_60 ~ 1.62841 below pi^2/6 ~ 1.64493', () => {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo } from './helpers';
 import {
   MAX_N,
   powerData,
@@ -41,15 +42,15 @@ describe('powerTerm ratios (ratio-test recurrence)', () => {
 
 describe('powerPartialSum', () => {
   it("geom at x=0.5, N=30 matches 1/(1-0.5) = 2 within 1e-9", () => {
-    expect(Math.abs(powerPartialSum('geom', 0.5, 30) - 2)).toBeLessThan(1e-9);
+    expectCloseTo(powerPartialSum('geom', 0.5, 30), 2, 1e-9);
   });
 
   it('exp at x=1, N=30 matches e within 1e-9', () => {
-    expect(Math.abs(powerPartialSum('exp', 1, 30) - Math.E)).toBeLessThan(1e-9);
+    expectCloseTo(powerPartialSum('exp', 1, 30), Math.E, 1e-9);
   });
 
   it('exp at x=2, N=20 is near e^2', () => {
-    expect(Math.abs(powerPartialSum('exp', 2, 20) - Math.E ** 2)).toBeLessThan(1e-9);
+    expectCloseTo(powerPartialSum('exp', 2, 20), Math.E ** 2, 1e-9);
   });
 
   it('factorial at x=0.5, N=10 is finite and above 4000', () => {

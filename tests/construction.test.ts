@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   constructionModel,
@@ -9,8 +10,7 @@ import {
 
 const SQRT2 = Math.SQRT2;
 
-const compute = (state: ControlState): ConstructionData =>
-  constructionModel.compute(state) as ConstructionData;
+const compute = (state: ControlState): ConstructionData => syncCompute(constructionModel, state);
 
 describe('construction: decimal truncations are exact rational fractions', () => {
   it('gives 1, 14/10, 141/100, 1414/1000, 14142/10000, 141421/100000, 1414213/1000000', () => {
@@ -83,7 +83,7 @@ describe('construction: equivalent sequences, same real number', () => {
       expect(diff).toBeLessThan(10 ** -n + (nw[n]?.error ?? 0) + 1e-15);
     }
     // concrete: x_3^decimal = 1.414 vs x_3^newton = 577/408
-    expect(Math.abs((d[3]?.value ?? 0) - 577 / 408)).toBeLessThan(0.001);
+    expectCloseTo((d[3]?.value ?? 0), 577 / 408, 0.001);
   });
 
   it('(1 + 1/n) and the constant 1 sequence differ by 1/n -> 0', () => {
