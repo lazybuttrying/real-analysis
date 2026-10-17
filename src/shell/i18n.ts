@@ -54,6 +54,14 @@ export const STRINGS = {
   pathsSceneCount: { ko: '개의 씬', en: ' scenes' },
   partOfPaths: { ko: '이 씬이 포함된 학습 경로', en: 'Part of these learning paths' },
   pathNotFound: { ko: '학습 경로를 찾을 수 없습니다', en: 'Learning path not found' },
+  map: { ko: '개념 지도', en: 'Concept Map' },
+  mapIntro: {
+    ko: '78개 씬을 선수 관계로 엮은 지도. 노드를 드래그하고 확대해 보세요. 노드를 클릭하면 해당 씬으로 이동합니다.',
+    en: 'All 78 scenes linked by prerequisite relations. Drag nodes, zoom in, and click a node to open its scene.',
+  },
+  mapPrereq: { ko: '선수 관계', en: 'Prerequisite' },
+  mapPathOrder: { ko: '학습 경로 순서', en: 'Learning-path order' },
+  mapResetView: { ko: '보기 초기화', en: 'Reset view' },
 } satisfies Record<string, LocalizedText>;
 
 export type StringKey = keyof typeof STRINGS;

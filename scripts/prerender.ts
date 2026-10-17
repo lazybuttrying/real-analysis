@@ -3,10 +3,11 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
+import { buildConceptMap } from '../src/concept-map.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
-import { chapterUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
+import { chapterUrl, glossaryUrl, homeUrl, mapUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -304,6 +305,55 @@ for (const path of learningPaths) {
   });
 }
 
+/** Static body of the concept map page: chapter-grouped scene lists with prerequisite links (zero-JS readable). */
+const renderMapStaticHtml = (lang: Lang): string => {
+  const { edges } = buildConceptMap();
+  const prereqsOf = new Map<string, string[]>();
+  for (const edge of edges) {
+    if (edge.kind !== 'prereq') continue;
+    const targetKey = `${edge.target.chapterId}/${edge.target.sceneId}`;
+    const list = prereqsOf.get(targetKey) ?? [];
+    list.push(`${edge.source.chapterId}/${edge.source.sceneId}`);
+    prereqsOf.set(targetKey, list);
+  }
+  const sections = catalog
+    .map((chapter, chapterIndex) => {
+      const items = [...chapter.scenes]
+        .sort((a, b) => a.order - b.order)
+        .map((scene) => {
+          const key = `${chapter.id}/${scene.id}`;
+          const prereqs = (prereqsOf.get(key) ?? [])
+            .map((sourceKey) => {
+              const source = sceneOf.get(sourceKey);
+              const label = source ? localize(source.title, lang) : sourceKey;
+              const [sourceChapter, sourceScene] = sourceKey.split('/');
+              return `<a href="${sceneUrl(BASE, lang, sourceChapter ?? '', sourceScene ?? '')}">${escapeHtml(label)}</a>`;
+            })
+            .join(', ');
+          const prereqNote = prereqs ? ` <span class="path-step-chapter">← ${prereqs}</span>` : '';
+          return `<li><a href="${sceneUrl(BASE, lang, chapter.id, scene.id)}">${escapeHtml(localize(scene.title, lang))}</a>${prereqNote}</li>`;
+        })
+        .join('\n');
+      return `<section>\n<h2>${chapterIndex + 1}. ${escapeHtml(localize(chapter.title, lang))}</h2>\n<ul>\n${items}\n</ul>\n</section>`;
+    })
+    .join('\n');
+  return [
+    `<h1>${escapeHtml(localize(STRINGS.map, lang))}</h1>`,
+    `<p>${escapeHtml(localize(STRINGS.mapIntro, lang))}</p>`,
+    sections,
+  ].join('\n');
+};
+
+pages.push({
+  segments: (lang) => [lang, 'map'],
+  url: (lang) => mapUrl(BASE, lang),
+  title: (lang) => `${localize(STRINGS.map, lang)} | ${SITE_NAME}`,
+  description: (lang) => localize(STRINGS.mapIntro, lang),
+  template: 'home',
+  formulas: false,
+  body: renderMapStaticHtml,
+});
+
 function selfCheck(): string[] {
   const problems: string[] = [];
   for (const chapter of catalog) {
@@ -394,6 +444,23 @@ function selfCheck(): string[] {
         if (opens !== closes) problems.push(`learning path '${path.id}' has unbalanced \\(...\\) in ${field} (${lang})`);
       }
     }
+  }
+  // Concept map: every edge endpoint is a real scene, no self-loops, no
+  // duplicate edges, and the graph is dense enough to be useful.
+  const conceptMap = buildConceptMap();
+  if (conceptMap.edges.length <= 40) {
+    problems.push(`concept map has only ${conceptMap.edges.length} edges (expected > 40)`);
+  }
+  const seenEdges = new Set<string>();
+  for (const edge of conceptMap.edges) {
+    const from = `${edge.source.chapterId}/${edge.source.sceneId}`;
+    const to = `${edge.target.chapterId}/${edge.target.sceneId}`;
+    if (!sceneOf.has(from)) problems.push(`concept map edge starts at unknown scene '${from}'`);
+    if (!sceneOf.has(to)) problems.push(`concept map edge ends at unknown scene '${to}'`);
+    if (from === to) problems.push(`concept map has a self-loop on '${from}'`);
+    const dedup = `${from}>${to}`;
+    if (seenEdges.has(dedup)) problems.push(`concept map has a duplicate edge '${dedup}'`);
+    seenEdges.add(dedup);
   }
   return problems;
 }
@@ -542,7 +609,7 @@ function main(): void {
   }
 
   console.log(
-    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
+    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s) + 1 map), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
   );
 }
 

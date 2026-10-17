@@ -6,6 +6,9 @@
   --line: #d0d7de;
   --accent: #0969da;
   --bound: #d1242f;
+  --chapter-limits: #0969da;
+  --chapter-series: #1a7f37;
+  --chapter-calculus: #8250df;
   font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', sans-serif;
 }
 
@@ -17,6 +20,9 @@
     --line: #30363d;
     --accent: #4493f8;
     --bound: #ff7b72;
+    --chapter-limits: #4493f8;
+    --chapter-series: #3fb950;
+    --chapter-calculus: #a371f7;
   }
 }
 
@@ -265,6 +271,148 @@ main.paths {
   border-radius: 999px;
   text-decoration: none;
   font-size: 0.875rem;
+}
+
+/* Concept map page */
+.map-link {
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+main.map {
+  max-width: 64rem;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: center;
+  margin: 4px 0 12px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.map-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.map-swatch[data-chapter='limits'] { background: var(--chapter-limits); }
+.map-swatch[data-chapter='series'] { background: var(--chapter-series); }
+.map-swatch[data-chapter='calculus'] { background: var(--chapter-calculus); }
+
+.map-line-sample {
+  display: inline-block;
+  width: 26px;
+  border-top: 2px solid var(--muted);
+}
+
+.map-line-path {
+  border-top-style: dashed;
+  opacity: 0.6;
+}
+
+.map-wrap {
+  position: relative;
+}
+
+.map-svg {
+  display: block;
+  width: 100%;
+  height: min(72vh, 640px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  touch-action: none;
+}
+
+.map-node {
+  cursor: pointer;
+}
+
+.map-node circle {
+  stroke: var(--bg);
+  stroke-width: 1.5px;
+}
+
+.map-node[data-chapter='limits'] circle { fill: var(--chapter-limits); }
+.map-node[data-chapter='series'] circle { fill: var(--chapter-series); }
+.map-node[data-chapter='calculus'] circle { fill: var(--chapter-calculus); }
+
+.map-node text {
+  font-size: 10px;
+  fill: var(--fg);
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  pointer-events: none;
+}
+
+.map-edge-prereq {
+  stroke: var(--muted);
+  stroke-opacity: 0.55;
+  stroke-width: 1px;
+}
+
+.map-edge-path {
+  stroke: var(--muted);
+  stroke-opacity: 0.3;
+  stroke-width: 1px;
+  stroke-dasharray: 4 3;
+}
+
+.map-arrow-prereq { fill: var(--muted); fill-opacity: 0.55; }
+.map-arrow-path { fill: var(--muted); fill-opacity: 0.3; }
+
+.map-tooltip {
+  position: absolute;
+  z-index: 10;
+  max-width: 16rem;
+  padding: 6px 10px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.map-tooltip strong {
+  display: block;
+}
+
+.map-tooltip-chapter {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.map-reset {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.map-reset:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Chapter page layout */

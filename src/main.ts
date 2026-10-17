@@ -1,7 +1,7 @@
 import './style.css';
 import { catalog } from './catalog';
 import { localize, stripInlineMath } from './contracts';
-import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathsUrl } from './paths';
+import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, mapUrl, parsePath, pathsUrl } from './paths';
 import { h } from './shell/dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './shell/i18n';
 import { mountSearch } from './shell/search';
@@ -50,6 +50,13 @@ if (parsed.lang === undefined) {
         else module.renderPathsIndexPage(root, lang);
       })
       .catch((error: unknown) => console.error(error));
+  } else if (parsed.chapterId === 'map') {
+    // Same treatment as the glossary and paths pages: the concept map lives
+    // on the home entry, and its renderer (plus d3) loads as a separate
+    // chunk only for this route.
+    import('./shell/map-page')
+      .then((module) => module.renderMapPage(root, lang))
+      .catch((error: unknown) => console.error(error));
   } else {
     const headerSearch = h('span', { class: 'header-search' });
     root.replaceChildren(
@@ -59,6 +66,7 @@ if (parsed.lang === undefined) {
         h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
         h('a', { href: pathsUrl(BASE, lang), class: 'paths-link' }, tr(lang, 'paths')),
         h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
+        h('a', { href: mapUrl(BASE, lang), class: 'map-link' }, tr(lang, 'map')),
         headerSearch,
         langSwitcher(lang, (target) => homeUrl(BASE, target)),
       ),
@@ -81,7 +89,7 @@ if (parsed.lang === undefined) {
             ),
           ),
         ),
-        h('p', {}, h('a', { href: pathsUrl(BASE, lang) }, tr(lang, 'paths')), ' · ', h('a', { href: glossaryUrl(BASE, lang) }, tr(lang, 'glossary'))),
+        h('p', {}, h('a', { href: pathsUrl(BASE, lang) }, tr(lang, 'paths')), ' · ', h('a', { href: glossaryUrl(BASE, lang) }, tr(lang, 'glossary')), ' · ', h('a', { href: mapUrl(BASE, lang) }, tr(lang, 'map'))),
       ),
     );
     mountSearch(headerSearch, lang);
