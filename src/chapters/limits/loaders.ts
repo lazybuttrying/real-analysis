@@ -14,6 +14,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'epsilon-n': () => import('./scenes/epsilonN').then((module) => module.default),
   epsdelta: () => import('./scenes/epsdelta').then((module) => module.default),
   continuity: () => import('./scenes/continuity').then((module) => module.default),
+  'monotone-discontinuities': () => import('./scenes/monotoneDiscontinuities').then((module) => module.default),
   'uniform-continuity': () => import('./scenes/uniformContinuity').then((module) => module.default),
   opensets: () => import('./scenes/opensets').then((module) => module.default),
   closure: () => import('./scenes/closure').then((module) => module.default),

@@ -266,7 +266,7 @@ describe('evt: the cubic values and the counterexamples', () => {
 });
 
 describe('limits chapter meta: order, prerequisites, presets', () => {
-  it('has the final 29-scene order sequence', () => {
+  it('has the final 33-scene order sequence', () => {
     const ids = limits.scenes.map((s) => s.id);
     expect(ids).toEqual([
       'natural-numbers',
@@ -281,6 +281,7 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'epsilon-n',
       'epsdelta',
       'continuity',
+      'monotone-discontinuities',
       'uniform-continuity',
       'opensets',
       'closure',
@@ -302,7 +303,7 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'uniform',
       'weierstrass-approx',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]);
   });
 
   it('sets the new scenes prerequisites', () => {
@@ -314,6 +315,7 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
     expect(byId['dimension-rank']?.prerequisites).toEqual(['vector-spaces']);
     expect(byId['epsdelta']?.prerequisites).toEqual(['epsilon-n']);
     expect(byId['continuity']?.prerequisites).toEqual(['epsdelta']);
+    expect(byId['monotone-discontinuities']?.prerequisites).toEqual(['continuity']);
     expect(byId['monotone-cauchy']?.prerequisites).toEqual(['bolzano-weierstrass']);
     expect(byId['evt']?.prerequisites).toEqual(['ivt']);
     expect(byId['compact']?.prerequisites).toEqual(['closure']);

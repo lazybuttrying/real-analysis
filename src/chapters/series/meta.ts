@@ -1,22 +1,27 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { problems as abelTheoremProblems } from './problems/abel-theorem';
+import { problems as abelTestProblems } from './problems/abel-test';
 import { problems as absoluteProblems } from './problems/absolute';
 import { problems as cauchyProductProblems } from './problems/cauchy-product';
 import { problems as baselProblems } from './problems/basel';
+import { problems as betaFunctionProblems } from './problems/beta-function';
 import { condensationProblems } from './problems/condensation';
 import { problems as diniProblems } from './problems/dini';
 import { problems as dirichletTestProblems } from './problems/dirichlet-test';
 import { problems as eseriesProblems } from './problems/eseries';
+import { eulerProductProblems } from './problems/euler-product';
 import { eulerMascheroniProblems } from './problems/euler-mascheroni';
 import { problems as gammaProblems } from './problems/gamma';
 import { problems as geometricProblems } from './problems/geometric';
 import { problems as grandiProblems } from './problems/grandi';
 import { problems as harmonicProblems } from './problems/harmonic';
 import { problems as improperProblems } from './problems/improper';
+import { kummerTestProblems } from './problems/kummer-test';
 import { problems as leibnizProblems } from './problems/leibniz';
 import { problems as mTestProblems } from './problems/m-test';
 import { problems as powerSeriesProblems } from './problems/power-series';
 import { problems as rearrangementProblems } from './problems/rearrangement';
+import { problems as raabeTestProblems } from './problems/raabe-test';
 import { problems as stirlingProblems } from './problems/stirling';
 import { problems as telescopingProblems } from './problems/telescoping';
 import { problems as testsProblems } from './problems/tests';
@@ -84,9 +89,25 @@ problems: harmonicProblems,
 problems: baselProblems,
     },
     {
+      id: 'euler-product',
+      title: { ko: '오일러 곱 공식', en: 'The Euler Product' },
+      order: 4,
+      summary: {
+        ko: String.raw`\(\zeta(s) = \sum_{n\ge 1} n^{-s}\)에 \((1-2^{-s})\)를 곱하면 짝수 항이 사라지고, \((1-3^{-s})\)를 곱하면 3의 배수가 사라집니다 — 체로 걸러내면 남는 것은 소수 위의 곱 \(\prod_p (1-p^{-s})^{-1}\)뿐입니다. 처음 \(k\)개 소수의 부분 곱이 \(\zeta(2) = \pi^2/6\)에 다가가는 모습을 확인합니다.`,
+        en: String.raw`Multiplying \(\zeta(s) = \sum_{n\ge 1} n^{-s}\) by \((1-2^{-s})\) sieves out the even terms, then \((1-3^{-s})\) removes multiples of 3 — sieving leaves only the product over primes \(\prod_p (1-p^{-s})^{-1}\). Watch the partial product over the first \(k\) primes approach \(\zeta(2) = \pi^2/6\).`,
+      },
+      tex: [
+        String.raw`\zeta(s) = \sum_{n=1}^{\infty}\frac{1}{n^s} = \prod_{p\ \mathrm{prime}}\frac{1}{1-p^{-s}} \qquad (s > 1)`,
+        String.raw`\prod_p\frac{1}{1-p^{-2}} = \frac{\pi^2}{6}`,
+      ],
+      prerequisites: ['basel'],
+      controls: [{ kind: 'slider', key: 'k', label: { ko: '소수 개수 k', en: 'Prime count k' }, min: 1, max: 15, step: 1, init: 6 }],
+problems: eulerProductProblems,
+    },
+    {
       id: 'leibniz',
       title: { ko: '라이프니츠 급수', en: 'Leibniz Series' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`부분합이 \(\frac{\pi}{4}\)를 번갈아 넘고 밑돌며 조여드는 모습을 확인합니다. 이웃한 두 부분합 사이의 간격이 곧 오차의 상한입니다.`,
         en: String.raw`The partial sums overshoot and undershoot \(\frac{\pi}{4}\) in turn, closing in from both sides. The gap between two neighboring partial sums is exactly the error bound.`,
@@ -101,7 +122,7 @@ problems: leibnizProblems,
     {
       id: 'tests',
       title: { ko: '수렴 판정법 도구상자', en: 'Convergence Tests Toolbox' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`비율 \(r_k = a_{k+1}/a_k\)가 극한 \(L < 1\)로 모이면 급수가 수렴합니다 — 두 급수에서 비율이 \(0\)과 \(\frac{1}{2}\)로 내려가는 모습을, 비교 판정법에서는 \(\frac{1}{k^2+1}\)이 \(\frac{1}{k^2}\) 아래에 깔리는 모습을 확인합니다.`,
         en: String.raw`When the ratio \(r_k = a_{k+1}/a_k\) settles to a limit \(L < 1\), the series converges — watch the ratios dive to \(0\) and \(\frac{1}{2}\) in two series, and \(\frac{1}{k^2+1}\) tuck itself under \(\frac{1}{k^2}\) for the comparison test.`,
@@ -118,9 +139,48 @@ problems: leibnizProblems,
 problems: testsProblems,
     },
     {
+      id: 'raabe-test',
+      title: { ko: '라베 판정법', en: "Raabe's Test" },
+      order: 7,
+      summary: {
+        ko: String.raw`비율이 1로 가서 비율 판정법이 항복할 때, 한 단계 더 깊이 본 양 \(R_n = n(a_n/a_{n+1} - 1)\)이 1 위/아래 어디에 안착하는지로 수렴을 가릅니다.`,
+        en: String.raw`When the ratio drifts to 1 and the ratio test surrenders, the finer quantity \(R_n = n(a_n/a_{n+1} - 1)\) settles above or below 1 and decides convergence.`,
+      },
+      tex: [
+        String.raw`L=\\lim_{n\\to\\infty}n\\left(\\frac{a_n}{a_{n+1}}-1\\right)`,
+        String.raw`L>1\\Rightarrow\\sum a_n\\ \\text{converges},\\quad L<1\\Rightarrow\\ \text{diverges}`,
+      ],
+      prerequisites: ['tests'],
+      controls: [
+        { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['central', 'log'], init: 'central' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Terms n' }, min: 10, max: 500, step: 10, init: 100 },
+      ],
+problems: raabeTestProblems,
+    },
+    {
+      id: 'kummer-test',
+      title: { ko: '쿰머 판정법', en: "Kummer's Test" },
+      order: 8,
+      summary: {
+        ko: String.raw`양의 보조수열 \((p_n)\)로 비율을 가중하면 \(K_n = p_n\frac{a_n}{a_{n+1}} - p_{n+1}\)이 0 위/아래 어디에 머무는지로 수렴을 가릅니다. \(p_n = 1\)이면 비율 판정법, \(p_n = n\)이면 라베 판정법이 됩니다.`,
+        en: String.raw`Weighting the ratio by a positive auxiliary sequence \((p_n)\), the sign of \(K_n = p_n\frac{a_n}{a_{n+1}} - p_{n+1}\) decides convergence. \(p_n = 1\) recovers the ratio test, \(p_n = n\) recovers Raabe's test.`,
+      },
+      tex: [
+        String.raw`K_n := p_n\frac{a_n}{a_{n+1}} - p_{n+1} \ge c > 0 \ \Rightarrow\ \sum a_n\ \text{converges}`,
+        String.raw`K_n \le 0,\ \sum\frac{1}{p_n} = \infty \ \Rightarrow\ \sum a_n\ \text{diverges}`,
+      ],
+      prerequisites: ['raabe-test', 'tests'],
+      controls: [
+        { kind: 'select', key: 'pKind', label: { ko: 'p_n', en: 'p_n' }, options: ['p1', 'pn', 'pnlogn'], init: 'pn' },
+        { kind: 'select', key: 'aSel', label: { ko: '매개변수 a', en: 'Parameter a' }, options: ['a2', 'ahalf'], init: 'a2' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Terms n' }, min: 10, max: 500, step: 10, init: 100 },
+      ],
+problems: kummerTestProblems,
+    },
+    {
       id: 'condensation',
       title: { ko: '코시 응축 판정법', en: 'Cauchy Condensation Test' },
-      order: 6,
+      order: 9,
       summary: {
         ko: String.raw`\(a_n\)의 항들을 \([2^n, 2^{n+1})\) 블록으로 묶어 보세요 — 블록 합이 응축 항 \(2^n a_{2^n}\) 사이에 끼면서, 원래 급수와 응축된 급수가 운명을 같이합니다.`,
         en: String.raw`Group the terms \(a_n\) into blocks \([2^n, 2^{n+1})\): each block sum is sandwiched between condensed terms \(2^n a_{2^n}\), so the original and condensed series share their fate.`,
@@ -139,7 +199,7 @@ problems: testsProblems,
     {
       id: 'power-series',
       title: { ko: '멱급수와 수렴반경', en: 'Power Series and Radius of Convergence' },
-      order: 7,
+      order: 10,
       summary: {
         ko: String.raw`멱급수 \(\sum a_n x^n\)은 반경 \(R\) 안에서는 절대 수렴하고 밖에서는 발산합니다 — 세 가지 전형적인 급수로 수렴반경을 확인하고, 경계 \(\lvert x\rvert = R\)은 점마다 따로 판정합니다.`,
         en: String.raw`A power series \(\sum a_n x^n\) converges absolutely inside its radius \(R\) and diverges outside — watch three archetypal series pin down their radii, and see why the boundary \(\lvert x\rvert = R\) must be decided case by case.`,
@@ -159,7 +219,7 @@ problems: testsProblems,
     {
       id: 'abel-theorem',
       title: { ko: '아벨 정리', en: "Abel's Theorem" },
-      order: 8,
+      order: 11,
       summary: {
         ko: String.raw`수렴급수 \(\sum a_n \to S\)에 대해 멱급수 \(\sum a_n x^n\)은 \(x \to 1^{-}\)에서 \(S\)로 다가갑니다 — 아벨 정리. 발산하는 그란디 급수도 이 한계에서는 \(\frac{1}{2}\)를 가리키지만, 그것은 급수의 "합"이 아니라 Abel 합입니다.`,
         en: String.raw`For a convergent series \(\sum a_n \to S\), the power series \(\sum a_n x^n\) approaches \(S\) as \(x \to 1^{-}\) — Abel's theorem. Even the divergent Grandi series points to \(\frac{1}{2}\) in this limit, but that is the Abel sum, never "the sum" of the series.`,
@@ -179,7 +239,7 @@ problems: testsProblems,
     {
       id: 'eseries',
       title: { ko: 'e로 가는 두 길', en: 'Two Roads to e' },
-      order: 9,
+      order: 12,
       summary: {
         ko: String.raw`복리 \((1+\frac{1}{n})^n\)과 급수 \(\sum_{k=0}^{\infty} \frac{1}{k!}\)가 \(e\)에 다가가는 속도를 견주어 확인합니다. 팩토리얼 급수가 압도적으로 빠릅니다.`,
         en: String.raw`Compare how fast compound growth \((1+\frac{1}{n})^n\) and the series \(\sum_{k=0}^{\infty} \frac{1}{k!}\) approach \(e\). The factorial series wins by a landslide.`,
@@ -191,7 +251,7 @@ problems: eseriesProblems,
     {
       id: 'telescoping',
       title: { ko: '망원급수', en: 'Telescoping Series' },
-      order: 10,
+      order: 13,
       summary: {
         ko: String.raw`각 항을 \(\frac{1}{n} - \frac{1}{n+1}\)로 쪼개면 이웃끼리 서로 지워지고 처음의 1과 사라져 가는 꼬리만 남는 모습을 확인합니다.`,
         en: String.raw`Split each term into \(\frac{1}{n} - \frac{1}{n+1}\) and the neighbors cancel each other, leaving only the very first 1 and a vanishing tail.`,
@@ -206,7 +266,7 @@ problems: telescopingProblems,
     {
       id: 'geometric',
       title: { ko: '기하급수: 정사각형 채우기', en: 'Geometric Series: Filling the Square' },
-      order: 11,
+      order: 14,
       summary: {
         ko: '단위 정사각형을 남은 부분의 절반씩 채워 나가면 빈틈이 매 단계 절반으로 줄며 합이 1이 되는 모습을 확인합니다.',
         en: 'Fill a unit square by always taking half of what remains: the gap halves at every step and the total becomes 1.',
@@ -218,7 +278,7 @@ problems: geometricProblems,
     {
       id: 'wallis',
       title: { ko: '월리스 곱', en: 'Wallis Product' },
-      order: 12,
+      order: 15,
       summary: {
         ko: String.raw`유리수 인수들을 하나씩 곱해 나갈수록 실행 곱이 \(\frac{\pi}{2}\) 위아래로 흔들리며 조여드는 모습을 확인합니다.`,
         en: String.raw`Multiply the rational factors in one at a time and watch the running product swing above and below \(\frac{\pi}{2}\), closing in as the swings shrink.`,
@@ -230,7 +290,7 @@ problems: wallisProblems,
     {
       id: 'stirling',
       title: { ko: '스털링 근사', en: "Stirling's Approximation" },
-      order: 13,
+      order: 16,
       summary: {
         ko: String.raw`로그 눈금에서 \(n!\)와 스털링 근사가 거의 겹쳐지고 상대오차가 대략 \(\frac{1}{12n}\)으로 줄어드는 모습을 확인합니다. \(\pi\)가 들어오는 경로는 아이디어 수준에서만 짚습니다.`,
         en: String.raw`On a log scale, \(n!\) and the Stirling approximation nearly coincide, and the relative error shrinks like \(\frac{1}{12n}\). Where \(\pi\) enters is only sketched at the idea level.`,
@@ -242,7 +302,7 @@ problems: stirlingProblems,
     {
       id: 'gamma',
       title: { ko: '감마함수', en: 'The Gamma Function' },
-      order: 14,
+      order: 17,
       summary: {
         ko: String.raw`팩토리얼을 실수로 늘인 함수 — \(\Gamma(x+1) = x\Gamma(x)\)라서 \(\Gamma(n+1) = n!\)입니다. \(x > 0\)에서 이상적분이 수렴함을 확인합니다.`,
         en: String.raw`The factorial stretched to real arguments — \(\Gamma(x+1) = x\Gamma(x)\), so \(\Gamma(n+1) = n!\). Watch the improper integral converge for \(x > 0\).`,
@@ -256,9 +316,28 @@ problems: stirlingProblems,
 problems: gammaProblems,
     },
     {
+      id: 'beta-function',
+      title: { ko: '베타 함수', en: 'The Beta Function' },
+      order: 18,
+      summary: {
+        ko: String.raw`\\(t^{p-1}(1-t)^{q-1}\\) 곡선 아래 넓이가 베타 함수 — \\(p\\), \\(q\\) 슬라이더로 모양이 바뀌는 모습을 보세요. 감마함수와의 관계 \\(B(p,q) = \\Gamma(p)\\Gamma(q)/\\Gamma(p+q)\\)도 함께 다룹니다.`,
+        en: String.raw`The area under \\(t^{p-1}(1-t)^{q-1}\\) is the beta function — morph its shape with the \\(p\\), \\(q\\) sliders. Also covers \\(B(p,q) = \\Gamma(p)\\Gamma(q)/\\Gamma(p+q)\\), the bridge to the gamma function.`,
+      },
+      tex: [
+        String.raw`B(p,q)=\\int_0^1 t^{p-1}(1-t)^{q-1}\\,dt\\quad(p,q>0)`,
+        String.raw`B(p,q)=\\frac{\\Gamma(p)\\Gamma(q)}{\\Gamma(p+q)}`,
+      ],
+      prerequisites: ['gamma'],
+      controls: [
+        { kind: 'slider', key: 'p', label: { ko: 'p', en: 'p' }, min: 0.2, max: 5, step: 0.1, init: 2 },
+        { kind: 'slider', key: 'q', label: { ko: 'q', en: 'q' }, min: 0.2, max: 5, step: 0.1, init: 3 },
+      ],
+problems: betaFunctionProblems,
+    },
+    {
       id: 'grandi',
       title: { ko: '그란디 급수', en: 'Grandi Series' },
-      order: 15,
+      order: 19,
       summary: {
         ko: String.raw`부분합이 1과 0을 영원히 오가므로 이 급수에는 합이 없습니다. \(\frac{1}{2}\)는 부분합들의 평균(체사로 평균)일 뿐, 급수의 합이 아닙니다.`,
         en: String.raw`The partial sums bounce between 1 and 0 forever, so this series has no sum. \(\frac{1}{2}\) is only the average of the partial sums (the Cesàro mean), not a sum of the series.`,
@@ -270,7 +349,7 @@ problems: grandiProblems,
     {
       id: 'zeta4',
       title: { ko: 'ζ(4)와 짝수 거듭제곱', en: 'ζ(4) and Even Powers' },
-      order: 16,
+      order: 20,
       summary: {
         ko: String.raw`\(\frac{1}{n^4}\)의 부분합이 \(\frac{\pi^4}{90}\)에 빠르게 닿는 모습과, 짝수 거듭제곱마다 \(\zeta\)값이 \(\pi\)의 거듭제곱으로 닫히는 패턴을 확인합니다.`,
         en: String.raw`The partial sums of \(\frac{1}{n^4}\) reach \(\frac{\pi^4}{90}\) quickly — and at every even power, the \(\zeta\) value closes into a power of \(\pi\).`,
@@ -285,7 +364,7 @@ problems: zeta4Problems,
     {
       id: 'rearrangement',
       title: { ko: '재배열 정리', en: 'Rearranging Changes the Sum' },
-      order: 17,
+      order: 21,
       summary: {
         ko: String.raw`조건수렴 급수는 순서를 바꾸면 합이 바뀝니다 — \(\ln 2 \approx 0.6931\)이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로. 라이프니츠 장면의 짝꿍입니다.`,
         en: String.raw`Reordering a conditionally convergent series changes its sum — \(\ln 2 \approx 0.6931\) becomes \(\frac{3}{2}\ln 2 \approx 1.0397\). Twin of the Leibniz scene.`,
@@ -298,7 +377,7 @@ problems: rearrangementProblems,
     {
       id: 'absolute',
       title: { ko: '절대수렴 정리', en: 'Absolute Convergence' },
-      order: 18,
+      order: 22,
       summary: {
         ko: String.raw`절댓값을 씌운 급수가 수렴하면 원래 급수도 수렴합니다 — 두 부분합 곡선 \(S_n\)과 \(T_n\)이 함께 안착하는 모습과, 조화급수처럼 절댓값은 발산해도 부호 덕분에 수렴하는 경우를 견주어 확인합니다.`,
         en: String.raw`If the absolute-value series converges, so does the original — compare the two partial-sum walks \(S_n\) and \(T_n\) settling together against the harmonic-like case where the signs rescue a divergent absolute series.`,
@@ -317,7 +396,7 @@ problems: absoluteProblems,
     {
       id: 'cauchy-product',
       title: { ko: '코시 곱', en: 'The Cauchy Product' },
-      order: 19,
+      order: 23,
       summary: {
         ko: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\), \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — 대각선으로 격자를 휩쓰는 합. 메르텐스 정리(한쪽이 절대수렴하면 곱이 성립)와, 둘 다 조건수렴일 때 깨지는 반례를 봅니다.`,
         en: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\) with \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — sweeping the lattice along diagonals. Mertens' theorem (absolute convergence on one side saves the product) and the counterexample when both converge only conditionally.`,
@@ -336,7 +415,7 @@ problems: absoluteProblems,
     {
       id: 'dirichlet-test',
       title: { ko: '디리클레 판정법', en: "Dirichlet's Test" },
-      order: 20,
+      order: 24,
       summary: {
         ko: String.raw`부분합이 \(1/|\sin(x/2)|\) 안에 갇혀 흔들리는 \(\sin(kx)\)와 \(0\)으로 가라앉는 \(1/n\)이 만나 \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴합니다 — 디리클레 판정법.`,
         en: String.raw`The partial sums of \(\sin(kx)\) wobble, trapped inside \(1/|\sin(x/2)|\), and the \(1/n\) weight sinking to \(0\) tames them into the convergent series \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\) — Dirichlet's test.`,
@@ -353,9 +432,28 @@ problems: absoluteProblems,
       problems: dirichletTestProblems,
     },
     {
+      id: 'abel-test',
+      title: { ko: '아벨 판정법', en: "Abel's Test" },
+      order: 25,
+      summary: {
+        ko: String.raw`\\(\\sum a_n\\)이 수렴하고 \\((b_n)\\)이 단조·유계이면 \\(\\sum a_n b_n\\)도 수렴합니다 — 디리클레 판정법의 짝꿍. \\((b_n)\\)이 0으로 가지 않아도 된다는 점이 다릅니다.`,
+        en: String.raw`If \\(\\sum a_n\\) converges and \\((b_n)\\) is monotone and bounded, then \\(\\sum a_n b_n\\) converges — the companion to Dirichlet's test. The difference: \\((b_n)\\) need not tend to 0.`,
+      },
+      tex: [
+        String.raw`\\sum a_n\\ \\text{converges},\\ (b_n)\\ \\text{monotone bounded}\\ \\Rightarrow\\ \\sum a_n b_n\\ \\text{converges}`,
+        String.raw`\\sum_{k=m}^{n}a_k b_k = A_n b_{n+1} - A_{m-1}b_m + \\sum_{k=m}^{n}A_k(b_k-b_{k+1})`,
+      ],
+      prerequisites: ['dirichlet-test'],
+      controls: [
+        { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['shifted', 'scaled'], init: 'shifted' },
+        { kind: 'slider', key: 'n', label: { ko: '부분합 항 수', en: 'Partial sum terms' }, min: 10, max: 500, step: 10, init: 120 },
+      ],
+problems: abelTestProblems,
+    },
+    {
       id: 'm-test',
       title: { ko: 'M-판정법', en: 'The Weierstrass M-Test' },
-      order: 21,
+      order: 26,
       summary: {
         ko: String.raw`각 항을 모든 \(x\)에서 누르는 수열 \(M_n\)이 있으면 급수는 균등수렴합니다 — \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\), \(\sum M_n = \frac{\pi^2}{6}\)이므로 부분합 오차 띠가 전체 \(x\) 구간에서 한꺼번에 좁아집니다.`,
         en: String.raw`If a majorant \(M_n\) dominates every term at all \(x\) and \(\sum M_n\) converges, the series converges uniformly — here \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\) and \(\sum M_n = \frac{\pi^2}{6}\), so the partial-sum error band tightens across the whole \(x\)-interval at once.`,
@@ -373,7 +471,7 @@ problems: absoluteProblems,
     {
       id: 'dini',
       title: { ko: '디니 정리', en: "Dini's Theorem" },
-      order: 22,
+      order: 27,
       summary: {
         ko: String.raw`컴팩트 집합 위에서는 단조인 연속함수열의 점별수렴이 균등수렴이 됩니다 — 열린 덮개 \(E_n\)들의 유한 부분덮개가 한 번에 잡아줍니다. M-판정법의 쌍대 도구.`,
         en: String.raw`On a compact set, a monotone sequence of continuous functions converging pointwise converges uniformly — a finite subcover of the open sets \(E_n\) grabs them all at once. The twin tool of the M-test.`,
@@ -392,7 +490,7 @@ problems: absoluteProblems,
     {
       id: 'improper',
       title: { ko: '이상적분', en: 'Improper Integrals' },
-      order: 23,
+      order: 28,
       summary: {
         ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
         en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,
