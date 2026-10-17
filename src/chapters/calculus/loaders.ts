@@ -7,6 +7,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'cauchy-mvt': () => import('./scenes/cauchyMvt').then((module) => module.default),
   lhopital: () => import('./scenes/lhopital').then((module) => module.default),
   darboux: () => import('./scenes/darboux').then((module) => module.default),
+  'weierstrass-function': () => import('./scenes/weierstrassFunction').then((module) => module.default),
   taylor: () => import('./scenes/taylor').then((module) => module.default),
   'taylor-thm': () => import('./scenes/taylorThm').then((module) => module.default),
   convex: () => import('./scenes/convex').then((module) => module.default),

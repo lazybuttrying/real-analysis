@@ -1,6 +1,7 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { problems as abelTheoremProblems } from './problems/abel-theorem';
 import { problems as absoluteProblems } from './problems/absolute';
+import { problems as cauchyProductProblems } from './problems/cauchy-product';
 import { problems as baselProblems } from './problems/basel';
 import { condensationProblems } from './problems/condensation';
 import { problems as diniProblems } from './problems/dini';
@@ -314,9 +315,28 @@ problems: rearrangementProblems,
 problems: absoluteProblems,
     },
     {
+      id: 'cauchy-product',
+      title: { ko: '코시 곱', en: 'The Cauchy Product' },
+      order: 19,
+      summary: {
+        ko: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\), \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — 대각선으로 격자를 휩쓰는 합. 메르텐스 정리(한쪽이 절대수렴하면 곱이 성립)와, 둘 다 조건수렴일 때 깨지는 반례를 봅니다.`,
+        en: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\) with \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — sweeping the lattice along diagonals. Mertens' theorem (absolute convergence on one side saves the product) and the counterexample when both converge only conditionally.`,
+      },
+      tex: [
+        String.raw`c_n = \sum_{k=0}^{n} a_k b_{n-k}`,
+        String.raw`\sum |a_n| < \infty,\ \sum b_n = B\ \Rightarrow\ \sum c_n = AB`,
+      ],
+      prerequisites: ['absolute', 'rearrangement'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 30, step: 1, init: 10 },
+        { kind: 'select', key: 'pair', label: { ko: '급수 쌍', en: 'Series pair' }, options: ['exp', 'alternating'], init: 'exp' },
+      ],
+      problems: cauchyProductProblems,
+    },
+    {
       id: 'dirichlet-test',
       title: { ko: '디리클레 판정법', en: "Dirichlet's Test" },
-      order: 19,
+      order: 20,
       summary: {
         ko: String.raw`부분합이 \(1/|\sin(x/2)|\) 안에 갇혀 흔들리는 \(\sin(kx)\)와 \(0\)으로 가라앉는 \(1/n\)이 만나 \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴합니다 — 디리클레 판정법.`,
         en: String.raw`The partial sums of \(\sin(kx)\) wobble, trapped inside \(1/|\sin(x/2)|\), and the \(1/n\) weight sinking to \(0\) tames them into the convergent series \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\) — Dirichlet's test.`,
@@ -335,7 +355,7 @@ problems: absoluteProblems,
     {
       id: 'm-test',
       title: { ko: 'M-판정법', en: 'The Weierstrass M-Test' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`각 항을 모든 \(x\)에서 누르는 수열 \(M_n\)이 있으면 급수는 균등수렴합니다 — \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\), \(\sum M_n = \frac{\pi^2}{6}\)이므로 부분합 오차 띠가 전체 \(x\) 구간에서 한꺼번에 좁아집니다.`,
         en: String.raw`If a majorant \(M_n\) dominates every term at all \(x\) and \(\sum M_n\) converges, the series converges uniformly — here \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\) and \(\sum M_n = \frac{\pi^2}{6}\), so the partial-sum error band tightens across the whole \(x\)-interval at once.`,
@@ -353,7 +373,7 @@ problems: absoluteProblems,
     {
       id: 'dini',
       title: { ko: '디니 정리', en: "Dini's Theorem" },
-      order: 21,
+      order: 22,
       summary: {
         ko: String.raw`컴팩트 집합 위에서는 단조인 연속함수열의 점별수렴이 균등수렴이 됩니다 — 열린 덮개 \(E_n\)들의 유한 부분덮개가 한 번에 잡아줍니다. M-판정법의 쌍대 도구.`,
         en: String.raw`On a compact set, a monotone sequence of continuous functions converging pointwise converges uniformly — a finite subcover of the open sets \(E_n\) grabs them all at once. The twin tool of the M-test.`,
@@ -372,7 +392,7 @@ problems: absoluteProblems,
     {
       id: 'improper',
       title: { ko: '이상적분', en: 'Improper Integrals' },
-      order: 22,
+      order: 23,
       summary: {
         ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
         en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,

@@ -3,6 +3,7 @@ import { problems as bolzanoWeierstrassProblems } from './problems/bolzano-weier
 import { problems as binomialProblems } from './problems/binomial';
 import { problems as cauchySchwarzProblems } from './problems/cauchy-schwarz';
 import { problems as cantorProblems } from './problems/cantor';
+import { problems as cantorFunctionProblems } from './problems/cantor-function';
 import { problems as closureProblems } from './problems/closure';
 import { problems as compactProblems } from './problems/compact';
 import { problems as continuityProblems } from './problems/continuity';
@@ -590,9 +591,27 @@ problems: monotoneCauchyProblems,
 problems: cantorProblems,
     },
     {
+      id: 'cantor-function',
+      title: { ko: '칸토어 함수', en: 'The Cantor Function' },
+      order: 28,
+      summary: {
+        ko: String.raw`악마의 계단: 연속이고 단조롭게 \(0\)에서 \(1\)로 오르지만, 여집합 구간에서는 상수라서 \(f' = 0\)인 점들의 전체 길이가 \(1\)입니다. \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — 미적분학 기본정리가 "거의 모든 곳에서 미분가능"보다 더 강한 것을 요구하는 이유입니다.`,
+        en: String.raw`The Devil's staircase: continuous and nondecreasing from \(0\) to \(1\), yet constant on every complementary interval, so \(f' = 0\) on a set of total length \(1\). \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — why the FTC needs more than differentiability almost everywhere.`,
+      },
+      tex: [
+        String.raw`f(x) = \sum b_k 2^{-k},\quad b_k \in \{0,1\}\ \text{from the ternary expansion}`,
+        String.raw`f(1) - f(0) = 1 \neq 0 = \int_0^1 f'`,
+      ],
+      prerequisites: ['cantor'],
+      controls: [
+        { kind: 'slider', key: 'stage', label: { ko: '칸토어 집합 단계 n', en: 'Cantor set stage n' }, min: 0, max: 7, step: 1, init: 4 },
+      ],
+      problems: cantorFunctionProblems,
+    },
+    {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 28,
+      order: 29,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -607,7 +626,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 29,
+      order: 30,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -631,7 +650,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 30,
+      order: 31,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
@@ -649,7 +668,7 @@ problems: uniformProblems,
     {
       id: 'weierstrass-approx',
       title: { ko: '바이어슈트라스 근사정리', en: 'Weierstrass Approximation Theorem' },
-      order: 31,
+      order: 32,
       summary: {
         ko: String.raw`\([0,1]\) 위의 연속함수는 다항식으로 균등하게 근사됩니다 — 번스타인 다항식 \(B_n(f)\)가 \(f\)에 다가가는 모습을 \(n\)을 키우며 확인합니다. 수렴 증명의 세부 추정은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every continuous function on \([0,1]\) is uniformly approximable by polynomials — watch the Bernstein polynomials \(B_n(f)\) close in on \(f\) as \(n\) grows. The fine estimates of the convergence proof are sketched at the idea level.`,

@@ -432,6 +432,36 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'cantor',
   },
   {
+    id: 'cantor-function',
+    term: { ko: '칸토어 함수', en: 'Cantor function' },
+    definition: {
+      ko: String.raw`칸토어 집합 위에서만 올라가는 연속 단조함수 — 여집합 구간에서는 상수라서 \(f'=0\)인 점들의 전체 길이가 \(1\)이다.`,
+      en: String.raw`The continuous nondecreasing function that climbs only on the Cantor set — constant on every complementary interval, so \(f'=0\) on a set of total length \(1\).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'cantor-function',
+  },
+  {
+    id: 'devils-staircase',
+    term: { ko: '악마의 계단', en: "devil's staircase" },
+    definition: {
+      ko: `칸토어 함수의 별명 — 평평한 계단이 무한히 이어지는데도 0에서 1까지 오른다.`,
+      en: `Nickname for the Cantor function — infinitely many flat steps, yet it climbs from 0 to 1.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'cantor-function',
+  },
+  {
+    id: 'absolutely-continuous',
+    term: { ko: '절대연속', en: 'absolutely continuous' },
+    definition: {
+      ko: String.raw`미적분학 기본정리가 성립하는 함수 클래스 — \(f(b)-f(a) = \int_a^b f'\)을 보장한다. 칸토어 함수는 연속이지만 절대연속이 아니다.`,
+      en: String.raw`The class of functions for which the FTC holds — guaranteeing \(f(b)-f(a) = \int_a^b f'\). The Cantor function is continuous but not absolutely continuous.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'cantor-function',
+  },
+  {
     id: 'ivt',
     term: { ko: '중간값 정리', en: 'intermediate value theorem' },
     definition: {
@@ -832,7 +862,26 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'series',
     sceneId: 'euler-mascheroni',
   },
-  // -------------------------------------------------------------- calculus
+  {
+    id: 'cauchy-product',
+    term: { ko: '코시 곱', en: 'Cauchy product' },
+    definition: {
+      ko: String.raw`두 급수의 곱 \((\sum a_n)(\sum b_n) = \sum c_n\), \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — 대각선 합.`,
+      en: String.raw`The product of two series \((\sum a_n)(\sum b_n) = \sum c_n\) with \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — diagonal sums.`,
+    },
+    chapterId: 'series',
+    sceneId: 'cauchy-product',
+  },
+  {
+    id: 'mertens-theorem',
+    term: { ko: '메르텐스 정리', en: "Mertens' theorem" },
+    definition: {
+      ko: String.raw`한 급수가 절대수렴하고 다른 하나가 수렴하면 코시 곱도 수렴하고 그 합은 두 합의 곱과 같다.`,
+      en: String.raw`If one series converges absolutely and the other converges, their Cauchy product converges to the product of the sums.`,
+    },
+    chapterId: 'series',
+    sceneId: 'cauchy-product',
+  },  // -------------------------------------------------------------- calculus
   {
     id: 'darboux-theorem',
     term: { ko: '다르부 정리', en: "Darboux's theorem" },
@@ -1062,5 +1111,15 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'calculus',
     sceneId: 'lhopital',
+  },
+  {
+    id: 'weierstrass-function',
+    term: { ko: '바이어슈트라스 함수', en: 'Weierstrass function' },
+    definition: {
+      ko: String.raw`모든 점에서 연속이지만 어느 점에서도 미분 불가능한 함수 — \(\sum a^n\cos(b^n\pi x)\). 매끄러운 함수들의 균등극한이 미분가능하지 않을 수 있음을 보여준다.`,
+      en: String.raw`Continuous everywhere but differentiable nowhere — \(\sum a^n\cos(b^n\pi x)\). Shows a uniform limit of smooth functions need not be differentiable.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'weierstrass-function',
   },
 ];
