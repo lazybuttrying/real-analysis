@@ -7,7 +7,7 @@ import {
   type Scene,
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
 import { evtModel, type EvtData, type EvtSample } from '../models/evt';
 
 /**
@@ -47,7 +47,7 @@ function verdictText(data: EvtData, lang: Lang): string {
 }
 
 function createEvtScene(): Scene<EvtData> {
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let chart: Chart | undefined;
   let wrap: HTMLElement | undefined;
   let verdictSlot: RichSlot | undefined;
@@ -150,20 +150,14 @@ function createEvtScene(): Scene<EvtData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const legend = document.createElement('div');
       legend.style.cssText = 'font-size: 12px; color: var(--muted);';
       const verdict = document.createElement('div');
       verdict.style.fontWeight = '600';
       strips.append(legend, verdict);
-      host.append(chartWrap, strips);
 
       setRichText(
         createRichSlot(legend),
@@ -193,12 +187,8 @@ function createEvtScene(): Scene<EvtData> {
       chart = undefined;
       verdictSlot = undefined;
       wrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };

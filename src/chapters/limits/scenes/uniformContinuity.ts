@@ -7,7 +7,7 @@ import {
   type Scene,
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
 import {
   evaluateFn,
   uniformContinuityModel,
@@ -61,7 +61,7 @@ function verdictText(data: UniformContinuityData, lang: Lang): string {
 }
 
 function createUniformContinuityScene(): Scene<UniformContinuityData> {
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let chart: Chart | undefined;
   let wrap: HTMLElement | undefined;
   let readoutSlot: RichSlot | undefined;
@@ -142,14 +142,9 @@ function createUniformContinuityScene(): Scene<UniformContinuityData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const legend = document.createElement('div');
       legend.style.cssText = 'font-size: 12px; color: var(--muted);';
       const readout = document.createElement('div');
@@ -157,7 +152,6 @@ function createUniformContinuityScene(): Scene<UniformContinuityData> {
       const verdict = document.createElement('div');
       verdict.style.fontWeight = '600';
       strips.append(legend, readout, verdict);
-      host.append(chartWrap, strips);
 
       setRichText(
         createRichSlot(legend),
@@ -189,12 +183,8 @@ function createUniformContinuityScene(): Scene<UniformContinuityData> {
       readoutSlot = undefined;
       verdictSlot = undefined;
       wrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };

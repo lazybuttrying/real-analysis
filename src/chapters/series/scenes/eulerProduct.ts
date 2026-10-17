@@ -7,7 +7,7 @@ import {
   type Scene,
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
 import { ZETA2, eulerProductModel, type EulerProductData } from '../models/eulerProduct';
 
 /**
@@ -42,7 +42,7 @@ function verdictText(lang: Lang): string {
 }
 
 function createEulerProductScene(): Scene<EulerProductData> {
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let chart: Chart | undefined;
   let wrap: HTMLElement | undefined;
   let readoutSlot: RichSlot | undefined;
@@ -131,14 +131,9 @@ function createEulerProductScene(): Scene<EulerProductData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const readout = document.createElement('div');
       readout.style.fontWeight = '600';
       const verdict = document.createElement('div');
@@ -156,7 +151,6 @@ function createEulerProductScene(): Scene<EulerProductData> {
       seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), link);
 
       strips.append(readout, verdict, seeAlso);
-      host.append(chartWrap, strips);
 
       readoutSlot = createRichSlot(readout);
       verdictSlot = createRichSlot(verdict);
@@ -178,12 +172,8 @@ function createEulerProductScene(): Scene<EulerProductData> {
       readoutSlot = undefined;
       verdictSlot = undefined;
       wrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };
