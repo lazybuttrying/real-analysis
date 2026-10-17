@@ -3,6 +3,7 @@ import type { SceneLoader } from '../../contracts';
 /** Scene id → dynamic import. Scene code (including d3 and three) is split into separate chunks at this boundary. */
 export const loaders: Readonly<Record<string, SceneLoader>> = {
   harmonic: () => import('./scenes/harmonic').then((module) => module.default),
+  'euler-mascheroni': () => import('./scenes/eulerMascheroni').then((module) => module.default),
   basel: () => import('./scenes/basel').then((module) => module.default),
   leibniz: () => import('./scenes/leibniz').then((module) => module.default),
   tests: () => import('./scenes/tests').then((module) => module.default),
@@ -21,5 +22,6 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   absolute: () => import('./scenes/absolute').then((module) => module.default),
   'dirichlet-test': () => import('./scenes/dirichletTest').then((module) => module.default),
   'm-test': () => import('./scenes/mTest').then((module) => module.default),
+  dini: () => import('./scenes/dini').then((module) => module.default),
   improper: () => import('./scenes/improper').then((module) => module.default),
 };
