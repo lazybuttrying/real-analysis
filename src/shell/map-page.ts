@@ -15,10 +15,9 @@ import {
 import { catalog } from '../catalog.ts';
 import { localize, type Lang } from '../contracts.ts';
 import { buildConceptMap } from '../concept-map.ts';
-import { homeUrl, parsePath, sceneUrl, withLang } from '../paths.ts';
+import { sceneUrl } from '../paths.ts';
 import { h } from './dom.ts';
-import { langSwitcher, tr } from './i18n.ts';
-import { mountSearch } from './search.ts';
+import { tr } from './i18n.ts';
 
 const BASE = import.meta.env.BASE_URL;
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -55,28 +54,15 @@ function svgEl(tag: string, attrs: Readonly<Record<string, string>> = {}): SVGEl
   return element;
 }
 
-function pageHeader(lang: Lang): HTMLElement {
-  const headerSearch = h('span', { class: 'header-search' });
-  const header = h(
-    'header',
-    { class: 'home-header' },
-    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
-    headerSearch,
-    langSwitcher(lang, (target) => withLang(BASE, parsePath(BASE, location.pathname), target)),
-  );
-  mountSearch(headerSearch, lang);
-  return header;
-}
-
 /**
- * Client-side render of /<lang>/map/: a d3 force-directed concept map of all
- * scenes, linked by prerequisite relations (solid) and learning-path reading
- * order (dashed). The layout is pre-settled synchronously (deterministic —
- * nodes start on chapter rings, no Math.random), so the first paint is the
- * final layout; drag and zoom stay interactive afterwards.
+ * Mounts the interactive concept map into a container element (the home page's
+ * map section). The container's static fallback (chapter-grouped scene list,
+ * written by the prerender step) is replaced by the d3 graph. The layout is
+ * pre-settled synchronously (deterministic — nodes start on chapter rings, no
+ * Math.random), so the first paint is the final layout; drag and zoom stay
+ * interactive afterwards.
  */
-export function renderMapPage(root: HTMLElement, lang: Lang): void {
-  document.title = `${tr(lang, 'map')} | Real Analysis`;
+export function mountConceptMap(container: HTMLElement, lang: Lang): void {
   const { nodes, edges } = buildConceptMap();
 
   const simNodes: SimNode[] = nodes.map((node) => {
@@ -143,9 +129,6 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
     .stop();
   for (let i = 0; i < SETTLE_TICKS; i++) simulation.tick();
 
-  const main = h('main', { class: 'home map' });
-  main.append(h('h1', {}, tr(lang, 'map')), h('p', {}, tr(lang, 'mapIntro')));
-
   const legend = h('div', { class: 'map-legend' });
   const filterButtons: HTMLButtonElement[] = [];
   for (const [index, chapter] of catalog.entries()) {
@@ -167,7 +150,6 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
     h('span', { class: 'map-legend-item' }, h('span', { class: 'map-line-sample map-line-prereq' }), tr(lang, 'mapPrereq')),
     h('span', { class: 'map-legend-item' }, h('span', { class: 'map-line-sample map-line-path' }), tr(lang, 'mapPathOrder')),
   );
-  main.append(legend);
 
   const wrap = h('div', { class: 'map-wrap' });
   const svg = svgEl('svg', {
@@ -183,7 +165,6 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
 
   const resetButton = h('button', { class: 'map-reset', type: 'button' }, tr(lang, 'mapResetView'));
   wrap.append(resetButton);
-  main.append(wrap);
 
   // Arrowhead markers, one per edge kind.
   const defs = svgEl('defs');
@@ -376,5 +357,6 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
     applyFilter();
   });
 
-  root.replaceChildren(pageHeader(lang), main);
+  // Replace the static fallback (chapter-grouped scene list) with the graph.
+  container.replaceChildren(legend, wrap);
 }

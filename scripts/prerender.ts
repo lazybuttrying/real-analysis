@@ -7,7 +7,7 @@ import { buildConceptMap } from '../src/concept-map.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
-import { chapterUrl, glossaryUrl, homeUrl, mapUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
+import { chapterUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -222,6 +222,13 @@ const pages: Page[] = [
         ),
         '</ul>',
         `<p><a href="${glossaryUrl(BASE, lang)}">${escapeHtml(localize(STRINGS.glossary, lang))}</a></p>`,
+        `<section class="home-map">`,
+        `<h2>${escapeHtml(localize(STRINGS.map, lang))}</h2>`,
+        `<p>${escapeHtml(localize(STRINGS.mapIntro, lang))}</p>`,
+        `<div class="map-mount">`,
+        renderMapFallbackHtml(lang),
+        `</div>`,
+        `</section>`,
       ].join('\n'),
   },
 ];
@@ -305,8 +312,8 @@ for (const path of learningPaths) {
   });
 }
 
-/** Static body of the concept map page: chapter-grouped scene lists with prerequisite links (zero-JS readable). */
-const renderMapStaticHtml = (lang: Lang): string => {
+/** Static fallback for the home page's concept map section: chapter-grouped scene lists with prerequisite links (zero-JS readable). The client replaces it with the interactive d3 graph on load. */
+const renderMapFallbackHtml = (lang: Lang): string => {
   const { edges } = buildConceptMap();
   const prereqsOf = new Map<string, string[]>();
   for (const edge of edges) {
@@ -337,22 +344,8 @@ const renderMapStaticHtml = (lang: Lang): string => {
       return `<section>\n<h2>${chapterIndex + 1}. ${escapeHtml(localize(chapter.title, lang))}</h2>\n<ul>\n${items}\n</ul>\n</section>`;
     })
     .join('\n');
-  return [
-    `<h1>${escapeHtml(localize(STRINGS.map, lang))}</h1>`,
-    `<p>${escapeHtml(localize(STRINGS.mapIntro, lang))}</p>`,
-    sections,
-  ].join('\n');
+  return sections;
 };
-
-pages.push({
-  segments: (lang) => [lang, 'map'],
-  url: (lang) => mapUrl(BASE, lang),
-  title: (lang) => `${localize(STRINGS.map, lang)} | ${SITE_NAME}`,
-  description: (lang) => localize(STRINGS.mapIntro, lang),
-  template: 'home',
-  formulas: false,
-  body: renderMapStaticHtml,
-});
 
 function selfCheck(): string[] {
   const problems: string[] = [];
@@ -609,7 +602,7 @@ function main(): void {
   }
 
   console.log(
-    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s) + 1 map), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
+    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
   );
 }
 

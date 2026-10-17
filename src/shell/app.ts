@@ -2,7 +2,7 @@ import '../style.css';
 import { catalog } from '../catalog';
 import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { learningPaths } from '../learning-paths';
-import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, mapUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
+import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
@@ -222,7 +222,6 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
       h('a', { href: chapterUrl(BASE, lang, chapter.id), 'data-spa': '' }, chapterTitle),
       h('a', { href: pathsUrl(BASE, lang), class: 'paths-link' }, tr(lang, 'paths')),
       h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
-      h('a', { href: mapUrl(BASE, lang), class: 'map-link' }, tr(lang, 'map')),
       headerSearch,
       langSwitcher(lang, (target) => `${withLang(BASE, parsePath(BASE, location.pathname), target)}${location.search}`),
     ),

@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { catalog } from '../src/catalog.ts';
 import { buildConceptMap } from '../src/concept-map.ts';
-import { mapUrl, withLang } from '../src/paths.ts';
-
-const BASE = '/real-analysis/';
 
 const sceneKeys = new Set<string>();
 for (const chapter of catalog) {
@@ -59,16 +56,5 @@ describe('concept map: graph integrity', () => {
   it('is deterministic', () => {
     const again = buildConceptMap();
     expect(JSON.stringify(again)).toBe(JSON.stringify({ nodes, edges }));
-  });
-});
-
-describe('concept map: URL helpers', () => {
-  it('builds the map URL', () => {
-    expect(mapUrl(BASE, 'ko')).toBe('/real-analysis/ko/map/');
-    expect(mapUrl(BASE, 'en')).toBe('/real-analysis/en/map/');
-  });
-
-  it('withLang keeps the map route across languages', () => {
-    expect(withLang(BASE, { lang: 'ko', chapterId: 'map', sceneId: undefined }, 'en')).toBe(mapUrl(BASE, 'en'));
   });
 });

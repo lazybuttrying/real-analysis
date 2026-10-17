@@ -31,15 +31,11 @@ export const pathsUrl = (base: string, lang: Lang): string => `${base}${lang}/pa
 export const pathDetailUrl = (base: string, lang: Lang, pathId: string): string =>
   `${base}${lang}/paths/${pathId}/`;
 
-/** The concept map page: /<lang>/map/ */
-export const mapUrl = (base: string, lang: Lang): string => `${base}${lang}/map/`;
-
 /** The same page in another language: only the lang segment changes, chapter/scene/query are kept. */
 export function withLang(base: string, parsed: ParsedPath, lang: Lang): string {
   if (parsed.chapterId === undefined) return homeUrl(base, lang);
   if (parsed.chapterId === 'glossary') return glossaryUrl(base, lang);
   if (parsed.chapterId === 'paths') return parsed.sceneId ? pathDetailUrl(base, lang, parsed.sceneId) : pathsUrl(base, lang);
-  if (parsed.chapterId === 'map') return mapUrl(base, lang);
   if (parsed.sceneId === undefined) return chapterUrl(base, lang, parsed.chapterId);
   return sceneUrl(base, lang, parsed.chapterId, parsed.sceneId);
 }

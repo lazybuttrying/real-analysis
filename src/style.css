@@ -273,15 +273,15 @@ main.paths {
   font-size: 0.875rem;
 }
 
-/* Concept map page */
-.map-link {
-  font-size: 0.875rem;
-  text-decoration: none;
-  white-space: nowrap;
+/* Concept map section embedded at the bottom of the home page */
+.home-map {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
 }
 
-main.map {
-  max-width: 64rem;
+.home-map > h2 {
+  margin: 0 0 4px;
 }
 
 .map-legend {
