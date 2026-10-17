@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import { limits } from '../src/chapters/limits/meta';
 import {
@@ -34,10 +35,10 @@ import {
   type EvtData,
 } from '../src/chapters/limits/models/evt';
 
-const epsDeltaCompute = (state: ControlState): EpsDeltaData => epsdeltaModel.compute(state) as EpsDeltaData;
-const continuityCompute = (state: ControlState): ContinuityData => continuityModel.compute(state) as ContinuityData;
-const cauchyCompute = (state: ControlState): MonotoneCauchyData => monotoneCauchyModel.compute(state) as MonotoneCauchyData;
-const evtCompute = (state: ControlState): EvtData => evtModel.compute(state) as EvtData;
+const epsDeltaCompute = (state: ControlState): EpsDeltaData => syncCompute(epsdeltaModel, state);
+const continuityCompute = (state: ControlState): ContinuityData => syncCompute(continuityModel, state);
+const cauchyCompute = (state: ControlState): MonotoneCauchyData => syncCompute(monotoneCauchyModel, state);
+const evtCompute = (state: ControlState): EvtData => syncCompute(evtModel, state);
 
 describe('epsdelta: delta = epsilon / 2 mapping', () => {
   it('epsDeltaDelta(0.4) = 0.2', () => {
@@ -65,8 +66,8 @@ describe('epsdelta: delta = epsilon / 2 mapping', () => {
     const inDelta = data.samples.filter((s) => s.inDelta);
     expect(inDelta.length).toBeGreaterThan(0);
     for (const s of inDelta) {
-      expect(Math.abs(s.x - 1)).toBeLessThan(data.delta);
-      expect(Math.abs(s.fx - 2)).toBeLessThan(0.4);
+      expectCloseTo(s.x, 1, data.delta);
+      expectCloseTo(s.fx, 2, 0.4);
     }
   });
 
@@ -342,7 +343,7 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
             expect(value as number).toBeGreaterThanOrEqual(spec.min);
             expect(value as number).toBeLessThanOrEqual(spec.max);
             const steps = ((value as number) - spec.min) / spec.step;
-            expect(Math.abs(steps - Math.round(steps))).toBeLessThan(1e-9);
+            expectCloseTo(steps, Math.round(steps), 1e-9);
           } else if (spec?.kind === 'toggle') {
             expect(typeof value).toBe('boolean');
           } else if (spec?.kind === 'select') {

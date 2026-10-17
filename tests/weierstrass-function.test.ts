@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   A,
@@ -17,8 +18,7 @@ import {
 } from '../src/chapters/calculus/models/weierstrassFunction';
 import { problems } from '../src/chapters/calculus/problems/weierstrass-function';
 
-const compute = (state: ControlState): WeierstrassData =>
-  weierstrassModel.compute(state) as WeierstrassData;
+const compute = (state: ControlState): WeierstrassData => syncCompute(weierstrassModel, state);
 
 // Hand-computed closed forms (independent of the model helpers):
 //   weierstrassPartial(0, n) = sum_{k=0}^n (1/2)^k = 2 - (1/2)^n

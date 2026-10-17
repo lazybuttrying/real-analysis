@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   CLOSED_COVER_SIZE,
@@ -13,7 +14,7 @@ import {
 } from '../src/chapters/limits/models/compact';
 import { problems } from '../src/chapters/limits/problems/compact';
 
-const compactCompute = (state: ControlState): CompactData => compactModel.compute(state) as CompactData;
+const compactCompute = (state: ControlState): CompactData => syncCompute(compactModel, state);
 
 /**
  * The control spec this scene will be registered with in meta.ts
@@ -174,7 +175,7 @@ describe('compact: problems data', () => {
           expect(value as number).toBeGreaterThanOrEqual(spec.min);
           expect(value as number).toBeLessThanOrEqual(spec.max);
           const steps = ((value as number) - spec.min) / spec.step;
-          expect(Math.abs(steps - Math.round(steps))).toBeLessThan(1e-9);
+          expectCloseTo(steps, Math.round(steps), 1e-9);
         } else {
           throw new Error(`${problem.id}: undeclared control key '${key}'`);
         }

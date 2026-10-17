@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   aValue,
@@ -19,8 +20,7 @@ import {
 } from '../src/chapters/series/models/kummerTest';
 import { kummerTestProblems } from '../src/chapters/series/problems/kummer-test';
 
-const compute = (state: ControlState): KummerData =>
-  kummerModel.compute(state) as KummerData;
+const compute = (state: ControlState): KummerData => syncCompute(kummerModel, state);
 
 const PKINDS: PKind[] = ['p1', 'pn', 'pnlogn'];
 const ASELS: ASel[] = ['a2', 'ahalf'];
@@ -93,7 +93,7 @@ describe('kummer-test: the ratio test is inconclusive (ratio -> 1)', () => {
     for (const sel of ASELS) {
       const a = aValue(sel);
       expect(gaussRatio(a, 500)).toBeCloseTo(1 + a / 501, 14);
-      expect(Math.abs(gaussRatio(a, 500) - 1)).toBeLessThan(0.02);
+      expectCloseTo(gaussRatio(a, 500), 1, 0.02);
     }
   });
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   clampLevel,
@@ -21,7 +22,7 @@ import {
 } from '../src/chapters/calculus/models/darboux';
 import { problems } from '../src/chapters/calculus/problems/darboux';
 
-const compute = (state: ControlState): DarbouxData => darbouxModel.compute(state) as DarbouxData;
+const compute = (state: ControlState): DarbouxData => syncCompute(darbouxModel, state);
 
 describe('darboux: the witness function f(x) = x^2 sin(1/x), f(0) = 0', () => {
   it('f(0) = 0', () => {

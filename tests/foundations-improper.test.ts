@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo } from './helpers';
 import { improperArea, improperData, improperModel } from '../src/chapters/series/models/improper';
 
 function at<T>(xs: readonly T[], i: number): T {
@@ -23,7 +24,7 @@ describe('improper model', () => {
     const { area, limit, converges } = improperArea('tail', 1, 50, 0.01);
     // Proof figure: integral_1^50 dx/x = ln 50 ≈ 3.912
     expect(area).toBeCloseTo(Math.log(50), 12);
-    expect(Math.abs(area - 3.912)).toBeLessThan(5e-4);
+    expectCloseTo(area, 3.912, 5e-4);
     expect(converges).toBe(false);
     expect(limit).toBeNull();
   });

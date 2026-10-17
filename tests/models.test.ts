@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo } from './helpers';
 import { epsilonNTail, epsilonNModel, sequenceKey, type EpsilonNData } from '../src/chapters/limits/models/epsilonN';
 import { babylonian, holesModel, type HolesData } from '../src/chapters/limits/models/holes';
 import { bolzanoWeierstrass } from '../src/chapters/limits/models/bolzanoWeierstrass';
@@ -99,7 +100,7 @@ describe('harmonic model', () => {
   it('tracks ln n + gamma closely', () => {
     const data = harmonicPartialSums(1000);
     expect(data.final.asymptotic).toBeCloseTo(Math.log(1000) + EULER_GAMMA, 12);
-    expect(Math.abs(data.final.sum - data.final.asymptotic)).toBeLessThan(0.001);
+    expectCloseTo(data.final.sum, data.final.asymptotic, 0.001);
   });
 });
 
@@ -244,10 +245,10 @@ describe('ivt model', () => {
   it('locates the crossing by bisection', () => {
     const cubic = ivtData('cubic', 0.5);
     expect(cubic.c).toBe(0);
-    expect(Math.abs(cubic.xi - 0.6823278038280193)).toBeLessThan(1e-9);
+    expectCloseTo(cubic.xi, 0.6823278038280193, 1e-9);
     const sine = ivtData('sine', 0.5);
     expect(sine.c).toBe(0.5);
-    expect(Math.abs(sine.xi - Math.PI / 6)).toBeLessThan(1e-9);
+    expectCloseTo(sine.xi, Math.PI / 6, 1e-9);
   });
 
   it('maps the 0–100 slider onto [f(a), f(b)]', () => {
@@ -323,10 +324,10 @@ describe('problems: every number stated in the 18 proofs', () => {
     const cubic = ivtData('cubic', 0.5);
     expect(cubic.c).toBe(0);
     expect(cubic.xi).toBeCloseTo(0.6823278038, 9);
-    expect(Math.abs(cubic.xi ** 3 + cubic.xi - 1)).toBeLessThan(1e-12);
+    expectCloseTo(cubic.xi ** 3 + cubic.xi, 1, 1e-12);
     const sine = ivtData('sine', 0.5);
     expect(sine.c).toBe(0.5);
-    expect(Math.abs(sine.xi - Math.PI / 6)).toBeLessThan(1e-12);
+    expectCloseTo(sine.xi, Math.PI / 6, 1e-12);
   });
 
   it('uniform: the grid sup norm and the exact supremum distinction', () => {
@@ -410,7 +411,7 @@ describe('series problems', () => {
   it('eseries/compound: (1 + 1/30)^30 < series partial sum < e', () => {
     const data = eSeriesRace(30);
     expect(data.compoundValue).toBeLessThan(data.seriesValue);
-    expect(Math.abs(data.seriesValue - Math.E)).toBeLessThan(1e-12);
+    expectCloseTo(data.seriesValue, Math.E, 1e-12);
     expect(data.compoundValue).toBeLessThan(Math.E);
   });
 
@@ -502,7 +503,7 @@ describe('series problems', () => {
     const data = stirlingTable(10);
     expect(data.fact).toBeCloseTo(3628800, 6);
     expect(data.relErr).toBeCloseTo(0.008296, 5);
-    expect(Math.abs(data.relErr - 1 / 120)).toBeLessThan(0.0001);
+    expectCloseTo(data.relErr, 1 / 120, 0.0001);
   });
 
   it('stirling/central-binomial: C(2n,n) is close to 4^n/sqrt(pi n)', () => {

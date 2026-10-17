@@ -35,7 +35,7 @@ real-analysis/
     ├── paths.ts                URL 규칙 (순수)
     ├── state.ts                ControlState ↔ URL 쿼리 (순수)
     ├── shell/                  app.ts(챕터 라우팅), controls.ts, scene-host.ts, tex.ts, dom.ts
-    ├── view/                   d3kit.ts, threekit.ts, richtext.ts(씬용 KaTeX 리치텍스트 — shell import 금지 규칙 때문에 shell/tex.ts와 분리)
+    ├── view/                   d3kit.ts, threekit.ts, richtext.ts(씬용 KaTeX 리치텍스트 — shell import 금지 규칙 때문에 shell/tex.ts와 분리), richslot.ts(씬 공용 리치텍스트 슬롯: createRichSlot/setRichText, KaTeX는 dynamic import 유지)
     ├── math/                   순수 수치 함수 (Kahan 합산, 로그 간격 샘플링 등)
     └── chapters/series/
         ├── meta.ts             ChapterMeta + SceneMeta[] (타입 + ./problems/* 데이터 import만 허용)

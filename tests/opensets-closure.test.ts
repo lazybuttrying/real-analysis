@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import { limits } from '../src/chapters/limits/meta';
 import {
@@ -18,8 +19,8 @@ import {
   type OpenSetData,
 } from '../src/chapters/limits/models/opensets';
 
-const opensetsCompute = (state: ControlState): OpenSetData => opensetsModel.compute(state) as OpenSetData;
-const closureCompute = (state: ControlState): ClosureData => closureModel.compute(state) as ClosureData;
+const opensetsCompute = (state: ControlState): OpenSetData => syncCompute(opensetsModel, state);
+const closureCompute = (state: ControlState): ClosureData => syncCompute(closureModel, state);
 
 describe('opensets: membership', () => {
   it('open (0,1) excludes its endpoints', () => {
@@ -297,7 +298,7 @@ describe('limits chapter meta: the two new scenes', () => {
             expect(value as number).toBeGreaterThanOrEqual(spec.min);
             expect(value as number).toBeLessThanOrEqual(spec.max);
             const steps = ((value as number) - spec.min) / spec.step;
-            expect(Math.abs(steps - Math.round(steps))).toBeLessThan(1e-9);
+            expectCloseTo(steps, Math.round(steps), 1e-9);
           } else if (spec?.kind === 'toggle') {
             expect(typeof value).toBe('boolean');
           } else if (spec?.kind === 'select') {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   exampleValue,
@@ -15,8 +16,7 @@ import {
 } from '../src/chapters/limits/models/monotoneDiscontinuities';
 import { monotoneDiscontinuitiesProblems } from '../src/chapters/limits/problems/monotone-discontinuities';
 
-const compute = (state: ControlState): MonotoneDiscontinuitiesData =>
-  monotoneDiscontinuitiesModel.compute(state) as MonotoneDiscontinuitiesData;
+const compute = (state: ControlState): MonotoneDiscontinuitiesData => syncCompute(monotoneDiscontinuitiesModel, state);
 
 /** Independent gcd for the independent enumeration. */
 function gcd(a: number, b: number): number {

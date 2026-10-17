@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   alternatingAbsBound,
@@ -20,8 +21,7 @@ import {
 } from '../src/chapters/series/models/cauchyProduct';
 import { problems } from '../src/chapters/series/problems/cauchy-product';
 
-const compute = (state: ControlState): CauchyProductData =>
-  cauchyProductModel.compute(state) as CauchyProductData;
+const compute = (state: ControlState): CauchyProductData => syncCompute(cauchyProductModel, state);
 
 /** Independent factorial (test-side), not the model's pairTerm loop. */
 function fact(n: number): number {
@@ -77,7 +77,7 @@ describe('cauchy-product: the exp pair c_n = 2^n/n!', () => {
     // "C_10 within 1e-6 of e^2" claim would be false.
     const C10 = partialSums(cauchyTerms('exp', 10))[10] ?? 0;
     expect(Math.abs(C10 - Math.E * Math.E)).toBeGreaterThan(1e-6);
-    expect(Math.abs(C10 - Math.E * Math.E)).toBeLessThan(1e-4);
+    expectCloseTo(C10, Math.E * Math.E, 1e-4);
   });
 
   it('pairLimit is e^2 for exp and null for alternating', () => {
