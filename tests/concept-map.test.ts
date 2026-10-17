@@ -47,6 +47,15 @@ describe('concept map: graph integrity', () => {
     for (const edge of edges) expect(['prereq', 'path']).toContain(edge.kind);
   });
 
+  it('marks exactly one entry node per chapter: its order-0 scene', () => {
+    const entries = nodes.filter((node) => node.isEntry);
+    expect(entries.length).toBe(catalog.length);
+    for (const chapter of catalog) {
+      const first = [...chapter.scenes].sort((a, b) => a.order - b.order)[0];
+      expect(entries.some((node) => node.chapterId === chapter.id && node.sceneId === first?.id)).toBe(true);
+    }
+  });
+
   it('is deterministic', () => {
     const again = buildConceptMap();
     expect(JSON.stringify(again)).toBe(JSON.stringify({ nodes, edges }));

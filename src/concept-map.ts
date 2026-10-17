@@ -15,15 +15,21 @@ import { learningPaths } from './learning-paths.ts';
  */
 
 /** One scene, addressed by chapter + scene id. */
-export interface MapNode {
+export interface MapNodeRef {
   chapterId: string;
   sceneId: string;
 }
 
+/** One scene, with its chapter-entry flag. */
+export interface MapNode extends MapNodeRef {
+  /** True for the first scene (order 0) of each chapter — the chapter's "front door". */
+  isEntry: boolean;
+}
+
 /** Directed edge: the source should be read before the target. */
 export interface MapEdge {
-  source: MapNode;
-  target: MapNode;
+  source: MapNodeRef;
+  target: MapNodeRef;
   /** 'prereq': from SceneMeta.prerequisites; 'path': consecutive learning-path steps. */
   kind: 'prereq' | 'path';
 }
@@ -44,8 +50,9 @@ export function buildConceptMap(): ConceptMap {
 
   const nodes: MapNode[] = [];
   for (const chapter of catalog) {
-    for (const scene of [...chapter.scenes].sort((a, b) => a.order - b.order)) {
-      nodes.push({ chapterId: chapter.id, sceneId: scene.id });
+    const ordered = [...chapter.scenes].sort((a, b) => a.order - b.order);
+    for (const [index, scene] of ordered.entries()) {
+      nodes.push({ chapterId: chapter.id, sceneId: scene.id, isEntry: index === 0 });
     }
   }
 

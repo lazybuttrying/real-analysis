@@ -31,6 +31,7 @@ interface SimNode extends SimulationNodeDatum {
   sceneId: string;
   title: string;
   chapterTitle: string;
+  isEntry: boolean;
 }
 
 interface SimLink extends SimulationLinkDatum<SimNode> {
@@ -85,6 +86,7 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
       sceneId: node.sceneId,
       title: info?.title(lang) ?? node.sceneId,
       chapterTitle: info?.chapterTitle(lang) ?? node.chapterId,
+      isEntry: node.isEntry,
     };
   });
   const simLinks: SimLink[] = edges.map((edge) => ({
@@ -93,17 +95,31 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
     kind: edge.kind,
   }));
 
-  // Deterministic start: one ring per chapter (catalog order), so the settled
-  // layout does not depend on Math.random.
+  // One anchor per chapter, arranged in a triangle, so the graph settles into
+  // visible chapter lobes instead of a single clump. Fully deterministic.
   const chapterOrder = catalog.map((chapter) => chapter.id);
+  const chapterCenters = new Map<string, { x: number; y: number }>();
+  for (const [index, chapterId] of chapterOrder.entries()) {
+    const angle = -Math.PI / 2 + (index / Math.max(1, chapterOrder.length)) * Math.PI * 2;
+    const radius = Math.min(WIDTH, HEIGHT) * 0.30;
+    chapterCenters.set(chapterId, {
+      x: WIDTH / 2 + radius * Math.cos(angle),
+      y: HEIGHT / 2 + radius * Math.sin(angle),
+    });
+  }
+  const chapterCenter = (chapterId: string): { x: number; y: number } =>
+    chapterCenters.get(chapterId) ?? { x: WIDTH / 2, y: HEIGHT / 2 };
+
+  // Deterministic start: nodes seed around their own chapter's center, so the
+  // settled layout does not depend on Math.random.
   for (const node of simNodes) {
-    const ring = chapterOrder.indexOf(node.chapterId);
+    const center = chapterCenter(node.chapterId);
     const siblings = simNodes.filter((candidate) => candidate.chapterId === node.chapterId);
     const slot = siblings.indexOf(node);
-    const radius = 130 + Math.max(0, ring) * 105;
-    const angle = (slot / Math.max(1, siblings.length)) * Math.PI * 2 + ring * 0.6;
-    node.x = WIDTH / 2 + radius * Math.cos(angle);
-    node.y = HEIGHT / 2 + radius * Math.sin(angle) * 0.72;
+    const radius = 50 + (slot % 6) * 24;
+    const angle = (slot / Math.max(1, siblings.length)) * Math.PI * 2;
+    node.x = center.x + radius * Math.cos(angle);
+    node.y = center.y + radius * Math.sin(angle);
   }
 
   const simulation = forceSimulation(simNodes)
@@ -111,13 +127,19 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
       'link',
       forceLink<SimNode, SimLink>(simLinks)
         .id((node) => `${node.chapterId}/${node.sceneId}`)
-        .distance(80)
-        .strength(0.55),
+        .distance(84)
+        .strength(0.45),
     )
-    .force('charge', forceManyBody().strength(-200))
-    .force('collide', forceCollide(28))
-    .force('x', forceX(WIDTH / 2).strength(0.12))
-    .force('y', forceY(HEIGHT / 2).strength(0.12))
+    .force('charge', forceManyBody().strength(-240))
+    .force('collide', forceCollide(32))
+    .force(
+      'x',
+      forceX<SimNode>((d) => chapterCenter(d.chapterId).x).strength(0.26),
+    )
+    .force(
+      'y',
+      forceY<SimNode>((d) => chapterCenter(d.chapterId).y).strength(0.26),
+    )
     .stop();
   for (let i = 0; i < SETTLE_TICKS; i++) simulation.tick();
 
@@ -125,15 +147,21 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
   main.append(h('h1', {}, tr(lang, 'map')), h('p', {}, tr(lang, 'mapIntro')));
 
   const legend = h('div', { class: 'map-legend' });
+  const filterButtons: HTMLButtonElement[] = [];
   for (const [index, chapter] of catalog.entries()) {
-    legend.append(
-      h(
-        'span',
-        { class: 'map-legend-item' },
-        h('span', { class: 'map-swatch', 'data-chapter': chapter.id }),
-        `${index + 1}. ${localize(chapter.title, lang)}`,
-      ),
-    );
+    const button = h(
+      'button',
+      {
+        class: 'map-legend-filter',
+        type: 'button',
+        'data-chapter': chapter.id,
+        'aria-pressed': 'false',
+      },
+      h('span', { class: 'map-swatch', 'data-chapter': chapter.id }),
+      `${index + 1}. ${localize(chapter.title, lang)}`,
+    ) as HTMLButtonElement;
+    filterButtons.push(button);
+    legend.append(button);
   }
   legend.append(
     h('span', { class: 'map-legend-item' }, h('span', { class: 'map-line-sample map-line-prereq' }), tr(lang, 'mapPrereq')),
@@ -193,17 +221,45 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
     .selectAll<SVGGElement, SimNode>('g')
     .data(simNodes)
     .join('g')
-    .attr('class', 'map-node')
+    .attr('class', (d) => (d.isEntry ? 'map-node map-entry' : 'map-node'))
     .attr('data-chapter', (d) => d.chapterId);
-  nodeSel.append('circle').attr('r', '7');
+  nodeSel.append('circle').attr('r', (d) => (d.isEntry ? '11' : '7'));
   nodeSel
     .append('text')
-    .attr('dy', '1.7em')
+    .attr('dy', (d) => (d.isEntry ? '2em' : '1.7em'))
     .attr('text-anchor', 'middle')
+    .attr('class', (d) => (d.isEntry ? 'map-label-entry' : null))
     .text((d) => d.title);
 
-  const renderPositions = (): void => {
-    linkSel
+  // Adjacency (both directions) for the hover neighborhood highlight. Built
+  // after the link force resolved string ids to node objects.
+  const nodeKeyOf = (node: SimNode): string => `${node.chapterId}/${node.sceneId}`;
+  const neighbors = new Map<string, Set<string>>();
+  for (const node of simNodes) neighbors.set(nodeKeyOf(node), new Set([nodeKeyOf(node)]));
+  for (const link of simLinks) {
+    const from = nodeKeyOf(link.source as SimNode);
+    const to = nodeKeyOf(link.target as SimNode);
+    neighbors.get(from)?.add(to);
+    neighbors.get(to)?.add(from);
+  }
+
+  /**
+   * Dims everything outside the hovered node's neighborhood to 15% opacity.
+   * Passing null restores the full graph.
+   */
+  const setFocus = (focused: SimNode | null): void => {
+    const keep: Set<string> | null =
+      focused === null ? null : (neighbors.get(nodeKeyOf(focused)) ?? new Set<string>());
+    nodeSel.style('opacity', (node) => (keep === null || keep.has(nodeKeyOf(node)) ? null : '0.15'));
+    linkSel.style('opacity', (link) => {
+      if (keep === null) return null;
+      const from = nodeKeyOf(link.source as SimNode);
+      const to = nodeKeyOf(link.target as SimNode);
+      return keep.has(from) && keep.has(to) ? null : '0.15';
+    });
+  };
+
+  const renderPositions = (): void => {    linkSel
       .attr('x1', (d) => (d.source as SimNode).x ?? 0)
       .attr('y1', (d) => (d.source as SimNode).y ?? 0)
       .attr('x2', (d) => (d.target as SimNode).x ?? 0)
@@ -218,24 +274,51 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
   });
   select(svg).call(zoomBehavior);
 
-  // Fit the settled layout into the viewBox with padding, so edge labels are
-  // never clipped. The reset button restores this fitted view.
-  let minX = Infinity;
-  let maxX = -Infinity;
-  let minY = Infinity;
-  let maxY = -Infinity;
-  for (const node of simNodes) {
-    minX = Math.min(minX, node.x ?? 0);
-    maxX = Math.max(maxX, node.x ?? 0);
-    minY = Math.min(minY, node.y ?? 0);
-    maxY = Math.max(maxY, node.y ?? 0);
+  // Fit a set of nodes into the viewBox with padding. The reset button
+  // restores the full-graph fit; the chapter filter fits the visible lobe.
+  const fitNodes = (nodesToFit: readonly SimNode[]): void => {
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const node of nodesToFit) {
+      minX = Math.min(minX, node.x ?? 0);
+      maxX = Math.max(maxX, node.x ?? 0);
+      minY = Math.min(minY, node.y ?? 0);
+      maxY = Math.max(maxY, node.y ?? 0);
+    }
+    if (!Number.isFinite(minX)) return;
+    const pad = 80;
+    const fitScale = Math.min(WIDTH / (maxX - minX + pad * 2), HEIGHT / (maxY - minY + pad * 2));
+    const transform = zoomIdentity
+      .translate(WIDTH / 2 - fitScale * ((minX + maxX) / 2), HEIGHT / 2 - fitScale * ((minY + maxY) / 2))
+      .scale(fitScale);
+    select(svg).call(zoomBehavior.transform, transform);
+  };
+  fitNodes(simNodes);
+
+  // Chapter filter: clicking a legend swatch isolates that chapter's subgraph
+  // (other chapters hidden). Clicking again restores the full graph.
+  let isolatedChapter: string | null = null;
+  const applyFilter = (): void => {
+    const visible = (chapterId: string): boolean => isolatedChapter === null || isolatedChapter === chapterId;
+    nodeSel.style('display', (node) => (visible(node.chapterId) ? null : 'none'));
+    linkSel.style('display', (link) =>
+      visible((link.source as SimNode).chapterId) && visible((link.target as SimNode).chapterId) ? null : 'none',
+    );
+    for (const button of filterButtons) {
+      button.setAttribute('aria-pressed', String(button.dataset['chapter'] === isolatedChapter));
+    }
+    setFocus(null);
+    fitNodes(isolatedChapter === null ? simNodes : simNodes.filter((node) => node.chapterId === isolatedChapter));
+  };
+  for (const button of filterButtons) {
+    button.addEventListener('click', () => {
+      const chapterId = button.dataset['chapter'] ?? '';
+      isolatedChapter = isolatedChapter === chapterId ? null : chapterId;
+      applyFilter();
+    });
   }
-  const pad = 80;
-  const fitScale = Math.min(WIDTH / (maxX - minX + pad * 2), HEIGHT / (maxY - minY + pad * 2));
-  const initialTransform = zoomIdentity
-    .translate(WIDTH / 2 - fitScale * ((minX + maxX) / 2), HEIGHT / 2 - fitScale * ((minY + maxY) / 2))
-    .scale(fitScale);
-  select(svg).call(zoomBehavior.transform, initialTransform);
 
   // Drag a node; a click (no drag) navigates to the scene page.
   let dragged = false;
@@ -267,7 +350,8 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
     location.href = sceneUrl(BASE, lang, d.chapterId, d.sceneId);
   });
 
-  // Hover tooltip: scene title + chapter.
+  // Hover: tooltip plus neighborhood highlight (everything outside the
+  // hovered node's incoming/outgoing neighborhood dims to 15%).
   nodeSel
     .on('mouseenter', (_event, d) => {
       tooltip.replaceChildren(
@@ -275,6 +359,7 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
         h('span', { class: 'map-tooltip-chapter' }, d.chapterTitle),
       );
       tooltip.hidden = false;
+      setFocus(d);
     })
     .on('mousemove', (event) => {
       const rect = wrap.getBoundingClientRect();
@@ -283,10 +368,12 @@ export function renderMapPage(root: HTMLElement, lang: Lang): void {
     })
     .on('mouseleave', () => {
       tooltip.hidden = true;
+      setFocus(null);
     });
 
   resetButton.addEventListener('click', () => {
-    select(svg).call(zoomBehavior.transform, initialTransform);
+    isolatedChapter = null;
+    applyFilter();
   });
 
   root.replaceChildren(pageHeader(lang), main);

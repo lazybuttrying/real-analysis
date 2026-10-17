@@ -300,6 +300,30 @@ main.map {
   gap: 6px;
 }
 
+/* Chapter filter buttons in the legend */
+.map-legend-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.map-legend-filter:hover {
+  border-color: var(--line);
+}
+
+.map-legend-filter[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .map-swatch {
   width: 12px;
   height: 12px;
@@ -338,11 +362,18 @@ main.map {
 
 .map-node {
   cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 
 .map-node circle {
   stroke: var(--bg);
   stroke-width: 1.5px;
+}
+
+/* Chapter entry nodes ("front doors"): larger, bold label, accent ring. */
+.map-node.map-entry circle {
+  stroke: var(--accent);
+  stroke-width: 2.5px;
 }
 
 .map-node[data-chapter='limits'] circle { fill: var(--chapter-limits); }
@@ -356,6 +387,16 @@ main.map {
   stroke: var(--bg);
   stroke-width: 3px;
   pointer-events: none;
+}
+
+.map-node text.map-label-entry {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.map-edge-prereq,
+.map-edge-path {
+  transition: opacity 0.15s ease;
 }
 
 .map-edge-prereq {
