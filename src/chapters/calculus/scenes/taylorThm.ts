@@ -1,7 +1,7 @@
 import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
 import { taylorThmModel, type TaylorThmData, type TaylorThmSample } from '../models/taylorThm';
 
 /**
@@ -24,7 +24,7 @@ function readoutText(data: TaylorThmData, lang: Lang): string {
 }
 
 function createTaylorThmScene(): Scene<TaylorThmData> {
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let chart: Chart | undefined;
   let wrap: HTMLElement | undefined;
   let readoutSlot: RichSlot | undefined;
@@ -80,18 +80,12 @@ function createTaylorThmScene(): Scene<TaylorThmData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const readout = document.createElement('div');
       readout.style.fontWeight = '600';
       strips.append(readout);
-      host.append(chartWrap, strips);
 
       readoutSlot = createRichSlot(readout);
       wrap = chartWrap;
@@ -111,12 +105,8 @@ function createTaylorThmScene(): Scene<TaylorThmData> {
       chart = undefined;
       readoutSlot = undefined;
       wrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };

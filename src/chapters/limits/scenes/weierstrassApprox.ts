@@ -7,7 +7,7 @@ import {
   type Scene,
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
 import { bernsteinModel, type BernsteinData, type BernsteinSample } from '../models/weierstrass-approx';
 
 /**
@@ -52,7 +52,7 @@ function verdictText(lang: Lang): string {
 
 function createWeierstrassScene(): Scene<BernsteinData> {
   let chart: Chart | undefined;
-  let hostEl: HTMLElement | undefined;
+  let shell: SceneShell | undefined;
   let factsSlot: RichSlot | undefined;
   let ideaSlot: RichSlot | undefined;
   let verdictSlot: RichSlot | undefined;
@@ -110,14 +110,9 @@ function createWeierstrassScene(): Scene<BernsteinData> {
   return {
     mount(host, pageLang) {
       lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
+      shell = createSceneShell(host);
+      const chartWrap = shell.chartWrap;
+      const strips = shell.strips;
       const facts = document.createElement('div');
       facts.style.fontWeight = '600';
       const idea = document.createElement('div');
@@ -125,7 +120,6 @@ function createWeierstrassScene(): Scene<BernsteinData> {
       const verdict = document.createElement('div');
       verdict.style.fontWeight = '600';
       strips.append(facts, idea, verdict);
-      host.append(chartWrap, strips);
 
       factsSlot = createRichSlot(facts);
       ideaSlot = createRichSlot(idea);
@@ -145,12 +139,8 @@ function createWeierstrassScene(): Scene<BernsteinData> {
       factsSlot = undefined;
       ideaSlot = undefined;
       verdictSlot = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
+      shell?.dispose();
+      shell = undefined;
       last = undefined;
     },
   };
