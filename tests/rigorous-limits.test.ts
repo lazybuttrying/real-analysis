@@ -288,6 +288,7 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'metric-spaces',
       'contraction',
       'sequence-spaces',
+      'cauchy-schwarz',
       'holes',
       'construction',
       'bolzano-weierstrass',
@@ -300,7 +301,7 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'uniform',
       'weierstrass-approx',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
   });
 
   it('sets the new scenes prerequisites', () => {
