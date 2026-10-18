@@ -1,14 +1,20 @@
 import { describe, expect, it } from 'vitest';
+import { buildLegacyPages, pages, renderPage, sitemapXml } from '../scripts/prerender.ts';
 import { catalog } from '../src/catalog.ts';
 import { LANGS, localize } from '../src/contracts.ts';
-import { FULLY_RETIRED_CHAPTER_IDS, LEGACY_CHAPTER_IDS, LEGACY_SCENE_CHAPTER } from '../src/paths.ts';
+import {
+  FULLY_RETIRED_CHAPTER_IDS,
+  LEGACY_CHAPTER_IDS,
+  LEGACY_SCENE_CHAPTER,
+  legacyChapterOf,
+} from '../src/paths.ts';
 
 /**
  * Integrity of the 10-chapter split:
  * - the catalog lists exactly the 10 logical chapters in order,
  * - no scene is lost or duplicated (93 unique),
  * - every chapter's scenes are ordered 1..N with 3 proven problems each,
- * - the legacy redirect map covers every scene exactly once.
+ * - the legacy canonical map covers every scene exactly once.
  */
 
 const EXPECTED_CHAPTERS = [
@@ -113,7 +119,7 @@ describe('catalog: the 10 chapters', () => {
   });
 });
 
-describe('legacy redirects', () => {
+describe('legacy canonical pages', () => {
   it('retires limits and calculus fully; series keeps its id', () => {
     expect([...LEGACY_CHAPTER_IDS].sort()).toEqual(['calculus', 'limits', 'series']);
     expect([...FULLY_RETIRED_CHAPTER_IDS].sort()).toEqual(['calculus', 'limits']);
@@ -130,30 +136,100 @@ describe('legacy redirects', () => {
     }
   });
 
-  it('gives every old scene URL a redirect target', () => {
-    // Fully retired chapters: every scene that lived there redirects to its
-    // new chapter. The pre-split homes are recovered from the split itself:
-    // limits scenes are those now in the five ex-limits chapters, etc.
-    const preSplitHome = (sceneId: string, chapterId: string): string => {
-      if (['numbers', 'sequences', 'continuity', 'topology', 'approximation'].includes(chapterId)) return 'limits';
-      if (
-        chapterId === 'series' ||
-        chapterId === 'power-series' ||
-        ['m-test', 'dini', 'gamma', 'beta-function', 'bohr-mollerup', 'improper'].includes(sceneId)
-      ) {
-        return 'series';
-      }
-      return 'calculus';
-    };
-    for (const chapter of catalog) {
-      for (const scene of chapter.scenes) {
-        const home = preSplitHome(scene.id, chapter.id);
-        const target = LEGACY_SCENE_CHAPTER[scene.id];
-        expect(target, scene.id).toBe(chapter.id);
-        if (home === 'series' && chapter.id === 'series') continue; // stayed: no redirect needed
-        // Otherwise the old /<lang>/<home>/<scene>/ URL has target chapterId.
-        expect(typeof target).toBe('string');
+  it('assigns every scene its pre-split chapter (39 limits + 22 calculus + 16 moved series)', () => {
+    const moved = catalog.flatMap((chapter) =>
+      chapter.scenes
+        .map((scene) => ({ sceneId: scene.id, chapterId: chapter.id, legacy: legacyChapterOf(scene.id, chapter.id) }))
+        .filter(({ legacy, chapterId }) => legacy !== chapterId),
+    );
+    expect(moved).toHaveLength(77);
+    const counts = new Map<string, number>();
+    for (const { legacy } of moved) counts.set(legacy, (counts.get(legacy) ?? 0) + 1);
+    expect(counts.get('limits')).toBe(39);
+    expect(counts.get('calculus')).toBe(22);
+    expect(counts.get('series')).toBe(16);
+    // The 16 scenes that stayed in the (reused) series chapter need no legacy page.
+    const stayed = catalog
+      .find((chapter) => chapter.id === 'series')!
+      .scenes.filter((scene) => legacyChapterOf(scene.id, 'series') === 'series');
+    expect(stayed).toHaveLength(16);
+  });
+
+  it('emits one legacy page per retired scene URL, canonicalizing to the new URL', () => {
+    const legacyPages = buildLegacyPages();
+    expect(legacyPages).toHaveLength(77);
+    const seen = new Set<string>();
+    for (const page of legacyPages) {
+      for (const lang of LANGS) {
+        const segments = page.segments(lang);
+        expect(segments).toHaveLength(3);
+        const [l, legacyId, sceneId] = segments;
+        expect(l).toBe(lang);
+        // Never a hub or an exercises page: retired hubs/exercises emit nothing.
+        expect(sceneId).not.toBe('exercises');
+        expect(sceneId).not.toBe(legacyId);
+        expect(page.url(lang)).toBe(`/real-analysis/${lang}/${legacyId}/${sceneId}/`);
+        const canonical = page.canonicalUrl?.(lang);
+        expect(canonical, `${legacyId}/${sceneId}`).toBeDefined();
+        expect(canonical).toBe(`/real-analysis/${lang}/${LEGACY_SCENE_CHAPTER[sceneId!]}/${sceneId}/`);
+        expect(canonical).not.toBe(page.url(lang));
+        const key = `${lang}/${legacyId}/${sceneId}`;
+        expect(seen.has(key), `duplicate legacy page ${key}`).toBe(false);
+        seen.add(key);
       }
     }
+  });
+
+  it('serves full content with canonical (no redirect) at retired scene URLs', () => {
+    const template =
+      '<!doctype html><html lang="ko"><head><title>x</title></head><body><div id="app"></div></body></html>';
+    const legacyPages = buildLegacyPages();
+    // One sample per retired origin: limits -> sequences, calculus ->
+    // integration, moved series scene -> power-series.
+    for (const sceneId of ['epsilon-n', 'riemann', 'power-series']) {
+      const page = legacyPages.find((candidate) => candidate.segments('ko')[2] === sceneId);
+      expect(page, `legacy page for ${sceneId}`).toBeDefined();
+      for (const lang of LANGS) {
+        const html = renderPage(template, page!, lang, undefined);
+        expect(html).toContain(`<link rel="canonical" href="https://sdykim.me${page!.canonicalUrl!(lang)}" />`);
+        expect(html, 'no meta refresh').not.toContain('http-equiv="refresh"');
+        expect(html, 'no JS redirect').not.toContain('location.replace');
+        // Full content, not a stub: the scene heading and its problems render.
+        expect(html).toContain('<div id="app"><h1>');
+        expect(html).toContain('class="problems"');
+      }
+    }
+  });
+
+  it('gives legacy pages byte-identical bodies to their canonical pages', () => {
+    const chapterIds = new Set(catalog.map((chapter) => chapter.id));
+    const canonicalByScene = new Map<string, (typeof pages)[number]>();
+    for (const page of pages) {
+      const segments = page.segments('ko');
+      if (segments.length === 3 && chapterIds.has(segments[1]!) && segments[2] !== 'exercises') {
+        canonicalByScene.set(segments[2]!, page);
+      }
+    }
+    expect(canonicalByScene.size).toBe(93);
+    for (const page of buildLegacyPages()) {
+      const sceneId = page.segments('ko')[2]!;
+      const canonical = canonicalByScene.get(sceneId);
+      expect(canonical, `canonical page for ${sceneId}`).toBeDefined();
+      for (const lang of LANGS) {
+        expect(page.body(lang), `${sceneId} body (${lang})`).toBe(canonical!.body(lang));
+      }
+    }
+  });
+
+  it('lists only canonical URLs in the sitemap', () => {
+    const xml = sitemapXml();
+    const legacyUrls = buildLegacyPages().flatMap((page) => LANGS.map((lang) => `https://sdykim.me${page.url(lang)}`));
+    expect(legacyUrls).toHaveLength(154);
+    for (const legacyUrl of legacyUrls) {
+      expect(xml, `sitemap must not list ${legacyUrl}`).not.toContain(`<loc>${legacyUrl}</loc>`);
+    }
+    expect(xml).toContain('<loc>https://sdykim.me/real-analysis/ko/sequences/epsilon-n/</loc>');
+    expect(xml).toContain('<loc>https://sdykim.me/real-analysis/en/integration/riemann/</loc>');
+    expect((xml.match(/<loc>/g) ?? []).length).toBe(pages.length * LANGS.length);
   });
 });

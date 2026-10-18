@@ -41,25 +41,46 @@ export const pathDetailUrl = (base: string, lang: Lang, pathId: string): string 
  * src/chapters/{limits,series,calculus}/; only the chapter-level wiring is
  * retired.
  *
- * 'limits' and 'calculus' are fully retired: every URL under them redirects
- * (scene URLs to the scene's new chapter via LEGACY_SCENE_CHAPTER, hubs and
- * exercises pages to the home page).
+ * Retired scene URLs serve the full scene content directly (HTTP 200, no
+ * redirect) with <link rel="canonical"> pointing at the scene's new chapter
+ * URL — Google's preferred consolidation signal on static hosting, where
+ * true 301s are unavailable.
+ *
+ * 'limits' and 'calculus' are fully retired: their hubs and exercises pages
+ * are gone (404), every scene URL serves content canonically elsewhere.
  *
  * 'series' is only partially retired: the id is reused by the new (smaller)
  * Series chapter, so its hub and exercises page stay put and only the scenes
- * that moved away redirect. A scene URL under /<lang>/series/<scene>/ stays
- * when LEGACY_SCENE_CHAPTER[scene] === 'series'.
+ * that moved away get legacy canonical pages. A scene URL under
+ * /<lang>/series/<scene>/ is canonical when LEGACY_SCENE_CHAPTER[scene] ===
+ * 'series'.
  */
 export const LEGACY_CHAPTER_IDS: readonly string[] = ['limits', 'series', 'calculus'];
 
-/** Chapter ids with no pages at all anymore: hub and exercises URLs redirect home. */
+/** Chapter ids with no pages at all anymore: hub and exercises URLs are gone (404). */
 export const FULLY_RETIRED_CHAPTER_IDS: readonly string[] = ['limits', 'calculus'];
 
 /**
- * sceneId -> owning chapterId after the 10-chapter split. Redirects retired
- * scene URLs (/<lang>/{limits,series,calculus}/<scene>/) to their new homes.
+ * sceneId -> owning chapterId after the 10-chapter split. Retired scene URLs
+ * (/<lang>/{limits,series,calculus}/<scene>/) serve the scene's full content
+ * with <link rel="canonical"> pointing at this chapter's URL.
  * Covers every scene in the catalog exactly once (asserted by tests).
  */
+const SERIES_MOVED_SCENES = new Set(['m-test', 'dini', 'gamma', 'beta-function', 'bohr-mollerup', 'improper']);
+
+/**
+ * The pre-split chapter a scene lived in, recovered from the split
+ * assignment: limits scenes are those now in numbers/sequences/continuity/
+ * topology/approximation; series scenes are those now in series/power-series
+ * plus the series-owned scenes that moved to function-series (m-test, dini)
+ * and integration (gamma, beta-function, bohr-mollerup, improper); the rest
+ * were calculus scenes.
+ */
+export function legacyChapterOf(sceneId: string, chapterId: string): 'limits' | 'series' | 'calculus' {
+  if (['numbers', 'sequences', 'continuity', 'topology', 'approximation'].includes(chapterId)) return 'limits';
+  if (chapterId === 'series' || chapterId === 'power-series' || SERIES_MOVED_SCENES.has(sceneId)) return 'series';
+  return 'calculus';
+}
 export const LEGACY_SCENE_CHAPTER: Readonly<Record<string, string>> = {
   // numbers
   'natural-numbers': 'numbers',

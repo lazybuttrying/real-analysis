@@ -17,7 +17,7 @@ import { buildConceptMap } from '../src/concept-map.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type ExerciseDifficulty, type ExerciseMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
-import { chapterUrl, exercisesUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl, FULLY_RETIRED_CHAPTER_IDS, LEGACY_CHAPTER_IDS, LEGACY_SCENE_CHAPTER } from '../src/paths.ts';
+import { chapterUrl, exercisesUrl, glossaryUrl, homeUrl, legacyChapterOf, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -203,6 +203,12 @@ interface Page {
   segments: (lang: Lang) => string[];
   /** Root-relative URL of the page (with base, no origin). */
   url: (lang: Lang) => string;
+  /**
+   * Overrides the <link rel="canonical"> target. Legacy scene pages serve
+   * the full content at their retired URL but canonicalize to the scene's
+   * new chapter URL.
+   */
+  canonicalUrl?: (lang: Lang) => string;
   title: (lang: Lang) => string;
   description: (lang: Lang) => string;
   body: (lang: Lang) => string;
@@ -294,7 +300,7 @@ const renderPathChipsHtml = (chapterId: string, sceneId: string, lang: Lang): st
   return `<section class="path-chips"><h2>${escapeHtml(localize(STRINGS.partOfPaths, lang))}</h2>\n<ul>\n${chips}\n</ul></section>`;
 };
 
-const pages: Page[] = [
+export const pages: Page[] = [
   {
     segments: (lang) => [lang],
     url: (lang) => homeUrl(BASE, lang),
@@ -376,25 +382,70 @@ for (const [index, chapter] of catalog.entries()) {
   });
 
   for (const scene of [...chapter.scenes].sort((a, b) => a.order - b.order)) {
-    pages.push({
-      segments: (lang) => [lang, chapter.id, scene.id],
-      url: (lang) => sceneUrl(BASE, lang, chapter.id, scene.id),
-      title: (lang) => `${localize(scene.title, lang)} | ${SITE_NAME}`,
-      description: (lang) => stripInlineMath(localize(scene.summary, lang)),
-      template: chapter.id,
-      formulas: (scene.tex?.length ?? 0) > 0 || hasInlineMath(scene.summary) || (scene.problems?.length ?? 0) > 0,
-      body: (lang) =>
-        [
-          `<h1>${escapeHtml(localize(scene.title, lang))}</h1>`,
-          `<p>${renderSummaryHtml(localize(scene.summary, lang))}</p>`,
-          ...(scene.tex ?? []).map((formula) => renderDisplayHtml(formula)),
-          renderPathChipsHtml(chapter.id, scene.id, lang),
-          renderProblemsHtml(scene, lang),
-          renderPagerHtml(chapter.id, scene.id, lang),
-          `<p><a href="${chapterUrl(BASE, lang, chapter.id)}">${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</a></p>`,
-        ].join('\n'),
-    });
+    pages.push(makeScenePage(chapter, chapterNumber, scene));
   }
+}
+
+/**
+ * One scene's static page. The optional override serves the same page at a
+ * retired URL: identical body and template (the scene's new chapter entry),
+ * only the path segments, the page URL, and the canonical target differ.
+ */
+function makeScenePage(
+  chapter: ChapterMeta,
+  chapterNumber: number,
+  scene: SceneMeta,
+  override?: { segments: (lang: Lang) => string[]; url: (lang: Lang) => string; canonicalUrl: (lang: Lang) => string },
+): Page {
+  return {
+    segments: override?.segments ?? ((lang) => [lang, chapter.id, scene.id]),
+    url: override?.url ?? ((lang) => sceneUrl(BASE, lang, chapter.id, scene.id)),
+    canonicalUrl: override?.canonicalUrl,
+    title: (lang) => `${localize(scene.title, lang)} | ${SITE_NAME}`,
+    description: (lang) => stripInlineMath(localize(scene.summary, lang)),
+    template: chapter.id,
+    formulas: (scene.tex?.length ?? 0) > 0 || hasInlineMath(scene.summary) || (scene.problems?.length ?? 0) > 0,
+    body: (lang) =>
+      [
+        `<h1>${escapeHtml(localize(scene.title, lang))}</h1>`,
+        `<p>${renderSummaryHtml(localize(scene.summary, lang))}</p>`,
+        ...(scene.tex ?? []).map((formula) => renderDisplayHtml(formula)),
+        renderPathChipsHtml(chapter.id, scene.id, lang),
+        renderProblemsHtml(scene, lang),
+        renderPagerHtml(chapter.id, scene.id, lang),
+        `<p><a href="${chapterUrl(BASE, lang, chapter.id)}">${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</a></p>`,
+      ].join('\n'),
+  };
+}
+
+/**
+ * Legacy canonical pages for retired scene URLs (10-chapter split). Each
+ * serves the scene's FULL content at its old URL (HTTP 200, no redirect)
+ * with <link rel="canonical"> pointing at the new chapter URL — Google's
+ * preferred consolidation signal on static hosting, where true 301s are
+ * unavailable. Not in the sitemap.
+ *
+ * Covered: every scene whose pre-split chapter differs from its current one
+ * (limits 39 + calculus 22 + moved series scenes 16 = 77 per language).
+ * Retired hubs and exercises pages get nothing (they 404).
+ */
+export function buildLegacyPages(): Page[] {
+  const legacy: Page[] = [];
+  for (const [index, chapter] of catalog.entries()) {
+    const chapterNumber = index + 1;
+    for (const scene of [...chapter.scenes].sort((a, b) => a.order - b.order)) {
+      const legacyChapterId = legacyChapterOf(scene.id, chapter.id);
+      if (legacyChapterId === chapter.id) continue; // URL unchanged: no legacy page needed
+      legacy.push(
+        makeScenePage(chapter, chapterNumber, scene, {
+          segments: (lang) => [lang, legacyChapterId, scene.id],
+          url: (lang) => sceneUrl(BASE, lang, legacyChapterId, scene.id),
+          canonicalUrl: (lang) => sceneUrl(BASE, lang, chapter.id, scene.id),
+        }),
+      );
+    }
+  }
+  return legacy;
 }
 
 pages.push({
@@ -634,14 +685,37 @@ function selfCheck(): string[] {
     if (seenEdges.has(dedup)) problems.push(`concept map has a duplicate edge '${dedup}'`);
     seenEdges.add(dedup);
   }
+  // Legacy canonical pages: one per retired scene URL (77 per language),
+  // every canonical target is a real canonical page URL, and no legacy page
+  // shadows a canonical URL.
+  const legacyPages = buildLegacyPages();
+  const canonicalUrls = new Set<string>();
+  for (const page of pages) {
+    for (const lang of LANGS) canonicalUrls.add(page.url(lang));
+  }
+  const legacyUrls = new Set<string>();
+  for (const page of legacyPages) {
+    for (const lang of LANGS) {
+      const legacyUrl = page.url(lang);
+      const target = page.canonicalUrl?.(lang) ?? '';
+      if (!canonicalUrls.has(target)) problems.push(`legacy page '${legacyUrl}' canonicalizes to unknown page '${target}'`);
+      if (canonicalUrls.has(legacyUrl)) problems.push(`legacy page '${legacyUrl}' shadows a canonical URL`);
+      if (legacyUrls.has(legacyUrl)) problems.push(`duplicate legacy page '${legacyUrl}'`);
+      legacyUrls.add(legacyUrl);
+    }
+  }
+  if (legacyPages.length !== 77) {
+    problems.push(`legacy pages = ${legacyPages.length} (expected 77: limits 39 + calculus 22 + moved series 16)`);
+  }
   return problems;
 }
 
-function renderPage(template: string, page: Page, lang: Lang, katexCss: string | undefined): string {
+export function renderPage(template: string, page: Page, lang: Lang, katexCss: string | undefined): string {
   const absolute = (l: Lang): string => `${ORIGIN}${page.url(l)}`;
+  const canonical = (l: Lang): string => `${ORIGIN}${(page.canonicalUrl ?? page.url)(l)}`;
   const headExtras = [
     `<meta name="description" content="${escapeHtml(page.description(lang))}" />`,
-    `<link rel="canonical" href="${absolute(lang)}" />`,
+    `<link rel="canonical" href="${canonical(lang)}" />`,
     ...LANGS.map((l) => `<link rel="alternate" hreflang="${l}" href="${absolute(l)}" />`),
     `<link rel="alternate" hreflang="x-default" href="${absolute('ko')}" />`,
     `<meta property="og:title" content="${escapeHtml(page.title(lang))}" />`,
@@ -660,97 +734,6 @@ function renderPage(template: string, page: Page, lang: Lang, katexCss: string |
   }
   html = html.replace('<div id="app"></div>', `<div id="app">${page.body(lang)}</div>`);
   return html;
-}
-
-/**
- * Static redirect pages for retired chapter URLs (10-chapter split). These
- * are NOT in the sitemap: they exist so old links keep working.
- *
- * - 'limits'/'calculus' are fully retired: hub -> home, exercises -> home,
- *   every scene -> its new chapter.
- * - 'series' is partially retired (the id is reused by the new Series
- *   chapter): only the scenes that moved away get redirect pages. The hub,
- *   the exercises page, and the scenes that stayed keep their URLs, so they
- *   must NOT redirect (a self-redirect would loop).
- */
-interface Redirect {
-  /** Path segments below dist/, e.g. ['ko', 'limits', 'epsilon-n'] */
-  segments: (lang: Lang) => string[];
-  /** Root-relative URL of the redirect target (with base). */
-  target: (lang: Lang) => string;
-  title: (lang: Lang) => string;
-}
-
-const redirects: Redirect[] = [];
-{
-  const newChapterOf = new Map<string, string>();
-  const sceneTitleOf = new Map<string, { ko: string; en: string }>();
-  for (const chapter of catalog) {
-    for (const scene of chapter.scenes) {
-      newChapterOf.set(scene.id, chapter.id);
-      sceneTitleOf.set(scene.id, scene.title);
-    }
-  }
-  for (const legacyId of LEGACY_CHAPTER_IDS) {
-    if ((FULLY_RETIRED_CHAPTER_IDS as readonly string[]).includes(legacyId)) {
-      redirects.push({
-        segments: (lang) => [lang, legacyId],
-        target: (lang) => homeUrl(BASE, lang),
-        title: () => SITE_NAME,
-      });
-      redirects.push({
-        segments: (lang) => [lang, legacyId, 'exercises'],
-        target: (lang) => homeUrl(BASE, lang),
-        title: () => SITE_NAME,
-      });
-    }
-  }
-  // Each scene's pre-split chapter, recovered from the split assignment:
-  // limits scenes are those now in numbers/sequences/continuity/topology/
-  // approximation; series scenes those now in series/power-series plus the
-  // series-owned scenes that moved to function-series (m-test, dini) and
-  // integration (gamma, beta-function, bohr-mollerup, improper); the rest
-  // were calculus scenes.
-  const SERIES_MOVED = new Set(['m-test', 'dini', 'gamma', 'beta-function', 'bohr-mollerup', 'improper']);
-  const preSplitHome = (sceneId: string): 'limits' | 'series' | 'calculus' => {
-    const now = newChapterOf.get(sceneId);
-    if (now === 'numbers' || now === 'sequences' || now === 'continuity' || now === 'topology' || now === 'approximation') {
-      return 'limits';
-    }
-    if (now === 'series' || now === 'power-series' || SERIES_MOVED.has(sceneId)) return 'series';
-    return 'calculus';
-  };
-  for (const sceneId of Object.keys(LEGACY_SCENE_CHAPTER)) {
-    const legacyId = preSplitHome(sceneId);
-    const newChapterId = LEGACY_SCENE_CHAPTER[sceneId];
-    if (newChapterId === undefined) continue;
-    if (legacyId === 'series' && newChapterId === 'series') continue; // stayed: no redirect
-    const title = sceneTitleOf.get(sceneId);
-    redirects.push({
-      segments: (lang) => [lang, legacyId, sceneId],
-      target: (lang) => sceneUrl(BASE, lang, newChapterId, sceneId),
-      title: (lang) => `${title ? localize(title, lang) : sceneId} | ${SITE_NAME}`,
-    });
-  }
-}
-
-/** Minimal redirect page: meta refresh + canonical + JS replace. */
-function redirectHtml(target: string, title: string): string {
-  const absolute = `${ORIGIN}${target}`;
-  return `<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>${escapeHtml(title)}</title>
-    <link rel="canonical" href="${escapeHtml(absolute)}" />
-    <meta http-equiv="refresh" content="0; url=${escapeHtml(target)}" />
-    <script>location.replace(${JSON.stringify(target)} + location.search);</script>
-  </head>
-  <body>
-    <p>Moved to <a href="${escapeHtml(target)}">${escapeHtml(absolute)}</a></p>
-  </body>
-</html>
-`;
 }
 
 function rootRedirectHtml(): string {
@@ -815,7 +798,7 @@ function notFoundHtml(): string {
 `;
 }
 
-function sitemapXml(): string {
+export function sitemapXml(): string {
   const urls = pages
     .map((page) => {
       const alternates = [
@@ -860,14 +843,16 @@ function main(): void {
     }
   }
 
-  // Static redirect pages for retired chapter URLs (not in the sitemap).
-  let redirectCount = 0;
-  for (const redirect of redirects) {
+  // Legacy canonical pages for retired scene URLs (not in the sitemap):
+  // full content served at the old URL, canonical pointing at the new one.
+  const legacyPages = buildLegacyPages();
+  for (const page of legacyPages) {
+    const template = templates.get(page.template);
+    if (!template) throw new Error(`[prerender] no template for ${page.template}`);
     for (const lang of LANGS) {
-      const dir = join(DIST, ...redirect.segments(lang));
+      const dir = join(DIST, ...page.segments(lang));
       mkdirSync(dir, { recursive: true });
-      writeFileSync(join(dir, 'index.html'), redirectHtml(redirect.target(lang), redirect.title(lang)));
-      redirectCount++;
+      writeFileSync(join(dir, 'index.html'), renderPage(template, page, lang, katexCss));
     }
   }
 
@@ -883,8 +868,12 @@ function main(): void {
   }
 
   console.log(
-    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + ${catalog.length} exercises page(s) + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), ${redirectCount} redirect pages (not in sitemap), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
+    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + ${catalog.length} exercises page(s) + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), ${legacyPages.length} legacy canonical pages (not in sitemap), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
   );
 }
 
-main();
+// Guarded so vitest can import the builders (renderPage, buildLegacyPages,
+// sitemapXml) without running the full prerender.
+if (process.argv[1] !== undefined && /prerender\.ts$/.test(process.argv[1])) {
+  main();
+}

@@ -98,7 +98,7 @@ real-analysis/
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
 - [x] 의존 방향 검사 (`scripts/check-deps.ts`: `models → view` 금지, `meta.ts` import 제한, three는 threekit만)
-- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 챕터 연습문제 페이지(챕터당 언어별 1개, 총 20개), 용어 사전 페이지, 학습 경로 목록·상세 페이지, 홈 하단 개념 지도 섹션(정적 폴백: 챕터별 씬 목록+선수 관계 링크 포함), 언어별 `search-index.<lang>.json`, `sitemap.xml`(리다이렉트 제외 244 URL), 404.html, robots.txt, title 중복·`summary` 비어 있음·용어 사전/학습 경로/개념 지도/연습문제 무결성 검사, 퇴역 챕터 리다이렉트 페이지 162개(언어별 81, sitemap 제외). 총 244페이지(언어별: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 7)
+- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 챕터 연습문제 페이지(챕터당 언어별 1개, 총 20개), 용어 사전 페이지, 학습 경로 목록·상세 페이지, 홈 하단 개념 지도 섹션(정적 폴백: 챕터별 씬 목록+선수 관계 링크 포함), 언어별 `search-index.<lang>.json`, `sitemap.xml`(244 URL, canonical만), 404.html, robots.txt, title 중복·`summary` 비어 있음·용어 사전/학습 경로/개념 지도/연습문제 무결성 검사, 퇴역 씬 URL용 legacy canonical 페이지 154개(언어별 77, sitemap 제외). 총 244페이지(언어별: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 7)
 - [x] CI 검사와 챕터별 번들 예산(`size-limit`), `deploy.yml`에 test → check-deps → build → 프리렌더 검증 → size-limit 반영. PR은 검증만, 배포는 main push에서만
 
 ## 챕터 10분할 (2026-10-18)
@@ -128,18 +128,20 @@ real-analysis/
 - 개념 지도: 10색 팔레트(`--chapter-<id>`, light/dark), 10개 entry scene 강조. prerequisites는 씬 id → 실제 소속 챕터로 해소한다(분할 전에는 같은 챕터로 가정했음).
 - 용어 사전 143개·학습 경로 60개 스텝의 chapterId를 새 챕터로 remap했다. 연습문제 36개는 주제 적합도로 재배치(numbers 0·sequences 5·continuity 2·topology 4·approximation 1·series 7·power-series 3·function-series 3·differentiation 7·integration 4, 난이도는 easy→hard 그룹 유지).
 
-### Redirect
+### Legacy URLs: canonical pages, zero redirects
 
-- 구 scene URL `/<lang>/{limits,series,calculus}/<scene>/` → `/<lang>/<new-chapter>/<scene>/` (`LEGACY_SCENE_CHAPTER` 맵, 93개 전부 1회씩).
-- 구 hub `/<lang>/limits/`·`/<lang>/calculus/`, 구 exercises `/<lang>/limits/exercises/`·`/<lang>/calculus/exercises/` → `/<lang>/` (home).
-- `series`는 id를 재사용하므로 hub/exercises/머무른 16씬은 리다이렉트하지 않는다(자기 자신으로의 리다이렉트 방지). 이동한 16씬만 리다이렉트.
-- 클라이언트: `src/shell/app.ts`의 startChapter에서 `location.replace` (history에 남지 않음). 정적: prerender가 리다이렉트 페이지 162개(언어별 81: limits 41 + calculus 24 + series 이동씬 16)를 meta refresh + canonical + JS replace로 생성 — sitemap에는 포함하지 않는다.
+정적 호스팅에서는 301을 쓸 수 없어서, 구 scene URL은 리다이렉트 없이 본문을 그대로 서빙하고 `<link rel="canonical">`로 새 URL을 가리킨다 — Google이 선호하는 duplicate consolidation 방식. 리다이렉트가 없으니 구 링크 접속이 곧바로 렌더링된다.
+
+- 구 scene URL `/<lang>/{limits,series,calculus}/<scene>/`: 전체 씬 HTML을 HTTP 200으로 직접 서빙. body는 canonical 페이지와 바이트 동일, `<link rel="canonical">`만 새 URL(`/<lang>/<new-chapter>/<scene>/`)을 가리킨다. prerender가 154개 생성(언어별 77: limits 39 + calculus 22 + 이동한 series 씬 16) — sitemap 제외.
+- 구 hub `/<lang>/limits/`·`/<lang>/calculus/`, 구 exercises `/<lang>/limits/exercises/`·`/<lang>/calculus/exercises/`: 아무것도 생성하지 않음 (표준 404 페이지).
+- `series`는 id를 재사용하므로 hub/exercises/머무른 16씬은 legacy 페이지가 없다. 이동한 16씬만 legacy 페이지를 가진다.
+- 클라이언트: `src/shell/app.ts`의 startChapter는 legacy URL에서도 리다이렉트 없이 새 챕터 entry로 씬을 그 자리에서 렌더링한다. `<link rel="canonical">`은 정적 HTML에 박혀 그대로 유지된다(SPA는 canonical을 건드리지 않음).
 - Sitemap: 새 canonical URL만 244개.
 
 ### 새 카운트
 
-- 페이지: 244 (언어별 122: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 1 + 경로 상세 6) + 리다이렉트 162 (sitemap 제외)
-- 테스트: 1153개 (신설 `tests/chapters.test.ts`: 카탈로그 구조·씬 유실/중복·리다이렉트 맵 커버리지)
+- 페이지: 244 (언어별 122: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 1 + 경로 상세 6) + legacy canonical 페이지 154 (sitemap 제외, 리다이렉트 0개)
+- 테스트: 1157개 (`tests/chapters.test.ts`: 카탈로그 구조·씬 유실/중복·legacy canonical 맵 커버리지·canonical HTML 단언)
 
 남음 (착수 순서)
 

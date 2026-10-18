@@ -2,7 +2,7 @@ import '../style.css';
 import { catalog } from '../catalog';
 import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type ExerciseMeta, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { learningPaths } from '../learning-paths';
-import { chapterUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang, FULLY_RETIRED_CHAPTER_IDS, LEGACY_CHAPTER_IDS, LEGACY_SCENE_CHAPTER } from '../paths';
+import { chapterUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
@@ -35,32 +35,11 @@ export function startChapter(chapterId: string, loaders: Loaders, exercisesLoade
   rememberLang(lang);
   document.documentElement.lang = lang;
 
-  // Retired chapters (10-chapter split): redirect old URLs to their new homes.
-  // Uses location.replace so the retired URL never enters the history.
-  // 'limits'/'calculus' are fully retired; 'series' keeps its hub/exercises
-  // page and only redirects the scenes that moved to another chapter.
-  if ((LEGACY_CHAPTER_IDS as readonly string[]).includes(chapterId)) {
-    const sceneId = parsed.sceneId;
-    if ((FULLY_RETIRED_CHAPTER_IDS as readonly string[]).includes(chapterId)) {
-      if (sceneId === undefined || sceneId === 'exercises') {
-        location.replace(homeUrl(BASE, lang));
-      } else {
-        const target = LEGACY_SCENE_CHAPTER[sceneId];
-        location.replace(
-          target !== undefined ? `${sceneUrl(BASE, lang, target, sceneId)}${location.search}` : homeUrl(BASE, lang),
-        );
-      }
-      return;
-    }
-    if (sceneId !== undefined && sceneId !== 'exercises') {
-      const target = LEGACY_SCENE_CHAPTER[sceneId];
-      if (target !== undefined && target !== chapterId) {
-        location.replace(`${sceneUrl(BASE, lang, target, sceneId)}${location.search}`);
-        return;
-      }
-    }
-  }
-
+  // Retired chapter URLs (10-chapter split) serve the scene's full content
+  // directly: the prerendered page boots this chapter's entry and the router
+  // below renders the scene in place. The <link rel="canonical"> in the
+  // static HTML points at the scene's new chapter URL, so search engines
+  // consolidate the duplicate without any redirect.
   const chapter = catalog.find((candidate) => candidate.id === chapterId);
   if (!chapter || !root) throw new Error(`${tr(lang, 'chapterMissing')}: ${chapterId}`);
   mountChapter(chapter, loaders, exercisesLoader, root, lang);
