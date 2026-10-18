@@ -571,6 +571,46 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'limits',
     sceneId: 'cauchy-schwarz',
   },
+  {
+    id: 'meagre-set',
+    term: { ko: '희박 집합 (제1 범주)', en: 'meagre set (first category)' },
+    definition: {
+      ko: String.raw`nowhere dense인 집합들의 가산합집합 — Baire Category Theorem에 따르면 완비 거리공간은 자기 자신 안에서 희박할 수 없습니다.`,
+      en: String.raw`A countable union of nowhere dense sets — by the Baire Category Theorem, a complete metric space cannot be meagre in itself.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'baire-category',
+  },
+  {
+    id: 'baire-space',
+    term: { ko: '베어 공간', en: 'Baire space' },
+    definition: {
+      ko: String.raw`가산개의 조밀한 열린집합의 교집합이 항상 조밀한 위상공간 — 완비 거리공간과 국소 컴팩트 Hausdorff 공간이 대표적 예입니다.`,
+      en: String.raw`A topological space in which every countable intersection of dense open sets is dense — complete metric spaces and locally compact Hausdorff spaces are the key examples.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'baire-category',
+  },
+  {
+    id: 'separating-points',
+    term: { ko: '점 분리', en: 'separating points' },
+    definition: {
+      ko: String.raw`서로 다른 두 점 \(x \ne y\)에 대해 값이 다른 함수 \(u\) (\(u(x) \ne u(y)\))가 대수 \(\mathcal{A}\) 안에 존재하는 성질. Stone–Weierstrass 정리의 핵심 가정 중 하나.`,
+      en: String.raw`The property that for any two distinct points \(x \ne y\) there is a function \(u\) in the algebra \(\mathcal{A}\) with \(u(x) \ne u(y)\). One of the key hypotheses of the Stone–Weierstrass theorem.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'stone-weierstrass',
+  },
+  {
+    id: 'subalgebra',
+    term: { ko: '부분대수', en: 'subalgebra' },
+    definition: {
+      ko: String.raw`선형결합과 곱셈에 닫혀 있는 함수의 집합. 삼각다항식은 곱셈 공식(예: \(\cos A \cos B = \tfrac12(\cos(A-B)+\cos(A+B))\))에 의해 부분대수이며, Stone–Weierstrass 정리로 \(C(S^1)\)에서 균등 조밀하다.`,
+      en: String.raw`A set of functions closed under linear combinations and products. Trigonometric polynomials form a subalgebra via product-to-sum identities (e.g. \(\cos A \cos B = \tfrac12(\cos(A-B)+\cos(A+B))\)), and by the Stone–Weierstrass theorem it is uniformly dense in \(C(S^1)\).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'stone-weierstrass',
+  },
   // ---------------------------------------------------------------- series
   {
     id: 'abel-theorem',
@@ -961,7 +1001,28 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'series',
     sceneId: 'kummer-test',
-  },  // -------------------------------------------------------------- calculus
+  },
+  {
+    id: 'log-convex',
+    term: { ko: '로그볼록', en: 'log-convex' },
+    definition: {
+      ko: String.raw`\(\ln f\)가 볼록함수인 성질. \(f(1) = 1\), \(f(x+1) = x\,f(x)\)와 함께 \(\Gamma\)를 유일하게 특정한다 (Bohr–Mollerup 정리).`,
+      en: String.raw`The property that \(\ln f\) is convex. Together with \(f(1) = 1\) and \(f(x+1) = x\,f(x)\), it characterizes \(\Gamma\) uniquely (Bohr–Mollerup theorem).`,
+    },
+    chapterId: 'series',
+    sceneId: 'bohr-mollerup',
+  },
+  {
+    id: 'riemann-rearrangement-theorem',
+    term: { ko: '리만 재배열 정리', en: "Riemann's rearrangement theorem" },
+    definition: {
+      ko: String.raw`조건수렴하는 실수 급수는 재배열로 임의의 실수(또는 \(\pm\infty\))에 수렴시킬 수 있다 — 양항 부분과 음항 부분이 각각 발산하기 때문이다.`,
+      en: String.raw`A conditionally convergent real series can be rearranged to converge to any real number (or \(\pm\infty\)) — because its positive and negative parts each diverge.`,
+    },
+    chapterId: 'series',
+    sceneId: 'riemann-rearrangement',
+  },
+  // -------------------------------------------------------------- calculus
   {
     id: 'darboux-theorem',
     term: { ko: '다르부 정리', en: "Darboux's theorem" },
@@ -1221,5 +1282,15 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'calculus',
     sceneId: 'weierstrass-function',
+  },
+  {
+    id: 'absolute-continuity',
+    term: { ko: '절대연속성', en: 'absolute continuity' },
+    definition: {
+      ko: String.raw`\(\varepsilon > 0\)마다 \(\sum (b_i - a_i) < \delta\)이면 \(\sum |F(b_i) - F(a_i)| < \varepsilon\)가 되는 \(\delta > 0\)이 존재하는 성질 — 균등연속의 "절대적" 강화. 정확히 \(L^1\) 함수의 부정적분들이다.`,
+      en: String.raw`The property that for every \(\varepsilon > 0\) there is \(\delta > 0\) with \(\sum |F(b_i) - F(a_i)| < \varepsilon\) whenever \(\sum (b_i - a_i) < \delta\) — the "absolute" strengthening of uniform continuity. Exactly the indefinite integrals of \(L^1\) functions.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'absolute-continuity',
   },
 ];
