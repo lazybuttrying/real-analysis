@@ -125,6 +125,41 @@ export interface ProblemMeta {
   proof: readonly ProofStep[];
 }
 
+/** Difficulty of a chapter exercise: 1 = easy, 2 = medium, 3 = hard. */
+export type ExerciseDifficulty = 1 | 2 | 3;
+
+/**
+ * An end-of-chapter exercise. Chapter-level (not attached to a scene), so
+ * statements are fully self-contained and must be original compositions, not
+ * restatements of scene examples. `topics` lists scene ids in the same chapter
+ * for cross-linking. `viz` optionally reuses one of the chapter's own scene
+ * models with a fixed preset for a compact, non-interactive mini
+ * visualization (same pattern as ProblemMeta.preset). The solution is
+ * bilingual data; renderers show it behind a toggle.
+ */
+export interface ExerciseMeta {
+  /** Unique within the chapter; used for element ids and URL anchors. */
+  id: string;
+  difficulty: ExerciseDifficulty;
+  /** Scene ids in the same chapter that this exercise draws on. */
+  topics: readonly string[];
+  /** Problem statement; prose may embed \(...\) inline TeX. */
+  statement: LocalizedText;
+  /** Display formulas shown under the statement. */
+  display?: readonly string[];
+  /** The rigorous solution, shown behind a toggle. */
+  solution: readonly ProofStep[];
+  /** Optional mini visualization reusing a scene of the same chapter. */
+  viz?: {
+    /** Scene id within the same chapter whose model/renderer is reused. */
+    sceneId: string;
+    /** Fixed control values for the mini visualization. Must be valid for the scene's controls. */
+    preset: ControlState;
+    /** One-line caption describing the preset. Prose may embed \(...\) inline TeX. */
+    presetCaption: LocalizedText;
+  };
+}
+
 export interface SceneMeta {
   /** URL slug within the chapter. The page path is /<lang>/<chapter id>/<scene id>/ */
   id: string;
