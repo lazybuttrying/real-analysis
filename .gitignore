@@ -4,5 +4,14 @@ dist
 .DS_Store
 
 # >>> generated chapter entries (scripts/gen-entries.ts) >>>
+/numbers/
+/sequences/
+/continuity/
+/topology/
+/approximation/
 /series/
+/power-series/
+/function-series/
+/differentiation/
+/integration/
 # <<< generated chapter entries <<<

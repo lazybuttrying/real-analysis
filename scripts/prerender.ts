@@ -3,14 +3,21 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
-import { exercises as limitsExercises } from '../src/chapters/limits/exercises.ts';
+import { exercises as numbersExercises } from '../src/chapters/numbers/exercises.ts';
+import { exercises as sequencesExercises } from '../src/chapters/sequences/exercises.ts';
+import { exercises as continuityExercises } from '../src/chapters/continuity/exercises.ts';
+import { exercises as topologyExercises } from '../src/chapters/topology/exercises.ts';
+import { exercises as approximationExercises } from '../src/chapters/approximation/exercises.ts';
 import { exercises as seriesExercises } from '../src/chapters/series/exercises.ts';
-import { exercises as calculusExercises } from '../src/chapters/calculus/exercises.ts';
+import { exercises as powerSeriesExercises } from '../src/chapters/power-series/exercises.ts';
+import { exercises as functionSeriesExercises } from '../src/chapters/function-series/exercises.ts';
+import { exercises as differentiationExercises } from '../src/chapters/differentiation/exercises.ts';
+import { exercises as integrationExercises } from '../src/chapters/integration/exercises.ts';
 import { buildConceptMap } from '../src/concept-map.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type ExerciseDifficulty, type ExerciseMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
-import { chapterUrl, exercisesUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
+import { chapterUrl, exercisesUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl, FULLY_RETIRED_CHAPTER_IDS, LEGACY_CHAPTER_IDS, LEGACY_SCENE_CHAPTER } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -95,9 +102,16 @@ ${(problem.display ?? []).map(renderDisplayHtml).join('\n')}
  * src/shell/exercises-page.ts.
  */
 const exercisesByChapter = new Map<string, readonly ExerciseMeta[]>([
-  ['limits', limitsExercises],
+  ['numbers', numbersExercises],
+  ['sequences', sequencesExercises],
+  ['continuity', continuityExercises],
+  ['topology', topologyExercises],
+  ['approximation', approximationExercises],
   ['series', seriesExercises],
-  ['calculus', calculusExercises],
+  ['power-series', powerSeriesExercises],
+  ['function-series', functionSeriesExercises],
+  ['differentiation', differentiationExercises],
+  ['integration', integrationExercises],
 ]);
 
 const difficultyHeading = (difficulty: ExerciseDifficulty, lang: Lang): string =>
@@ -482,10 +496,12 @@ function selfCheck(): string[] {
       }
     }
   }
-  // Chapter exercises: exactly 12 per chapter, unique kebab-case ids, the
-  // 4/5/3 difficulty split in file order (easy first), non-empty bilingual
+  // Chapter exercises: unique kebab-case ids across all chapters, difficulties
+  // grouped easy -> hard in file order, non-empty bilingual
   // statement/solution, topics and viz presets referencing real scenes of the
   // same chapter, and well-formed math delimiters (\(...\) only, never $...$).
+  // Exercise counts per chapter are uneven by design (the 10-chapter split
+  // redistributed the 36 exercises by topic fit).
   const KEBAB_CASE = /^[a-z][a-z0-9-]*$/;
   const checkExerciseText = (tag: string, field: string, text: { ko: string; en: string }): void => {
     for (const lang of LANGS) {
@@ -500,21 +516,23 @@ function selfCheck(): string[] {
   const checkNoDollar = (tag: string, field: string, formula: string): void => {
     if (formula.includes('$')) problems.push(`${tag} uses a $ delimiter in ${field}`);
   };
+  const seenExerciseIds = new Set<string>();
+  let totalExercises = 0;
   for (const chapter of catalog) {
     const exercises = exercisesByChapter.get(chapter.id) ?? [];
-    if (exercises.length !== 12) problems.push(`chapter '${chapter.id}' has ${exercises.length} exercises (expected 12)`);
+    totalExercises += exercises.length;
     const sceneIds = new Set(chapter.scenes.map((scene) => scene.id));
     const controlsOf = new Map(chapter.scenes.map((scene) => [scene.id, new Set(scene.controls.map((control) => control.key))]));
-    const seenExerciseIds = new Set<string>();
+    let lastDifficulty: ExerciseDifficulty = 1;
     exercises.forEach((exercise, index) => {
       const tag = `exercise '${chapter.id}/${exercise.id}'`;
-      if (seenExerciseIds.has(exercise.id)) problems.push(`chapter '${chapter.id}' has a duplicate exercise id '${exercise.id}'`);
+      if (seenExerciseIds.has(exercise.id)) problems.push(`duplicate exercise id '${exercise.id}' across chapters`);
       seenExerciseIds.add(exercise.id);
       if (!KEBAB_CASE.test(exercise.id)) problems.push(`${tag} id is not kebab-case`);
-      const expectedDifficulty = index < 4 ? 1 : index < 9 ? 2 : 3;
-      if (exercise.difficulty !== expectedDifficulty) {
-        problems.push(`${tag} has difficulty ${exercise.difficulty} at position ${index + 1} (expected ${expectedDifficulty}: the 4/5/3 split in file order)`);
+      if (exercise.difficulty < lastDifficulty) {
+        problems.push(`${tag} has difficulty ${exercise.difficulty} at position ${index + 1} after difficulty ${lastDifficulty} (exercises must be grouped easy -> hard)`);
       }
+      lastDifficulty = exercise.difficulty;
       checkExerciseText(tag, 'statement', exercise.statement);
       for (const formula of exercise.display ?? []) checkNoDollar(tag, 'display', formula);
       if (exercise.solution.length === 0) problems.push(`${tag} has an empty solution`);
@@ -539,6 +557,7 @@ function selfCheck(): string[] {
       }
     });
   }
+  if (totalExercises !== 36) problems.push(`total exercises = ${totalExercises} (expected 36)`);
   for (const lang of LANGS) {
     const seen = new Map<string, number>();
     for (const page of pages) {
@@ -641,6 +660,97 @@ function renderPage(template: string, page: Page, lang: Lang, katexCss: string |
   }
   html = html.replace('<div id="app"></div>', `<div id="app">${page.body(lang)}</div>`);
   return html;
+}
+
+/**
+ * Static redirect pages for retired chapter URLs (10-chapter split). These
+ * are NOT in the sitemap: they exist so old links keep working.
+ *
+ * - 'limits'/'calculus' are fully retired: hub -> home, exercises -> home,
+ *   every scene -> its new chapter.
+ * - 'series' is partially retired (the id is reused by the new Series
+ *   chapter): only the scenes that moved away get redirect pages. The hub,
+ *   the exercises page, and the scenes that stayed keep their URLs, so they
+ *   must NOT redirect (a self-redirect would loop).
+ */
+interface Redirect {
+  /** Path segments below dist/, e.g. ['ko', 'limits', 'epsilon-n'] */
+  segments: (lang: Lang) => string[];
+  /** Root-relative URL of the redirect target (with base). */
+  target: (lang: Lang) => string;
+  title: (lang: Lang) => string;
+}
+
+const redirects: Redirect[] = [];
+{
+  const newChapterOf = new Map<string, string>();
+  const sceneTitleOf = new Map<string, { ko: string; en: string }>();
+  for (const chapter of catalog) {
+    for (const scene of chapter.scenes) {
+      newChapterOf.set(scene.id, chapter.id);
+      sceneTitleOf.set(scene.id, scene.title);
+    }
+  }
+  for (const legacyId of LEGACY_CHAPTER_IDS) {
+    if ((FULLY_RETIRED_CHAPTER_IDS as readonly string[]).includes(legacyId)) {
+      redirects.push({
+        segments: (lang) => [lang, legacyId],
+        target: (lang) => homeUrl(BASE, lang),
+        title: () => SITE_NAME,
+      });
+      redirects.push({
+        segments: (lang) => [lang, legacyId, 'exercises'],
+        target: (lang) => homeUrl(BASE, lang),
+        title: () => SITE_NAME,
+      });
+    }
+  }
+  // Each scene's pre-split chapter, recovered from the split assignment:
+  // limits scenes are those now in numbers/sequences/continuity/topology/
+  // approximation; series scenes those now in series/power-series plus the
+  // series-owned scenes that moved to function-series (m-test, dini) and
+  // integration (gamma, beta-function, bohr-mollerup, improper); the rest
+  // were calculus scenes.
+  const SERIES_MOVED = new Set(['m-test', 'dini', 'gamma', 'beta-function', 'bohr-mollerup', 'improper']);
+  const preSplitHome = (sceneId: string): 'limits' | 'series' | 'calculus' => {
+    const now = newChapterOf.get(sceneId);
+    if (now === 'numbers' || now === 'sequences' || now === 'continuity' || now === 'topology' || now === 'approximation') {
+      return 'limits';
+    }
+    if (now === 'series' || now === 'power-series' || SERIES_MOVED.has(sceneId)) return 'series';
+    return 'calculus';
+  };
+  for (const sceneId of Object.keys(LEGACY_SCENE_CHAPTER)) {
+    const legacyId = preSplitHome(sceneId);
+    const newChapterId = LEGACY_SCENE_CHAPTER[sceneId];
+    if (newChapterId === undefined) continue;
+    if (legacyId === 'series' && newChapterId === 'series') continue; // stayed: no redirect
+    const title = sceneTitleOf.get(sceneId);
+    redirects.push({
+      segments: (lang) => [lang, legacyId, sceneId],
+      target: (lang) => sceneUrl(BASE, lang, newChapterId, sceneId),
+      title: (lang) => `${title ? localize(title, lang) : sceneId} | ${SITE_NAME}`,
+    });
+  }
+}
+
+/** Minimal redirect page: meta refresh + canonical + JS replace. */
+function redirectHtml(target: string, title: string): string {
+  const absolute = `${ORIGIN}${target}`;
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>${escapeHtml(title)}</title>
+    <link rel="canonical" href="${escapeHtml(absolute)}" />
+    <meta http-equiv="refresh" content="0; url=${escapeHtml(target)}" />
+    <script>location.replace(${JSON.stringify(target)} + location.search);</script>
+  </head>
+  <body>
+    <p>Moved to <a href="${escapeHtml(target)}">${escapeHtml(absolute)}</a></p>
+  </body>
+</html>
+`;
 }
 
 function rootRedirectHtml(): string {
@@ -750,6 +860,17 @@ function main(): void {
     }
   }
 
+  // Static redirect pages for retired chapter URLs (not in the sitemap).
+  let redirectCount = 0;
+  for (const redirect of redirects) {
+    for (const lang of LANGS) {
+      const dir = join(DIST, ...redirect.segments(lang));
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(join(dir, 'index.html'), redirectHtml(redirect.target(lang), redirect.title(lang)));
+      redirectCount++;
+    }
+  }
+
   writeFileSync(join(DIST, 'index.html'), rootRedirectHtml());
   writeFileSync(join(DIST, '404.html'), notFoundHtml());
   writeFileSync(join(DIST, 'sitemap.xml'), sitemapXml());
@@ -762,7 +883,7 @@ function main(): void {
   }
 
   console.log(
-    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + ${catalog.length} exercises page(s) + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
+    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + ${catalog.length} exercises page(s) + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), ${redirectCount} redirect pages (not in sitemap), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
   );
 }
 
