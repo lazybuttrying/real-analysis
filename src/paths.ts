@@ -63,14 +63,35 @@ export const FULLY_RETIRED_CHAPTER_IDS: readonly string[] = ['limits', 'calculus
 const SERIES_MOVED_SCENES = new Set(['m-test', 'dini', 'gamma', 'beta-function', 'bohr-mollerup', 'improper']);
 
 /**
+ * Scenes added after the 10-chapter split (2026-10-19). They never had
+ * pre-split URLs, so they get no legacy canonical page: the "legacy
+ * chapter" is the scene's own chapter, making buildLegacyPages skip them.
+ */
+const POST_SPLIT_SCENES = new Set([
+  'nth-root',
+  'axiom-of-choice',
+  'zorn-lemma',
+  'cantor-theorem',
+  'integral-test',
+  'double-series',
+  'inverse-function-theorem',
+  'integration-by-parts',
+  'change-of-variables',
+]);
+
+/**
  * The pre-split chapter a scene lived in, recovered from the split
  * assignment: limits scenes are those now in numbers/sequences/continuity/
  * topology/approximation; series scenes are those now in series/power-series
  * plus the series-owned scenes that moved to function-series (m-test, dini)
  * and integration (gamma, beta-function, bohr-mollerup, improper); the rest
  * were calculus scenes.
+ *
+ * Post-split scenes (see POST_SPLIT_SCENES) return their own chapter id, so
+ * no legacy page is emitted for them.
  */
-export function legacyChapterOf(sceneId: string, chapterId: string): 'limits' | 'series' | 'calculus' {
+export function legacyChapterOf(sceneId: string, chapterId: string): string {
+  if (POST_SPLIT_SCENES.has(sceneId)) return chapterId;
   if (['numbers', 'sequences', 'continuity', 'topology', 'approximation'].includes(chapterId)) return 'limits';
   if (chapterId === 'series' || chapterId === 'power-series' || SERIES_MOVED_SCENES.has(sceneId)) return 'series';
   return 'calculus';

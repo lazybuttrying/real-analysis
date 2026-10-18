@@ -5,6 +5,8 @@ import { boundedVariationProblems } from '../calculus/problems/bounded-variation
 import { jordanDecompositionProblems } from '../calculus/problems/jordan-decomposition';
 import { problems as betaFunctionProblems } from '../series/problems/beta-function';
 import { problems as ftcProblems } from '../calculus/problems/ftc';
+import { changeOfVariablesProblems } from '../calculus/problems/change-of-variables';
+import { integrationByPartsProblems } from '../calculus/problems/integration-by-parts';
 import { problems as gammaProblems } from '../series/problems/gamma';
 import { problems as improperProblems } from '../series/problems/improper';
 import { problems as lebesgueProblems } from '../calculus/problems/lebesgue';
@@ -162,9 +164,59 @@ problems: volterraFunctionProblems,
 problems: ftcProblems,
     },
     {
+      id: 'integration-by-parts',
+      title: { ko: '부분적분', en: 'Integration by Parts' },
+      order: 8,
+      summary: {
+        ko: String.raw`곱의 미분법칙을 적분하면 \(\int u\,dv = [uv] - \int v\,du\) — 면적을 두 조각으로 나누어 각각 계산합니다. \(b\)를 움직이면 양변이 소수점 아래로 일치합니다.`,
+        en: String.raw`Integrate the product rule and get \(\int u\,dv = [uv] - \int v\,du\) — split the area into two pieces and compute each. Move \(b\): both sides agree to the last decimal.`,
+      },
+      tex: [
+        String.raw`\int_a^b u\,dv = [uv]_a^b - \int_a^b v\,du`,
+        String.raw`\int x e^x\,dx = (x-1)e^x + C`,
+      ],
+      prerequisites: ['ftc'],
+      controls: [
+        {
+          kind: 'select',
+          key: 'pair',
+          label: { ko: '함수 쌍', en: 'Function pair' },
+          options: ['x·e^x', 'x·sin x'],
+          init: 'x·e^x',
+        },
+        { kind: 'slider', key: 'b', label: { ko: '상한 b', en: 'Upper limit b' }, min: 0.5, max: 3, step: 0.1, init: 2 },
+      ],
+      problems: integrationByPartsProblems,
+    },
+    {
+      id: 'change-of-variables',
+      title: { ko: '치환적분', en: 'Change of Variables' },
+      order: 9,
+      summary: {
+        ko: String.raw`\(u = \varphi(x)\)로 축을 늘이고 줄이면 적분 구간이 따라 바뀝니다 — \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\). 두 치환이 같은 적분으로 모이는 것을 보세요.`,
+        en: String.raw`Stretch and squeeze the axis with \(u = \varphi(x)\) and the limits follow — \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\). Watch two substitutions collapse onto the same integral.`,
+      },
+      tex: [
+        String.raw`\int_a^b f(\varphi(x))\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(u)\,du`,
+        String.raw`\int_0^1 2x e^{x^2}\,dx = \int_0^1 e^u\,du = e - 1`,
+      ],
+      prerequisites: ['integration-by-parts'],
+      controls: [
+        {
+          kind: 'select',
+          key: 'sub',
+          label: { ko: '치환', en: 'Substitution' },
+          options: ['u=x^2', 'u=sin x'],
+          init: 'u=x^2',
+        },
+        { kind: 'slider', key: 'N', label: { ko: '구간 수', en: 'Panels' }, min: 4, max: 200, step: 4, init: 50 },
+      ],
+      problems: changeOfVariablesProblems,
+    },
+    {
       id: 'bounded-variation',
       title: { ko: '유계변동 함수', en: 'Functions of Bounded Variation' },
-      order: 8,
+      order: 10,
       summary: {
         ko: String.raw`분할을 잘게 쪼갤 때 \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\)이 유한한 상한 안에 머무르면 유계변동 — 단조함수는 전부 해당하고, \(x\sin(1/x)\)처럼 0 근처에서 끝없이 출렁이면 탈락합니다.`,
         en: String.raw`A function has bounded variation when \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\) stays under a finite ceiling as partitions refine — every monotone function qualifies, while \(x\sin(1/x)\), wiggling endlessly near 0, does not.`,
@@ -189,7 +241,7 @@ problems: boundedVariationProblems,
     {
       id: 'jordan-decomposition',
       title: { ko: '조르당 분해', en: 'Jordan Decomposition' },
-      order: 9,
+      order: 11,
       summary: {
         ko: String.raw`유계변동 함수는 두 단조증가 함수의 차입니다 — \(f = g - h\), 여기서 \(g(x) = V_0^x(f)\)는 변동함수. \(x^2\sin\frac{1}{x}\) 위에서 점을 움직이며 분해가 점마다 성립하는 것을 확인하세요.`,
         en: String.raw`Every BV function is a difference of two increasing functions — \(f = g - h\) with \(g(x) = V_0^x(f)\) the variation function. Drag the probe point over \(x^2\sin\frac{1}{x}\) and watch the identity hold pointwise.`,
@@ -207,7 +259,7 @@ problems: boundedVariationProblems,
     {
       id: 'measure',
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
-      order: 10,
+      order: 12,
       summary: {
         ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
         en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
@@ -224,7 +276,7 @@ problems: boundedVariationProblems,
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 11,
+      order: 13,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
@@ -239,7 +291,7 @@ problems: lebesgueProblems,
     {
       id: 'absolute-continuity',
       title: { ko: '절대연속성', en: 'Absolute Continuity' },
-      order: 12,
+      order: 14,
       summary: {
         ko: String.raw`\(F(x) = x^2\)는 절대연속 — 구간들의 총 길이가 0으로 가면 \(\sum |\Delta F|\)도 0으로 갑니다. 칸토어 함수는 균등연속이지만 절대연속이 아닙니다: 총 길이 \(\left(\frac23\right)^n \to 0\)인데 \(\sum |\Delta c| = 1\)에 고정됩니다. 절대연속인 함수는 정확히 Lebesgue 적분 가능한 함수의 부정적분입니다.`,
         en: String.raw`\(F(x) = x^2\) is absolutely continuous — when the intervals' total length goes to 0, so does \(\sum |\Delta F|\). The Cantor function is uniformly continuous but not absolutely continuous: total length \(\left(\frac23\right)^n \to 0\) while \(\sum |\Delta c| = 1\) stays frozen. Absolutely continuous functions are exactly the indefinite integrals of Lebesgue-integrable functions.`,

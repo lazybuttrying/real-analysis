@@ -1,13 +1,17 @@
 import type { ChapterMeta } from '../../contracts.ts';
+import { axiomOfChoiceProblems } from '../limits/problems/axiom-of-choice';
 import { problems as binomialProblems } from '../limits/problems/binomial';
+import { cantorTheoremProblems } from '../limits/problems/cantor-theorem';
 import { problems as countableProblems } from '../limits/problems/countable';
 import { problems as dimensionRankProblems } from '../limits/problems/dimension-rank';
 import { problems as groupsFieldsProblems } from '../limits/problems/groups-fields';
 import { problems as integersRationalsProblems } from '../limits/problems/integers-rationals';
 import { problems as naturalNumbersProblems } from '../limits/problems/natural-numbers';
+import { nthRootProblems } from '../limits/problems/nth-root';
 import { problems as setsProblems } from '../limits/problems/sets';
 import { problems as supremumProblems } from '../limits/problems/supremum';
 import { problems as vectorSpacesProblems } from '../limits/problems/vector-spaces';
+import { zornLemmaProblems } from '../limits/problems/zorn-lemma';
 
 /**
  * Pure data. Imports types plus per-scene problems data modules
@@ -125,9 +129,46 @@ export const numbers: ChapterMeta = {
 problems: setsProblems,
     },
     {
+      id: 'axiom-of-choice',
+      title: { ko: '선택 공리', en: 'The Axiom of Choice' },
+      order: 5,
+      summary: {
+        ko: String.raw`비어 있지 않은 집합들의 모음에서 각각 하나씩 원소를 고르는 함수 — 유한 모음에서는 공리 없이도 되지만, 무한 모음에서는 이 "고르기" 자체가 공리입니다. 각 줄에서 하나씩 찍어보세요.`,
+        en: String.raw`A function picking one element from each set in a collection — for finite collections no axiom is needed, but for infinite ones this "picking" is itself an axiom. Pick one dot per row.`,
+      },
+      tex: [
+        String.raw`\forall i \in I\;(X_i \ne \varnothing) \Rightarrow \prod_{i \in I} X_i \ne \varnothing`,
+        String.raw`c: \{X_i\}_{i \in I} \to \bigcup_i X_i,\quad c(X_i) \in X_i`,
+      ],
+      prerequisites: ['sets'],
+      controls: [
+        { kind: 'slider', key: 'm', label: { ko: '집합 개수', en: 'Number of sets' }, min: 2, max: 5, step: 1, init: 3 },
+        { kind: 'slider', key: 'seed', label: { ko: '배치', en: 'Arrangement' }, min: 1, max: 5, step: 1, init: 1 },
+      ],
+      problems: axiomOfChoiceProblems,
+    },
+    {
+      id: 'zorn-lemma',
+      title: { ko: '초른 보조정리', en: "Zorn's Lemma" },
+      order: 6,
+      summary: {
+        ko: String.raw`모든 사슬이 상계를 가지면 극대 원소가 존재합니다 — 12의 약수들을 나누어떨어짐 순서로 놓고 사슬을 하나씩 비춰보세요. 선택 공리와 동치인, 대수학의 만능 열쇠입니다.`,
+        en: String.raw`If every chain has an upper bound, a maximal element exists — light up the chains one by one in the divisibility poset of 12's divisors. Equivalent to the axiom of choice, the master key of algebra.`,
+      },
+      tex: [
+        String.raw`\text{every chain has an upper bound} \Rightarrow \exists\, \text{maximal } m`,
+        String.raw`1 \mid 2 \mid 4 \mid 12,\quad 1 \mid 3 \mid 6 \mid 12`,
+      ],
+      prerequisites: ['axiom-of-choice'],
+      controls: [
+        { kind: 'slider', key: 'chain', label: { ko: '사슬 선택', en: 'Choose chain' }, min: 0, max: 2, step: 1, init: 0 },
+      ],
+      problems: zornLemmaProblems,
+    },
+    {
       id: 'supremum',
       title: { ko: '상한과 완비성', en: 'The Supremum Axiom' },
-      order: 5,
+      order: 7,
       summary: {
         ko: String.raw`위로 유계인 집합은 가장 작은 상한 \(\sup S\)를 갖습니다 — 실수의 빈틈을 메우는 공리, 유리수의 구멍 장면의 짝꿍입니다.`,
         en: String.raw`Every bounded-above set has a least upper bound \(\sup S\) — the axiom filling the gaps in the rationals, twin of the rational-holes scene.`,
@@ -154,9 +195,28 @@ problems: setsProblems,
 problems: supremumProblems,
     },
     {
+      id: 'nth-root',
+      title: { ko: 'n제곱근의 존재', en: 'Existence of n-th Roots' },
+      order: 8,
+      summary: {
+        ko: String.raw`\(\{x \ge 0 : x^n < a\}\)의 상한이 바로 \(\sqrt[n]{a}\)입니다 — 상한 공리가 "빈틈"을 메워 제곱근을 만들어내는 순간을 보세요.`,
+        en: String.raw`The supremum of \(\{x \ge 0 : x^n < a\}\) IS \(\sqrt[n]{a}\) — watch the supremum axiom fill a "gap" and manufacture a root.`,
+      },
+      tex: [
+        String.raw`s = \sup\{x \ge 0 : x^n < a\} \Rightarrow s^n = a`,
+        String.raw`\sqrt[n]{a}\ \text{exists and is unique}`,
+      ],
+      prerequisites: ['supremum'],
+      controls: [
+        { kind: 'slider', key: 'a', label: { ko: 'a 값', en: 'Value a' }, min: 0.5, max: 8, step: 0.5, init: 2 },
+        { kind: 'slider', key: 'n', label: { ko: '제곱근 차수 n', en: 'Root index n' }, min: 2, max: 5, step: 1, init: 2 },
+      ],
+      problems: nthRootProblems,
+    },
+    {
       id: 'countable',
       title: { ko: '가산과 비가산', en: 'Countable vs Uncountable' },
-      order: 6,
+      order: 9,
       summary: {
         ko: String.raw`유리수는 한 줄로 나열할 수 있지만 실수는 그럴 수 없습니다 — 칸토어의 대각선 논법으로 확인합니다.`,
         en: String.raw`The rationals fit into a single list; the reals do not — verified by Cantor's diagonal argument.`,
@@ -175,9 +235,27 @@ problems: supremumProblems,
 problems: countableProblems,
     },
     {
+      id: 'cantor-theorem',
+      title: { ko: '칸토어 정리', en: "Cantor's Theorem" },
+      order: 10,
+      summary: {
+        ko: String.raw`어떤 집합도 그 멱집합보다 작습니다 — \(|X| < |\mathcal{P}(X)|\). 대각선을 뒤집은 집합은 목록의 어느 행과도 다릅니다. (칸토어 "집합" 장면이 아니라 정리 자체입니다.)`,
+        en: String.raw`Every set is smaller than its power set — \(|X| < |\mathcal{P}(X)|\). The diagonal-flipped set differs from every row of the list. (This is the theorem itself, not the Cantor "set" scene.)`,
+      },
+      tex: [
+        String.raw`|X| < |\mathcal{P}(X)|`,
+        String.raw`D = \{x \in X : x \notin f(x)\} \ne f(y)\ \forall y`,
+      ],
+      prerequisites: ['countable'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '집합 크기 n', en: 'Set size n' }, min: 3, max: 8, step: 1, init: 5 },
+      ],
+      problems: cantorTheoremProblems,
+    },
+    {
       id: 'groups-fields',
       title: { ko: '군과 체', en: 'Groups vs Fields' },
-      order: 7,
+      order: 11,
       summary: {
         ko: String.raw`군은 되돌릴 수 있는 움직임(결합·항등원·역원), 체는 사칙연산이 되는 세계입니다. 부분군 판정법과 \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\)의 차이를 봅니다.`,
         en: String.raw`A group is reversible moves (associativity, identity, inverses); a field is a world where all four operations work. Includes the subgroup test and \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\).`,
@@ -200,7 +278,7 @@ problems: groupsFieldsProblems,
     {
       id: 'vector-spaces',
       title: { ko: '벡터공간과 동형', en: 'Vector Spaces and Isomorphism' },
-      order: 8,
+      order: 12,
       summary: {
         ko: String.raw`벡터공간은 체 위의 아벨군에 스칼라곱을 얹은 구조입니다 — \(\mathbb{R}^n\), 수열공간, 연속함수공간은 포장만 다를 뿐 같은 구조입니다. 계수 \((a, b)\)를 움직이면 직선 \(y = a+bx\)와 점 \((a, b)\)가 함께 움직입니다.`,
         en: String.raw`A vector space is an abelian group over a field with scalar multiplication — \(\mathbb{R}^n\), sequence spaces, and spaces of continuous functions are the same structure in different packaging. Move \((a, b)\) and the line \(y = a+bx\) and the point \((a, b)\) move together.`,
@@ -219,7 +297,7 @@ problems: vectorSpacesProblems,
     {
       id: 'dimension-rank',
       title: { ko: '차원과 랭크', en: 'Dimension and Rank' },
-      order: 9,
+      order: 13,
       summary: {
         ko: String.raw`동형이 "같은 구조"라면, 차원과 랭크는 그 구조의 크기를 재는 자입니다. 격자가 행렬에 눌려 펴지는 모습을 보며 \(\dim\ker T + \mathrm{rank}\,T = \dim V\)를 확인합니다.`,
         en: String.raw`If isomorphism means "same structure", dimension and rank measure its size. Watch the grid get squeezed by a matrix and verify \(\dim\ker T + \mathrm{rank}\,T = \dim V\).`,

@@ -11,7 +11,7 @@ import {
 /**
  * Integrity of the 10-chapter split:
  * - the catalog lists exactly the 10 logical chapters in order,
- * - no scene is lost or duplicated (93 unique),
+ * - no scene is lost or duplicated (102 unique),
  * - every chapter's scenes are ordered 1..N with 3 proven problems each.
  */
 
@@ -42,10 +42,10 @@ describe('catalog: the 10 chapters', () => {
     }
   });
 
-  it('covers 93 scenes with no loss or duplication', () => {
+  it('covers 102 scenes with no loss or duplication', () => {
     const ids = catalog.flatMap((chapter) => chapter.scenes.map((scene) => scene.id));
-    expect(ids).toHaveLength(93);
-    expect(new Set(ids).size).toBe(93);
+    expect(ids).toHaveLength(102);
+    expect(new Set(ids).size).toBe(102);
   });
 
   it('orders every chapter\'s scenes 1..N', () => {
@@ -128,8 +128,8 @@ describe('legacy canonical pages', () => {
     const catalogScenes = catalog.flatMap((chapter) =>
       chapter.scenes.map((scene) => [scene.id, chapter.id] as const),
     );
-    expect(catalogScenes).toHaveLength(93);
-    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(93);
+    expect(catalogScenes).toHaveLength(102);
+    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(102);
   });
 
   it('assigns every scene its pre-split chapter (39 limits + 22 calculus + 16 moved series)', () => {
@@ -144,11 +144,12 @@ describe('legacy canonical pages', () => {
     expect(counts.get('limits')).toBe(39);
     expect(counts.get('calculus')).toBe(22);
     expect(counts.get('series')).toBe(16);
-    // The 16 scenes that stayed in the (reused) series chapter need no legacy page.
+    // The scenes that stayed in the (reused) series chapter need no legacy page:
+    // 16 pre-split + 2 post-split additions (integral-test, double-series).
     const stayed = catalog
       .find((chapter) => chapter.id === 'series')!
       .scenes.filter((scene) => legacyChapterOf(scene.id, 'series') === 'series');
-    expect(stayed).toHaveLength(16);
+    expect(stayed).toHaveLength(18);
   });
 
   it('emits one legacy page per retired scene URL, canonicalizing to the new URL', () => {
@@ -209,7 +210,7 @@ describe('legacy canonical pages', () => {
         canonicalByScene.set(segments[2]!, page);
       }
     }
-    expect(canonicalByScene.size).toBe(93);
+    expect(canonicalByScene.size).toBe(102);
     for (const page of buildLegacyPages()) {
       const sceneId = page.segments('ko')[2]!;
       const canonical = canonicalByScene.get(sceneId);
