@@ -95,7 +95,7 @@ export interface DarbouxData {
 /** Upper bound on drawn crossing markers; the true count can be far larger near 0. */
 export const MAX_DRAWN_CROSSINGS = 400;
 
-export function darbouxData(zoom: number, level: number, showF: boolean): DarbouxData {
+function darbouxData(zoom: number, level: number, showF: boolean): DarbouxData {
   const z = clampZoom(zoom);
   const c = clampLevel(level);
   const h = halfWidth(z);

@@ -18,7 +18,7 @@ import type { SceneModel } from '../../../contracts';
 export const PAIR_SIN = 'sin x / x';
 export const PAIR_LOG = 'ln x / x';
 
-export type LHopitalPair = 'sin' | 'log';
+type LHopitalPair = 'sin' | 'log';
 
 /** Slider range: 0 = far from the limit point, 100 = at the limit point. */
 export const POS_MIN = 0;
@@ -29,16 +29,16 @@ export const POS_INIT = 55;
 export const GRID_POINTS = 161;
 
 /** f(x) = sin x, g(x) = x, x -> 0+. */
-export function sinF(x: number): number {
+function sinF(x: number): number {
   return Math.sin(x);
 }
-export function sinG(x: number): number {
+function sinG(x: number): number {
   return x;
 }
-export function sinFp(x: number): number {
+function sinFp(x: number): number {
   return Math.cos(x);
 }
-export function sinGp(_x: number): number {
+function sinGp(_x: number): number {
   return 1;
 }
 
@@ -49,10 +49,10 @@ export function logF(x: number): number {
 export function logG(x: number): number {
   return x;
 }
-export function logFp(x: number): number {
+function logFp(x: number): number {
   return 1 / x;
 }
-export function logGp(_x: number): number {
+function logGp(_x: number): number {
   return 1;
 }
 

@@ -30,9 +30,9 @@ export const DEFAULT_TERMS = 40;
 /** Partial sums shown at x = 1 in the contrast panel (k = 0..SIDE_K). */
 export const SIDE_K = 20;
 
-export type AbelSeriesKey = 'grandi' | 'alt-harmonic';
+type AbelSeriesKey = 'grandi' | 'alt-harmonic';
 
-export const ABEL_LIMITS: Readonly<Record<AbelSeriesKey, number>> = {
+const ABEL_LIMITS: Readonly<Record<AbelSeriesKey, number>> = {
   grandi: 0.5,
   'alt-harmonic': Math.LN2,
 };

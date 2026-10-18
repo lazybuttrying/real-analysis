@@ -21,7 +21,7 @@ import type { SceneModel } from '../../../contracts';
  *   (equal only when the walk lands exactly on s, as at S_1 = 1).
  */
 
-export interface RiemannStep {
+interface RiemannStep {
   /** 1-based step index. */
   step: number;
   /** +1 when a positive term was taken, -1 when a negative term was taken. */

@@ -48,7 +48,7 @@ export interface BaireOneSample {
   y: number;
 }
 
-export interface BaireOneProbe {
+interface BaireOneProbe {
   /** Display label, e.g. '1/2'. */
   label: string;
   x: number;
@@ -93,7 +93,7 @@ export function gcd(a: number, b: number): number {
   return x;
 }
 
-export interface ReducedRational {
+interface ReducedRational {
   p: number;
   q: number;
 }

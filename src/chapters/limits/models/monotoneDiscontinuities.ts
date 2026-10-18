@@ -33,7 +33,7 @@ export const DEFAULT_N = 4;
 export const SAMPLE_COUNT = 801;
 
 /** One discontinuity of the example function. */
-export interface RationalJump {
+interface RationalJump {
   /** The rational q_k in (0, 1). */
   x: number;
   /** Jump size, exactly 2^{-k}. */
@@ -42,7 +42,7 @@ export interface RationalJump {
   k: number;
 }
 
-export interface FunctionSample {
+interface FunctionSample {
   x: number;
   f: number;
 }

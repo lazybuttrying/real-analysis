@@ -24,7 +24,6 @@ import type { SceneModel } from '../../../contracts';
 /** Selectable sequences. Option values must match the meta.ts control options. */
 export type CondSeries = 'inv-n' | 'inv-n2' | 'inv-n-logn';
 
-export const SERIES_OPTIONS: readonly CondSeries[] = ['inv-n', 'inv-n2', 'inv-n-logn'];
 export const DEFAULT_SERIES: CondSeries = 'inv-n';
 
 /** Highlighted dyadic block index; blocks 0..6 cover k = 1..127. */

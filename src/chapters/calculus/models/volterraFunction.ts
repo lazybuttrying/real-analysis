@@ -53,7 +53,7 @@ export interface VolterraSample {
   fp: number;
 }
 
-export interface VolterraInterval {
+interface VolterraInterval {
   a: number;
   b: number;
   /** The stage at which this complementary interval was removed. */

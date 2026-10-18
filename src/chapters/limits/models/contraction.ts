@@ -22,13 +22,13 @@ import { clampNumber } from '../../../math/clamp';
 /** Contraction constant shared by both maps. */
 export const CONTRACTION_Q = 0.5;
 
-export const MIN_ITERATES = 0;
-export const MAX_ITERATES = 12;
-export const DEFAULT_ITERATES = 5;
+const MIN_ITERATES = 0;
+const MAX_ITERATES = 12;
+const DEFAULT_ITERATES = 5;
 export const DEFAULT_X0 = 1;
 
-export const MAP_KEYS = ['affine', 'half'] as const;
-export type ContractionMap = (typeof MAP_KEYS)[number];
+const MAP_KEYS = ['affine', 'half'] as const;
+type ContractionMap = (typeof MAP_KEYS)[number];
 
 export function mapOf(raw: unknown): ContractionMap {
   return raw === 'half' ? 'half' : 'affine';

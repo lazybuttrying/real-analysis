@@ -14,7 +14,7 @@ import type { SceneModel } from '../../../contracts';
  *    b_k = k/(k+1) increasing, bounded, b_k -> 1 != 0.
  */
 
-export type AbelExample = 'shifted' | 'scaled';
+type AbelExample = 'shifted' | 'scaled';
 
 export const MIN_N = 10;
 export const MAX_N = 500;
@@ -43,7 +43,7 @@ export function exactLimit(example: AbelExample): number | null {
 }
 
 /** b_k -> b ( != 0 ), the nonzero monotone limit that defeats Dirichlet. */
-export function weightLimit(example: AbelExample): number {
+function weightLimit(example: AbelExample): number {
   return example === 'shifted' ? 2 : 1;
 }
 

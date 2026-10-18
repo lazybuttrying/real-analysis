@@ -148,7 +148,7 @@ export function leastSquaresCoeffs(
 }
 
 /** Evaluate sum_j coeffs[j] * x^{exponents[j]}. */
-export function evalBasis(coeffs: number[], exponents: number[], x: number): number {
+function evalBasis(coeffs: number[], exponents: number[], x: number): number {
   let v = 0;
   for (let j = 0; j < exponents.length; j++) v += coeffs[j]! * Math.pow(x, exponents[j]!);
   return v;

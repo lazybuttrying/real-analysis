@@ -30,11 +30,11 @@ export const DEFAULT_R = 90;
 /** Terms used for the Abel curve A_D(r) and the partial-sum readouts. */
 export const ABEL_TERMS = 4000;
 /** Terms for the horizontal dashed line marking the ordinary sum S_D. */
-export const SUM_TERMS = 20000;
+const SUM_TERMS = 20000;
 /** r-grid domain of the chart. */
 export const R_MIN = 0.5;
 export const R_MAX = 0.999;
-export const GRID_R = 121;
+const GRID_R = 121;
 /** Probe indices for the o(1/n) check. */
 export const N_PROBES = [100, 1000, 10000] as const;
 

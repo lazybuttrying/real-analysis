@@ -23,7 +23,7 @@ import { clampNumber } from '../../../math/clamp';
  */
 
 /** Ternary digits extracted; each digit costs one bit of output precision. */
-export const TERNARY_DIGITS = 40;
+const TERNARY_DIGITS = 40;
 
 /** Control range of the Cantor-set construction stage slider. */
 export const STAGE_MIN = 0;
@@ -33,7 +33,7 @@ export const STAGE_INIT = 4;
 /** Sampled polyline resolution for the drawn staircase. */
 export const SAMPLE_POINTS = 2001;
 
-export interface CantorSetInterval {
+interface CantorSetInterval {
   l: number;
   r: number;
 }
@@ -106,7 +106,7 @@ export interface CantorFunctionData {
   fVals: number[];
 }
 
-export function cantorFunctionData(stage: number): CantorFunctionData {
+function cantorFunctionData(stage: number): CantorFunctionData {
   const s = clampStage(stage);
   const intervals = cantorIntervals(s);
   const xs: number[] = new Array<number>(SAMPLE_POINTS);

@@ -28,7 +28,7 @@ import type { SceneModel } from '../../../contracts';
 
 export type CompactKind = 'closed' | 'halfopen' | 'unbounded';
 
-export interface CoverInterval {
+interface CoverInterval {
   readonly lo: number;
   readonly hi: number;
 }
@@ -39,9 +39,7 @@ export const CLOSED_HALF_WIDTH = 0.18;
 export const CLOSED_COVER_SIZE = 6;
 /** Number of intervals in the (0,1] and [0,inf) covers. */
 export const OPEN_COVER_SIZE = 8;
-/** Slider range for the subcover size. */
-export const MAX_STEP = 8;
-export const DEFAULT_STEP = 6;
+const DEFAULT_STEP = 6;
 
 export function compactKindOf(raw: unknown): CompactKind {
   if (raw === 'halfopen') return 'halfopen';

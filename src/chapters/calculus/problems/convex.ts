@@ -78,7 +78,7 @@ export const problems: readonly ProblemMeta[] = [
       en: String.raw`Derive the AM–GM inequality for two numbers from the concavity of log.`,
     },
     display: [String.raw`\log\frac{a+b}{2} \ge \frac{\log a + \log b}{2} = \log\sqrt{ab}`],
-    preset: { fn: 'square', a: 1, b: 3 },
+    preset: { fn: 'square', a: 1, b: 2 },
     presetCaption: {
       ko: String.raw`현 그림은 log에도 똑같이 적용된다`,
       en: String.raw`the chord picture applies to log just the same`,

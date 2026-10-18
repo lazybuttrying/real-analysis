@@ -24,7 +24,7 @@ export const MIN_N = 1;
 export const MAX_N = 60;
 export const DEFAULT_N = 8;
 
-export const DOMAINS = ['compact', 'noncompact'] as const;
+const DOMAINS = ['compact', 'noncompact'] as const;
 export type Domain = (typeof DOMAINS)[number];
 
 /** A sequence term on the compact domain: f_n(x) = n*x/(n+1), increasing in n. */

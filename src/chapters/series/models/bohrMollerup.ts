@@ -41,12 +41,10 @@ export const GRID_PTS = 160;
 
 export const AMP_MIN = 0;
 export const AMP_MAX = 0.5;
-export const AMP_STEP = 0.05;
 export const DEFAULT_AMP = 0.3;
 
 export const PROBE_MIN = 0.2;
 export const PROBE_MAX = 1.8;
-export const PROBE_STEP = 0.1;
 export const DEFAULT_PROBE = 0.6;
 
 /** The wobble factor w_a(x) = 1 + a sin(2 pi x); positive for |a| < 1. */
@@ -100,7 +98,7 @@ export function logImpostor(a: number, t: number): number {
 }
 
 /** ln Gamma(t), evaluated exactly. */
-export function logGamma(t: number): number {
+function logGamma(t: number): number {
   return Math.log(gamma(t));
 }
 

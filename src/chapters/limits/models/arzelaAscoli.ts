@@ -31,7 +31,7 @@ import type { SceneModel } from '../../../contracts';
  *     at the pairs (2, 8) and (8, 32), hence >= 0.2.
  */
 
-export interface ArzelaCurve {
+interface ArzelaCurve {
   /** 1-based member index k. */
   k: number;
   /** Amplitude a_k. */

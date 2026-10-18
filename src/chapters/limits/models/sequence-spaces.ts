@@ -15,16 +15,16 @@ import { clampNumber } from '../../../math/clamp';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const VIEW_KINDS = ['balls', 'sequence'] as const;
-export type ViewKind = (typeof VIEW_KINDS)[number];
+const VIEW_KINDS = ['balls', 'sequence'] as const;
+type ViewKind = (typeof VIEW_KINDS)[number];
 
-export const P_KINDS = ['1', '2', 'inf'] as const;
+const P_KINDS = ['1', '2', 'inf'] as const;
 export type PKind = (typeof P_KINDS)[number];
 
 /** Number of terms used for the partial-sum norm readouts. */
 export const TERMS = 200;
 
-export interface LpMembership {
+interface LpMembership {
   inL1: boolean;
   inL2: boolean;
   inLInf: boolean;
@@ -129,7 +129,7 @@ function clampAlpha(raw: number): number {
   return clampNumber(raw, 0.2, 2, 1);
 }
 
-export function sequenceSpacesData(view: ViewKind, p: PKind, alpha: number): SequenceSpacesData {
+function sequenceSpacesData(view: ViewKind, p: PKind, alpha: number): SequenceSpacesData {
   return {
     view,
     p,

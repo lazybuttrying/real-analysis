@@ -18,9 +18,8 @@ import { clampNumber } from '../../../math/clamp';
  */
 
 /** The two example pairs. */
-export type CauchyPair = 'exp' | 'alternating';
+type CauchyPair = 'exp' | 'alternating';
 
-export const PAIR_OPTIONS: readonly CauchyPair[] = ['exp', 'alternating'];
 
 /** Slider bounds for n: how many terms c_0..c_n are shown. */
 export const N_MIN = 1;
@@ -104,7 +103,7 @@ export function pairLimit(pair: CauchyPair): number | null {
 }
 
 /** One cell of the a_k * b_j lattice, k + j = d <= n (the c_d diagonal). */
-export interface LatticeCell {
+interface LatticeCell {
   k: number;
   j: number;
   d: number;

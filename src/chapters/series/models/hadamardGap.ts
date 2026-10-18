@@ -47,7 +47,7 @@ export interface HadamardPoint {
   y: number;
 }
 
-export interface HadamardCurve {
+interface HadamardCurve {
   r: number;
   points: HadamardPoint[];
 }
@@ -140,7 +140,7 @@ function thetaOf(i: number): number {
 }
 
 /** Pure: no DOM, no d3. */
-export function hadamardData(n: number): HadamardData {
+function hadamardData(n: number): HadamardData {
   const nn = Math.min(MAX_N, Math.max(MIN_N, Math.floor(n)));
   const curves: HadamardCurve[] = RADII.map((r) => {
     const points: HadamardPoint[] = [];

@@ -32,7 +32,7 @@ import type { SceneModel } from '../../../contracts';
  *             survivor = 0.810546875
  */
 
-export interface BaireStage {
+interface BaireStage {
   /** 1-based enumeration index. */
   k: number;
   /** q_k, the k-th rational of the enumeration. */
@@ -67,7 +67,7 @@ function gcd(a: number, b: number): number {
   return b === 0 ? a : gcd(b, a % b);
 }
 
-export interface RationalTerm {
+interface RationalTerm {
   num: number;
   den: number;
   value: number;
