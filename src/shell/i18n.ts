@@ -79,7 +79,7 @@ export const STRINGS = {
   mapResetView: { ko: '보기 초기화', en: 'Reset view' },
 } satisfies Record<string, LocalizedText>;
 
-export type StringKey = keyof typeof STRINGS;
+type StringKey = keyof typeof STRINGS;
 
 export function tr(lang: Lang, key: StringKey): string {
   return localize(STRINGS[key], lang);

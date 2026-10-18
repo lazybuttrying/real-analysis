@@ -16,26 +16,26 @@ import { learningPaths } from './learning-paths.ts';
  */
 
 /** One scene, addressed by chapter + scene id. */
-export interface MapNodeRef {
+interface MapNodeRef {
   chapterId: string;
   sceneId: string;
 }
 
 /** One scene, with its chapter-entry flag. */
-export interface MapNode extends MapNodeRef {
+interface MapNode extends MapNodeRef {
   /** True for the first scene (order 0) of each chapter — the chapter's "front door". */
   isEntry: boolean;
 }
 
 /** Directed edge: the source should be read before the target. */
-export interface MapEdge {
+interface MapEdge {
   source: MapNodeRef;
   target: MapNodeRef;
   /** 'prereq': from SceneMeta.prerequisites; 'path': consecutive learning-path steps. */
   kind: 'prereq' | 'path';
 }
 
-export interface ConceptMap {
+interface ConceptMap {
   nodes: readonly MapNode[];
   edges: readonly MapEdge[];
 }

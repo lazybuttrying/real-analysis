@@ -7,7 +7,7 @@ import { tr } from './i18n.ts';
 const BASE = import.meta.env.BASE_URL;
 const MAX_RESULTS = 8;
 
-export interface RankedHit {
+interface RankedHit {
   kind: 'scene' | 'term' | 'exercise';
   /** Scene title, the glossary term itself, or the localized "Exercise N" label. */
   label: string;

@@ -24,7 +24,7 @@ import { glossary } from './glossary.ts';
  * client bundle, so no chapter code leaks into a page because of search.
  */
 
-export interface SearchSceneRecord {
+interface SearchSceneRecord {
   chapterId: string;
   sceneId: string;
   title: string;
@@ -34,7 +34,7 @@ export interface SearchSceneRecord {
   chapterTitle: string;
 }
 
-export interface SearchTermRecord {
+interface SearchTermRecord {
   id: string;
   term: string;
   /** Plain text (math delimiters stripped) for substring matching. */
@@ -45,7 +45,7 @@ export interface SearchTermRecord {
   sceneId: string;
 }
 
-export interface SearchExerciseRecord {
+interface SearchExerciseRecord {
   chapterId: string;
   exerciseId: string;
   /** 1-based position in the chapter's exercise file (the number shown on the card). */

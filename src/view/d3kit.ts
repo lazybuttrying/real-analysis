@@ -13,14 +13,14 @@ export function fmtSci(x: number, digits = 3): string {
   return x.toExponential(digits);
 }
 
-export interface Margin {
+interface Margin {
   top: number;
   right: number;
   bottom: number;
   left: number;
 }
 
-export const DEFAULT_MARGIN: Margin = { top: 16, right: 16, bottom: 36, left: 52 };
+const DEFAULT_MARGIN: Margin = { top: 16, right: 16, bottom: 36, left: 52 };
 
 export interface Chart {
   readonly svg: Selection<SVGSVGElement, unknown, null, undefined>;

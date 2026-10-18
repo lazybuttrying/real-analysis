@@ -10,7 +10,7 @@ import type { LocalizedText } from './contracts.ts';
  * step links to a real scene via chapterId + sceneId (verified by tests and
  * the prerender self-check). Steps are in the recommended reading order.
  */
-export interface LearningPathStep {
+interface LearningPathStep {
   chapterId: string;
   sceneId: string;
 }

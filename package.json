@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "check-deps": "tsx scripts/check-deps.ts",
-    "size": "size-limit"
+    "size": "tsx scripts/gen-size-budget.ts && size-limit"
   },
   "size-limit": [
     {
@@ -24,87 +24,206 @@
     {
       "name": "shared shell chunks",
       "path": [
-        "dist/assets/i18n-*.js",
+        "dist/assets/app-*.js",
         "dist/assets/tex-*.js",
-        "dist/assets/sum-*.js"
+        "dist/assets/sum-*.js",
+        "dist/assets/clamp-*.js"
       ],
-      "limit": "5.5 kB"
+      "limit": "7 kB"
     },
     {
-      "name": "chapter: limits (shell, view kit, all scenes)",
+      "name": "shared view kit",
       "path": [
-        "dist/assets/limits-*.js",
-        "dist/assets/app-*.js",
         "dist/assets/d3kit-*.js",
+        "dist/assets/richslot-*.js",
+        "dist/assets/richtext-*.js"
+      ],
+      "limit": "2 kB"
+    },
+    {
+      "name": "shared problems data (all chapters)",
+      "path": [
+        "dist/assets/preload-helper-*.js"
+      ],
+      "limit": "220 kB"
+    },
+    {
+      "name": "chapter: numbers (entry + 9 scenes)",
+      "path": [
+        "dist/assets/numbers-*.js",
+        "dist/assets/naturalNumbers-*.js",
+        "dist/assets/binomial-*.js",
+        "dist/assets/integersRationals-*.js",
+        "dist/assets/sets-*.js",
+        "dist/assets/supremum-*.js",
+        "dist/assets/countable-*.js",
+        "dist/assets/groupsFields-*.js",
+        "dist/assets/vectorSpaces-*.js",
+        "dist/assets/dimensionRank-*.js"
+      ],
+      "limit": "20 kB"
+    },
+    {
+      "name": "chapter: sequences (entry + 9 scenes)",
+      "path": [
+        "dist/assets/sequences-*.js",
         "dist/assets/epsilonN-*.js",
+        "dist/assets/sequenceSpaces-*.js",
+        "dist/assets/cauchySchwarz-*.js",
         "dist/assets/holes-*.js",
         "dist/assets/construction-*.js",
         "dist/assets/bolzanoWeierstrass-*.js",
-        "dist/assets/cantor-*.js",
-        "dist/assets/ivt-*.js",
-        "dist/assets/uniform-*.js",
-        "dist/assets/epsdelta-*.js",
-        "dist/assets/continuity-*.js",
-        "dist/assets/opensets-*.js",
-        "dist/assets/closure-*.js",
-        "dist/assets/metricSpaces-*.js",
-        "dist/assets/sequenceSpaces-*.js",
-        "dist/assets/uniformContinuity-*.js",
-        "dist/assets/vectorSpaces-*.js",
-        "dist/assets/dimensionRank-*.js",
-        "dist/assets/sequenceSpaces-*.js",
         "dist/assets/monotoneCauchy-*.js",
-        "dist/assets/evt-*.js",
-        "dist/assets/weierstrassApprox-*.js",
-        "dist/assets/naturalNumbers-*.js",
-        "dist/assets/binomial-*.js",
-        "dist/assets/integersRationals-*.js"
+        "dist/assets/limsupLiminf-*.js",
+        "dist/assets/stolzCesaro-*.js"
       ],
-      "limit": "42 kB"
+      "limit": "18 kB"
     },
     {
-      "name": "chapter: series (shell, view kit, all scenes)",
+      "name": "chapter: continuity (entry + 7 scenes)",
+      "path": [
+        "dist/assets/continuity-*.js",
+        "dist/assets/epsdelta-*.js",
+        "dist/assets/continuity-*.js",
+        "dist/assets/monotoneDiscontinuities-*.js",
+        "dist/assets/uniformContinuity-*.js",
+        "dist/assets/ivt-*.js",
+        "dist/assets/evt-*.js",
+        "dist/assets/uniform-*.js"
+      ],
+      "limit": "17 kB"
+    },
+    {
+      "name": "chapter: topology (entry + 10 scenes)",
+      "path": [
+        "dist/assets/topology-*.js",
+        "dist/assets/opensets-*.js",
+        "dist/assets/closure-*.js",
+        "dist/assets/compact-*.js",
+        "dist/assets/metricSpaces-*.js",
+        "dist/assets/contraction-*.js",
+        "dist/assets/baireCategory-*.js",
+        "dist/assets/baireOne-*.js",
+        "dist/assets/cantor-*.js",
+        "dist/assets/fatCantor-*.js",
+        "dist/assets/cantorFunction-*.js"
+      ],
+      "limit": "30 kB"
+    },
+    {
+      "name": "chapter: approximation (entry + 4 scenes)",
+      "path": [
+        "dist/assets/approximation-*.js",
+        "dist/assets/arzelaAscoli-*.js",
+        "dist/assets/weierstrassApprox-*.js",
+        "dist/assets/stoneWeierstrass-*.js",
+        "dist/assets/muntzSzasz-*.js"
+      ],
+      "limit": "12 kB"
+    },
+    {
+      "name": "chapter: series (entry + 16 scenes)",
       "path": [
         "dist/assets/series-*.js",
-        "dist/assets/d3kit-*.js",
         "dist/assets/harmonic-*.js",
+        "dist/assets/eulerMascheroni-*.js",
         "dist/assets/basel-*.js",
+        "dist/assets/eulerProduct-*.js",
         "dist/assets/leibniz-*.js",
-        "dist/assets/eseries-*.js",
+        "dist/assets/tests-*.js",
+        "dist/assets/raabeTest-*.js",
+        "dist/assets/kummerTest-*.js",
+        "dist/assets/condensation-*.js",
         "dist/assets/telescoping-*.js",
         "dist/assets/geometric-*.js",
         "dist/assets/wallis-*.js",
         "dist/assets/stirling-*.js",
         "dist/assets/grandi-*.js",
-        "dist/assets/zeta4-*.js",
-        "dist/assets/tests-*.js",
-        "dist/assets/powerSeries-*.js",
-        "dist/assets/gamma-*.js",
-        "dist/assets/absolute-*.js",
-        "dist/assets/app-*.js"
+        "dist/assets/dirichletTest-*.js",
+        "dist/assets/abelTest-*.js"
       ],
-      "limit": "28 kB"
+      "limit": "40 kB"
     },
     {
-      "name": "chapter: calculus (shell, view kit, all scenes)",
+      "name": "chapter: power-series (entry + 10 scenes)",
       "path": [
-        "dist/assets/calculus-*.js",
-        "dist/assets/app-*.js",
-        "dist/assets/d3kit-*.js",
-        "dist/assets/mvt-*.js",
-        "dist/assets/taylor-*.js",
-        "dist/assets/riemann-*.js",
-        "dist/assets/ftc-*.js",
-        "dist/assets/newton-*.js",
-        "dist/assets/banach-*.js",
+        "dist/assets/power-series-*.js",
+        "dist/assets/powerSeries-*.js",
+        "dist/assets/hadamardGap-*.js",
+        "dist/assets/abelTheorem-*.js",
+        "dist/assets/tauber-*.js",
+        "dist/assets/eseries-*.js",
+        "dist/assets/zeta4-*.js",
+        "dist/assets/rearrangement-*.js",
+        "dist/assets/absolute-*.js",
+        "dist/assets/riemannRearrangement-*.js",
+        "dist/assets/cauchyProduct-*.js"
+      ],
+      "limit": "30 kB"
+    },
+    {
+      "name": "chapter: function-series (entry + 5 scenes)",
+      "path": [
+        "dist/assets/function-series-*.js",
+        "dist/assets/mTest-*.js",
+        "dist/assets/dini-*.js",
         "dist/assets/fourier-*.js",
+        "dist/assets/fejerTheorem-*.js",
+        "dist/assets/gibbsPhenomenon-*.js"
+      ],
+      "limit": "14 kB"
+    },
+    {
+      "name": "chapter: differentiation (entry + 11 scenes)",
+      "path": [
+        "dist/assets/differentiation-*.js",
+        "dist/assets/diffCont-*.js",
+        "dist/assets/mvt-*.js",
+        "dist/assets/cauchyMvt-*.js",
+        "dist/assets/lhopital-*.js",
+        "dist/assets/darboux-*.js",
+        "dist/assets/weierstrassFunction-*.js",
+        "dist/assets/taylor-*.js",
+        "dist/assets/taylorThm-*.js",
+        "dist/assets/convex-*.js",
+        "dist/assets/newton-*.js",
+        "dist/assets/banach-*.js"
+      ],
+      "limit": "25 kB"
+    },
+    {
+      "name": "chapter: integration (entry + 12 scenes)",
+      "path": [
+        "dist/assets/integration-*.js",
+        "dist/assets/gamma-*.js",
+        "dist/assets/betaFunction-*.js",
+        "dist/assets/bohrMollerup-*.js",
+        "dist/assets/improper-*.js",
+        "dist/assets/riemann-*.js",
+        "dist/assets/volterraFunction-*.js",
+        "dist/assets/ftc-*.js",
+        "dist/assets/boundedVariation-*.js",
+        "dist/assets/jordanDecomposition-*.js",
         "dist/assets/measure-*.js",
         "dist/assets/lebesgue-*.js",
-        "dist/assets/cauchyMvt-*.js",
-        "dist/assets/taylorThm-*.js",
-        "dist/assets/convex-*.js"
+        "dist/assets/absoluteContinuity-*.js"
       ],
-      "limit": "22 kB"
+      "limit": "30 kB"
+    },
+    {
+      "name": "exercises (all chapters, 10 chunks)",
+      "path": "dist/assets/exercises-*.js",
+      "limit": "40 kB"
+    },
+    {
+      "name": "home lazy chunks (glossary, paths, map)",
+      "path": [
+        "dist/assets/glossary-page-*.js",
+        "dist/assets/learning-paths-*.js",
+        "dist/assets/map-page-*.js",
+        "dist/assets/paths-page-*.js"
+      ],
+      "limit": "30 kB"
     },
     {
       "name": "vendor: d3",
