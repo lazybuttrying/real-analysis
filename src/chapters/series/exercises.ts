@@ -1,12 +1,9 @@
 import type { ExerciseMeta } from '../../contracts.ts';
 
 /**
- * Pure data: end-of-chapter exercises for the series chapter.
- * Imports only the type. Twelve original exercises, ordered easy -> hard
- * (4 x difficulty 1, 5 x difficulty 2, 3 x difficulty 3).
- * Every statement is self-contained; every solution is a complete proof.
- * No viz: no scene model in this chapter computes exactly the series used
- * in these exercises, so a reused picture would mislead rather than help.
+ * End-of-chapter exercises for the 급수 chapter.
+ * Ordered easy -> hard. All statements are original compositions; solutions
+ * are complete bilingual proofs. TeX via String.raw with \(...\) inline math only.
  */
 export const exercises: readonly ExerciseMeta[] = [
   // ------------------------------------------------------------------
@@ -38,36 +35,6 @@ export const exercises: readonly ExerciseMeta[] = [
         text: {
           ko: String.raw`극한 비교 판정법의 "극한이 0인 경우": \(\frac{a_n}{b_n} \to 0\)이고 \(\sum b_n\)이 수렴하면 \(\sum a_n\)도 수렴합니다. 따라서 \(\sum_{n=2}^{\infty}\frac{\ln n}{n^2}\)는 수렴합니다.`,
           en: String.raw`By the limit-\(0\) case of the limit comparison test: if \(\frac{a_n}{b_n} \to 0\) and \(\sum b_n\) converges, then \(\sum a_n\) converges. Hence \(\sum_{n=2}^{\infty}\frac{\ln n}{n^2}\) converges.`,
-        },
-      },
-    ],
-  },
-  {
-    id: 'poly-radius',
-    difficulty: 1,
-    topics: ['power-series', 'tests'],
-    statement: {
-      ko: String.raw`멱급수 \(\sum_{n=0}^{\infty}\frac{n^2+1}{3^n}\,x^n\)의 수렴반경을 구하세요.`,
-      en: String.raw`Find the radius of convergence of the power series \(\sum_{n=0}^{\infty}\frac{n^2+1}{3^n}\,x^n\).`,
-    },
-    display: [String.raw`\left|\frac{c_{n+1}x^{n+1}}{c_n x^n}\right| = \frac{(n+1)^2+1}{n^2+1}\cdot\frac{|x|}{3} \to \frac{|x|}{3}`],
-    solution: [
-      {
-        text: {
-          ko: String.raw`\(c_n = \frac{n^2+1}{3^n} > 0\)이라 두면 일반항의 절댓값의 비는 \(\left|\frac{c_{n+1}x^{n+1}}{c_n x^n}\right| = \frac{(n+1)^2+1}{n^2+1}\cdot\frac{|x|}{3}\)입니다.`,
-          en: String.raw`With \(c_n = \frac{n^2+1}{3^n} > 0\), the ratio of successive absolute terms is \(\left|\frac{c_{n+1}x^{n+1}}{c_n x^n}\right| = \frac{(n+1)^2+1}{n^2+1}\cdot\frac{|x|}{3}\).`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`\(\frac{(n+1)^2+1}{n^2+1} = \frac{n^2+2n+2}{n^2+1} \to 1\)이므로, 이 비는 \(\frac{|x|}{3}\)로 수렴합니다.`,
-          en: String.raw`Since \(\frac{(n+1)^2+1}{n^2+1} = \frac{n^2+2n+2}{n^2+1} \to 1\), the ratio tends to \(\frac{|x|}{3}\).`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`비율 판정법에 따라 \(|x| < 3\)이면 급수는 (절대) 수렴하고, \(|x| > 3\)이면 일반항 \(\left|c_n x^n\right| = (n^2+1)\left(\frac{|x|}{3}\right)^n \to \infty\)이므로 발산합니다. 따라서 수렴반경은 \(R = 3\)입니다.`,
-          en: String.raw`By the ratio test the series converges (absolutely) for \(|x| < 3\), and for \(|x| > 3\) the general term \(\left|c_n x^n\right| = (n^2+1)\left(\frac{|x|}{3}\right)^n \to \infty\), so it diverges. Hence the radius of convergence is \(R = 3\).`,
         },
       },
     ],
@@ -136,36 +103,6 @@ export const exercises: readonly ExerciseMeta[] = [
   // Difficulty 2
   // ------------------------------------------------------------------
   {
-    id: 'abel-divergent',
-    difficulty: 2,
-    topics: ['abel-theorem', 'grandi'],
-    statement: {
-      ko: String.raw`급수 \(\sum_{n=1}^{\infty} n(-1)^n\)은 (보통 의미에서) 발산하지만 Abel 총합가능하며, 그 Abel 합이 \(-\frac{1}{4}\)임을 증명하세요.`,
-      en: String.raw`Prove that \(\sum_{n=1}^{\infty} n(-1)^n\) diverges in the ordinary sense but is Abel summable, with Abel sum \(-\frac{1}{4}\).`,
-    },
-    display: [String.raw`\sum_{n\ge 1} n(-1)^n x^n = -\frac{x}{(1+x)^2} \xrightarrow[x\to 1^{-}]{} -\frac{1}{4}`],
-    solution: [
-      {
-        text: {
-          ko: String.raw`먼저 발산: 일반항 \(n(-1)^n\)은 \(0\)으로 수렴하지 않으므로(\(|n(-1)^n| = n \to \infty\)), 제\(n\)항 판정법으로 급수는 발산합니다.`,
-          en: String.raw`Divergence first: the general term \(n(-1)^n\) does not tend to \(0\) (since \(|n(-1)^n| = n \to \infty\)), so the series diverges by the \(n\)-th term test.`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`\(|z| < 1\)에서 \(\sum_{n=0}^{\infty} z^n = \frac{1}{1-z}\)를 항별 미분하면(멱급수는 수렴원 안에서 항별 미분 가능) \(\sum_{n=1}^{\infty} n z^{n-1} = \frac{1}{(1-z)^2}\)이고, \(z\)를 곱하면 \(\sum_{n=1}^{\infty} n z^n = \frac{z}{(1-z)^2}\)입니다.`,
-          en: String.raw`For \(|z| < 1\), differentiating \(\sum_{n=0}^{\infty} z^n = \frac{1}{1-z}\) termwise (a power series may be differentiated termwise inside its disc) gives \(\sum_{n=1}^{\infty} n z^{n-1} = \frac{1}{(1-z)^2}\); multiplying by \(z\) yields \(\sum_{n=1}^{\infty} n z^n = \frac{z}{(1-z)^2}\).`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`\(z = -x\) (\(0 \le x < 1\))를 대입하면 \(n(-x)^n = n(-1)^n x^n\)이므로 \(\sum_{n=1}^{\infty} n(-1)^n x^n = \frac{-x}{(1+x)^2}\)입니다. \(x \to 1^{-}\)일 때 이는 \(-\frac{1}{4}\)로 수렴하므로, Abel 합은 \(-\frac{1}{4}\)입니다. 발산하는 급수도 Abel 총합가능할 수 있습니다.`,
-          en: String.raw`Substituting \(z = -x\) (\(0 \le x < 1\)) gives \(n(-x)^n = n(-1)^n x^n\), so \(\sum_{n=1}^{\infty} n(-1)^n x^n = \frac{-x}{(1+x)^2}\). As \(x \to 1^{-}\) this tends to \(-\frac{1}{4}\), the Abel sum. A divergent series can still be Abel summable.`,
-        },
-      },
-    ],
-  },
-  {
     id: 'raabe-weighted-central',
     difficulty: 2,
     topics: ['raabe-test', 'tests'],
@@ -196,33 +133,9 @@ export const exercises: readonly ExerciseMeta[] = [
     ],
   },
   {
-    id: 'm-test-rational',
-    difficulty: 2,
-    topics: ['m-test', 'tests'],
-    statement: {
-      ko: String.raw`급수 \(\sum_{n=1}^{\infty}\frac{1}{n^2+x^2}\)가 실수 전체 \(\mathbb{R}\)에서 균등수렴함을 M-판정법으로 보이고, 그 합함수가 \(\mathbb{R}\)에서 연속임을 증명하세요.`,
-      en: String.raw`Show that \(\sum_{n=1}^{\infty}\frac{1}{n^2+x^2}\) converges uniformly on all of \(\mathbb{R}\) by the M-test, and prove its sum is continuous on \(\mathbb{R}\).`,
-    },
-    display: [String.raw`\left|\frac{1}{n^2+x^2}\right| \le \frac{1}{n^2} =: M_n, \qquad \sum_{n=1}^{\infty} M_n < \infty`],
-    solution: [
-      {
-        text: {
-          ko: String.raw`모든 실수 \(x\)에 대해 \(n^2+x^2 \ge n^2\)이므로 \(\left|\frac{1}{n^2+x^2}\right| \le \frac{1}{n^2} =: M_n\)입니다. \(\sum M_n = \sum \frac{1}{n^2}\)은 수렴하므로(\(p\)-급수, \(p = 2\)), 바이어슈트라스 M-판정법으로 \(\sum_{n=1}^{\infty}\frac{1}{n^2+x^2}\)는 \(\mathbb{R}\)에서 균등수렴합니다.`,
-          en: String.raw`For every real \(x\), \(n^2+x^2 \ge n^2\), so \(\left|\frac{1}{n^2+x^2}\right| \le \frac{1}{n^2} =: M_n\). Since \(\sum M_n = \sum \frac{1}{n^2}\) converges (a \(p\)-series with \(p = 2\)), the Weierstrass M-test gives uniform convergence of \(\sum_{n=1}^{\infty}\frac{1}{n^2+x^2}\) on \(\mathbb{R}\).`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`각 항 \(f_n(x) = \frac{1}{n^2+x^2}\)은 \(\mathbb{R}\)에서 연속입니다 (분모가 \(0\)이 되지 않음). 연속함수들의 균등수렴 극한은 연속이므로, 합함수 \(S(x) = \sum_{n=1}^{\infty}\frac{1}{n^2+x^2}\)는 \(\mathbb{R}\) 전체에서 연속입니다.`,
-          en: String.raw`Each term \(f_n(x) = \frac{1}{n^2+x^2}\) is continuous on \(\mathbb{R}\) (the denominator never vanishes). A uniform limit of continuous functions is continuous, so the sum \(S(x) = \sum_{n=1}^{\infty}\frac{1}{n^2+x^2}\) is continuous on all of \(\mathbb{R}\).`,
-        },
-      },
-    ],
-  },
-  {
     id: 'conditional-expansion',
     difficulty: 2,
-    topics: ['leibniz', 'absolute', 'tests'],
+    topics: ['leibniz', 'tests'],
     statement: {
       ko: String.raw`급수 \(\sum_{n=2}^{\infty}\frac{(-1)^n}{\,n+(-1)^n\sqrt{n}\,}\)가 조건수렴함을 증명하세요. (힌트: \(\frac{1}{1+u} = 1-u+\frac{u^2}{1+u}\)를 이용하세요.)`,
       en: String.raw`Prove that \(\sum_{n=2}^{\infty}\frac{(-1)^n}{\,n+(-1)^n\sqrt{n}\,}\) converges conditionally. (Hint: use \(\frac{1}{1+u} = 1-u+\frac{u^2}{1+u}\).)`,
@@ -245,42 +158,6 @@ export const exercises: readonly ExerciseMeta[] = [
         text: {
           ko: String.raw`절대수렴은 하지 않습니다: \(n+(-1)^n\sqrt{n} \le n+\sqrt{n} \le 2n\) (\(n \ge 1\))이므로 \(b_n \ge \frac{1}{2n}\)이고, \(\sum\frac{1}{2n}\)은 발산하므로 비교 판정법으로 \(\sum b_n\)도 발산합니다. 따라서 조건수렴입니다.`,
           en: String.raw`It does not converge absolutely: \(n+(-1)^n\sqrt{n} \le n+\sqrt{n} \le 2n\) (\(n \ge 1\)), so \(b_n \ge \frac{1}{2n}\), and \(\sum\frac{1}{2n}\) diverges; by comparison \(\sum b_n\) diverges too. Hence the convergence is conditional.`,
-        },
-      },
-    ],
-  },
-  {
-    id: 'ppn-proof',
-    difficulty: 2,
-    topics: ['rearrangement', 'riemann-rearrangement', 'harmonic', 'euler-mascheroni'],
-    statement: {
-      ko: String.raw`교대조화급수를 "양항 두 개, 음항 한 개"씩 순서대로 재배열한 급수 \(1+\frac{1}{3}-\frac{1}{2}+\frac{1}{5}+\frac{1}{7}-\frac{1}{4}+\cdots\)가 \(\frac{3}{2}\ln 2\)로 수렴함을 엄밀히 증명하세요. (\(H_m = \ln m+\gamma+o(1)\)은 알려진 사실로 사용해도 됩니다.)`,
-      en: String.raw`Prove rigorously that the rearrangement of the alternating harmonic series taking "two positive terms, then one negative term" in order, \(1+\frac{1}{3}-\frac{1}{2}+\frac{1}{5}+\frac{1}{7}-\frac{1}{4}+\cdots\), converges to \(\frac{3}{2}\ln 2\). (You may use \(H_m = \ln m+\gamma+o(1)\) as known.)`,
-    },
-    display: [String.raw`T_{3N} = H_{4N}-\tfrac12 H_{2N}-\tfrac12 H_N \to \tfrac32\ln 2`],
-    solution: [
-      {
-        text: {
-          ko: String.raw`이것은 진짜 재배열입니다: 홀수 역수 \(\frac{1}{2k-1}\)와 짝수 역수 \(\frac{1}{2k}\)가 각각 정확히 한 번씩, 순서대로 등장합니다. 처음 \(3N\)개 항의 부분합을 \(T_{3N}\)이라 하면, 사용된 양항은 처음 \(2N\)개의 홀수 역수, 음항은 처음 \(N\)개의 짝수 역수이므로 \(T_{3N} = \sum_{k=1}^{2N}\frac{1}{2k-1}-\sum_{k=1}^{N}\frac{1}{2k}\)입니다.`,
-          en: String.raw`This is a genuine rearrangement: the odd reciprocals \(\frac{1}{2k-1}\) and the even reciprocals \(\frac{1}{2k}\) each appear exactly once, in order. Let \(T_{3N}\) be the sum of the first \(3N\) terms; the positive terms used are the first \(2N\) odd reciprocals and the negative terms the first \(N\) even reciprocals, so \(T_{3N} = \sum_{k=1}^{2N}\frac{1}{2k-1}-\sum_{k=1}^{N}\frac{1}{2k}\).`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`\(\sum_{k=1}^{2N}\frac{1}{2k-1} = H_{4N}-\sum_{k=1}^{2N}\frac{1}{2k} = H_{4N}-\frac{1}{2}H_{2N}\)이므로, \(T_{3N} = H_{4N}-\frac{1}{2}H_{2N}-\frac{1}{2}H_N\)입니다.`,
-          en: String.raw`Since \(\sum_{k=1}^{2N}\frac{1}{2k-1} = H_{4N}-\sum_{k=1}^{2N}\frac{1}{2k} = H_{4N}-\frac{1}{2}H_{2N}\), we get \(T_{3N} = H_{4N}-\frac{1}{2}H_{2N}-\frac{1}{2}H_N\).`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`\(H_m = \ln m+\gamma+\varepsilon_m\) (\(\varepsilon_m \to 0\))를 대입하면 \(T_{3N} = \ln(4N)-\frac{1}{2}\ln(2N)-\frac{1}{2}\ln N+\gamma\left(1-\frac{1}{2}-\frac{1}{2}\right)+o(1)\)입니다. \(\gamma\) 항은 소거되고, 로그 항은 \(\ln 4-\frac{1}{2}\ln 2 = \frac{3}{2}\ln 2\)가 되므로 \(T_{3N} \to \frac{3}{2}\ln 2\)입니다.`,
-          en: String.raw`Substituting \(H_m = \ln m+\gamma+\varepsilon_m\) (\(\varepsilon_m \to 0\)) gives \(T_{3N} = \ln(4N)-\frac{1}{2}\ln(2N)-\frac{1}{2}\ln N+\gamma\left(1-\frac{1}{2}-\frac{1}{2}\right)+o(1)\). The \(\gamma\) terms cancel and the logarithms give \(\ln 4-\frac{1}{2}\ln 2 = \frac{3}{2}\ln 2\), so \(T_{3N} \to \frac{3}{2}\ln 2\).`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`중간 부분합도 따라갑니다: \(T_{3N+1} = T_{3N}+\frac{1}{4N+1}\), \(T_{3N+2} = T_{3N+1}+\frac{1}{4N+3}\)이고 추가 항들은 \(0\)으로 가므로, 전체 수열 \(T_m\)이 \(\frac{3}{2}\ln 2\)로 수렴합니다. 조건수렴 급수는 재배열에 따라 합이 달라질 수 있습니다.`,
-          en: String.raw`The intermediate partial sums follow: \(T_{3N+1} = T_{3N}+\frac{1}{4N+1}\) and \(T_{3N+2} = T_{3N+1}+\frac{1}{4N+3}\), and the added terms tend to \(0\), so the whole sequence \(T_m\) converges to \(\frac{3}{2}\ln 2\). A conditionally convergent series can change its sum under rearrangement.`,
         },
       },
     ],
@@ -327,7 +204,7 @@ export const exercises: readonly ExerciseMeta[] = [
   {
     id: 'euler-product-shift',
     difficulty: 3,
-    topics: ['euler-product', 'basel', 'zeta4'],
+    topics: ['euler-product', 'basel'],
     statement: {
       ko: String.raw`오일러 곱셈식을 이용해 무한곱 \(\prod_{p\ \text{소수}}\left(1+\frac{1}{p^2}\right)\)가 수렴하고 그 값이 \(\frac{15}{\pi^2}\)임을 증명하세요. (\(\zeta(2) = \frac{\pi^2}{6}\), \(\zeta(4) = \frac{\pi^4}{90}\)은 알려진 사실로 사용해도 됩니다.)`,
       en: String.raw`Using the Euler product, prove that the infinite product \(\prod_{p\ \text{prime}}\left(1+\frac{1}{p^2}\right)\) converges and equals \(\frac{15}{\pi^2}\). (You may use \(\zeta(2) = \frac{\pi^2}{6}\) and \(\zeta(4) = \frac{\pi^4}{90}\) as known.)`,
@@ -350,36 +227,6 @@ export const exercises: readonly ExerciseMeta[] = [
         text: {
           ko: String.raw`\(x \to \infty\)일 때 분자는 \(\zeta(2) = \frac{\pi^2}{6}\)로, 분모는 \(\zeta(4) = \frac{\pi^4}{90}\)으로 수렴합니다 (오일러 곱셈식). 따라서 무한곱은 수렴하고, 그 값은 \(\frac{\pi^2/6}{\pi^4/90} = \frac{90}{6\pi^2} = \frac{15}{\pi^2}\)입니다.`,
           en: String.raw`As \(x \to \infty\), the numerator tends to \(\zeta(2) = \frac{\pi^2}{6}\) and the denominator to \(\zeta(4) = \frac{\pi^4}{90}\) (Euler product). Hence the infinite product converges to \(\frac{\pi^2/6}{\pi^4/90} = \frac{90}{6\pi^2} = \frac{15}{\pi^2}\).`,
-        },
-      },
-    ],
-  },
-  {
-    id: 'dini-series',
-    difficulty: 3,
-    topics: ['dini', 'tests'],
-    statement: {
-      ko: String.raw`\(N \ge 1\)에 대해 \(s_N(x) = \sum_{n=1}^{N}(1-x)x^n\)이라 둡니다. (a) \(s_N\)이 \([0,a]\) (\(0 < a < 1\))에서 디니 정리로 균등수렴함을 보이세요. (b) \([0,1]\)에서는 균등수렴하지 않음을 증명하세요.`,
-      en: String.raw`Let \(s_N(x) = \sum_{n=1}^{N}(1-x)x^n\) for \(N \ge 1\). (a) Show \(s_N\) converges uniformly on \([0,a]\) (\(0 < a < 1\)) via Dini's theorem. (b) Prove it does not converge uniformly on \([0,1]\).`,
-    },
-    display: [String.raw`s_N(x) = x(1-x^N) \uparrow x \quad (0 \le x < 1), \qquad s_N(1) = 0`],
-    solution: [
-      {
-        text: {
-          ko: String.raw`\(x \ne 1\)에서 \(\sum_{n=1}^{N}x^n = \frac{x(1-x^N)}{1-x}\)이므로 \(s_N(x) = x(1-x^N)\)입니다 (\(x = 1\)에서도 각 항이 \(0\)이므로 같은 식이 성립). 각 \(s_N\)은 다항식이므로 연속이고, \(s_{N+1}(x)-s_N(x) = (1-x)x^{N+1} \ge 0\) (\(0 \le x \le 1\))이므로 \(s_N\)은 단조증가합니다.`,
-          en: String.raw`For \(x \ne 1\), \(\sum_{n=1}^{N}x^n = \frac{x(1-x^N)}{1-x}\), so \(s_N(x) = x(1-x^N)\) (the same formula holds at \(x = 1\), where every term is \(0\)). Each \(s_N\) is a polynomial, hence continuous, and \(s_{N+1}(x)-s_N(x) = (1-x)x^{N+1} \ge 0\) (\(0 \le x \le 1\)), so \(s_N\) is monotone increasing.`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`(a) \(0 \le x \le a < 1\)에서 \(x^N \to 0\)이므로 \(s_N(x) \to x\)입니다. 극한함수 \(s(x) = x\)는 \([0,a]\)에서 연속이고, 연속함수들의 단조증가 수열이 연속 극한으로 각 점 수렴하므로, 디니 정리에 의해 수렴은 균등합니다.`,
-          en: String.raw`(a) For \(0 \le x \le a < 1\), \(x^N \to 0\), so \(s_N(x) \to x\). The limit \(s(x) = x\) is continuous on \([0,a]\); a monotone increasing sequence of continuous functions converging pointwise to a continuous limit converges uniformly by Dini's theorem.`,
-        },
-      },
-      {
-        text: {
-          ko: String.raw`(b) \([0,1]\)에서의 각 점별 극한은 \(s(x) = x\) (\(x < 1\)), \(s(1) = 0\)으로, \(x = 1\)에서 불연속입니다 (\(\lim_{x\to 1^{-}}s(x) = 1 \ne 0 = s(1)\)). 연속함수들의 균등수렴 극한은 연속이어야 하므로, \([0,1]\)에서의 수렴은 균등할 수 없습니다.`,
-          en: String.raw`(b) The pointwise limit on \([0,1]\) is \(s(x) = x\) (\(x < 1\)), \(s(1) = 0\), which is discontinuous at \(x = 1\) (\(\lim_{x\to 1^{-}}s(x) = 1 \ne 0 = s(1)\)). A uniform limit of continuous functions must be continuous, so convergence on \([0,1]\) cannot be uniform.`,
         },
       },
     ],
