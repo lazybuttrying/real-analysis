@@ -6,7 +6,7 @@ import { KahanSum } from '../../../math/sum';
 /** Pure computation. Does not import the DOM, d3, or three. */
 
 export const MAX_N = 1_000_000;
-export const MAX_POINTS = 400;
+const MAX_POINTS = 400;
 
 export interface HarmonicPoint {
   k: number;

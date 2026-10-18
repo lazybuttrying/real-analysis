@@ -7,9 +7,9 @@ import type { SceneModel } from '../../../contracts';
  * rational" claim is literally visible. Pure computation: no DOM, d3, or three.
  */
 
-export const MAX_ITERATIONS = 8;
+const MAX_ITERATIONS = 8;
 
-export interface BabylonianStep {
+interface BabylonianStep {
   n: number;
   /** Exact numerator/denominator of x_n */
   p: bigint;

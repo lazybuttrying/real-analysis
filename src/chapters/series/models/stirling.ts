@@ -10,11 +10,11 @@ import type { SceneModel } from '../../../contracts';
 
 export const MAX_N = 60;
 
-export function stirlingApprox(n: number): number {
+function stirlingApprox(n: number): number {
   return Math.sqrt(2 * Math.PI * n) * Math.pow(n / Math.E, n);
 }
 
-export interface StirlingPoint {
+interface StirlingPoint {
   k: number;
   lnFact: number;
   lnStir: number;

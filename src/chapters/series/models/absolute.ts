@@ -8,7 +8,7 @@ import type { SceneModel } from '../../../contracts';
  *                                a_k sums to -ln 2 (alternating series test)
  */
 
-export type AbsSeries = 'abs' | 'cond';
+type AbsSeries = 'abs' | 'cond';
 
 export const MAX_N = 200;
 

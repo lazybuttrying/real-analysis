@@ -8,7 +8,7 @@ import type { SceneModel } from '../../../contracts';
 
 export const MAX_STAGE = 8;
 
-export interface CantorInterval {
+interface CantorInterval {
   l: number;
   r: number;
 }

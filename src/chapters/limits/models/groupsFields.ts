@@ -6,9 +6,9 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type MultTable = 'z6' | 'z5';
+type MultTable = 'z6' | 'z5';
 
-export interface UnitInverse {
+interface UnitInverse {
   a: number;
   inv: number;
 }

@@ -8,9 +8,9 @@ import { clampNumber } from '../../../math/clamp';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const EPS_DELTA_A = 1;
-export const EPS_DELTA_L = 2;
-export const EPS_DELTA_SLOPE = 2;
+const EPS_DELTA_A = 1;
+const EPS_DELTA_L = 2;
+const EPS_DELTA_SLOPE = 2;
 
 /** General linear rule delta = epsilon / |slope|, used by the proofs too. */
 export function linearDelta(epsilon: number, slope: number): number {
@@ -21,7 +21,7 @@ export function epsDeltaDelta(epsilon: number): number {
   return linearDelta(epsilon, EPS_DELTA_SLOPE);
 }
 
-export function epsDeltaF(x: number): number {
+function epsDeltaF(x: number): number {
   return EPS_DELTA_SLOPE * x;
 }
 

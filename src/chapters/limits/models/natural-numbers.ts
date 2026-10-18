@@ -7,16 +7,16 @@ import type { SceneModel } from '../../../contracts';
  * one over. Pure computation: no DOM, d3, or three.
  */
 
-export const MAX_DOMINOES = 10;
-export const MIN_DOMINOES = 1;
-export const DEFAULT_DOMINOES = 6;
+const MAX_DOMINOES = 10;
+const MIN_DOMINOES = 1;
+const DEFAULT_DOMINOES = 6;
 
 export interface Domino {
   k: number;
   label: string;
 }
 
-export interface DominoData {
+interface DominoData {
   count: number;
   dominoes: Domino[];
 }

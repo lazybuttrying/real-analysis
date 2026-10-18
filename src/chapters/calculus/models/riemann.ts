@@ -8,9 +8,9 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const RIEMANN_LIMIT = 1 / 3;
+const RIEMANN_LIMIT = 1 / 3;
 
-export interface RiemannBar {
+interface RiemannBar {
   x0: number;
   x1: number;
   /** Lower rectangle height (left endpoint). */
@@ -29,7 +29,7 @@ export interface RiemannData {
 }
 
 /** Sum of squares 1^2 + ... + m^2, exact integer arithmetic for small m. */
-export function sumOfSquares(m: number): number {
+function sumOfSquares(m: number): number {
   return (m * (m + 1) * (2 * m + 1)) / 6;
 }
 
@@ -40,7 +40,7 @@ export function riemannSums(n: number): { lower: number; upper: number } {
   return { lower, upper };
 }
 
-export function riemannData(n: number): RiemannData {
+function riemannData(n: number): RiemannData {
   const nn = Math.max(1, Math.min(64, Math.round(n)));
   const { lower, upper } = riemannSums(nn);
   const bars: RiemannBar[] = [];

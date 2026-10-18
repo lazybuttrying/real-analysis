@@ -6,11 +6,11 @@ import type { SceneModel } from '../../../contracts';
  * past pi/2 - first above, then below - with ever-smaller swings.
  */
 
-export const MAX_PAIRS = 40;
+const MAX_PAIRS = 40;
 
 export const LIMIT = Math.PI / 2;
 
-export interface ProductPoint {
+interface ProductPoint {
   /** How many individual factors have been multiplied in so far */
   step: number;
   value: number;

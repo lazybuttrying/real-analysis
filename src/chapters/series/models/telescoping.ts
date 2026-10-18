@@ -10,7 +10,7 @@ export const MAX_N = 24;
 
 export const LIMIT = 1;
 
-export interface TermPair {
+interface TermPair {
   i: number;
   /** +1/i piece */
   pos: number;

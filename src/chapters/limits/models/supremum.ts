@@ -6,14 +6,13 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const SUPREMUM_SETS = ['one-minus', 'sqrt2'] as const;
-export type SupremumSet = (typeof SUPREMUM_SETS)[number];
+const SUPREMUM_SETS = ['one-minus', 'sqrt2'] as const;
 
 export const BOUND_MIN = 0.5;
 export const BOUND_MAX = 2;
 export const BOUND_INIT = 1.4;
 
-export interface SupremumPoints {
+interface SupremumPoints {
   sup: number;
   points: number[];
 }
