@@ -1,12 +1,13 @@
 import '../style.css';
 import { catalog } from '../catalog';
-import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
+import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type ExerciseMeta, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { learningPaths } from '../learning-paths';
-import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
+import { chapterUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './i18n';
+import { disposeExercisesPage, exercisesPageTitle, renderExercisesPage } from './exercises-page';
 import { SceneHost } from './scene-host';
 import { mountSearch } from './search';
 
@@ -15,8 +16,11 @@ const URL_SYNC_DELAY_MS = 200;
 
 type Loaders = Readonly<Record<string, SceneLoader>>;
 
+/** Loads the chapter's exercise data on demand (dynamic import keeps the text out of the chapter entry bundle). */
+type ExercisesLoader = () => Promise<readonly ExerciseMeta[]>;
+
 /** Called from a chapter entry. Wires up routing within the chapter (scene navigation), controls, and the scene lifecycle. */
-export function startChapter(chapterId: string, loaders: Loaders): void {
+export function startChapter(chapterId: string, loaders: Loaders, exercisesLoader: ExercisesLoader): void {
   const root = document.getElementById('app');
   const parsed = parsePath(BASE, location.pathname);
 
@@ -33,7 +37,7 @@ export function startChapter(chapterId: string, loaders: Loaders): void {
 
   const chapter = catalog.find((candidate) => candidate.id === chapterId);
   if (!chapter || !root) throw new Error(`${tr(lang, 'chapterMissing')}: ${chapterId}`);
-  mountChapter(chapter, loaders, root, lang);
+  mountChapter(chapter, loaders, exercisesLoader, root, lang);
 }
 
 function sceneLink(lang: Lang, chapter: ChapterMeta, scene: SceneMeta): HTMLAnchorElement {
@@ -194,7 +198,7 @@ function renderProblems(
     .catch((error: unknown) => console.error(error));
 }
 
-function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement, lang: Lang): void {
+function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: ExercisesLoader, root: HTMLElement, lang: Lang): void {
   const scenes = [...chapter.scenes].sort((a, b) => a.order - b.order);
   // Chapter numbers are automatic: the catalog order is the numbering, never stored in meta files.
   const chapterNumber = catalog.indexOf(chapter) + 1;
@@ -203,9 +207,19 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
   const nav = h(
     'nav',
     { 'aria-label': `${chapterTitle} ${tr(lang, 'tocLabel')}` },
-    h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene)))),
+    h(
+      'ul',
+      {},
+      ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene))),
+      h(
+        'li',
+        {},
+        h('a', { href: exercisesUrl(BASE, lang, chapter.id), 'data-spa': '', 'data-scene': 'exercises' }, tr(lang, 'exercises')),
+      ),
+    ),
   );
   const hub = h('section', { class: 'hub' });
+  const exercisesView = h('section', { class: 'exercises-view' });
   const hostEl = h('div', { class: 'scene-host' });
   const controlsEl = h('div', { class: 'controls' });
   const textEl = h('article', { class: 'scene-text' });
@@ -226,12 +240,14 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
       langSwitcher(lang, (target) => `${withLang(BASE, parsePath(BASE, location.pathname), target)}${location.search}`),
     ),
     nav,
-    h('main', {}, hub, sceneView),
+    h('main', {}, hub, exercisesView, sceneView),
   );
   mountSearch(headerSearch, lang);
 
   const sceneHost = new SceneHost(hostEl, lang);
   let urlSyncTimer: number | undefined;
+  /** Guards the async exercises load against a route change while it is in flight. */
+  let exercisesToken = 0;
 
   /** Disposers for the problem mini-visualizations of the current scene. */
   let problemDisposers: Array<() => void> = [];
@@ -263,9 +279,12 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
   };
 
   const showHub = (notice?: string): void => {
+    exercisesToken++;
     sceneHost.dispose();
     disposeProblems();
+    disposeExercisesPage(exercisesView);
     sceneView.hidden = true;
+    exercisesView.hidden = true;
     pagerEl.hidden = true;
     hub.hidden = false;
     document.title = `${chapterTitle} | Real Analysis`;
@@ -273,13 +292,23 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
       h('h1', {}, chapterTitle),
       ...(notice ? [h('p', { role: 'alert' }, notice)] : []),
       h('p', {}, summarySpan(localize(chapter.summary, lang))),
+      h(
+        'p',
+        { class: 'hub-exercises' },
+        h('a', { href: exercisesUrl(BASE, lang, chapter.id), 'data-spa': '' }, tr(lang, 'exercisesLinkLabel')),
+        ' — ',
+        tr(lang, 'exercisesIntro'),
+      ),
       h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene), ' — ', summarySpan(localize(scene.summary, lang))))),
     );
     markActive(undefined);
   };
 
   const showScene = (scene: SceneMeta): void => {
+    exercisesToken++;
     hub.hidden = true;
+    exercisesView.hidden = true;
+    disposeExercisesPage(exercisesView);
     sceneView.hidden = false;
     disposeProblems();
     document.title = `${localize(scene.title, lang)} | Real Analysis`;
@@ -339,6 +368,29 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
     pagerEl.hidden = false;
   };
 
+  const showExercises = (): void => {
+    hub.hidden = true;
+    sceneView.hidden = true;
+    disposeProblems();
+    sceneHost.dispose();
+    disposeExercisesPage(exercisesView);
+    exercisesView.hidden = false;
+    markActive('exercises');
+    document.title = exercisesPageTitle(lang, chapter);
+    const ticket = ++exercisesToken;
+    void exercisesLoader().then(
+      (exercises) => {
+        if (ticket !== exercisesToken) return;
+        renderExercisesPage(exercisesView, chapter, lang, loaders, exercises);
+      },
+      (error: unknown) => {
+        console.error(error);
+        if (ticket !== exercisesToken) return;
+        exercisesView.replaceChildren(h('p', { role: 'alert' }, tr(lang, 'exercisesLoadFailed')));
+      },
+    );
+  };
+
   const route = (): void => {
     // Prevents the previous scene's URL sync from overwriting the new path.
     window.clearTimeout(urlSyncTimer);
@@ -346,6 +398,10 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, root: HTMLElement,
     const { sceneId } = parsePath(BASE, location.pathname);
     if (!sceneId) {
       showHub();
+      return;
+    }
+    if (sceneId === 'exercises') {
+      showExercises();
       return;
     }
     const scene = scenes.find((candidate) => candidate.id === sceneId);

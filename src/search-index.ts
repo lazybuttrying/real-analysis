@@ -1,5 +1,8 @@
 import { catalog } from './catalog.ts';
-import { localize, stripInlineMath, type Lang } from './contracts.ts';
+import { exercises as limitsExercises } from './chapters/limits/exercises.ts';
+import { exercises as seriesExercises } from './chapters/series/exercises.ts';
+import { exercises as calculusExercises } from './chapters/calculus/exercises.ts';
+import { localize, stripInlineMath, type ExerciseMeta, type Lang } from './contracts.ts';
 import { glossary } from './glossary.ts';
 
 /**
@@ -8,6 +11,10 @@ import { glossary } from './glossary.ts';
  * The browser never imports this module: the shell fetches the emitted JSON
  * lazily and filters it with the tiny matcher in src/shell/search.ts, so the
  * catalog's full weight never enters a page bundle because of search.
+ *
+ * The exercise data modules are imported directly (an explicit exception in
+ * scripts/check-deps.ts): this module is build/test-only and never enters a
+ * client bundle, so no chapter code leaks into a page because of search.
  */
 
 export interface SearchSceneRecord {
@@ -31,15 +38,35 @@ export interface SearchTermRecord {
   sceneId: string;
 }
 
+export interface SearchExerciseRecord {
+  chapterId: string;
+  exerciseId: string;
+  /** 1-based position in the chapter's exercise file (the number shown on the card). */
+  number: number;
+  /** Plain text (math delimiters stripped) for substring matching. */
+  statement: string;
+  /** "1. 극한과 연속" — shown as the result's context line. */
+  chapterTitle: string;
+}
+
 export interface SearchIndexData {
   scenes: readonly SearchSceneRecord[];
   terms: readonly SearchTermRecord[];
+  exercises: readonly SearchExerciseRecord[];
 }
 
-/** One JSON-serializable index per language, covering every scene and every glossary term. */
+/** Chapter id -> that chapter's exercise data, in catalog order. */
+const exercisesByChapter = new Map<string, readonly ExerciseMeta[]>([
+  ['limits', limitsExercises],
+  ['series', seriesExercises],
+  ['calculus', calculusExercises],
+]);
+
+/** One JSON-serializable index per language, covering every scene, glossary term, and chapter exercise. */
 export function buildSearchIndex(lang: Lang): SearchIndexData {
   const scenes: SearchSceneRecord[] = [];
   const sceneTitleOf = new Map<string, string>();
+  const exercises: SearchExerciseRecord[] = [];
   catalog.forEach((chapter, chapterIndex) => {
     const chapterTitle = `${chapterIndex + 1}. ${localize(chapter.title, lang)}`;
     for (const scene of [...chapter.scenes].sort((a, b) => a.order - b.order)) {
@@ -53,6 +80,16 @@ export function buildSearchIndex(lang: Lang): SearchIndexData {
         chapterTitle,
       });
     }
+    const chapterExercises = exercisesByChapter.get(chapter.id) ?? [];
+    chapterExercises.forEach((exercise, index) => {
+      exercises.push({
+        chapterId: chapter.id,
+        exerciseId: exercise.id,
+        number: index + 1,
+        statement: stripInlineMath(localize(exercise.statement, lang)),
+        chapterTitle,
+      });
+    });
   });
   const terms: SearchTermRecord[] = glossary.map((entry) => ({
     id: entry.id,
@@ -62,5 +99,5 @@ export function buildSearchIndex(lang: Lang): SearchIndexData {
     chapterId: entry.chapterId,
     sceneId: entry.sceneId,
   }));
-  return { scenes, terms };
+  return { scenes, terms, exercises };
 }

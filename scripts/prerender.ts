@@ -3,11 +3,14 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
+import { exercises as limitsExercises } from '../src/chapters/limits/exercises.ts';
+import { exercises as seriesExercises } from '../src/chapters/series/exercises.ts';
+import { exercises as calculusExercises } from '../src/chapters/calculus/exercises.ts';
 import { buildConceptMap } from '../src/concept-map.ts';
-import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
+import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type ExerciseDifficulty, type ExerciseMeta, type Lang, type SceneMeta } from '../src/contracts.ts';
 import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
-import { chapterUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
+import { chapterUrl, exercisesUrl, glossaryUrl, homeUrl, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 
@@ -83,6 +86,81 @@ ${(problem.display ?? []).map(renderDisplayHtml).join('\n')}
     .join('\n');
   return `<section class="problems"><h2>${escapeHtml(localize(STRINGS.problemsHeading, lang))}</h2>\n${cards}\n</section>`;
 };
+
+/**
+ * Static body form of a chapter's exercises page: difficulty-grouped cards with
+ * statements, display formulas, topic links, viz figure+caption placeholders
+ * (the mini visualizations are client-only), and solutions in <details> so
+ * they work with zero JS. Mirrors the client renderer in
+ * src/shell/exercises-page.ts.
+ */
+const exercisesByChapter = new Map<string, readonly ExerciseMeta[]>([
+  ['limits', limitsExercises],
+  ['series', seriesExercises],
+  ['calculus', calculusExercises],
+]);
+
+const difficultyHeading = (difficulty: ExerciseDifficulty, lang: Lang): string =>
+  escapeHtml(
+    localize(
+      difficulty === 1 ? STRINGS.difficultyEasy : difficulty === 2 ? STRINGS.difficultyMedium : STRINGS.difficultyHard,
+      lang,
+    ),
+  );
+
+const renderExercisesHtml = (chapter: ChapterMeta, lang: Lang): string => {
+  const exercises = exercisesByChapter.get(chapter.id) ?? [];
+  const sceneTitleOf = new Map(chapter.scenes.map((scene) => [scene.id, localize(scene.title, lang)]));
+  const groups = ([1, 2, 3] as const)
+    .map((difficulty) => {
+      const cards = exercises
+        .map((exercise, index) => ({ exercise, index }))
+        .filter(({ exercise }) => exercise.difficulty === difficulty)
+        .map(({ exercise, index }) => {
+          const steps = exercise.solution
+            .map(
+              (step) =>
+                `<li>${renderSummaryHtml(localize(step.text, lang))}${(step.display ?? []).map(renderDisplayHtml).join('\n')}</li>`,
+            )
+            .join('\n');
+          const topics = exercise.topics
+            .map(
+              (topicId) =>
+                `<li><a href="${sceneUrl(BASE, lang, chapter.id, topicId)}">${escapeHtml(sceneTitleOf.get(topicId) ?? topicId)}</a></li>`,
+            )
+            .join('\n');
+          const viz = exercise.viz
+            ? `<figure class="exercise-viz"><figcaption>${renderSummaryHtml(localize(exercise.viz.presetCaption, lang))}</figcaption></figure>`
+            : '';
+          return `<article class="exercise problem" id="exercise-${exercise.id}">
+<div class="exercise-badges"><span class="exercise-number">${index + 1}</span><span class="difficulty-badge difficulty-${difficulty}">${difficultyHeading(difficulty, lang)}</span></div>
+<p class="exercise-statement">${renderSummaryHtml(localize(exercise.statement, lang))}</p>
+${(exercise.display ?? []).map(renderDisplayHtml).join('\n')}
+<ul class="exercise-topics">
+${topics}
+</ul>
+${viz}
+<details class="problem-proof"><summary>${escapeHtml(localize(STRINGS.showSolution, lang))}</summary>
+<ol>${steps}</ol>
+</details>
+</article>`;
+        })
+        .join('\n');
+      return cards ? `<section class="exercise-group"><h2>${difficultyHeading(difficulty, lang)}</h2>\n${cards}\n</section>` : '';
+    })
+    .join('\n');
+  return groups;
+};
+
+/** True when any language's form of the exercise data embeds inline math (the page then needs the KaTeX stylesheet). */
+const exerciseHasInlineMath = (exercise: ExerciseMeta): boolean =>
+  LANGS.some((lang) =>
+    [
+      localize(exercise.statement, lang),
+      ...(exercise.viz ? [localize(exercise.viz.presetCaption, lang)] : []),
+      ...exercise.solution.map((step) => localize(step.text, lang)),
+    ].some((text) => text.includes('\\(')),
+  );
 
 /** Every scene in reading order, across chapters — the static pager walks this list. */
 const readingOrder: ReadonlyArray<{ chapter: ChapterMeta; scene: SceneMeta }> = catalog.flatMap((chapter) =>
@@ -258,6 +336,31 @@ for (const [index, chapter] of catalog.entries()) {
       ].join('\n'),
   });
 
+  // Chapter exercises page: /<lang>/<chapter id>/exercises/
+  const chapterExercises = exercisesByChapter.get(chapter.id) ?? [];
+  pages.push({
+    segments: (lang) => [lang, chapter.id, 'exercises'],
+    url: (lang) => exercisesUrl(BASE, lang, chapter.id),
+    // Mirrors exercisesPageTitle in src/shell/exercises-page.ts; unique per
+    // language because the chapter differs.
+    title: (lang) => `${localize(STRINGS.exercises, lang)} · ${chapterNumber}. ${localize(chapter.title, lang)} | ${SITE_NAME}`,
+    description: (lang) => localize(STRINGS.exercisesIntro, lang),
+    template: chapter.id,
+    formulas: chapterExercises.some(
+      (exercise) =>
+        (exercise.display?.length ?? 0) > 0 ||
+        exercise.solution.some((step) => (step.display?.length ?? 0) > 0) ||
+        exerciseHasInlineMath(exercise),
+    ),
+    body: (lang) =>
+      [
+        `<p class="exercises-back"><a href="${chapterUrl(BASE, lang, chapter.id)}">← ${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</a></p>`,
+        `<h1>${escapeHtml(localize(STRINGS.exercises, lang))}</h1>`,
+        `<p>${escapeHtml(localize(STRINGS.exercisesIntro, lang))}</p>`,
+        renderExercisesHtml(chapter, lang),
+      ].join('\n'),
+  });
+
   for (const scene of [...chapter.scenes].sort((a, b) => a.order - b.order)) {
     pages.push({
       segments: (lang) => [lang, chapter.id, scene.id],
@@ -378,6 +481,63 @@ function selfCheck(): string[] {
         });
       }
     }
+  }
+  // Chapter exercises: exactly 12 per chapter, unique kebab-case ids, the
+  // 4/5/3 difficulty split in file order (easy first), non-empty bilingual
+  // statement/solution, topics and viz presets referencing real scenes of the
+  // same chapter, and well-formed math delimiters (\(...\) only, never $...$).
+  const KEBAB_CASE = /^[a-z][a-z0-9-]*$/;
+  const checkExerciseText = (tag: string, field: string, text: { ko: string; en: string }): void => {
+    for (const lang of LANGS) {
+      const value = localize(text, lang);
+      if (!value.trim()) problems.push(`${tag} has an empty ${field} (${lang})`);
+      if (value.includes('$')) problems.push(`${tag} uses a $ delimiter in ${field} (${lang})`);
+      const opens = (value.match(/\\\(/g) ?? []).length;
+      const closes = (value.match(/\\\)/g) ?? []).length;
+      if (opens !== closes) problems.push(`${tag} has unbalanced \\(...\\) in ${field} (${lang})`);
+    }
+  };
+  const checkNoDollar = (tag: string, field: string, formula: string): void => {
+    if (formula.includes('$')) problems.push(`${tag} uses a $ delimiter in ${field}`);
+  };
+  for (const chapter of catalog) {
+    const exercises = exercisesByChapter.get(chapter.id) ?? [];
+    if (exercises.length !== 12) problems.push(`chapter '${chapter.id}' has ${exercises.length} exercises (expected 12)`);
+    const sceneIds = new Set(chapter.scenes.map((scene) => scene.id));
+    const controlsOf = new Map(chapter.scenes.map((scene) => [scene.id, new Set(scene.controls.map((control) => control.key))]));
+    const seenExerciseIds = new Set<string>();
+    exercises.forEach((exercise, index) => {
+      const tag = `exercise '${chapter.id}/${exercise.id}'`;
+      if (seenExerciseIds.has(exercise.id)) problems.push(`chapter '${chapter.id}' has a duplicate exercise id '${exercise.id}'`);
+      seenExerciseIds.add(exercise.id);
+      if (!KEBAB_CASE.test(exercise.id)) problems.push(`${tag} id is not kebab-case`);
+      const expectedDifficulty = index < 4 ? 1 : index < 9 ? 2 : 3;
+      if (exercise.difficulty !== expectedDifficulty) {
+        problems.push(`${tag} has difficulty ${exercise.difficulty} at position ${index + 1} (expected ${expectedDifficulty}: the 4/5/3 split in file order)`);
+      }
+      checkExerciseText(tag, 'statement', exercise.statement);
+      for (const formula of exercise.display ?? []) checkNoDollar(tag, 'display', formula);
+      if (exercise.solution.length === 0) problems.push(`${tag} has an empty solution`);
+      exercise.solution.forEach((step, stepIndex) => {
+        checkExerciseText(tag, `solution step ${stepIndex}`, step.text);
+        for (const formula of step.display ?? []) checkNoDollar(tag, `solution step ${stepIndex} display`, formula);
+      });
+      if (exercise.topics.length === 0) problems.push(`${tag} has no topics`);
+      for (const topicId of exercise.topics) {
+        if (!sceneIds.has(topicId)) problems.push(`${tag} links to unknown scene '${chapter.id}/${topicId}'`);
+      }
+      if (exercise.viz) {
+        checkExerciseText(tag, 'presetCaption', exercise.viz.presetCaption);
+        const controlKeys = controlsOf.get(exercise.viz.sceneId);
+        if (!controlKeys) {
+          problems.push(`${tag} viz references unknown scene '${chapter.id}/${exercise.viz.sceneId}'`);
+        } else {
+          for (const key of Object.keys(exercise.viz.preset)) {
+            if (!controlKeys.has(key)) problems.push(`${tag} viz preset has unknown control key '${key}' for scene '${exercise.viz.sceneId}'`);
+          }
+        }
+      }
+    });
   }
   for (const lang of LANGS) {
     const seen = new Map<string, number>();
@@ -602,7 +762,7 @@ function main(): void {
   }
 
   console.log(
-    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
+    `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + ${catalog.length} exercises page(s) + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
   );
 }
 

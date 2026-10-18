@@ -16,7 +16,10 @@ import { fileURLToPath } from 'node:url';
  *  4. Chapter code reaches the shell only through its entry.ts (the wiring point),
  *     and never imports another chapter.
  *  5. Outside the chapters, only src/catalog.ts may import chapter code
- *     (it is the aggregation point for chapter meta).
+ *     (it is the aggregation point for chapter meta), with one narrow
+ *     exception: src/search-index.ts may aggregate the chapter exercise data
+ *     modules, because it is build/test-only and provably never enters a
+ *     client bundle (no value import of search-index.ts from src/ is allowed).
  *
  * Exits non-zero and prints every violation it finds.
  */
@@ -121,7 +124,19 @@ for (const file of files) {
       }
     }
     if (!inChapter && resolved !== undefined && resolved.startsWith('chapters/') && rel !== 'catalog.ts') {
-      violations.push({ file: rel, rule: 'only catalog.ts aggregates chapters', detail: `imports '${ref.spec}'` });
+      // Narrow exception: search-index.ts is build/test-only (imported by
+      // scripts/prerender.ts and tests/; see the build-only guard below), so
+      // aggregating the chapter exercise data there never puts chapter code
+      // into a client bundle.
+      if (rel !== 'search-index.ts') {
+        violations.push({ file: rel, rule: 'only catalog.ts aggregates chapters', detail: `imports '${ref.spec}'` });
+      }
+    }
+    // search-index.ts must stay build-only: no value import of it is allowed
+    // from anywhere else in src/ (type-only imports are erased and harmless).
+    const targetsSearchIndex = resolved === 'search-index.ts' || resolved === 'search-index';
+    if (targetsSearchIndex && rel !== 'search-index.ts' && !ref.typeOnly) {
+      violations.push({ file: rel, rule: 'search-index.ts is build-only', detail: `imports '${ref.spec}' as a value` });
     }
     if (ref.dynamic && base === 'meta.ts') {
       violations.push({ file: rel, rule: 'meta.ts imports types and problems-data only', detail: `dynamically imports '${ref.spec}'` });

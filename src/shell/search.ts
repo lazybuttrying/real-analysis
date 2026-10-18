@@ -1,4 +1,4 @@
-import { glossaryUrl, sceneUrl } from '../paths.ts';
+import { exercisesUrl, glossaryUrl, sceneUrl } from '../paths.ts';
 import type { Lang } from '../contracts.ts';
 import type { SearchIndexData } from '../search-index.ts';
 import { h } from './dom.ts';
@@ -8,10 +8,10 @@ const BASE = import.meta.env.BASE_URL;
 const MAX_RESULTS = 8;
 
 export interface RankedHit {
-  kind: 'scene' | 'term';
-  /** Scene title, or the glossary term itself. */
+  kind: 'scene' | 'term' | 'exercise';
+  /** Scene title, the glossary term itself, or the localized "Exercise N" label. */
   label: string;
-  /** Chapter title for scenes, scene title for terms. */
+  /** Chapter title for scenes and exercises, scene title for terms. */
   context: string;
   url: string;
 }
@@ -56,6 +56,22 @@ export function filterSearchIndex(index: SearchIndexData, query: string, base: s
           url: `${glossaryUrl(base, lang)}#term-${term.id}`,
         },
         score: inTerm ? 2 : 1,
+      });
+    }
+  }
+  for (const exercise of index.exercises) {
+    const label = `${tr(lang, 'searchExerciseKind')} ${exercise.number}`;
+    const inLabel = label.toLowerCase().includes(q);
+    const inStatement = !inLabel && exercise.statement.toLowerCase().includes(q);
+    if (inLabel || inStatement) {
+      scored.push({
+        hit: {
+          kind: 'exercise',
+          label,
+          context: exercise.chapterTitle,
+          url: `${exercisesUrl(base, lang, exercise.chapterId)}#exercise-${exercise.exerciseId}`,
+        },
+        score: inLabel ? 2 : 1,
       });
     }
   }
@@ -118,7 +134,10 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
       list.append(h('li', { class: 'search-empty', role: 'option', 'aria-selected': 'false' }, tr(lang, 'searchNoResults')));
     } else {
       for (const hit of hits) {
-        const kindLabel = tr(lang, hit.kind === 'scene' ? 'searchSceneKind' : 'searchTermKind');
+        const kindLabel = tr(
+          lang,
+          hit.kind === 'scene' ? 'searchSceneKind' : hit.kind === 'term' ? 'searchTermKind' : 'searchExerciseKind',
+        );
         const item = h(
           'li',
           { role: 'option', 'aria-selected': 'false' },

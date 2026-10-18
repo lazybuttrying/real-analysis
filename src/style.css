@@ -626,6 +626,99 @@ main.paths {
   margin: 0.5rem 0;
 }
 
+/* Chapter exercises page */
+.exercise-group {
+  margin-top: 2rem;
+}
+
+.exercise-group > h2 {
+  font-size: 1.25rem;
+}
+
+.exercise-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.exercise-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.difficulty-badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.exercise-statement {
+  font-weight: 600;
+}
+
+.exercise-topics {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.exercise-topics li a {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.exercise-viz {
+  margin: 1rem 0;
+}
+
+.exercise-viz-host {
+  height: 240px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.exercise-viz figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.exercises-back {
+  margin-bottom: 0.5rem;
+}
+
+.hub-exercises {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.hub-exercises a {
+  font-weight: 700;
+}
+
 @media (max-width: 720px) {
   #app.chapter {
     grid-template-columns: minmax(0, 1fr);
