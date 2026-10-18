@@ -12,7 +12,7 @@ describe('search index: buildSearchIndex', () => {
     for (const lang of ['ko', 'en'] as const) {
       const index = buildSearchIndex(lang);
       expect(index.scenes).toHaveLength(totalScenes);
-      expect(totalScenes).toBe(78);
+      expect(totalScenes).toBe(83);
       for (const scene of index.scenes) {
         expect(scene.title.trim().length).toBeGreaterThan(0);
         expect(scene.summary.trim().length).toBeGreaterThan(0);
