@@ -1,4 +1,5 @@
 import type { ChapterMeta } from '../../contracts.ts';
+import { arzelaAscoliProblems } from './problems/arzela-ascoli';
 import { baireCategoryProblems } from './problems/baire-category';
 import { problems as bolzanoWeierstrassProblems } from './problems/bolzano-weierstrass';
 import { problems as binomialProblems } from './problems/binomial';
@@ -15,6 +16,7 @@ import { problems as dimensionRankProblems } from './problems/dimension-rank';
 import { problems as epsdeltaProblems } from './problems/epsdelta';
 import { problems as epsilonNProblems } from './problems/epsilon-n';
 import { problems as evtProblems } from './problems/evt';
+import { fatCantorProblems } from './problems/fat-cantor';
 import { problems as groupsFieldsProblems } from './problems/groups-fields';
 import { problems as holesProblems } from './problems/holes';
 import { problems as ivtProblems } from './problems/ivt';
@@ -631,9 +633,25 @@ problems: monotoneCauchyProblems,
 problems: cantorProblems,
     },
     {
+      id: 'fat-cantor',
+      title: { ko: '팻 칸토어 집합', en: 'The Fat Cantor Set' },
+      order: 30,
+      summary: {
+        ko: String.raw`가운데를 덜 파내면 어떻게 될까요 — 매 단계에서 길이 \(4^{-n}\)만 제거하면 남는 집합은 컴팩트하고 nowhere dense이며 perfect인데도 전체 길이가 \(\frac12\)로 수렴합니다. 측도와 위상적 크기는 독립적입니다.`,
+        en: String.raw`What if we dig out less? Removing only length \(4^{-n}\) per interval leaves a set that is compact, nowhere dense and perfect — yet keeps total length \(\frac12\). Measure and topological size are independent notions.`,
+      },
+      tex: [
+        String.raw`\sum_{n\ge 1} 2^{n-1} 4^{-n} = \frac12`,
+        String.raw`m(C) = \frac12,\quad \mathrm{int}\,C = \varnothing`,
+      ],
+      prerequisites: ['cantor'],
+      controls: [{ kind: 'slider', key: 'stage', label: { ko: '단계 n', en: 'Stage n' }, min: 0, max: 7, step: 1, init: 4 }],
+problems: fatCantorProblems,
+    },
+    {
       id: 'cantor-function',
       title: { ko: '칸토어 함수', en: 'The Cantor Function' },
-      order: 30,
+      order: 31,
       summary: {
         ko: String.raw`악마의 계단: 연속이고 단조롭게 \(0\)에서 \(1\)로 오르지만, 여집합 구간에서는 상수라서 \(f' = 0\)인 점들의 전체 길이가 \(1\)입니다. \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — 미적분학 기본정리가 "거의 모든 곳에서 미분가능"보다 더 강한 것을 요구하는 이유입니다.`,
         en: String.raw`The Devil's staircase: continuous and nondecreasing from \(0\) to \(1\), yet constant on every complementary interval, so \(f' = 0\) on a set of total length \(1\). \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — why the FTC needs more than differentiability almost everywhere.`,
@@ -651,7 +669,7 @@ problems: cantorProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 31,
+      order: 32,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -666,7 +684,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 32,
+      order: 33,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -690,7 +708,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 33,
+      order: 34,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
@@ -706,9 +724,26 @@ problems: evtProblems,
 problems: uniformProblems,
     },
     {
+      id: 'arzela-ascoli',
+      title: { ko: '아르첼라-아스콜리 정리', en: 'Arzelà–Ascoli Theorem' },
+      order: 35,
+      summary: {
+        ko: String.raw`연속함수들의 집합이 균등수렴하는 부분수열을 품을 조건 — 균등 유계와 동등연속이면 대각선 논증으로 균등수렴 부분수열을 뽑아냅니다. \(x^n\)은 왜 안 되는지 대비해 보세요.`,
+        en: String.raw`When does a family of continuous functions hide a uniformly convergent subsequence? Uniform boundedness plus equicontinuity lets the diagonal argument extract one. Contrast with \(x^n\), where it fails.`,
+      },
+      tex: [
+        String.raw`F \subset C(K)\ \text{relatively compact}`,
+        String.raw`\iff \text{uniformly bounded} + \text{equicontinuous}`,
+        String.raw`\|f_{a_k} - f^*\|_\infty = \frac{1}{k+2} \to 0`,
+      ],
+      prerequisites: ['uniform', 'bolzano-weierstrass'],
+      controls: [{ kind: 'slider', key: 'members', label: { ko: '부분수열 항의 수', en: 'Subsequence members' }, min: 2, max: 12, step: 1, init: 6 }],
+problems: arzelaAscoliProblems,
+    },
+    {
       id: 'weierstrass-approx',
       title: { ko: '바이어슈트라스 근사정리', en: 'Weierstrass Approximation Theorem' },
-      order: 34,
+      order: 36,
       summary: {
         ko: String.raw`\([0,1]\) 위의 연속함수는 다항식으로 균등하게 근사됩니다 — 번스타인 다항식 \(B_n(f)\)가 \(f\)에 다가가는 모습을 \(n\)을 키우며 확인합니다. 수렴 증명의 세부 추정은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every continuous function on \([0,1]\) is uniformly approximable by polynomials — watch the Bernstein polynomials \(B_n(f)\) close in on \(f\) as \(n\) grows. The fine estimates of the convergence proof are sketched at the idea level.`,
@@ -727,7 +762,7 @@ problems: weierstrassApproxProblems,
     {
       id: 'stone-weierstrass',
       title: { ko: '스톤-바이어슈트라스 정리', en: 'Stone–Weierstrass Theorem' },
-      order: 35,
+      order: 37,
       summary: {
         ko: String.raw`점들을 분리하고 상수를 포함하는 부분대수는 균등하게 조밀합니다 — 원 위의 삼각다항식이 삼각파 \(|x|\)에 다가가며 대수적 다항식 없이 조밀성을 보여줍니다.`,
         en: String.raw`A subalgebra that separates points and contains the constants is uniformly dense — trigonometric polynomials on the circle close in on the triangle wave \(|x|\), with no algebraic polynomial in sight.`,

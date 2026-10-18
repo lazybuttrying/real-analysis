@@ -611,6 +611,36 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'limits',
     sceneId: 'stone-weierstrass',
   },
+  {
+    id: 'fat-cantor-set',
+    term: { ko: '팻 칸토어 집합', en: 'fat Cantor set' },
+    definition: {
+      ko: String.raw`매 단계에서 길이 \(4^{-n}\)만 제거해 만든 칸토어형 집합 — 컴팩트하고 nowhere dense이며 perfect인데도 측도가 \(\frac12\)로 남는다. Smith–Volterra–Cantor 집합이라고도 한다.`,
+      en: String.raw`A Cantor-type set built by removing only length \(4^{-n}\) at each stage — compact, nowhere dense and perfect, yet keeping measure \(\frac12\). Also called the Smith–Volterra–Cantor set.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'fat-cantor',
+  },
+  {
+    id: 'equicontinuous',
+    term: { ko: '동등연속', en: 'equicontinuous' },
+    definition: {
+      ko: String.raw`함수족 \(\mathcal{F}\)가 한 점이 아니라 모든 점에서 "같은 \(\delta\)"로 연속인 성질 — \(\varepsilon > 0\)마다 모든 \(f \in \mathcal{F}\)에 통하는 \(\delta > 0\)이 존재한다. Arzelà–Ascoli 정리의 핵심 가정.`,
+      en: String.raw`A family \(\mathcal{F}\) of functions that is continuous with "the same \(\delta\)" at every point — for each \(\varepsilon > 0\) there is \(\delta > 0\) working for all \(f \in \mathcal{F}\). The key hypothesis of the Arzelà–Ascoli theorem.`,
+    },
+    chapterId: 'limits',
+    sceneId: 'arzela-ascoli',
+  },
+  {
+    id: 'relatively-compact',
+    term: { ko: '상대 컴팩트', en: 'relatively compact' },
+    definition: {
+      ko: String.raw`폐포가 컴팩트인 집합 — 모든 수열이 수렴하는 부분수열을 품는다. \(C(K)\)에서는 균등 유계 + 동등연속과 동치 (Arzelà–Ascoli).`,
+      en: String.raw`A set whose closure is compact — every sequence hides a convergent subsequence. In \(C(K)\) this is equivalent to uniform boundedness + equicontinuity (Arzelà–Ascoli).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'arzela-ascoli',
+  },
   // ---------------------------------------------------------------- series
   {
     id: 'abel-theorem',
@@ -1292,5 +1322,55 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'calculus',
     sceneId: 'absolute-continuity',
+  },
+  {
+    id: 'volterra-function',
+    term: { ko: 'Volterra 함수', en: 'Volterra function' },
+    definition: {
+      ko: String.raw`어디서나 미분가능하고 도함수가 유계이지만, 그 도함수는 리만 적분 불가능한 함수 — 팻 칸토어 집합 위에 \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)형 혹들을 쌓아 만든다.`,
+      en: String.raw`Differentiable everywhere with a bounded derivative, yet the derivative is not Riemann integrable — built by stacking \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)-type bumps over a fat Cantor set.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'volterra-function',
+  },
+  {
+    id: 'fejer-kernel',
+    term: { ko: 'Fejér kernel', en: 'Fejér kernel' },
+    definition: {
+      ko: String.raw`\(K_N(t) = \frac1N\left(\frac{\sin(Nt/2)}{\sin(t/2)}\right)^2\) — 0 이상이고 평균이 1인 삼각다항식으로, 푸리에 부분합의 체자로 평균을 컨볼루션으로 만든다.`,
+      en: String.raw`\(K_N(t) = \frac1N\left(\frac{\sin(Nt/2)}{\sin(t/2)}\right)^2\) — a nonnegative trigonometric polynomial of mean 1 that turns Cesàro means of Fourier sums into a convolution.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'fejer-theorem',
+  },
+  {
+    id: 'cesaro-mean',
+    term: { ko: '체자로 평균', en: 'Cesàro mean' },
+    definition: {
+      ko: String.raw`부분합들의 평균 \(\sigma_N = \frac{S_0+\cdots+S_{N-1}}{N}\) — 발산하는 급수에도 합을 부여할 수 있고, 푸리에급수에서는 울림을 매끈하게 다듬는다 (Fejér 정리).`,
+      en: String.raw`The average of partial sums \(\sigma_N = \frac{S_0+\cdots+S_{N-1}}{N}\) — it can sum divergent series, and for Fourier series it smooths out the ringing (Fejér's theorem).`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'fejer-theorem',
+  },
+  {
+    id: 'gibbs-phenomenon',
+    term: { ko: 'Gibbs 현상', en: 'Gibbs phenomenon' },
+    definition: {
+      ko: String.raw`점프 불연속점 근처에서 푸리에 부분합이 점프의 약 8.95%만큼 오버슈트하고, \(N\)을 키워도 혹이 좁아질 뿐 사라지지 않는 현상.`,
+      en: String.raw`Fourier partial sums overshoot by about 8.95% of the jump near a discontinuity — raising \(N\) narrows the bump but never removes it.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'gibbs-phenomenon',
+  },
+  {
+    id: 'wilbraham-gibbs-constant',
+    term: { ko: 'Wilbraham–Gibbs 상수', en: 'Wilbraham–Gibbs constant' },
+    definition: {
+      ko: String.raw`Gibbs 오버슈트의 극한값 \(\frac{2}{\pi}\mathrm{Si}(\pi) - 1 \approx 0.17898\) — 점프 크기의 약 8.949%. \(\mathrm{Si}\)는 사인 적분.`,
+      en: String.raw`The limiting Gibbs overshoot \(\frac{2}{\pi}\mathrm{Si}(\pi) - 1 \approx 0.17898\) — about 8.949% of the jump. \(\mathrm{Si}\) is the sine integral.`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'gibbs-phenomenon',
   },
 ];

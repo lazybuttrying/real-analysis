@@ -43,6 +43,7 @@ export const learningPaths: readonly LearningPath[] = [
       { chapterId: 'limits', sceneId: 'holes' },
       { chapterId: 'limits', sceneId: 'construction' },
       { chapterId: 'limits', sceneId: 'cantor' },
+      { chapterId: 'limits', sceneId: 'fat-cantor' },
     ],
   },
   {
@@ -116,6 +117,7 @@ export const learningPaths: readonly LearningPath[] = [
       { chapterId: 'limits', sceneId: 'cantor' },
       { chapterId: 'limits', sceneId: 'cantor-function' },
       { chapterId: 'calculus', sceneId: 'weierstrass-function' },
+      { chapterId: 'calculus', sceneId: 'volterra-function' },
       { chapterId: 'calculus', sceneId: 'bounded-variation' },
       { chapterId: 'calculus', sceneId: 'darboux' },
       { chapterId: 'limits', sceneId: 'weierstrass-approx' },
@@ -135,6 +137,7 @@ export const learningPaths: readonly LearningPath[] = [
       { chapterId: 'limits', sceneId: 'baire-category' },
       { chapterId: 'calculus', sceneId: 'banach' },
       { chapterId: 'limits', sceneId: 'compact' },
+      { chapterId: 'limits', sceneId: 'arzela-ascoli' },
       { chapterId: 'limits', sceneId: 'bolzano-weierstrass' },
       { chapterId: 'limits', sceneId: 'evt' },
       { chapterId: 'limits', sceneId: 'uniform-continuity' },
