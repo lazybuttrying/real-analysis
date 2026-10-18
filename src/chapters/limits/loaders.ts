@@ -32,9 +32,11 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'stolz-cesaro': () => import('./scenes/stolzCesaro').then((module) => module.default),
   cantor: () => import('./scenes/cantor').then((module) => module.default),
   'cantor-function': () => import('./scenes/cantorFunction').then((module) => module.default),
+  'fat-cantor': () => import('./scenes/fatCantor').then((module) => module.default),
   ivt: () => import('./scenes/ivt').then((module) => module.default),
   evt: () => import('./scenes/evt').then((module) => module.default),
   uniform: () => import('./scenes/uniform').then((module) => module.default),
+  'arzela-ascoli': () => import('./scenes/arzelaAscoli').then((module) => module.default),
   'weierstrass-approx': () => import('./scenes/weierstrassApprox').then((module) => module.default),
   'stone-weierstrass': () => import('./scenes/stoneWeierstrass').then((module) => module.default),
 };

@@ -9,6 +9,8 @@ import { problems as diffcontProblems } from './problems/diffcont';
 import { problems as fourierProblems } from './problems/fourier';
 import { problems as weierstrassFunctionProblems } from './problems/weierstrass-function';
 import { problems as ftcProblems } from './problems/ftc';
+import { fejerTheoremProblems } from './problems/fejer-theorem';
+import { gibbsPhenomenonProblems } from './problems/gibbs-phenomenon';
 import { problems as lhopitalProblems } from './problems/lhopital';
 import { problems as lebesgueProblems } from './problems/lebesgue';
 import { problems as measureProblems } from './problems/measure';
@@ -17,6 +19,7 @@ import { problems as newtonProblems } from './problems/newton';
 import { problems as riemannProblems } from './problems/riemann';
 import { problems as taylorProblems } from './problems/taylor';
 import { problems as taylorThmProblems } from './problems/taylor-thm';
+import { volterraFunctionProblems } from './problems/volterra-function';
 
 /**
  * Pure data. Imports types plus the chapter's per-scene problems data modules
@@ -217,9 +220,28 @@ problems: convexProblems,
 problems: riemannProblems,
     },
     {
+      id: 'volterra-function',
+      title: { ko: 'Volterra 함수', en: "Volterra's Function" },
+      order: 11,
+      summary: {
+        ko: String.raw`어디서나 미분가능하고 도함수가 유계인데, 그 도함수는 리만 적분 불가능 — 팻 칸토어 집합 위에 올린 \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)형 혹들의 합이 만드는 전설적인 반례입니다.`,
+        en: String.raw`Differentiable everywhere with a bounded derivative — yet the derivative is not Riemann integrable. A sum of \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)-type bumps over a fat Cantor set builds this legendary counterexample.`,
+      },
+      tex: [
+        String.raw`\varphi(x) = (x-a)^2(b-x)^2\sin\frac{1}{x-a}`,
+        String.raw`f'\ \text{bounded},\quad f' \notin \mathcal{R}[0,1]`,
+      ],
+      prerequisites: ['riemann'],
+      controls: [
+        { kind: 'slider', key: 'stage', label: { ko: '단계', en: 'Stage' }, min: 1, max: 7, step: 1, init: 4 },
+        { kind: 'slider', key: 'interval', label: { ko: '확대 구간', en: 'Zoom interval' }, min: 0, max: 126, step: 1, init: 0 },
+      ],
+problems: volterraFunctionProblems,
+    },
+    {
       id: 'ftc',
       title: { ko: '미적분 기본정리', en: "The Area Function's Derivative Is the Function" },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`넓이함수 \(A(x) = \int_a^x f(t)\,dt\)의 기울기를 재보면 \(f(x)\)와 일치합니다. \(x\)를 움직여보세요.`,
         en: String.raw`Measure the slope of the area function \(A(x) = \int_a^x f(t)\,dt\) — it equals \(f(x)\). Drag \(x\).`,
@@ -240,7 +262,7 @@ problems: ftcProblems,
     {
       id: 'bounded-variation',
       title: { ko: '유계변동 함수', en: 'Functions of Bounded Variation' },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`분할을 잘게 쪼갤 때 \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\)이 유한한 상한 안에 머무르면 유계변동 — 단조함수는 전부 해당하고, \(x\sin(1/x)\)처럼 0 근처에서 끝없이 출렁이면 탈락합니다.`,
         en: String.raw`A function has bounded variation when \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\) stays under a finite ceiling as partitions refine — every monotone function qualifies, while \(x\sin(1/x)\), wiggling endlessly near 0, does not.`,
@@ -265,7 +287,7 @@ problems: boundedVariationProblems,
     {
       id: 'newton',
       title: { ko: '뉴턴법', en: 'Riding Tangents to the Root' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`접선을 타고 내려가면 근에 닿습니다. 오차의 정확한 자릿수가 매 단계 두 배가 됩니다.`,
         en: String.raw`Ride the tangent down to the root. The number of correct digits doubles each step.`,
@@ -287,7 +309,7 @@ problems: newtonProblems,
     {
       id: 'banach',
       title: { ko: '바나흐 고정점', en: 'The Contraction Cobweb' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`\(y = x\)와 \(y = f(x)\) 사이를 오가는 거미줄이 한 점으로 빨려듭니다. 오차는 \(q^n\)으로 줄어듭니다.`,
         en: String.raw`The cobweb between \(y = x\) and \(y = f(x)\) gets sucked into one point. The error shrinks like \(q^n\).`,
@@ -309,7 +331,7 @@ problems: banachProblems,
     {
       id: 'fourier',
       title: { ko: '푸리에 정사각파', en: 'The Ringing That Never Dies' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`정사각파에 사인파를 겹쳐봅니다. 점프점 옆의 울림은 \(N\)을 키워도 사라지지 않습니다.`,
         en: String.raw`Layer sine waves onto a square wave. The ringing beside each jump never dies out, no matter how large \(N\) gets.`,
@@ -319,9 +341,41 @@ problems: banachProblems,
 problems: fourierProblems,
     },
     {
+      id: 'fejer-theorem',
+      title: { ko: 'Fejér 정리', en: "Fejér's Theorem" },
+      order: 17,
+      summary: {
+        ko: String.raw`푸리에 부분합의 체자로 평균 \(\sigma_N\)은 연속함수에 균등수렴합니다 — Fejér kernel이 근사 항등원이기 때문입니다. 울림 많은 \(S_N\)과 매끈한 \(\sigma_N\)을 겹쳐보세요.`,
+        en: String.raw`The Cesàro means \(\sigma_N\) of Fourier partial sums converge uniformly for continuous functions — because the Fejér kernel is an approximate identity. Overlay the ringing \(S_N\) with the smooth \(\sigma_N\).`,
+      },
+      tex: [
+        String.raw`\sigma_N = \frac{S_0+\cdots+S_{N-1}}{N} \xrightarrow{\|\cdot\|_\infty} f`,
+        String.raw`K_N(t) = \frac1N\left(\frac{\sin(Nt/2)}{\sin(t/2)}\right)^2 \ge 0`,
+      ],
+      prerequisites: ['fourier'],
+      controls: [{ kind: 'slider', key: 'N', label: { ko: '항의 수 N', en: 'Terms N' }, min: 1, max: 40, step: 1, init: 8 }],
+problems: fejerTheoremProblems,
+    },
+    {
+      id: 'gibbs-phenomenon',
+      title: { ko: 'Gibbs 현상', en: 'The Gibbs Phenomenon' },
+      order: 18,
+      summary: {
+        ko: String.raw`점프점 옆의 혹이 왜 사라지지 않는가 — 스케일을 \(t = 2Nx\)로 바꾸면 \(S_N\)이 \((2/\pi)\mathrm{Si}(t)\)에 붙고, 첫 봉우리는 \((2/\pi)\mathrm{Si}(\pi) \approx 1.179\)에 수렴합니다. 오버슈트는 점프의 약 8.95%.`,
+        en: String.raw`Why the bump beside the jump never dies — rescaling by \(t = 2Nx\) collapses \(S_N\) onto \((2/\pi)\mathrm{Si}(t)\), and the first peak tends to \((2/\pi)\mathrm{Si}(\pi) \approx 1.179\). The overshoot is about 8.95% of the jump.`,
+      },
+      tex: [
+        String.raw`S_N'(x) = \frac{2}{\pi}\frac{\sin(2Nx)}{\sin x}`,
+        String.raw`\text{peak} \to \frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898`,
+      ],
+      prerequisites: ['fourier'],
+      controls: [{ kind: 'slider', key: 'N', label: { ko: '항의 수 N', en: 'Terms N' }, min: 2, max: 60, step: 1, init: 12 }],
+problems: gibbsPhenomenonProblems,
+    },
+    {
       id: 'measure',
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
-      order: 16,
+      order: 19,
       summary: {
         ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
         en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
@@ -338,7 +392,7 @@ problems: fourierProblems,
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 17,
+      order: 20,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
@@ -353,7 +407,7 @@ problems: lebesgueProblems,
     {
       id: 'absolute-continuity',
       title: { ko: '절대연속성', en: 'Absolute Continuity' },
-      order: 18,
+      order: 21,
       summary: {
         ko: String.raw`\(F(x) = x^2\)는 절대연속 — 구간들의 총 길이가 0으로 가면 \(\sum |\Delta F|\)도 0으로 갑니다. 칸토어 함수는 균등연속이지만 절대연속이 아닙니다: 총 길이 \(\left(\frac23\right)^n \to 0\)인데 \(\sum |\Delta c| = 1\)에 고정됩니다. 절대연속인 함수는 정확히 Lebesgue 적분 가능한 함수의 부정적분입니다.`,
         en: String.raw`\(F(x) = x^2\) is absolutely continuous — when the intervals' total length goes to 0, so does \(\sum |\Delta F|\). The Cantor function is uniformly continuous but not absolutely continuous: total length \(\left(\frac23\right)^n \to 0\) while \(\sum |\Delta c| = 1\) stays frozen. Absolutely continuous functions are exactly the indefinite integrals of Lebesgue-integrable functions.`,
