@@ -9,7 +9,7 @@ import type { LocalizedText } from './contracts.ts';
  * inline math uses \\(...\\) delimiters (never $...$); every entry links to the
  * scene where the term is introduced via chapterId + sceneId.
  */
-export interface GlossaryEntry {
+interface GlossaryEntry {
   /** Stable kebab-case id, unique across the glossary. Used for #term-<id> anchors. */
   id: string;
   term: LocalizedText;

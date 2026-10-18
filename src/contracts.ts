@@ -27,7 +27,7 @@ export function localize(text: LocalizedText, lang: Lang): string {
  * A piece of a rich-text string (summaries): either plain prose, or TeX source
  * that appeared between \( and \) delimiters.
  */
-export type RichTextSegment = { kind: 'text'; text: string } | { kind: 'math'; tex: string };
+type RichTextSegment = { kind: 'text'; text: string } | { kind: 'math'; tex: string };
 
 const INLINE_MATH_PATTERN = /\\\(([\s\S]*?)\\\)/g;
 
@@ -83,7 +83,7 @@ export interface Scene<D> {
   dispose(): void;
 }
 
-export interface SceneModule<D> {
+interface SceneModule<D> {
   model: SceneModel<D>;
   createScene(): Scene<D>;
 }
@@ -99,7 +99,7 @@ export function defineScene<D>(module: SceneModule<D>): SceneModule<D> {
 }
 
 /** One step of a rigorous proof: prose (with \(...\) inline TeX) plus optional display formulas. */
-export interface ProofStep {
+interface ProofStep {
   text: LocalizedText;
   display?: readonly string[];
 }

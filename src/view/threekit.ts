@@ -168,7 +168,7 @@ export function createGrid(size: number, divisions: number, opacity = 0.28): Gri
   return grid;
 }
 
-export interface BarItem {
+interface BarItem {
   x?: number;
   z?: number;
   height: number;
@@ -178,7 +178,7 @@ export interface BarItem {
   depth?: number;
 }
 
-export interface BarsOpts {
+interface BarsOpts {
   width?: number;
   depth?: number;
 }
@@ -218,7 +218,7 @@ export function createPlane(w: number, d: number, color: number, opacity: number
   return new Mesh(geo, mat);
 }
 
-export interface LineOpts {
+interface LineOpts {
   dashed?: boolean;
   dashSize?: number;
   gapSize?: number;
@@ -268,7 +268,7 @@ function getCircleTexture(): CanvasTexture {
   return circleTexture;
 }
 
-export interface PointsOpts {
+interface PointsOpts {
   size?: number;
 }
 
@@ -294,7 +294,7 @@ export function createPoints(points: Array<[number, number, number]>, color: num
 
 // ---------- canvas-texture labels ----------
 
-export interface LabelOpts {
+interface LabelOpts {
   fontSize?: number;
   pad?: number;
   color?: string;
@@ -350,20 +350,3 @@ export function createLabel(text: string, opts: LabelOpts = {}): Sprite {
   return sprite;
 }
 
-/** Regenerates the label texture only when the text actually changed. */
-export function updateLabel(sprite: Sprite, text: string): void {
-  const data = sprite.userData['label'] as LabelData | undefined;
-  if (data && data.text === text) return;
-  const opts = data ? data.opts : {};
-  const canvas = drawLabelCanvas(text, opts);
-  const material = sprite.material as SpriteMaterial;
-  const old = material.map;
-  const tex = new CanvasTexture(canvas);
-  tex.anisotropy = 4;
-  material.map = tex;
-  material.needsUpdate = true;
-  if (old) old.dispose();
-  const worldHeight = opts.worldHeight ?? 0.85;
-  sprite.scale.set(worldHeight * (canvas.width / canvas.height), worldHeight, 1);
-  sprite.userData['label'] = { text, opts } satisfies LabelData;
-}

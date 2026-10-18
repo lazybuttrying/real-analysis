@@ -17,7 +17,7 @@
 | 상태 | `ControlSpec`이 컨트롤 상태와 URL 쿼리(`?n=500&logX=0`)의 단일 원천. 기본값은 URL에서 생략 |
 | SEO | 씬별 프리렌더(제목, 요약, 본문, KaTeX), sitemap, canonical, 챕터 허브 페이지 |
 | 배포 | GitHub Pages, 공식 Pages 액션, PR에서는 검증만 하고 배포는 main push에서만 |
-| 품질 | vitest(모델), `tsc --noEmit && vite build`, 챕터별 `size-limit`, 의존 방향 lint, 프리렌더 CI 검사 |
+| 품질 | vitest(모델), `tsc --noEmit && vite build`, 챕터별 `size-limit`(예산은 `scripts/gen-size-budget.ts`가 catalog+dist에서 자동 생성 — 손으로 고치지 않는다), 의존 방향 lint, 프리렌더 CI 검사 |
 
 ## 구조
 

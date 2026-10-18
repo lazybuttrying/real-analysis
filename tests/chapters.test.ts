@@ -5,7 +5,6 @@ import { LANGS, localize } from '../src/contracts.ts';
 import {
   FULLY_RETIRED_CHAPTER_IDS,
   LEGACY_CHAPTER_IDS,
-  LEGACY_SCENE_CHAPTER,
   legacyChapterOf,
 } from '../src/paths.ts';
 
@@ -13,8 +12,7 @@ import {
  * Integrity of the 10-chapter split:
  * - the catalog lists exactly the 10 logical chapters in order,
  * - no scene is lost or duplicated (93 unique),
- * - every chapter's scenes are ordered 1..N with 3 proven problems each,
- * - the legacy canonical map covers every scene exactly once.
+ * - every chapter's scenes are ordered 1..N with 3 proven problems each.
  */
 
 const EXPECTED_CHAPTERS = [
@@ -130,10 +128,8 @@ describe('legacy canonical pages', () => {
     const catalogScenes = catalog.flatMap((chapter) =>
       chapter.scenes.map((scene) => [scene.id, chapter.id] as const),
     );
-    expect(Object.keys(LEGACY_SCENE_CHAPTER)).toHaveLength(93);
-    for (const [sceneId, chapterId] of catalogScenes) {
-      expect(LEGACY_SCENE_CHAPTER[sceneId], sceneId).toBe(chapterId);
-    }
+    expect(catalogScenes).toHaveLength(93);
+    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(93);
   });
 
   it('assigns every scene its pre-split chapter (39 limits + 22 calculus + 16 moved series)', () => {
@@ -158,6 +154,9 @@ describe('legacy canonical pages', () => {
   it('emits one legacy page per retired scene URL, canonicalizing to the new URL', () => {
     const legacyPages = buildLegacyPages();
     expect(legacyPages).toHaveLength(77);
+    const chapterOf = new Map(
+      catalog.flatMap((chapter) => chapter.scenes.map((scene) => [scene.id, chapter.id] as const)),
+    );
     const seen = new Set<string>();
     for (const page of legacyPages) {
       for (const lang of LANGS) {
@@ -171,7 +170,7 @@ describe('legacy canonical pages', () => {
         expect(page.url(lang)).toBe(`/real-analysis/${lang}/${legacyId}/${sceneId}/`);
         const canonical = page.canonicalUrl?.(lang);
         expect(canonical, `${legacyId}/${sceneId}`).toBeDefined();
-        expect(canonical).toBe(`/real-analysis/${lang}/${LEGACY_SCENE_CHAPTER[sceneId!]}/${sceneId}/`);
+        expect(canonical).toBe(`/real-analysis/${lang}/${chapterOf.get(sceneId!)}/${sceneId}/`);
         expect(canonical).not.toBe(page.url(lang));
         const key = `${lang}/${legacyId}/${sceneId}`;
         expect(seen.has(key), `duplicate legacy page ${key}`).toBe(false);
