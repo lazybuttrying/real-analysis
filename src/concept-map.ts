@@ -5,7 +5,8 @@ import { learningPaths } from './learning-paths.ts';
  * Concept-map graph data, derived (not hand-written) from two sources:
  *
  *  1. `prerequisites` fields in src/chapters/<chapter>/meta.ts — a scene id
- *     listed there resolves to another scene of the same chapter.
+ *     listed there resolves to the scene's owning chapter (which may differ
+ *     from the listing chapter since the 10-chapter split).
  *  2. `learningPaths` (src/learning-paths.ts) — consecutive steps of a
  *     curated path are linked in reading order.
  *
@@ -72,11 +73,17 @@ export function buildConceptMap(): ConceptMap {
   };
 
   // Prerequisite edges: prerequisite -> scene (read the prerequisite first).
-  // All prerequisites in meta.ts are same-chapter scene ids.
+  // Since the 10-chapter split, a prerequisite may live in another chapter;
+  // resolve each prerequisite scene id to its owning chapter first.
+  const chapterOfScene = new Map<string, string>();
+  for (const chapter of catalog) {
+    for (const scene of chapter.scenes) chapterOfScene.set(scene.id, chapter.id);
+  }
   for (const chapter of catalog) {
     for (const scene of chapter.scenes) {
       for (const prereq of scene.prerequisites ?? []) {
-        addEdge(chapter.id, prereq, chapter.id, scene.id, 'prereq');
+        const prereqChapter = chapterOfScene.get(prereq);
+        if (prereqChapter !== undefined) addEdge(prereqChapter, prereq, chapter.id, scene.id, 'prereq');
       }
     }
   }

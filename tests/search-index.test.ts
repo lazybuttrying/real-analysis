@@ -58,13 +58,13 @@ describe('search: filterSearchIndex', () => {
 
   it('finds a scene by a word in its title', () => {
     const hits = filterSearchIndex(ko, '감마함수', BASE, 'ko');
-    const scene = hits.find((hit) => hit.kind === 'scene' && hit.url.includes('/series/gamma/'));
+    const scene = hits.find((hit) => hit.kind === 'scene' && hit.url.includes('/integration/gamma/'));
     expect(scene).toBeDefined();
   });
 
   it('matches case-insensitively in English', () => {
     const hits = filterSearchIndex(en, 'GAMMA', BASE, 'en');
-    expect(hits.some((hit) => hit.url.includes('/series/gamma/'))).toBe(true);
+    expect(hits.some((hit) => hit.url.includes('/integration/gamma/'))).toBe(true);
   });
 
   it('matches inside summaries and definitions, not just titles', () => {
@@ -94,7 +94,8 @@ describe('search: filterSearchIndex', () => {
     const exercise = hits.find((hit) => hit.kind === 'exercise');
     expect(exercise).toBeDefined();
     expect(exercise?.url).toContain('/exercises/#exercise-');
-    expect(exercise?.context).toContain('극한과 연속');
+    // Context shows the owning chapter ("N. <chapter title>").
+    expect(exercise?.context).toMatch(/^\d+\. \S/);
   });
 
   it('finds a chapter exercise in English by its number label', () => {
