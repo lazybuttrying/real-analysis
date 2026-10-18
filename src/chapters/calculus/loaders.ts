@@ -15,6 +15,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'volterra-function': () => import('./scenes/volterraFunction').then((module) => module.default),
   ftc: () => import('./scenes/ftc').then((module) => module.default),
   'bounded-variation': () => import('./scenes/boundedVariation').then((module) => module.default),
+  'jordan-decomposition': () => import('./scenes/jordanDecomposition').then((module) => module.default),
   newton: () => import('./scenes/newton').then((module) => module.default),
   banach: () => import('./scenes/banach').then((module) => module.default),
   fourier: () => import('./scenes/fourier').then((module) => module.default),

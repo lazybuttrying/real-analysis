@@ -22,6 +22,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'metric-spaces': () => import('./scenes/metricSpaces').then((module) => module.default),
   contraction: () => import('./scenes/contraction').then((module) => module.default),
   'baire-category': () => import('./scenes/baireCategory').then((module) => module.default),
+  'baire-1': () => import('./scenes/baireOne').then((module) => module.default),
   'sequence-spaces': () => import('./scenes/sequenceSpaces').then((module) => module.default),
   'cauchy-schwarz': () => import('./scenes/cauchySchwarz').then((module) => module.default),
   holes: () => import('./scenes/holes').then((module) => module.default),
@@ -39,4 +40,5 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'arzela-ascoli': () => import('./scenes/arzelaAscoli').then((module) => module.default),
   'weierstrass-approx': () => import('./scenes/weierstrassApprox').then((module) => module.default),
   'stone-weierstrass': () => import('./scenes/stoneWeierstrass').then((module) => module.default),
+  'muntz-szasz': () => import('./scenes/muntzSzasz').then((module) => module.default),
 };
