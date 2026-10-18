@@ -16,6 +16,7 @@ import { problems as gammaProblems } from './problems/gamma';
 import { problems as geometricProblems } from './problems/geometric';
 import { problems as grandiProblems } from './problems/grandi';
 import { problems as harmonicProblems } from './problems/harmonic';
+import { hadamardGapProblems } from './problems/hadamard-gap';
 import { problems as improperProblems } from './problems/improper';
 import { kummerTestProblems } from './problems/kummer-test';
 import { problems as leibnizProblems } from './problems/leibniz';
@@ -27,6 +28,7 @@ import { problems as raabeTestProblems } from './problems/raabe-test';
 import { problems as stirlingProblems } from './problems/stirling';
 import { problems as telescopingProblems } from './problems/telescoping';
 import { problems as testsProblems } from './problems/tests';
+import { tauberProblems } from './problems/tauber';
 import { problems as wallisProblems } from './problems/wallis';
 import { problems as zeta4Problems } from './problems/zeta4';
 
@@ -219,9 +221,28 @@ problems: kummerTestProblems,
       problems: powerSeriesProblems,
     },
     {
+      id: 'hadamard-gap',
+      title: { ko: 'Hadamard 간극 정리', en: 'Hadamard Gap Theorem' },
+      order: 11,
+      summary: {
+        ko: String.raw`\(S_N(z) = \sum_{k=0}^{N} z^{2^k}\) (간극비 정확히 2): \(r \in \{0.90, 0.95, 0.99\}\)에 대해 \(|S_N(r e^{i\theta})|\)를 그리면 \(N\)이 커질수록 봉우리가 점점 더 많은 각도에서 솟아오릅니다 — 수렴반경이 정확히 1인 간극 급수는 단위원 위의 모든 점에서 특이점이 됩니다. 간극 없는 대조군 \(\sum z^k/(k+1)^2\)는 얌전합니다.`,
+        en: String.raw`\(S_N(z) = \sum_{k=0}^{N} z^{2^k}\) (gap ratio exactly 2): plotting \(|S_N(r e^{i\theta})|\) for \(r \in \{0.90, 0.95, 0.99\}\), spikes erupt at more and more angles as \(N\) grows — a gappy series with radius exactly 1 is singular at every point of the unit circle. The gap-free contrast \(\sum z^k/(k+1)^2\) stays calm.`,
+      },
+      tex: [
+        String.raw`\frac{n_{k+1}}{n_k} = \frac{2^{k+1}}{2^k} = 2 > 1, \qquad \frac{1}{R} = \limsup_{n\to\infty} |a_n|^{1/n} = 1`,
+        String.raw`\max_\theta |S_{12}(0.99\,e^{i\theta})| \approx 6.3139`,
+      ],
+      prerequisites: ['power-series'],
+      controls: [
+        { kind: 'slider', key: 'N', label: { ko: '부분합 차수 N', en: 'Partial-sum degree N' }, min: 1, max: 12, step: 1, init: 6 },
+      ],
+      problems: hadamardGapProblems,
+    },
+
+    {
       id: 'abel-theorem',
       title: { ko: '아벨 정리', en: "Abel's Theorem" },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`수렴급수 \(\sum a_n \to S\)에 대해 멱급수 \(\sum a_n x^n\)은 \(x \to 1^{-}\)에서 \(S\)로 다가갑니다 — 아벨 정리. 발산하는 그란디 급수도 이 한계에서는 \(\frac{1}{2}\)를 가리키지만, 그것은 급수의 "합"이 아니라 Abel 합입니다.`,
         en: String.raw`For a convergent series \(\sum a_n \to S\), the power series \(\sum a_n x^n\) approaches \(S\) as \(x \to 1^{-}\) — Abel's theorem. Even the divergent Grandi series points to \(\frac{1}{2}\) in this limit, but that is the Abel sum, never "the sum" of the series.`,
@@ -239,9 +260,28 @@ problems: kummerTestProblems,
       problems: abelTheoremProblems,
     },
     {
+      id: 'tauber',
+      title: { ko: '타우버 정리', en: "Tauber's Theorem" },
+      order: 13,
+      summary: {
+        ko: String.raw`Abel 합 \(\frac{1}{2}\)을 갖는 그란디 급수는 발산합니다 — \(|n\,a_n| = n\)이라 가설 \(a_n = o(1/n)\)이 깨지기 때문입니다. \(d_n = \frac{(-1)^n}{(n+1)\ln(n+2)}\)은 가설을 만족하고, 그 Abel 합 곡선은 보통 합에 닿습니다 — 타우버 정리.`,
+        en: String.raw`Grandi's series has Abel sum \(\frac{1}{2}\) yet diverges — because \(|n\,a_n| = n\) breaks the hypothesis \(a_n = o(1/n)\). The series \(d_n = \frac{(-1)^n}{(n+1)\ln(n+2)}\) satisfies it, and its Abel-sum curve reaches the ordinary sum — Tauber's theorem.`,
+      },
+      tex: [
+        String.raw`A(r) = \sum a_n r^n \xrightarrow[r\to 1^{-}]{} L,\ a_n = o(1/n)\ \Rightarrow\ \sum a_n = L`,
+        String.raw`\sum_{n=0}^{\infty}(-1)^n r^n = \frac{1}{1+r} \xrightarrow[r\to 1^{-}]{} \frac{1}{2}`,
+      ],
+      prerequisites: ['abel-theorem', 'grandi'],
+      controls: [
+        { kind: 'slider', key: 'R', label: { ko: 'r × 100 (R)', en: 'r × 100 (R)' }, min: 50, max: 99, step: 1, init: 90 },
+      ],
+      problems: tauberProblems,
+    },
+
+    {
       id: 'eseries',
       title: { ko: 'e로 가는 두 길', en: 'Two Roads to e' },
-      order: 12,
+      order: 14,
       summary: {
         ko: String.raw`복리 \((1+\frac{1}{n})^n\)과 급수 \(\sum_{k=0}^{\infty} \frac{1}{k!}\)가 \(e\)에 다가가는 속도를 견주어 확인합니다. 팩토리얼 급수가 압도적으로 빠릅니다.`,
         en: String.raw`Compare how fast compound growth \((1+\frac{1}{n})^n\) and the series \(\sum_{k=0}^{\infty} \frac{1}{k!}\) approach \(e\). The factorial series wins by a landslide.`,
@@ -253,7 +293,7 @@ problems: eseriesProblems,
     {
       id: 'telescoping',
       title: { ko: '망원급수', en: 'Telescoping Series' },
-      order: 13,
+      order: 15,
       summary: {
         ko: String.raw`각 항을 \(\frac{1}{n} - \frac{1}{n+1}\)로 쪼개면 이웃끼리 서로 지워지고 처음의 1과 사라져 가는 꼬리만 남는 모습을 확인합니다.`,
         en: String.raw`Split each term into \(\frac{1}{n} - \frac{1}{n+1}\) and the neighbors cancel each other, leaving only the very first 1 and a vanishing tail.`,
@@ -268,7 +308,7 @@ problems: telescopingProblems,
     {
       id: 'geometric',
       title: { ko: '기하급수: 정사각형 채우기', en: 'Geometric Series: Filling the Square' },
-      order: 14,
+      order: 16,
       summary: {
         ko: '단위 정사각형을 남은 부분의 절반씩 채워 나가면 빈틈이 매 단계 절반으로 줄며 합이 1이 되는 모습을 확인합니다.',
         en: 'Fill a unit square by always taking half of what remains: the gap halves at every step and the total becomes 1.',
@@ -280,7 +320,7 @@ problems: geometricProblems,
     {
       id: 'wallis',
       title: { ko: '월리스 곱', en: 'Wallis Product' },
-      order: 15,
+      order: 17,
       summary: {
         ko: String.raw`유리수 인수들을 하나씩 곱해 나갈수록 실행 곱이 \(\frac{\pi}{2}\) 위아래로 흔들리며 조여드는 모습을 확인합니다.`,
         en: String.raw`Multiply the rational factors in one at a time and watch the running product swing above and below \(\frac{\pi}{2}\), closing in as the swings shrink.`,
@@ -292,7 +332,7 @@ problems: wallisProblems,
     {
       id: 'stirling',
       title: { ko: '스털링 근사', en: "Stirling's Approximation" },
-      order: 16,
+      order: 18,
       summary: {
         ko: String.raw`로그 눈금에서 \(n!\)와 스털링 근사가 거의 겹쳐지고 상대오차가 대략 \(\frac{1}{12n}\)으로 줄어드는 모습을 확인합니다. \(\pi\)가 들어오는 경로는 아이디어 수준에서만 짚습니다.`,
         en: String.raw`On a log scale, \(n!\) and the Stirling approximation nearly coincide, and the relative error shrinks like \(\frac{1}{12n}\). Where \(\pi\) enters is only sketched at the idea level.`,
@@ -304,7 +344,7 @@ problems: stirlingProblems,
     {
       id: 'gamma',
       title: { ko: '감마함수', en: 'The Gamma Function' },
-      order: 17,
+      order: 19,
       summary: {
         ko: String.raw`팩토리얼을 실수로 늘인 함수 — \(\Gamma(x+1) = x\Gamma(x)\)라서 \(\Gamma(n+1) = n!\)입니다. \(x > 0\)에서 이상적분이 수렴함을 확인합니다.`,
         en: String.raw`The factorial stretched to real arguments — \(\Gamma(x+1) = x\Gamma(x)\), so \(\Gamma(n+1) = n!\). Watch the improper integral converge for \(x > 0\).`,
@@ -320,7 +360,7 @@ problems: gammaProblems,
     {
       id: 'beta-function',
       title: { ko: '베타 함수', en: 'The Beta Function' },
-      order: 18,
+      order: 20,
       summary: {
         ko: String.raw`\\(t^{p-1}(1-t)^{q-1}\\) 곡선 아래 넓이가 베타 함수 — \\(p\\), \\(q\\) 슬라이더로 모양이 바뀌는 모습을 보세요. 감마함수와의 관계 \\(B(p,q) = \\Gamma(p)\\Gamma(q)/\\Gamma(p+q)\\)도 함께 다룹니다.`,
         en: String.raw`The area under \\(t^{p-1}(1-t)^{q-1}\\) is the beta function — morph its shape with the \\(p\\), \\(q\\) sliders. Also covers \\(B(p,q) = \\Gamma(p)\\Gamma(q)/\\Gamma(p+q)\\), the bridge to the gamma function.`,
@@ -339,7 +379,7 @@ problems: betaFunctionProblems,
     {
       id: 'bohr-mollerup',
       title: { ko: '보어-몰레루프 정리', en: 'Bohr–Mollerup Theorem' },
-      order: 19,
+      order: 21,
       summary: {
         ko: String.raw`\(f(1) = 1\)과 \(f(x+1) = x\,f(x)\)만으로는 팩토리얼의 연속 확장이 하나로 정해지지 않습니다 — impostor \(\Gamma(x)(1 + a\sin 2\pi x)\)가 모든 정수점에서 \(\Gamma\)와 완전히 일치하면서도 살아남기 때문입니다. secant 테스트로 로그볼록성이 \(\Gamma\)의 진짜 지문임을 직접 확인하세요.`,
         en: String.raw`\(f(1) = 1\) and \(f(x+1) = x\,f(x)\) do not pin down the continuous extension of the factorial — the impostor \(\Gamma(x)(1 + a\sin 2\pi x)\) matches \(\Gamma\) at every integer and survives. Watch the secant test expose log-convexity as \(\Gamma\)'s true fingerprint.`,
@@ -360,7 +400,7 @@ problems: bohrMollerupProblems,
     {
       id: 'grandi',
       title: { ko: '그란디 급수', en: 'Grandi Series' },
-      order: 20,
+      order: 22,
       summary: {
         ko: String.raw`부분합이 1과 0을 영원히 오가므로 이 급수에는 합이 없습니다. \(\frac{1}{2}\)는 부분합들의 평균(체사로 평균)일 뿐, 급수의 합이 아닙니다.`,
         en: String.raw`The partial sums bounce between 1 and 0 forever, so this series has no sum. \(\frac{1}{2}\) is only the average of the partial sums (the Cesàro mean), not a sum of the series.`,
@@ -372,7 +412,7 @@ problems: grandiProblems,
     {
       id: 'zeta4',
       title: { ko: 'ζ(4)와 짝수 거듭제곱', en: 'ζ(4) and Even Powers' },
-      order: 21,
+      order: 23,
       summary: {
         ko: String.raw`\(\frac{1}{n^4}\)의 부분합이 \(\frac{\pi^4}{90}\)에 빠르게 닿는 모습과, 짝수 거듭제곱마다 \(\zeta\)값이 \(\pi\)의 거듭제곱으로 닫히는 패턴을 확인합니다.`,
         en: String.raw`The partial sums of \(\frac{1}{n^4}\) reach \(\frac{\pi^4}{90}\) quickly — and at every even power, the \(\zeta\) value closes into a power of \(\pi\).`,
@@ -387,7 +427,7 @@ problems: zeta4Problems,
     {
       id: 'rearrangement',
       title: { ko: '재배열 정리', en: 'Rearranging Changes the Sum' },
-      order: 22,
+      order: 24,
       summary: {
         ko: String.raw`조건수렴 급수는 순서를 바꾸면 합이 바뀝니다 — \(\ln 2 \approx 0.6931\)이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로. 라이프니츠 장면의 짝꿍입니다.`,
         en: String.raw`Reordering a conditionally convergent series changes its sum — \(\ln 2 \approx 0.6931\) becomes \(\frac{3}{2}\ln 2 \approx 1.0397\). Twin of the Leibniz scene.`,
@@ -400,7 +440,7 @@ problems: rearrangementProblems,
     {
       id: 'absolute',
       title: { ko: '절대수렴 정리', en: 'Absolute Convergence' },
-      order: 23,
+      order: 25,
       summary: {
         ko: String.raw`절댓값을 씌운 급수가 수렴하면 원래 급수도 수렴합니다 — 두 부분합 곡선 \(S_n\)과 \(T_n\)이 함께 안착하는 모습과, 조화급수처럼 절댓값은 발산해도 부호 덕분에 수렴하는 경우를 견주어 확인합니다.`,
         en: String.raw`If the absolute-value series converges, so does the original — compare the two partial-sum walks \(S_n\) and \(T_n\) settling together against the harmonic-like case where the signs rescue a divergent absolute series.`,
@@ -419,7 +459,7 @@ problems: absoluteProblems,
     {
       id: 'riemann-rearrangement',
       title: { ko: '리만 재배열 정리', en: "Riemann's Rearrangement Theorem" },
-      order: 24,
+      order: 26,
       summary: {
         ko: String.raw`조건수렴 급수는 재배열로 어떤 실수든 만들 수 있습니다 — 탐욕 블록 규칙이 교대조화급수(원래 합 \(\ln 2\))를 당신이 고른 목표로 몰아넣는 과정을 직접 보세요.`,
         en: String.raw`A conditionally convergent series can be rearranged to sum to any real number — watch the greedy block rule steer the alternating harmonic series (which sums to \(\ln 2\) in its natural order) onto a target of your choice.`,
@@ -437,7 +477,7 @@ problems: riemannRearrangementProblems,
     {
       id: 'cauchy-product',
       title: { ko: '코시 곱', en: 'The Cauchy Product' },
-      order: 25,
+      order: 27,
       summary: {
         ko: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\), \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — 대각선으로 격자를 휩쓰는 합. 메르텐스 정리(한쪽이 절대수렴하면 곱이 성립)와, 둘 다 조건수렴일 때 깨지는 반례를 봅니다.`,
         en: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\) with \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — sweeping the lattice along diagonals. Mertens' theorem (absolute convergence on one side saves the product) and the counterexample when both converge only conditionally.`,
@@ -456,7 +496,7 @@ problems: riemannRearrangementProblems,
     {
       id: 'dirichlet-test',
       title: { ko: '디리클레 판정법', en: "Dirichlet's Test" },
-      order: 26,
+      order: 28,
       summary: {
         ko: String.raw`부분합이 \(1/|\sin(x/2)|\) 안에 갇혀 흔들리는 \(\sin(kx)\)와 \(0\)으로 가라앉는 \(1/n\)이 만나 \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴합니다 — 디리클레 판정법.`,
         en: String.raw`The partial sums of \(\sin(kx)\) wobble, trapped inside \(1/|\sin(x/2)|\), and the \(1/n\) weight sinking to \(0\) tames them into the convergent series \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\) — Dirichlet's test.`,
@@ -475,7 +515,7 @@ problems: riemannRearrangementProblems,
     {
       id: 'abel-test',
       title: { ko: '아벨 판정법', en: "Abel's Test" },
-      order: 27,
+      order: 29,
       summary: {
         ko: String.raw`\\(\\sum a_n\\)이 수렴하고 \\((b_n)\\)이 단조·유계이면 \\(\\sum a_n b_n\\)도 수렴합니다 — 디리클레 판정법의 짝꿍. \\((b_n)\\)이 0으로 가지 않아도 된다는 점이 다릅니다.`,
         en: String.raw`If \\(\\sum a_n\\) converges and \\((b_n)\\) is monotone and bounded, then \\(\\sum a_n b_n\\) converges — the companion to Dirichlet's test. The difference: \\((b_n)\\) need not tend to 0.`,
@@ -494,7 +534,7 @@ problems: abelTestProblems,
     {
       id: 'm-test',
       title: { ko: 'M-판정법', en: 'The Weierstrass M-Test' },
-      order: 28,
+      order: 30,
       summary: {
         ko: String.raw`각 항을 모든 \(x\)에서 누르는 수열 \(M_n\)이 있으면 급수는 균등수렴합니다 — \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\), \(\sum M_n = \frac{\pi^2}{6}\)이므로 부분합 오차 띠가 전체 \(x\) 구간에서 한꺼번에 좁아집니다.`,
         en: String.raw`If a majorant \(M_n\) dominates every term at all \(x\) and \(\sum M_n\) converges, the series converges uniformly — here \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\) and \(\sum M_n = \frac{\pi^2}{6}\), so the partial-sum error band tightens across the whole \(x\)-interval at once.`,
@@ -512,7 +552,7 @@ problems: abelTestProblems,
     {
       id: 'dini',
       title: { ko: '디니 정리', en: "Dini's Theorem" },
-      order: 29,
+      order: 31,
       summary: {
         ko: String.raw`컴팩트 집합 위에서는 단조인 연속함수열의 점별수렴이 균등수렴이 됩니다 — 열린 덮개 \(E_n\)들의 유한 부분덮개가 한 번에 잡아줍니다. M-판정법의 쌍대 도구.`,
         en: String.raw`On a compact set, a monotone sequence of continuous functions converging pointwise converges uniformly — a finite subcover of the open sets \(E_n\) grabs them all at once. The twin tool of the M-test.`,
@@ -531,7 +571,7 @@ problems: abelTestProblems,
     {
       id: 'improper',
       title: { ko: '이상적분', en: 'Improper Integrals' },
-      order: 30,
+      order: 32,
       summary: {
         ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
         en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,

@@ -641,6 +641,37 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'limits',
     sceneId: 'arzela-ascoli',
   },
+
+  {
+    id: 'muntz-szasz-theorem',
+    term: { ko: '뮌츠-서스 정리', en: 'Müntz–Szász theorem' },
+    definition: {
+      ko: String.raw`\(0 < \lambda_1 < \lambda_2 < \cdots\)일 때 \(\operatorname{span}\{1, x^{\lambda_1}, x^{\lambda_2}, \ldots\}\)가 \(C[0,1]\)에서 조밀할 필요충분조건은 \(\sum \frac{1}{\lambda_n} = \infty\)이다.`,
+      en: String.raw`For \(0 < \lambda_1 < \lambda_2 < \cdots\), \(\operatorname{span}\{1, x^{\lambda_1}, x^{\lambda_2}, \ldots\}\) is dense in \(C[0,1]\) if and only if \(\sum \frac{1}{\lambda_n} = \infty\).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'muntz-szasz',
+  },
+  {
+    id: 'baire-class-1',
+    term: { ko: '베어 1급 함수', en: 'Baire class 1 function' },
+    definition: {
+      ko: String.raw`연속함수열의 점별 극한으로 표현되는 함수 — Thomae 함수가 대표 예시이며, 연속점 집합이 항상 조밀한 \(G_\delta\)를 포함한다.`,
+      en: String.raw`A function expressible as the pointwise limit of a sequence of continuous functions — Thomae's function is the poster child; its continuity points always contain a dense \(G_\delta\).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'baire-1',
+  },
+  {
+    id: 'oscillation-function',
+    term: { ko: '진동 (함수의)', en: 'oscillation (of a function)' },
+    definition: {
+      ko: String.raw`점 \(x\)에서의 \(\omega_f(x) = \inf\{\mathrm{diam}\,f(U) : U \ni x\text{인 근방}\}\) — 국소적 퍼짐을 재는 양으로, \(\omega_f(x) = 0\)일 때 정확히 \(f\)가 \(x\)에서 연속이다.`,
+      en: String.raw`At \(x\), \(\omega_f(x) = \inf\{\mathrm{diam}\,f(U) : U \text{ a neighborhood of } x\}\) measures local spread; \(\omega_f(x) = 0\) iff \(f\) is continuous at \(x\).`,
+    },
+    chapterId: 'limits',
+    sceneId: 'baire-1',
+  },
   // ---------------------------------------------------------------- series
   {
     id: 'abel-theorem',
@@ -1052,6 +1083,37 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'series',
     sceneId: 'riemann-rearrangement',
   },
+
+  {
+    id: 'tauberian-theorem',
+    term: { ko: '타우버형 정리', en: 'Tauberian theorem' },
+    definition: {
+      ko: String.raw`Abel 합 같은 약한 총합법으로부터 항에 대한 부가 조건(\(a_n = o(1/n)\)) 하에 보통 수렴을 되돌려내는 정리 — 타우버 정리가 그 원형이다.`,
+      en: String.raw`A theorem recovering ordinary convergence from a weaker summability method (like Abel summation) under an extra condition on the terms, e.g. \(a_n = o(1/n)\) — Tauber's theorem is the prototype.`,
+    },
+    chapterId: 'series',
+    sceneId: 'tauber',
+  },
+  {
+    id: 'hadamard-gap',
+    term: { ko: 'Hadamard 간극', en: 'Hadamard gap' },
+    definition: {
+      ko: String.raw`멱급수 \(\sum a_k z^{n_k}\)의 지수가 \(n_{k+1}/n_k \ge q > 1\)을 만족하는 띄엄띄엄한 배치 — 예: \(n_k = 2^k\) (비율 정확히 2). 수렴반경이 1이면 단위원 전체가 자연경계가 된다.`,
+      en: String.raw`A sparse layout of exponents in \(\sum a_k z^{n_k}\) with \(n_{k+1}/n_k \ge q > 1\) — e.g. \(n_k = 2^k\) (ratio exactly 2). With radius 1, the whole unit circle becomes a natural boundary.`,
+    },
+    chapterId: 'series',
+    sceneId: 'hadamard-gap',
+  },
+  {
+    id: 'natural-boundary',
+    term: { ko: '자연경계', en: 'natural boundary' },
+    definition: {
+      ko: String.raw`정칙함수가 그 너머의 어떤 점으로도 정칙 확장될 수 없는 곡선 — Hadamard 간극 정리에 의해 \(\sum z^{2^k}\)에게 단위원 \(|z| = 1\)이 바로 그것이다.`,
+      en: String.raw`A curve past no point of which a holomorphic function can be analytically continued — for \(\sum z^{2^k}\) the unit circle \(|z| = 1\) is exactly that, by the Hadamard gap theorem.`,
+    },
+    chapterId: 'series',
+    sceneId: 'hadamard-gap',
+  },
   // -------------------------------------------------------------- calculus
   {
     id: 'darboux-theorem',
@@ -1372,5 +1434,25 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'calculus',
     sceneId: 'gibbs-phenomenon',
+  },
+  {
+    id: 'jordan-decomposition-theorem',
+    term: { ko: '조르당 분해', en: 'Jordan decomposition' },
+    definition: {
+      ko: String.raw`유계변동 함수 \(f\)를 두 단조증가 함수 \(g, h\)의 차 \(f = g - h\)로 쓰는 것 — \(g(x) = V_a^x(f)\) (변동함수), \(h = g - f\)로 두면 항상 성립한다.`,
+      en: String.raw`Writing a BV function \(f\) as the difference \(f = g - h\) of two increasing functions \(g, h\) — always possible with \(g(x) = V_a^x(f)\) (the variation function) and \(h = g - f\).`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'jordan-decomposition',
+  },
+  {
+    id: 'variation-function',
+    term: { ko: '변동함수', en: 'variation function' },
+    definition: {
+      ko: String.raw`\(g(x) = V_a^x(f)\): 구간 \([a, x]\)에서의 전변동. \(f\)가 유계변동이면 \(g\)는 단조증가이며, \(h = g - f\)도 단조증가여서 조르당 분해 \(f = g - h\)가 성립한다.`,
+      en: String.raw`\(g(x) = V_a^x(f)\): the total variation of \(f\) over \([a, x]\). For a BV \(f\) it is increasing, and \(h = g - f\) is increasing too — giving the Jordan decomposition \(f = g - h\).`,
+    },
+    chapterId: 'calculus',
+    sceneId: 'jordan-decomposition',
   },
 ];
