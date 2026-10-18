@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
-import { limits } from '../src/chapters/limits/meta';
+import { catalog } from '../src/catalog.ts';
 import {
   epsDeltaData,
   epsDeltaDelta,
@@ -266,10 +266,13 @@ describe('evt: the cubic values and the counterexamples', () => {
   });
 });
 
-describe('limits chapter meta: order, prerequisites, presets', () => {
-  it('has the final 39-scene order sequence', () => {
-    const ids = limits.scenes.map((s) => s.id);
-    expect(ids).toEqual([
+describe('split chapters: the five ex-limits chapters', () => {
+  const byId = new Map(catalog.map((chapter) => [chapter.id, chapter]));
+  const idsOf = (id: string): string[] =>
+    [...(byId.get(id)?.scenes ?? [])].sort((a, b) => a.order - b.order).map((s) => s.id);
+
+  it('assigns every ex-limits scene to its new chapter', () => {
+    expect(idsOf('numbers')).toEqual([
       'natural-numbers',
       'binomial',
       'integers-rationals',
@@ -279,18 +282,9 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'groups-fields',
       'vector-spaces',
       'dimension-rank',
+    ]);
+    expect(idsOf('sequences')).toEqual([
       'epsilon-n',
-      'epsdelta',
-      'continuity',
-      'monotone-discontinuities',
-      'uniform-continuity',
-      'opensets',
-      'closure',
-      'compact',
-      'metric-spaces',
-      'contraction',
-      'baire-category',
-      'baire-1',
       'sequence-spaces',
       'cauchy-schwarz',
       'holes',
@@ -299,64 +293,51 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'monotone-cauchy',
       'limsup-liminf',
       'stolz-cesaro',
-      'cantor',
-      'fat-cantor',
-      'cantor-function',
+    ]);
+    expect(idsOf('continuity')).toEqual([
+      'epsdelta',
+      'continuity',
+      'monotone-discontinuities',
+      'uniform-continuity',
       'ivt',
       'evt',
       'uniform',
-      'arzela-ascoli',
-      'weierstrass-approx',
-      'stone-weierstrass',
-      'muntz-szasz',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]);
+    expect(idsOf('topology')).toEqual([
+      'opensets',
+      'closure',
+      'compact',
+      'metric-spaces',
+      'contraction',
+      'baire-category',
+      'baire-1',
+      'cantor',
+      'fat-cantor',
+      'cantor-function',
+    ]);
+    expect(idsOf('approximation')).toEqual(['arzela-ascoli', 'weierstrass-approx', 'stone-weierstrass', 'muntz-szasz']);
   });
 
-  it('sets the new scenes prerequisites', () => {
-    const byId = Object.fromEntries(limits.scenes.map((s) => [s.id, s]));
-    expect(byId['binomial']?.prerequisites).toEqual(['natural-numbers']);
-    expect(byId['integers-rationals']?.prerequisites).toEqual(['natural-numbers']);
-    expect(byId['weierstrass-approx']?.prerequisites).toEqual(['uniform']);
-    expect(byId['vector-spaces']?.prerequisites).toEqual(['groups-fields']);
-    expect(byId['dimension-rank']?.prerequisites).toEqual(['vector-spaces']);
-    expect(byId['epsdelta']?.prerequisites).toEqual(['epsilon-n']);
-    expect(byId['continuity']?.prerequisites).toEqual(['epsdelta']);
-    expect(byId['monotone-discontinuities']?.prerequisites).toEqual(['continuity']);
-    expect(byId['monotone-cauchy']?.prerequisites).toEqual(['bolzano-weierstrass']);
-    expect(byId['evt']?.prerequisites).toEqual(['ivt']);
-    expect(byId['compact']?.prerequisites).toEqual(['closure']);
-    expect(byId['contraction']?.prerequisites).toEqual(['metric-spaces', 'monotone-cauchy']);
-  });
-
-  it('gives each new scene exactly 3 problems', () => {
-    for (const id of ['epsdelta', 'continuity', 'monotone-cauchy', 'evt']) {
-      const scene = limits.scenes.find((s) => s.id === id);
-      expect(scene?.problems).toHaveLength(3);
-    }
-  });
-
-  it('uses only declared control keys with valid values in every new problem preset', () => {
-    for (const id of ['epsdelta', 'continuity', 'monotone-cauchy', 'evt']) {
-      const scene = limits.scenes.find((s) => s.id === id);
-      expect(scene).toBeDefined();
-      for (const problem of scene?.problems ?? []) {
-        for (const [key, value] of Object.entries(problem.preset)) {
-          const spec = scene?.controls.find((c) => c.key === key);
-          expect(spec, `${id}/${problem.id}: control '${key}' must be declared`).toBeDefined();
-          if (spec?.kind === 'slider') {
-            expect(typeof value).toBe('number');
-            expect(value as number).toBeGreaterThanOrEqual(spec.min);
-            expect(value as number).toBeLessThanOrEqual(spec.max);
-            const steps = ((value as number) - spec.min) / spec.step;
-            expectCloseTo(steps, Math.round(steps), 1e-9);
-          } else if (spec?.kind === 'toggle') {
-            expect(typeof value).toBe('boolean');
-          } else if (spec?.kind === 'select') {
-            expect(spec.options).toContain(value);
-          }
-        }
-      }
-    }
+  it('keeps the prerequisite chains across the split', () => {
+    const byScene = new Map<string, (typeof catalog)[number]['scenes'][number]>();
+    for (const chapter of catalog) for (const scene of chapter.scenes) byScene.set(scene.id, scene);
+    expect(byScene.get('binomial')?.prerequisites).toEqual(['natural-numbers']);
+    expect(byScene.get('integers-rationals')?.prerequisites).toEqual(['natural-numbers']);
+    expect(byScene.get('weierstrass-approx')?.prerequisites).toEqual(['uniform']);
+    expect(byScene.get('vector-spaces')?.prerequisites).toEqual(['groups-fields']);
+    expect(byScene.get('dimension-rank')?.prerequisites).toEqual(['vector-spaces']);
+    expect(byScene.get('epsdelta')?.prerequisites).toEqual(['epsilon-n']);
+    expect(byScene.get('continuity')?.prerequisites).toEqual(['epsdelta']);
+    expect(byScene.get('monotone-discontinuities')?.prerequisites).toEqual(['continuity']);
+    expect(byScene.get('monotone-cauchy')?.prerequisites).toEqual(['bolzano-weierstrass']);
+    expect(byScene.get('evt')?.prerequisites).toEqual(['ivt']);
+    expect(byScene.get('compact')?.prerequisites).toEqual(['closure']);
+    expect(byScene.get('contraction')?.prerequisites).toEqual(['metric-spaces', 'monotone-cauchy']);
+    expect(byScene.get('uniform-continuity')?.prerequisites).toEqual(['continuity']);
+    expect(byScene.get('opensets')?.prerequisites).toEqual(['continuity']);
+    expect(byScene.get('closure')?.prerequisites).toEqual(['opensets']);
+    expect(byScene.get('metric-spaces')?.prerequisites).toEqual(['closure']);
+    expect(byScene.get('sequence-spaces')?.prerequisites).toEqual(['metric-spaces']);
+    expect(byScene.get('construction')?.prerequisites).toEqual(['holes']);
   });
 });

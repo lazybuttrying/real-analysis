@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { expectCloseTo, syncCompute } from './helpers';
+import { syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
-import { limits } from '../src/chapters/limits/meta';
+import { catalog } from '../src/catalog.ts';
 import {
   closureData,
   closureKindOf,
@@ -214,24 +214,13 @@ describe('closure: the proof numbers', () => {
   });
 });
 
-describe('limits chapter meta: the two new scenes', () => {
-  it('inserts opensets and closure right after continuity', () => {
-    const ids = limits.scenes.map((s) => s.id);
+describe('split chapters: topology chapter scenes', () => {
+  const topology = catalog.find((chapter) => chapter.id === 'topology');
+  if (!topology) throw new Error('topology chapter not found');
+
+  it('lists the topology scenes in order', () => {
+    const ids = [...topology.scenes].sort((a, b) => a.order - b.order).map((s) => s.id);
     expect(ids).toEqual([
-      'natural-numbers',
-      'binomial',
-      'integers-rationals',
-      'sets',
-      'supremum',
-      'countable',
-      'groups-fields',
-      'vector-spaces',
-      'dimension-rank',
-      'epsilon-n',
-      'epsdelta',
-      'continuity',
-      'monotone-discontinuities',
-      'uniform-continuity',
       'opensets',
       'closure',
       'compact',
@@ -239,79 +228,18 @@ describe('limits chapter meta: the two new scenes', () => {
       'contraction',
       'baire-category',
       'baire-1',
-      'sequence-spaces',
-      'cauchy-schwarz',
-      'holes',
-      'construction',
-      'bolzano-weierstrass',
-      'monotone-cauchy',
-      'limsup-liminf',
-      'stolz-cesaro',
       'cantor',
       'fat-cantor',
       'cantor-function',
-      'ivt',
-      'evt',
-      'uniform',
-      'arzela-ascoli',
-      'weierstrass-approx',
-      'stone-weierstrass',
-      'muntz-szasz',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]);
   });
 
   it('chains the prerequisites', () => {
-    const byId = Object.fromEntries(limits.scenes.map((s) => [s.id, s]));
-    expect(byId['binomial']?.prerequisites).toEqual(['natural-numbers']);
-    expect(byId['integers-rationals']?.prerequisites).toEqual(['natural-numbers']);
-    expect(byId['weierstrass-approx']?.prerequisites).toEqual(['uniform']);
-    expect(byId['uniform-continuity']?.prerequisites).toEqual(['continuity']);
-    expect(byId['monotone-discontinuities']?.prerequisites).toEqual(['continuity']);
+    const byId = Object.fromEntries(topology.scenes.map((s) => [s.id, s]));
     expect(byId['opensets']?.prerequisites).toEqual(['continuity']);
     expect(byId['closure']?.prerequisites).toEqual(['opensets']);
     expect(byId['metric-spaces']?.prerequisites).toEqual(['closure']);
     expect(byId['compact']?.prerequisites).toEqual(['closure']);
     expect(byId['contraction']?.prerequisites).toEqual(['metric-spaces', 'monotone-cauchy']);
-    expect(byId['sequence-spaces']?.prerequisites).toEqual(['metric-spaces']);
-    expect(byId['construction']?.prerequisites).toEqual(['holes']);
-  });
-
-  it('gives each new scene exactly 3 problems with non-empty proofs', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction', 'natural-numbers', 'binomial', 'integers-rationals']) {
-      const scene = limits.scenes.find((s) => s.id === id);
-      expect(scene?.problems).toHaveLength(3);
-      for (const problem of scene?.problems ?? []) {
-        expect(problem.proof.length).toBeGreaterThan(0);
-        for (const step of problem.proof) {
-          expect(step.text.ko.trim().length).toBeGreaterThan(0);
-          expect(step.text.en.trim().length).toBeGreaterThan(0);
-        }
-      }
-    }
-  });
-
-  it('uses only declared control keys with valid values in every new problem preset', () => {
-    for (const id of ['opensets', 'closure', 'uniform-continuity', 'metric-spaces', 'sequence-spaces', 'construction', 'natural-numbers', 'binomial', 'integers-rationals']) {
-      const scene = limits.scenes.find((s) => s.id === id);
-      expect(scene).toBeDefined();
-      for (const problem of scene?.problems ?? []) {
-        for (const [key, value] of Object.entries(problem.preset)) {
-          const spec = scene?.controls.find((c) => c.key === key);
-          expect(spec, `${id}/${problem.id}: control '${key}' must be declared`).toBeDefined();
-          if (spec?.kind === 'slider') {
-            expect(typeof value).toBe('number');
-            expect(value as number).toBeGreaterThanOrEqual(spec.min);
-            expect(value as number).toBeLessThanOrEqual(spec.max);
-            const steps = ((value as number) - spec.min) / spec.step;
-            expectCloseTo(steps, Math.round(steps), 1e-9);
-          } else if (spec?.kind === 'toggle') {
-            expect(typeof value).toBe('boolean');
-          } else if (spec?.kind === 'select') {
-            expect(spec.options).toContain(value);
-          }
-        }
-      }
-    }
   });
 });

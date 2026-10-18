@@ -85,11 +85,11 @@ real-analysis/
 - [x] dev/preview에서 `/<챕터>/<씬>/` 직접 접근
 - [x] 컨트롤 ↔ URL 상태, 씬 수명주기, 오류 처리
 - [x] series 챕터 씬 10개 전부 (harmonic 외 basel·leibniz·eseries·telescoping·geometric·wallis·stirling·grandi·zeta4)
-- [x] **limits 챕터(극한과 연속) 씬 26개** (기존 23개 + 수 체계 3씬(자연수와 귀납법·이항정리·정수와 유리수)을 맨 앞에 추가 — \(\mathbb{N} \to \mathbb{Z} \to \mathbb{Q} \to \mathbb{R}\) 아크 완성). `catalog`에서 series보다 앞에 두어 1장으로 표시된다. (김성기·김도한·계승혁 『해석개론』 1–3장, Tao Analysis I/II 목차 참고)
-- [x] **series 챕터 씬 16개** (기존 15개 + 감마함수(stirling 뒤) 추가)
-- [x] **calculus 챕터(미분과 적분) 씬 13개** (기존 12개 + 볼록함수(taylor-thm 뒤) 추가). `catalog`에서 세 번째로 두어 3장으로 표시된다. (김김계 『해석개론』 4–5·8–10장, Tao Analysis I/II 목차 참고)
+- [x] ~~**limits 챕터(극한과 연속) 씬 26개**~~ → 2026-10-18에 5개 챕터(numbers·sequences·continuity·topology·approximation)로 분할 (위 "챕터 10분할" 참조)
+- [x] ~~**series 챕터 씬 16개**~~ → 2026-10-18에 축소(16씬 유지) + power-series·function-series로 일부 이동 (위 "챕터 10분할" 참조)
+- [x] ~~**calculus 챕터(미분과 적분) 씬 13개**~~ → 2026-10-18에 differentiation·integration으로 분할 (위 "챕터 10분할" 참조)
 - [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 93씬·279문제·36연습문제. 증명에 등장하는 수치는 전부 vitest로 검증
-- [x] **챕터 연습문제**: `/ko/<챕터>/exercises/`·`/en/<챕터>/exercises/` (챕터당 12문제, 난이도 쉬움 4·중간 5·어려움 3). 데이터는 `src/chapters/<id>/exercises.ts`가 `export const exercises: readonly ExerciseMeta[]`로 export하고, 모양은 `contracts.ts`의 `ExerciseMeta` 계약이 정한다(진술+display 수식+접기식 풀이, 같은 챕터 씬으로의 교차 링크 `topics`, 선택적 `viz`(씬 미니 시각화를 고정 preset으로 재사용)). 챕터 entry는 `startChapter(chapterId, loaders, exercisesLoader)`에 `() => import('./exercises')`를 넘겨 연습문제 페이지를 방문할 때만 동적 로드한다 — 챕터 entry 번들에 연습문제 텍스트가 들어가지 않는다(check-deps: 챕터 내 import이므로 허용). 셸 렌더러는 `src/shell/exercises-page.ts`(카드 번호 1..12, 난이도 그룹, 토픽 칩, 미니 시각화, `<details>` 풀이), 챕터 허브에 진입 링크+챕터 내비게이션 끝에 항목을 둔다. 프리렌더는 챕터당 언어별 1페이지씩(총 6페이지, zero-JS 정적 HTML), 검색 인덱스에 exercise 레코드 포함(문항 번호 라벨 "연습문제 N"/"Exercise N" 매칭, `#exercise-<id>` 앵커로 이동)
+- [x] **챕터 연습문제**: `/ko/<챕터>/exercises/`·`/en/<챕터>/exercises/` (10개 챕터, 총 36문제, 챕터별 개수 상이 — 주제 적합도로 재배치, 난이도는 easy→hard 그룹 유지). 데이터는 `src/chapters/<id>/exercises.ts`가 `export const exercises: readonly ExerciseMeta[]`로 export하고, 모양은 `contracts.ts`의 `ExerciseMeta` 계약이 정한다(진술+display 수식+접기식 풀이, 같은 챕터 씬으로의 교차 링크 `topics`, 선택적 `viz`(씬 미니 시각화를 고정 preset으로 재사용)). 챕터 entry는 `startChapter(chapterId, loaders, exercisesLoader)`에 `() => import('./exercises')`를 넘겨 연습문제 페이지를 방문할 때만 동적 로드한다 — 챕터 entry 번들에 연습문제 텍스트가 들어가지 않는다(check-deps: 챕터 내 import이므로 허용). 셸 렌더러는 `src/shell/exercises-page.ts`(카드 번호 1..N, 난이도 그룹, 토픽 칩, 미니 시각화, `<details>` 풀이), 챕터 허브에 진입 링크+챕터 내비게이션 끝에 항목을 둔다. 프리렌더는 챕터당 언어별 1페이지씩(총 20페이지, zero-JS 정적 HTML), 검색 인덱스에 exercise 레코드 포함(문항 번호 라벨 "연습문제 N"/"Exercise N" 매칭, `#exercise-<id>` 앵커로 이동)
 - [x] **사이트 검색**: 모든 페이지 헤더의 검색창. 빌드(prerender) 시 언어별 `search-index.<lang>.json`을 생성(93개 씬의 제목·요약 + 용어 사전 전체 + 36개 연습문제의 진술)하고, 셸이 첫 입력 때 lazy fetch로 가져와 부분문자열(대소문자 무시)로 매칭한다. 결과 드롭다운은 씬/용어/연습문제를 구분해 링크하고(연습문제는 "연습문제 N" 라벨 매칭, 해당 카드 앵커로 이동), Enter(첫 결과 이동)·Escape(닫기)·방향키를 지원한다. 검색 인덱스는 번들에 포함되지 않아 페이지 무게가 늘지 않는다. (`src/search-index.ts`는 빌드/테스트 전용으로 챕터 연습문제 데이터를 직접 import한다 — check-deps에 명시된 좁은 예외, 클라이언트 번들에는 절대 들어가지 않는다)
 - [x] **용어 사전**: `/ko/glossary/`·`/en/glossary/` 프리렌더 페이지(사이트맵 포함, 홈·헤더에서 링크). `src/glossary.ts`에 143개 용어를 직접 작성(93개 씬 전부 최소 1개 이상, 정의 1–2문장, 한영, `\(...\)` 수식 허용, chapterId+sceneId로 씬에 연결). 챕터별(번호 순) 그룹, 용어별 정의·씬 링크·`#term-<id>` 앵커, 인페이지 필터 제공. 클라이언트 렌더러는 홈 entry에서 동적 import되어 용어 사전 페이지에서만 로드된다
 - [x] **학습 경로**: `/ko/paths/`·`/en/paths/` + `/ko/paths/<id>/`·`/en/paths/<id>/` 프리렌더 페이지(사이트맵 포함, 홈·헤더에서 링크). `src/learning-paths.ts`에 6개 경로를 직접 작성(수 체계 완성하기 10씬(팻 칸토어 집합 추가)·수렴 판정 정복 13씬(타우버 정리 추가)·미분 9씬·적분 9씬·병리적 함수들 9씬(Volterra 함수·조르당 분해 추가)·완비성과 컴팩트 10씬(아르첼라-아스콜리 정리·베어 1급 함수 추가), 순서 고정, chapterId+sceneId로 씬에 연결, 용어 사전과 같은 데이터 규칙). 경로 상세 페이지는 번호 매긴 씬 목록, 각 씬 페이지에는 "이 씬이 포함된 학습 경로" 칩 섹션(해당 없으면 표시 안 함). 클라이언트 렌더러(`src/shell/paths-page.ts`)는 홈 entry에서 동적 import되어 경로 페이지에서만 로드된다. 진도 저장·localStorage 없음, 씬 페이저는 전역 읽기 순서를 그대로 쓴다
@@ -98,8 +98,48 @@ real-analysis/
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
 - [x] 의존 방향 검사 (`scripts/check-deps.ts`: `models → view` 금지, `meta.ts` import 제한, three는 threekit만)
-- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 챕터 연습문제 페이지(챕터당 언어별 1개, 총 6개), 용어 사전 페이지, 학습 경로 목록·상세 페이지, 홈 하단 개념 지도 섹션(정적 폴백: 챕터별 씬 목록+선수 관계 링크 포함), 언어별 `search-index.<lang>.json`, `sitemap.xml`, `404.html`, `robots.txt`, title 중복·`summary` 비어 있음·용어 사전/학습 경로/개념 지도/연습문제 무결성 검사. 총 216페이지(언어별: 홈 1 + 허브 3 + 씬 93 + 연습문제 3 + 용어 사전 1 + 경로 7)
+- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 챕터 연습문제 페이지(챕터당 언어별 1개, 총 20개), 용어 사전 페이지, 학습 경로 목록·상세 페이지, 홈 하단 개념 지도 섹션(정적 폴백: 챕터별 씬 목록+선수 관계 링크 포함), 언어별 `search-index.<lang>.json`, `sitemap.xml`(리다이렉트 제외 244 URL), 404.html, robots.txt, title 중복·`summary` 비어 있음·용어 사전/학습 경로/개념 지도/연습문제 무결성 검사, 퇴역 챕터 리다이렉트 페이지 162개(언어별 81, sitemap 제외). 총 244페이지(언어별: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 7)
 - [x] CI 검사와 챕터별 번들 예산(`size-limit`), `deploy.yml`에 test → check-deps → build → 프리렌더 검증 → size-limit 반영. PR은 검증만, 배포는 main push에서만
+
+## 챕터 10분할 (2026-10-18)
+
+3개 챕터(limits 39씬·series 32씬·calculus 22씬)가 비대해져서 10개 논리 챕터로 분할했다. 총 씬 93개·문제 279개·연습문제 36개·용어 143개는 그대로.
+
+| # | id | ko / en | 씬 수 |
+|---|----|---------|-------|
+| 1 | `numbers` | 수의 체계 / Number Systems | 9 |
+| 2 | `sequences` | 수열 / Sequences | 9 |
+| 3 | `continuity` | 연속함수 / Continuity | 7 |
+| 4 | `topology` | 위상 / Topology | 10 |
+| 5 | `approximation` | 근사 / Approximation | 4 |
+| 6 | `series` | 급수 / Series | 16 |
+| 7 | `power-series` | 거듭제곱급수 / Power Series | 10 |
+| 8 | `function-series` | 함수급수와 푸리에 / Series of Functions & Fourier | 5 |
+| 9 | `differentiation` | 미분 / Differentiation | 11 |
+| 10 | `integration` | 적분 / Integration | 12 |
+
+### Physical vs logical
+
+푸시 도구에 delete/rename이 없어서 279개 씬 파일(models/, scenes/, problems/)을 옮기지 않았다. `src/chapters/{limits,series,calculus}/`는 **scene store**(레거시 물리 디렉토리)로 남고, 10개 논리 챕터 디렉토리는 `meta.ts`·`loaders.ts`·`entry.ts`·`exercises.ts` 4개 파일만 가진다. 논리 챕터의 meta/loaders는 상대경로(`../limits/scenes/foo`, `../limits/problems/foo`)로 store를 참조한다. 단 `series`는 예외: 새 Series 챕터(16씬)가 기존 `src/chapters/series/` 디렉토리를 그대로 재사용하므로, 이 디렉토리의 meta/loaders/entry/exercises는 살아 있고 limits/calculus의 4개 wiring 파일만 dead file이다.
+
+- `src/catalog.ts`는 10개 논리 챕터만 등록한다. 배열 순서 = 표시 번호(1..10).
+- check-deps 규칙 2 개정: meta.ts는 `./problems/*`뿐 아니라 `../{limits,series,calculus}/problems/*` 순수 데이터 모듈도 import할 수 있다(번들 무게 근거는 동일 — problems/*는 순수 데이터).
+- check-deps 규칙 4 예외: 논리 챕터가 레거시 store의 models|scenes|problems를 import할 수 있다. 단 retired wiring(meta/loaders/entry/exercises of limits/calculus)은 import 금지 — check-deps 규칙 6이 검사한다.
+- 개념 지도: 10색 팔레트(`--chapter-<id>`, light/dark), 10개 entry scene 강조. prerequisites는 씬 id → 실제 소속 챕터로 해소한다(분할 전에는 같은 챕터로 가정했음).
+- 용어 사전 143개·학습 경로 60개 스텝의 chapterId를 새 챕터로 remap했다. 연습문제 36개는 주제 적합도로 재배치(numbers 0·sequences 5·continuity 2·topology 4·approximation 1·series 7·power-series 3·function-series 3·differentiation 7·integration 4, 난이도는 easy→hard 그룹 유지).
+
+### Redirect
+
+- 구 scene URL `/<lang>/{limits,series,calculus}/<scene>/` → `/<lang>/<new-chapter>/<scene>/` (`LEGACY_SCENE_CHAPTER` 맵, 93개 전부 1회씩).
+- 구 hub `/<lang>/limits/`·`/<lang>/calculus/`, 구 exercises `/<lang>/limits/exercises/`·`/<lang>/calculus/exercises/` → `/<lang>/` (home).
+- `series`는 id를 재사용하므로 hub/exercises/머무른 16씬은 리다이렉트하지 않는다(자기 자신으로의 리다이렉트 방지). 이동한 16씬만 리다이렉트.
+- 클라이언트: `src/shell/app.ts`의 startChapter에서 `location.replace` (history에 남지 않음). 정적: prerender가 리다이렉트 페이지 162개(언어별 81: limits 41 + calculus 24 + series 이동씬 16)를 meta refresh + canonical + JS replace로 생성 — sitemap에는 포함하지 않는다.
+- Sitemap: 새 canonical URL만 244개.
+
+### 새 카운트
+
+- 페이지: 244 (언어별 122: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 1 + 경로 상세 6) + 리다이렉트 162 (sitemap 제외)
+- 테스트: 1153개 (신설 `tests/chapters.test.ts`: 카탈로그 구조·씬 유실/중복·리다이렉트 맵 커버리지)
 
 남음 (착수 순서)
 

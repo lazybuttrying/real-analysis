@@ -1,7 +1,14 @@
 import { catalog } from './catalog.ts';
-import { exercises as limitsExercises } from './chapters/limits/exercises.ts';
+import { exercises as numbersExercises } from './chapters/numbers/exercises.ts';
+import { exercises as sequencesExercises } from './chapters/sequences/exercises.ts';
+import { exercises as continuityExercises } from './chapters/continuity/exercises.ts';
+import { exercises as topologyExercises } from './chapters/topology/exercises.ts';
+import { exercises as approximationExercises } from './chapters/approximation/exercises.ts';
 import { exercises as seriesExercises } from './chapters/series/exercises.ts';
-import { exercises as calculusExercises } from './chapters/calculus/exercises.ts';
+import { exercises as powerSeriesExercises } from './chapters/power-series/exercises.ts';
+import { exercises as functionSeriesExercises } from './chapters/function-series/exercises.ts';
+import { exercises as differentiationExercises } from './chapters/differentiation/exercises.ts';
+import { exercises as integrationExercises } from './chapters/integration/exercises.ts';
 import { localize, stripInlineMath, type ExerciseMeta, type Lang } from './contracts.ts';
 import { glossary } from './glossary.ts';
 
@@ -57,9 +64,16 @@ export interface SearchIndexData {
 
 /** Chapter id -> that chapter's exercise data, in catalog order. */
 const exercisesByChapter = new Map<string, readonly ExerciseMeta[]>([
-  ['limits', limitsExercises],
+  ['numbers', numbersExercises],
+  ['sequences', sequencesExercises],
+  ['continuity', continuityExercises],
+  ['topology', topologyExercises],
+  ['approximation', approximationExercises],
   ['series', seriesExercises],
-  ['calculus', calculusExercises],
+  ['power-series', powerSeriesExercises],
+  ['function-series', functionSeriesExercises],
+  ['differentiation', differentiationExercises],
+  ['integration', integrationExercises],
 ]);
 
 /** One JSON-serializable index per language, covering every scene, glossary term, and chapter exercise. */

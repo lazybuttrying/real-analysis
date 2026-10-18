@@ -35,6 +35,137 @@ export const exercisesUrl = (base: string, lang: Lang, chapterId: string): strin
 export const pathDetailUrl = (base: string, lang: Lang, pathId: string): string =>
   `${base}${lang}/paths/${pathId}/`;
 
+/**
+ * Chapters retired by the 10-chapter split (2026-10-18). Their scene files
+ * (models/, scenes/, problems/) remain on disk as scene stores under
+ * src/chapters/{limits,series,calculus}/; only the chapter-level wiring is
+ * retired.
+ *
+ * 'limits' and 'calculus' are fully retired: every URL under them redirects
+ * (scene URLs to the scene's new chapter via LEGACY_SCENE_CHAPTER, hubs and
+ * exercises pages to the home page).
+ *
+ * 'series' is only partially retired: the id is reused by the new (smaller)
+ * Series chapter, so its hub and exercises page stay put and only the scenes
+ * that moved away redirect. A scene URL under /<lang>/series/<scene>/ stays
+ * when LEGACY_SCENE_CHAPTER[scene] === 'series'.
+ */
+export const LEGACY_CHAPTER_IDS: readonly string[] = ['limits', 'series', 'calculus'];
+
+/** Chapter ids with no pages at all anymore: hub and exercises URLs redirect home. */
+export const FULLY_RETIRED_CHAPTER_IDS: readonly string[] = ['limits', 'calculus'];
+
+/**
+ * sceneId -> owning chapterId after the 10-chapter split. Redirects retired
+ * scene URLs (/<lang>/{limits,series,calculus}/<scene>/) to their new homes.
+ * Covers every scene in the catalog exactly once (asserted by tests).
+ */
+export const LEGACY_SCENE_CHAPTER: Readonly<Record<string, string>> = {
+  // numbers
+  'natural-numbers': 'numbers',
+  'binomial': 'numbers',
+  'integers-rationals': 'numbers',
+  'sets': 'numbers',
+  'supremum': 'numbers',
+  'countable': 'numbers',
+  'groups-fields': 'numbers',
+  'vector-spaces': 'numbers',
+  'dimension-rank': 'numbers',
+  // sequences
+  'epsilon-n': 'sequences',
+  'sequence-spaces': 'sequences',
+  'cauchy-schwarz': 'sequences',
+  'holes': 'sequences',
+  'construction': 'sequences',
+  'bolzano-weierstrass': 'sequences',
+  'monotone-cauchy': 'sequences',
+  'limsup-liminf': 'sequences',
+  'stolz-cesaro': 'sequences',
+  // continuity
+  'epsdelta': 'continuity',
+  'continuity': 'continuity',
+  'monotone-discontinuities': 'continuity',
+  'uniform-continuity': 'continuity',
+  'ivt': 'continuity',
+  'evt': 'continuity',
+  'uniform': 'continuity',
+  // topology
+  'opensets': 'topology',
+  'closure': 'topology',
+  'compact': 'topology',
+  'metric-spaces': 'topology',
+  'contraction': 'topology',
+  'baire-category': 'topology',
+  'baire-1': 'topology',
+  'cantor': 'topology',
+  'fat-cantor': 'topology',
+  'cantor-function': 'topology',
+  // approximation
+  'arzela-ascoli': 'approximation',
+  'weierstrass-approx': 'approximation',
+  'stone-weierstrass': 'approximation',
+  'muntz-szasz': 'approximation',
+  // series
+  'harmonic': 'series',
+  'euler-mascheroni': 'series',
+  'basel': 'series',
+  'euler-product': 'series',
+  'leibniz': 'series',
+  'tests': 'series',
+  'raabe-test': 'series',
+  'kummer-test': 'series',
+  'condensation': 'series',
+  'telescoping': 'series',
+  'geometric': 'series',
+  'wallis': 'series',
+  'stirling': 'series',
+  'grandi': 'series',
+  'dirichlet-test': 'series',
+  'abel-test': 'series',
+  // power-series
+  'power-series': 'power-series',
+  'hadamard-gap': 'power-series',
+  'abel-theorem': 'power-series',
+  'tauber': 'power-series',
+  'eseries': 'power-series',
+  'zeta4': 'power-series',
+  'rearrangement': 'power-series',
+  'absolute': 'power-series',
+  'riemann-rearrangement': 'power-series',
+  'cauchy-product': 'power-series',
+  // function-series
+  'm-test': 'function-series',
+  'dini': 'function-series',
+  'fourier': 'function-series',
+  'fejer-theorem': 'function-series',
+  'gibbs-phenomenon': 'function-series',
+  // differentiation
+  'diffcont': 'differentiation',
+  'mvt': 'differentiation',
+  'cauchy-mvt': 'differentiation',
+  'lhopital': 'differentiation',
+  'darboux': 'differentiation',
+  'weierstrass-function': 'differentiation',
+  'taylor': 'differentiation',
+  'taylor-thm': 'differentiation',
+  'convex': 'differentiation',
+  'newton': 'differentiation',
+  'banach': 'differentiation',
+  // integration
+  'gamma': 'integration',
+  'beta-function': 'integration',
+  'bohr-mollerup': 'integration',
+  'improper': 'integration',
+  'riemann': 'integration',
+  'volterra-function': 'integration',
+  'ftc': 'integration',
+  'bounded-variation': 'integration',
+  'jordan-decomposition': 'integration',
+  'measure': 'integration',
+  'lebesgue': 'integration',
+  'absolute-continuity': 'integration',
+};
+
 /** The same page in another language: only the lang segment changes, chapter/scene/query are kept. */
 export function withLang(base: string, parsed: ParsedPath, lang: Lang): string {
   if (parsed.chapterId === undefined) return homeUrl(base, lang);

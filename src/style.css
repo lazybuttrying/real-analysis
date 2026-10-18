@@ -6,9 +6,16 @@
   --line: #d0d7de;
   --accent: #0969da;
   --bound: #d1242f;
-  --chapter-limits: #0969da;
-  --chapter-series: #1a7f37;
-  --chapter-calculus: #8250df;
+  --chapter-numbers: #0969da;
+  --chapter-sequences: #b45309;
+  --chapter-continuity: #1a7f37;
+  --chapter-topology: #cf222e;
+  --chapter-approximation: #8250df;
+  --chapter-series: #7a4a21;
+  --chapter-power-series: #c2185b;
+  --chapter-function-series: #00796b;
+  --chapter-differentiation: #5c6bc0;
+  --chapter-integration: #6d8c00;
   font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', sans-serif;
 }
 
@@ -20,9 +27,16 @@
     --line: #30363d;
     --accent: #4493f8;
     --bound: #ff7b72;
-    --chapter-limits: #4493f8;
-    --chapter-series: #3fb950;
-    --chapter-calculus: #a371f7;
+    --chapter-numbers: #4493f8;
+    --chapter-sequences: #fb8500;
+    --chapter-continuity: #3fb950;
+    --chapter-topology: #f85149;
+    --chapter-approximation: #a371f7;
+    --chapter-series: #c99a6b;
+    --chapter-power-series: #f778ba;
+    --chapter-function-series: #39c5cf;
+    --chapter-differentiation: #9aa5f5;
+    --chapter-integration: #b5cc18;
   }
 }
 
@@ -331,9 +345,16 @@ main.paths {
   flex: none;
 }
 
-.map-swatch[data-chapter='limits'] { background: var(--chapter-limits); }
+.map-swatch[data-chapter='numbers'] { background: var(--chapter-numbers); }
+.map-swatch[data-chapter='sequences'] { background: var(--chapter-sequences); }
+.map-swatch[data-chapter='continuity'] { background: var(--chapter-continuity); }
+.map-swatch[data-chapter='topology'] { background: var(--chapter-topology); }
+.map-swatch[data-chapter='approximation'] { background: var(--chapter-approximation); }
 .map-swatch[data-chapter='series'] { background: var(--chapter-series); }
-.map-swatch[data-chapter='calculus'] { background: var(--chapter-calculus); }
+.map-swatch[data-chapter='power-series'] { background: var(--chapter-power-series); }
+.map-swatch[data-chapter='function-series'] { background: var(--chapter-function-series); }
+.map-swatch[data-chapter='differentiation'] { background: var(--chapter-differentiation); }
+.map-swatch[data-chapter='integration'] { background: var(--chapter-integration); }
 
 .map-line-sample {
   display: inline-block;
@@ -376,9 +397,16 @@ main.paths {
   stroke-width: 2.5px;
 }
 
-.map-node[data-chapter='limits'] circle { fill: var(--chapter-limits); }
+.map-node[data-chapter='numbers'] circle { fill: var(--chapter-numbers); }
+.map-node[data-chapter='sequences'] circle { fill: var(--chapter-sequences); }
+.map-node[data-chapter='continuity'] circle { fill: var(--chapter-continuity); }
+.map-node[data-chapter='topology'] circle { fill: var(--chapter-topology); }
+.map-node[data-chapter='approximation'] circle { fill: var(--chapter-approximation); }
 .map-node[data-chapter='series'] circle { fill: var(--chapter-series); }
-.map-node[data-chapter='calculus'] circle { fill: var(--chapter-calculus); }
+.map-node[data-chapter='power-series'] circle { fill: var(--chapter-power-series); }
+.map-node[data-chapter='function-series'] circle { fill: var(--chapter-function-series); }
+.map-node[data-chapter='differentiation'] circle { fill: var(--chapter-differentiation); }
+.map-node[data-chapter='integration'] circle { fill: var(--chapter-integration); }
 
 .map-node text {
   font-size: 10px;

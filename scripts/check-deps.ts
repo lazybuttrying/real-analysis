@@ -7,19 +7,29 @@ import { fileURLToPath } from 'node:url';
  *
  *  1. models/ imports nothing from d3, three, the view kits, or the shell
  *     (pure computation — it must stay movable to a Worker and testable in Node).
- *  2. meta.ts imports types plus its own ./problems/* sibling data modules only
- *     (pure data — no code, models, views, or shell). Every page's navigation
+ *  2. meta.ts imports types plus problems-data modules only: its own
+ *     ./problems/* siblings, or — since the 10-chapter split — the legacy
+ *     scene stores' ../{limits,series,calculus}/problems/* (pure data — no
+ *     code, models, views, or shell). Every page's navigation
  *     and the build scripts read meta.ts; a runtime import of anything heavier
  *     would drag that code into every bundle.
  *  3. 'three' is imported only in src/view/threekit.ts (the single 3D boundary,
  *     so vendor-three loads only for 3D scenes).
- *  4. Chapter code reaches the shell only through its entry.ts (the wiring point),
- *     and never imports another chapter.
+ *  4. Chapter code reaches the shell only through its entry.ts (the wiring point).
+ *     Chapters do not import other chapters, with one exception: since the
+ *     10-chapter split, a logical chapter may import scene-store files
+ *     (models/, scenes/, problems/) from the legacy stores
+ *     chapters/{limits,series,calculus}/ — but never their retired wiring
+ *     (meta.ts, loaders.ts, entry.ts, exercises.ts), which are dead files.
  *  5. Outside the chapters, only src/catalog.ts may import chapter code
  *     (it is the aggregation point for chapter meta), with one narrow
  *     exception: src/search-index.ts may aggregate the chapter exercise data
  *     modules, because it is build/test-only and provably never enters a
  *     client bundle (no value import of search-index.ts from src/ is allowed).
+ *  6. The retired wiring files (chapters/{limits,calculus}/
+ *     {meta,loaders,entry,exercises}.ts) are dead: nothing in src/ may import
+ *     them. (The new 'series' chapter reuses src/chapters/series/ for its own
+ *     wiring, so it is not covered by this rule.)
  *
  * Exits non-zero and prints every violation it finds.
  */
@@ -81,6 +91,27 @@ function resolveRelative(fromFile: string, spec: string): string {
 const isD3 = (spec: string): boolean => spec === 'd3' || spec.startsWith('d3-') || spec.startsWith('d3/');
 const isThree = (spec: string): boolean => spec === 'three' || spec.startsWith('three/');
 
+/** Legacy scene stores left behind by the 10-chapter split. */
+const LEGACY_STORES = new Set(['limits', 'series', 'calculus']);
+
+/** True for imports of scene-store files (models/, scenes/, problems/) from a legacy store. */
+const isLegacyStoreFileImport = (resolved: string): boolean => {
+  const parts = resolved.split('/');
+  return parts[0] === 'chapters' && LEGACY_STORES.has(parts[1] ?? '') && ['models', 'scenes', 'problems'].includes(parts[2] ?? '');
+};
+
+/** Retired wiring files: kept on disk but dead (nothing may import them). */
+const DEAD_WIRING = new Set([
+  'chapters/limits/meta.ts',
+  'chapters/limits/loaders.ts',
+  'chapters/limits/entry.ts',
+  'chapters/limits/exercises.ts',
+  'chapters/calculus/meta.ts',
+  'chapters/calculus/loaders.ts',
+  'chapters/calculus/entry.ts',
+  'chapters/calculus/exercises.ts',
+]);
+
 interface Violation {
   file: string;
   rule: string;
@@ -104,9 +135,13 @@ for (const file of files) {
     if (inModels && (isD3(ref.spec) || isThree(ref.spec) || targetsViewOrShell)) {
       violations.push({ file: rel, rule: 'models stay pure', detail: `imports '${ref.spec}'` });
     }
-    // meta.ts may import types and its own ./problems/* sibling data modules
-    // (pure data). Anything else as a value would drag code into every bundle.
-    const isProblemsDataImport = base === 'meta.ts' && ref.spec.startsWith('./problems/');
+    // meta.ts may import types and problems-data modules: its own
+    // ./problems/* siblings, or the legacy scene stores'
+    // ../{limits,series,calculus}/problems/* (pure data). Anything else as a
+    // value would drag code into every bundle.
+    const isProblemsDataImport =
+      base === 'meta.ts' &&
+      (ref.spec.startsWith('./problems/') || /^\.\.\/(limits|series|calculus)\/problems\//.test(ref.spec));
     if (base === 'meta.ts' && !ref.typeOnly && !isProblemsDataImport) {
       violations.push({ file: rel, rule: 'meta.ts imports types and problems-data only', detail: `imports '${ref.spec}' as a value` });
     }
@@ -119,8 +154,17 @@ for (const file of files) {
     if (inChapter && resolved !== undefined && resolved.startsWith('chapters/')) {
       const ownChapter = rel.split('/')[1];
       const targetChapter = resolved.split('/')[1];
-      if (targetChapter !== ownChapter) {
+      if (targetChapter !== ownChapter && !isLegacyStoreFileImport(resolved)) {
         violations.push({ file: rel, rule: 'chapters do not import other chapters', detail: `imports '${ref.spec}'` });
+      }
+    }
+    // The retired wiring files are dead: nothing live may import them.
+    // (The dead files importing each other is irrelevant.)
+    if (resolved !== undefined) {
+      const key = resolved.endsWith('.ts') ? resolved : `${resolved}.ts`;
+      const selfKey = rel.endsWith('.ts') ? rel : `${rel}.ts`;
+      if (DEAD_WIRING.has(key) && !DEAD_WIRING.has(selfKey)) {
+        violations.push({ file: rel, rule: 'retired wiring is dead', detail: `imports '${ref.spec}'` });
       }
     }
     if (!inChapter && resolved !== undefined && resolved.startsWith('chapters/') && rel !== 'catalog.ts') {

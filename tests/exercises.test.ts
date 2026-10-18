@@ -1,23 +1,38 @@
 import { describe, expect, it } from 'vitest';
 import { catalog } from '../src/catalog.ts';
 import { LANGS, localize } from '../src/contracts.ts';
-import { exercises as limitsExercises } from '../src/chapters/limits/exercises.ts';
+import { exercises as numbersExercises } from '../src/chapters/numbers/exercises.ts';
+import { exercises as sequencesExercises } from '../src/chapters/sequences/exercises.ts';
+import { exercises as continuityExercises } from '../src/chapters/continuity/exercises.ts';
+import { exercises as topologyExercises } from '../src/chapters/topology/exercises.ts';
+import { exercises as approximationExercises } from '../src/chapters/approximation/exercises.ts';
 import { exercises as seriesExercises } from '../src/chapters/series/exercises.ts';
-import { exercises as calculusExercises } from '../src/chapters/calculus/exercises.ts';
+import { exercises as powerSeriesExercises } from '../src/chapters/power-series/exercises.ts';
+import { exercises as functionSeriesExercises } from '../src/chapters/function-series/exercises.ts';
+import { exercises as differentiationExercises } from '../src/chapters/differentiation/exercises.ts';
+import { exercises as integrationExercises } from '../src/chapters/integration/exercises.ts';
 
 /**
  * Integrity of the chapter exercise data (src/chapters/<id>/exercises.ts):
- * 12 exercises per chapter, unique kebab-case ids, the 4/5/3 difficulty split
- * in file order (easy first), non-empty bilingual statement/solution,
+ * unique kebab-case ids across all chapters, difficulties grouped easy -> hard
+ * in file order, non-empty bilingual statement/solution,
  * \(...\) delimiters only (never $...$), topics pointing at real scenes of the
  * same chapter, and viz presets whose keys all exist in the target scene's
- * controls.
+ * controls. Exercise counts per chapter are uneven by design (the 10-chapter
+ * split redistributed the 36 exercises by topic fit).
  */
 
 const chapters = [
-  { id: 'limits', exercises: limitsExercises },
+  { id: 'numbers', exercises: numbersExercises },
+  { id: 'sequences', exercises: sequencesExercises },
+  { id: 'continuity', exercises: continuityExercises },
+  { id: 'topology', exercises: topologyExercises },
+  { id: 'approximation', exercises: approximationExercises },
   { id: 'series', exercises: seriesExercises },
-  { id: 'calculus', exercises: calculusExercises },
+  { id: 'power-series', exercises: powerSeriesExercises },
+  { id: 'function-series', exercises: functionSeriesExercises },
+  { id: 'differentiation', exercises: differentiationExercises },
+  { id: 'integration', exercises: integrationExercises },
 ] as const;
 
 const KEBAB_CASE = /^[a-z][a-z0-9-]*$/;
@@ -29,6 +44,12 @@ const balancedInlineMath = (text: string): boolean => {
 };
 
 describe('chapter exercises', () => {
+  it('has 36 exercises in total with globally unique ids', () => {
+    const ids = chapters.flatMap(({ exercises }) => exercises.map((exercise) => exercise.id));
+    expect(ids).toHaveLength(36);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   for (const { id, exercises } of chapters) {
     describe(id, () => {
       const chapter = catalog.find((candidate) => candidate.id === id);
@@ -38,20 +59,17 @@ describe('chapter exercises', () => {
         chapter.scenes.map((scene) => [scene.id, new Set(scene.controls.map((control) => control.key))]),
       );
 
-      it('has exactly 12 exercises', () => {
-        expect(exercises).toHaveLength(12);
-      });
-
       it('has unique kebab-case ids', () => {
         const ids = exercises.map((exercise) => exercise.id);
         expect(new Set(ids).size).toBe(ids.length);
         for (const exerciseId of ids) expect(exerciseId).toMatch(KEBAB_CASE);
       });
 
-      it('uses the 4/5/3 difficulty split in file order (easy first)', () => {
+      it('groups difficulties easy -> hard in file order', () => {
+        let last = 1;
         exercises.forEach((exercise, index) => {
-          const expected = index < 4 ? 1 : index < 9 ? 2 : 3;
-          expect(exercise.difficulty, `${exercise.id} at position ${index + 1}`).toBe(expected);
+          expect(exercise.difficulty, `${exercise.id} at position ${index + 1}`).toBeGreaterThanOrEqual(last);
+          last = exercise.difficulty;
         });
       });
 
