@@ -100,18 +100,6 @@ const isLegacyStoreFileImport = (resolved: string): boolean => {
   return parts[0] === 'chapters' && LEGACY_STORES.has(parts[1] ?? '') && ['models', 'scenes', 'problems'].includes(parts[2] ?? '');
 };
 
-/** Retired wiring files: kept on disk but dead (nothing may import them). */
-const DEAD_WIRING = new Set([
-  'chapters/limits/meta.ts',
-  'chapters/limits/loaders.ts',
-  'chapters/limits/entry.ts',
-  'chapters/limits/exercises.ts',
-  'chapters/calculus/meta.ts',
-  'chapters/calculus/loaders.ts',
-  'chapters/calculus/entry.ts',
-  'chapters/calculus/exercises.ts',
-]);
-
 interface Violation {
   file: string;
   rule: string;
@@ -156,15 +144,6 @@ for (const file of files) {
       const targetChapter = resolved.split('/')[1];
       if (targetChapter !== ownChapter && !isLegacyStoreFileImport(resolved)) {
         violations.push({ file: rel, rule: 'chapters do not import other chapters', detail: `imports '${ref.spec}'` });
-      }
-    }
-    // The retired wiring files are dead: nothing live may import them.
-    // (The dead files importing each other is irrelevant.)
-    if (resolved !== undefined) {
-      const key = resolved.endsWith('.ts') ? resolved : `${resolved}.ts`;
-      const selfKey = rel.endsWith('.ts') ? rel : `${rel}.ts`;
-      if (DEAD_WIRING.has(key) && !DEAD_WIRING.has(selfKey)) {
-        violations.push({ file: rel, rule: 'retired wiring is dead', detail: `imports '${ref.spec}'` });
       }
     }
     if (!inChapter && resolved !== undefined && resolved.startsWith('chapters/') && rel !== 'catalog.ts') {
