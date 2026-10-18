@@ -9,14 +9,14 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type NewtonFunctionKey = 'sqrt2' | 'bad';
+type NewtonFunctionKey = 'sqrt2' | 'bad';
 
 /** Map the meta.ts select option value to the function key. */
 export function newtonFunctionKey(option: unknown): NewtonFunctionKey {
   return option === 'x^3-2x+2' ? 'bad' : 'sqrt2';
 }
 
-export interface NewtonFunction {
+interface NewtonFunction {
   f: (x: number) => number;
   fp: (x: number) => number;
   /** Known root, when the iteration targets one (null for the cycling demo). */
@@ -43,7 +43,7 @@ export function newtonFunction(key: NewtonFunctionKey): NewtonFunction {
       };
 }
 
-export interface NewtonStep {
+interface NewtonStep {
   x: number;
   fx: number;
   fpx: number;

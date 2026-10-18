@@ -9,7 +9,7 @@ import type { ControlState, SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type EvtMode = 'closed' | 'open-interval' | 'discontinuous';
+type EvtMode = 'closed' | 'open-interval' | 'discontinuous';
 
 export function evtMode(raw: unknown): EvtMode {
   return raw === 'open-interval' || raw === 'discontinuous' ? raw : 'closed';
@@ -37,14 +37,14 @@ export interface EvtSample {
   y: number;
 }
 
-export interface EvtExtremum {
+interface EvtExtremum {
   value: number;
   /** Points where the extreme is attained (exact candidates); empty when not attained. */
   at: number[];
   attained: boolean;
 }
 
-export type EvtVerdict = 'attained' | 'unbounded' | 'not-attained';
+type EvtVerdict = 'attained' | 'unbounded' | 'not-attained';
 
 export interface EvtData {
   mode: EvtMode;

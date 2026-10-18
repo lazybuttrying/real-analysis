@@ -17,7 +17,7 @@ import type { SceneModel } from '../../../contracts';
 
 export type PowerSeriesKind = 'exp' | 'factorial' | 'geom';
 
-export type PowerVerdict = 'converge' | 'diverge' | 'boundary';
+type PowerVerdict = 'converge' | 'diverge' | 'boundary';
 
 export interface PowerData {
   series: PowerSeriesKind;
@@ -38,7 +38,7 @@ export interface PowerData {
 export const MAX_N = 30;
 
 /** Magnitude beyond which a partial sum is reported as overflow instead of being printed. */
-export const OVERFLOW_MAGNITUDE = 1e15;
+const OVERFLOW_MAGNITUDE = 1e15;
 
 export function powerRadius(kind: PowerSeriesKind): number {
   if (kind === 'exp') return Infinity;

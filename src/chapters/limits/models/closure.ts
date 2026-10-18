@@ -9,7 +9,7 @@ import { clampNumber } from '../../../math/clamp';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const CLOSURE_KINDS = ['open', 'halfclosed', 'reciprocal'] as const;
+const CLOSURE_KINDS = ['open', 'halfclosed', 'reciprocal'] as const;
 export type ClosureKind = (typeof CLOSURE_KINDS)[number];
 
 export interface ClosureData {

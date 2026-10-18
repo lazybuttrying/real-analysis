@@ -8,9 +8,9 @@ import type { SceneModel } from '../../../contracts';
 
 export const MAX_N = 64;
 export const GRID_SIZE = 8;
-export const SEQ_COUNT = 8;
+const SEQ_COUNT = 8;
 
-export interface RationalEntry {
+interface RationalEntry {
   p: number;
   q: number;
   value: number;
@@ -18,7 +18,7 @@ export interface RationalEntry {
   index: number;
 }
 
-export interface GridCell {
+interface GridCell {
   p: number;
   q: number;
   /** Enumeration index assigned when this cell was first visited, or null when skipped as a duplicate value. */

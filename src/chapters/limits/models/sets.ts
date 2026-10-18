@@ -6,11 +6,9 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const SET_OPERATIONS = ['union', 'intersection', 'complement', 'difference', 'symdiff'] as const;
-export type SetOperation = (typeof SET_OPERATIONS)[number];
+const SET_OPERATIONS = ['union', 'intersection', 'complement', 'difference', 'symdiff'] as const;
 
-export const MAP_SHAPES = ['injective', 'surjective', 'bijective', 'neither'] as const;
-export type MapShape = (typeof MAP_SHAPES)[number];
+const MAP_SHAPES = ['injective', 'surjective', 'bijective', 'neither'] as const;
 
 /**
  * Venn regions: 'aOnly' = A\B, 'bOnly' = B\A, 'both' = A cap B,
@@ -33,7 +31,7 @@ export function setsActiveRegions(op: string): string[] {
   }
 }
 
-export interface ArrowMap {
+interface ArrowMap {
   domain: string[];
   codomain: string[];
   arrows: Array<[number, number]>;

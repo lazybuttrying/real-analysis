@@ -8,7 +8,7 @@ import { clampNumber } from '../../../math/clamp';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const OPEN_SET_KINDS = ['open', 'closed', 'half', 'singleton'] as const;
+const OPEN_SET_KINDS = ['open', 'closed', 'half', 'singleton'] as const;
 export type OpenSetKind = (typeof OPEN_SET_KINDS)[number];
 
 export interface OpenSetData {

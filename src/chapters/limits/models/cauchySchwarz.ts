@@ -18,11 +18,11 @@ export interface Vec2 {
 }
 
 /** The fixed vector x = (3, 0): ||x|| = 3 exactly, and y at angle 0 is parallel to it. */
-export const FIXED_X: Vec2 = { x: 3, y: 0 };
+const FIXED_X: Vec2 = { x: 3, y: 0 };
 
-export const MIN_ANGLE = 0;
-export const MAX_ANGLE = 2 * Math.PI;
-export const DEFAULT_ANGLE = 0;
+const MIN_ANGLE = 0;
+const MAX_ANGLE = 2 * Math.PI;
+const DEFAULT_ANGLE = 0;
 
 /** Tolerance for the parallel/orthogonal flags. */
 export const EPS = 1e-9;

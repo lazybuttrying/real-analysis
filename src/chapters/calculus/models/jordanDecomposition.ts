@@ -50,8 +50,8 @@ export interface JordanData {
   V: number;
 }
 
-export const MIN_X0 = 0;
-export const MAX_X0 = 1;
+const MIN_X0 = 0;
+const MAX_X0 = 1;
 export const DEFAULT_X0 = 0.7;
 /** Uniform grid points on [0, 1]. */
 export const GRID_POINTS = 2001;

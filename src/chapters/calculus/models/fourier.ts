@@ -13,9 +13,9 @@ import type { SceneModel } from '../../../contracts';
 export const GIBBS_PEAK = 1.178979744472167;
 
 /** Jump size of the square wave (from -1 to 1). */
-export const SQUARE_JUMP = 2;
+const SQUARE_JUMP = 2;
 
-export function squareWave(x: number): number {
+function squareWave(x: number): number {
   const s = Math.sin(x);
   if (s > 1e-12) return 1;
   if (s < -1e-12) return -1;

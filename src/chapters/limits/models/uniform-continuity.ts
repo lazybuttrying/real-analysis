@@ -8,7 +8,7 @@ import { clampNumber } from '../../../math/clamp';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const FUNCTION_KINDS = ['square', 'linear'] as const;
+const FUNCTION_KINDS = ['square', 'linear'] as const;
 export type FunctionKind = (typeof FUNCTION_KINDS)[number];
 
 export function functionKindOf(raw: unknown): FunctionKind {

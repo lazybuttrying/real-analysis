@@ -11,19 +11,19 @@ import type { SceneModel } from '../../../contracts';
 export const CAUCHY_A = 1;
 export const CAUCHY_B = 2;
 
-export function cauchyF(t: number): number {
+function cauchyF(t: number): number {
   return t * t;
 }
 
-export function cauchyG(t: number): number {
+function cauchyG(t: number): number {
   return t * t * t;
 }
 
-export function cauchyFp(t: number): number {
+function cauchyFp(t: number): number {
   return 2 * t;
 }
 
-export function cauchyGp(t: number): number {
+function cauchyGp(t: number): number {
   return 3 * t * t;
 }
 
@@ -45,7 +45,7 @@ export function cauchyTheoremXi(): number {
   return 14 / 9;
 }
 
-export interface CauchyMVTSample {
+interface CauchyMVTSample {
   /** x = g(t). */
   x: number;
   /** y = f(t). */

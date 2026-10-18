@@ -34,7 +34,7 @@ export function integrand(p: number, q: number, t: number): number {
 /** Number of integrand samples on [0, 1]. */
 export const SAMPLE_COUNT = 121;
 
-export interface BetaSample {
+interface BetaSample {
   t: number;
   y: number;
 }

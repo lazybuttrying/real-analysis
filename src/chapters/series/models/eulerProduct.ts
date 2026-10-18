@@ -43,7 +43,7 @@ export function eulerProduct(k: number): number {
   return product;
 }
 
-export interface EulerProductTerm {
+interface EulerProductTerm {
   /** Index k, 1-based. */
   k: number;
   /** The k-th prime p_k. */

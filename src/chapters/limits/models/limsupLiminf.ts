@@ -19,7 +19,7 @@ export function term(n: number): number {
   return sign * (1 + 1 / n);
 }
 
-export interface SequencePoint {
+interface SequencePoint {
   n: number;
   value: number;
 }

@@ -5,7 +5,7 @@ import type { SceneModel } from '../../../contracts';
  * transformation. Pure computation: no DOM, d3, or three.
  */
 
-export type DimensionRankPreset = 'identity' | 'rank1' | 'projection' | 'zero';
+type DimensionRankPreset = 'identity' | 'rank1' | 'projection' | 'zero';
 
 /** Preset key -> 2x2 matrix stored as rows [[a, b], [c, d]]. */
 export const dimensionRankPresets: Record<DimensionRankPreset, [[number, number], [number, number]]> = {

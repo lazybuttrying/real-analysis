@@ -9,9 +9,9 @@ import type { ControlState, SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type TargetKey = 'singleton' | 'rationals' | 'interval';
+type TargetKey = 'singleton' | 'rationals' | 'interval';
 
-export interface MeasureCover {
+interface MeasureCover {
   /** Interval center. */
   c: number;
   /** Interval width (length). */

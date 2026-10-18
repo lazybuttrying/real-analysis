@@ -8,7 +8,7 @@ import type { SceneModel } from '../../../contracts';
  */
 
 export const MAX_STEPS = 8;
-export const POINT_COUNT = 400;
+const POINT_COUNT = 400;
 
 /** Deterministic PRNG so the same seed always draws the same sequence. */
 export function mulberry32(seed: number): () => number {
@@ -22,7 +22,7 @@ export function mulberry32(seed: number): () => number {
   };
 }
 
-export interface BWInterval {
+interface BWInterval {
   a: number;
   b: number;
 }

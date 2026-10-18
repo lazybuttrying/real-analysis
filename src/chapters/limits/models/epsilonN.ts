@@ -8,7 +8,7 @@ import type { SceneModel } from '../../../contracts';
 
 export const MAX_K = 80;
 
-export type SequenceKey = 'inv' | 'alt' | 'frac' | 'sq';
+type SequenceKey = 'inv' | 'alt' | 'frac' | 'sq';
 
 /** Maps the select-control option strings (shown verbatim in the UI) to sequence keys. */
 export function sequenceKey(option: unknown): SequenceKey {
@@ -24,7 +24,7 @@ export function sequenceKey(option: unknown): SequenceKey {
   }
 }
 
-export function sequenceTerm(id: SequenceKey, k: number): number {
+function sequenceTerm(id: SequenceKey, k: number): number {
   switch (id) {
     case 'inv':
       return 1 / k;
@@ -37,11 +37,11 @@ export function sequenceTerm(id: SequenceKey, k: number): number {
   }
 }
 
-export function sequenceLimit(id: SequenceKey): number {
+function sequenceLimit(id: SequenceKey): number {
   return id === 'frac' ? 1 : 0;
 }
 
-export interface SequenceTerm {
+interface SequenceTerm {
   k: number;
   value: number;
 }

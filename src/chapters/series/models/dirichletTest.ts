@@ -17,7 +17,7 @@ export const MAX_TERMS = 80;
 export const DEFAULT_TERMS = 30;
 export const MIN_X = 0.2;
 export const MAX_X = 3.0;
-export const DEFAULT_X = 1.0;
+const DEFAULT_X = 1.0;
 
 /** Uniform bound for the raw partial sums: 1/|sin(x/2)|. */
 export function dirichletBound(x: number): number {

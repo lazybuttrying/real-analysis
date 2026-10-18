@@ -14,7 +14,7 @@ export const LIMIT = Math.pow(Math.PI, 4) / 90;
 
 const EVEN_DENOMINATORS: Record<number, number> = { 2: 6, 4: 90, 6: 945 };
 
-export interface ZetaPatternEntry {
+interface ZetaPatternEntry {
   p: number;
   /** Denominator in pi^p / denom for even p; absent for the odd entry */
   denom?: number;

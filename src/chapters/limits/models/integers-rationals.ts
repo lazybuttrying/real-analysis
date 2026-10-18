@@ -36,7 +36,7 @@ function gcd(a: number, b: number): number {
   return x;
 }
 
-export interface ReducedFraction {
+interface ReducedFraction {
   p: number;
   q: number;
   value: number;

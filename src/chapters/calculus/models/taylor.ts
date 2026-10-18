@@ -7,7 +7,7 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type TaylorFunctionKey = 'sin' | 'exp';
+type TaylorFunctionKey = 'sin' | 'exp';
 
 export function taylorFunctionKey(option: unknown): TaylorFunctionKey {
   return option === 'exp' ? 'exp' : 'sin';
@@ -20,7 +20,7 @@ function factorial(k: number): number {
 }
 
 /** The k-th derivative of the function at 0. */
-export function taylorDerivativeAtZero(key: TaylorFunctionKey, k: number): number {
+function taylorDerivativeAtZero(key: TaylorFunctionKey, k: number): number {
   if (key === 'exp') return 1;
   const r = k % 4;
   return r === 0 ? 0 : r === 1 ? 1 : r === 2 ? 0 : -1;

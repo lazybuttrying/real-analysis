@@ -11,9 +11,9 @@ import { clampNumber } from '../../../math/clamp';
  */
 
 export const METRIC_KINDS = ['euclid', 'discrete', 'maxnorm'] as const;
-export type MetricKind = (typeof METRIC_KINDS)[number];
+type MetricKind = (typeof METRIC_KINDS)[number];
 
-export interface DiscretePoint {
+interface DiscretePoint {
   x: number;
   y: number;
   label: string;

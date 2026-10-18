@@ -19,7 +19,7 @@ export const DEFAULT_N = 50;
 /** Euler-Mascheroni constant, for the dashed asymptote line. */
 export const GAMMA_TRUE = 0.5772156649015329;
 
-export interface GammaTerm {
+interface GammaTerm {
   /** Index k, 1-based. */
   k: number;
   /** H_k = sum_{j=1}^{k} 1/j. */

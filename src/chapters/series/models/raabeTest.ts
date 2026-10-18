@@ -13,7 +13,7 @@ import type { SceneModel } from '../../../contracts';
  *            both have R_k -> 1, the genuinely inconclusive boundary.
  */
 
-export type RaabeExample = 'central' | 'log';
+type RaabeExample = 'central' | 'log';
 
 export interface RaabeData {
   example: RaabeExample;

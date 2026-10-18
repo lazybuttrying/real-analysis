@@ -27,7 +27,7 @@ export function simpson(f: (t: number) => number, a: number, b: number, n: numbe
 }
 
 /** Gamma on [1, 2] by quadrature of the substituted integral. */
-export function gammaUnit(x: number): number {
+function gammaUnit(x: number): number {
   // u = 0 is a single point (measure zero); the limit of the integrand is 0 for x > 1/2.
   const f = (u: number): number => (u === 0 ? 0 : 2 * Math.pow(u, 2 * x - 1) * Math.exp(-u * u));
   return simpson(f, 0, Math.sqrt(40), 4000);
@@ -40,7 +40,7 @@ export function gamma(x: number): number {
   return gammaUnit(x);
 }
 
-export interface GammaSample {
+interface GammaSample {
   x: number;
   y: number;
 }

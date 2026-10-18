@@ -62,7 +62,7 @@ export function cesaroMeans(term: (n: number) => number, count: number): number[
   return means;
 }
 
-export interface StolzCesaroPoint {
+interface StolzCesaroPoint {
   n: number;
   /** r_n: the difference ratio (a_{n+1}-a_n)/(b_{n+1}-b_n). */
   diffRatio: number;

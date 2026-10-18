@@ -25,8 +25,8 @@ import type { SceneModel } from '../../../contracts';
  */
 
 /** The two example functions, matching the 'func' select control. */
-export type AcFunc = 'square' | 'cantor';
-export const DEFAULT_FUNC: AcFunc = 'square';
+type AcFunc = 'square' | 'cantor';
+const DEFAULT_FUNC: AcFunc = 'square';
 
 /** Slider range for 'scale': delta knob for 'square', stage n for 'cantor'. */
 export const MIN_SCALE = 1;
@@ -50,11 +50,11 @@ export interface AbsoluteContinuityData {
 }
 
 /** delta for 'square' (scale / 20), stage for 'cantor' (scale). */
-export function acDetail(func: AcFunc, scale: number): number {
+function acDetail(func: AcFunc, scale: number): number {
   return func === 'cantor' ? scale : scale / 20;
 }
 
-export function absoluteContinuityData(func: AcFunc, scale: number): AbsoluteContinuityData {
+function absoluteContinuityData(func: AcFunc, scale: number): AbsoluteContinuityData {
   const detail = acDetail(func, scale);
   const totalLen = func === 'cantor' ? Math.pow(2 / 3, scale) : detail;
   const varSum = func === 'cantor' ? 1 : 2 * detail - detail * detail;

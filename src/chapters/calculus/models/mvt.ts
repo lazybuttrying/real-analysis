@@ -9,7 +9,7 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type MVTFunctionKey = 'cubic' | 'square' | 'rolle' | 'constant';
+type MVTFunctionKey = 'cubic' | 'square' | 'rolle' | 'constant';
 
 /** Map the meta.ts select option value to the function key. */
 export function mvtFunctionKey(option: unknown): MVTFunctionKey {
@@ -22,7 +22,7 @@ export function mvtFunctionKey(option: unknown): MVTFunctionKey {
         : 'cubic';
 }
 
-export interface MVTFunction {
+interface MVTFunction {
   f: (x: number) => number;
   fp: (x: number) => number;
   a: number;

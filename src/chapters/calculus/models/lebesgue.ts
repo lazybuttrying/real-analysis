@@ -10,7 +10,7 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export interface RationalCover {
+interface RationalCover {
   /** The rational number. */
   r: number;
   /** 1-based index in the enumeration. */

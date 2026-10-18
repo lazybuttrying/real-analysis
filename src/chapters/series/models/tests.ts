@@ -9,9 +9,9 @@ import type { SceneModel } from '../../../contracts';
  *   inv-square-plus:  a_k = 1/(k^2+1) <= 1/k^2, compared with the Basel p-series
  */
 
-export type TestsSeries = 'factorial' | 'n-over-2n' | 'inv-square-plus';
+type TestsSeries = 'factorial' | 'n-over-2n' | 'inv-square-plus';
 
-export type TestsVerdict = 'ratio-converges' | 'comparison-converges';
+type TestsVerdict = 'ratio-converges' | 'comparison-converges';
 
 export interface TestsData {
   series: TestsSeries;

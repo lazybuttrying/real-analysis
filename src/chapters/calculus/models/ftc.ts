@@ -8,13 +8,13 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type FTCFunctionKey = 'square' | 'sin';
+type FTCFunctionKey = 'square' | 'sin';
 
 export function ftcFunctionKey(option: unknown): FTCFunctionKey {
   return option === 'sin' ? 'sin' : 'square';
 }
 
-export interface FTCFunction {
+interface FTCFunction {
   f: (x: number) => number;
   /** Closed-form area A(x) = integral_a^x f(t) dt. */
   area: (x: number) => number;
@@ -22,7 +22,7 @@ export interface FTCFunction {
   b: number;
 }
 
-export function ftcFunction(key: FTCFunctionKey): FTCFunction {
+function ftcFunction(key: FTCFunctionKey): FTCFunction {
   return key === 'sin'
     ? {
         f: (x) => Math.sin(x),

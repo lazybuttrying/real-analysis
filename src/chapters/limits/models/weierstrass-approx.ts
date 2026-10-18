@@ -8,7 +8,7 @@ import type { SceneModel } from '../../../contracts';
  * f does the rest. Pure computation: no DOM, d3, or three.
  */
 
-export type BernsteinFnKey = 'one' | 'id' | 'abs' | 'square' | 'sin';
+type BernsteinFnKey = 'one' | 'id' | 'abs' | 'square' | 'sin';
 
 export function bernsteinFnKey(option: unknown): BernsteinFnKey {
   return option === 'id'
@@ -22,7 +22,7 @@ export function bernsteinFnKey(option: unknown): BernsteinFnKey {
           : 'one';
 }
 
-export function bernsteinFn(key: BernsteinFnKey, x: number): number {
+function bernsteinFn(key: BernsteinFnKey, x: number): number {
   switch (key) {
     case 'one':
       return 1;

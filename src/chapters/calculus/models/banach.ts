@@ -10,13 +10,13 @@ import { clampNumber } from '../../../math/clamp';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type BanachFunctionKey = 'affine' | 'cos';
+type BanachFunctionKey = 'affine' | 'cos';
 
 export function banachFunctionKey(option: unknown): BanachFunctionKey {
   return option === 'cos' ? 'cos' : 'affine';
 }
 
-export interface BanachFunction {
+interface BanachFunction {
   f: (x: number) => number;
   q: number;
   fixed: number;

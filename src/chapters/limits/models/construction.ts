@@ -11,7 +11,7 @@ import type { SceneModel } from '../../../contracts';
 
 export const MAX_TERMS = 6;
 
-export interface ConstructionTerm {
+interface ConstructionTerm {
   n: number;
   /** Exact numerator/denominator of the rational term */
   p: bigint;

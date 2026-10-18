@@ -9,9 +9,9 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const MIN_ROW = 0;
-export const MAX_ROW = 8;
-export const DEFAULT_ROW = 4;
+const MIN_ROW = 0;
+const MAX_ROW = 8;
+const DEFAULT_ROW = 4;
 
 /**
  * Exact binomial coefficient C(n, k).
@@ -48,7 +48,7 @@ export function rowSum(n: number): number {
   return sum;
 }
 
-export interface ExpandCheck {
+interface ExpandCheck {
   /** (x + y)^n */
   lhs: number;
   /** sum_{k=0}^{n} C(n,k) x^{n-k} y^k */

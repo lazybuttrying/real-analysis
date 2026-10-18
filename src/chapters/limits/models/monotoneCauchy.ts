@@ -7,7 +7,7 @@ import type { ControlState, SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const CAUCHY_MAX_INDEX = 12;
+const CAUCHY_MAX_INDEX = 12;
 
 /** The scene's sequence (and, equivalently, the partial sums of 2^{-k}). */
 export function cauchyTerm(k: number): number {
@@ -24,7 +24,7 @@ export function partialSumDiff(m: number, n: number): number {
   return 2 ** -n - 2 ** -m;
 }
 
-export interface MonotoneCauchyTerm {
+interface MonotoneCauchyTerm {
   k: number;
   value: number;
 }

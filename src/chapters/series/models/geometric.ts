@@ -12,14 +12,14 @@ export const MAX_STEPS = 12;
 
 export const LIMIT = 1;
 
-export interface Rect {
+interface Rect {
   x0: number;
   y0: number;
   x1: number;
   y1: number;
 }
 
-export interface Piece extends Rect {
+interface Piece extends Rect {
   step: number;
   value: number;
   label: string;

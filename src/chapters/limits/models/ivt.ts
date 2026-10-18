@@ -8,26 +8,26 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type IVTFunctionKey = 'cubic' | 'sine';
+type IVTFunctionKey = 'cubic' | 'sine';
 
-export function ivtFunctionKey(option: unknown): IVTFunctionKey {
+function ivtFunctionKey(option: unknown): IVTFunctionKey {
   return option === 'sine' ? 'sine' : 'cubic';
 }
 
-export interface IVTFunction {
+interface IVTFunction {
   f: (x: number) => number;
   a: number;
   b: number;
 }
 
-export function ivtFunction(key: IVTFunctionKey): IVTFunction {
+function ivtFunction(key: IVTFunctionKey): IVTFunction {
   return key === 'sine'
     ? { f: (x) => Math.sin(x), a: 0, b: Math.PI / 2 }
     : { f: (x) => x * x * x + x - 1, a: 0, b: 1 };
 }
 
 /** Bisection for the crossing of f(x) = c. */
-export function findCrossing(key: IVTFunctionKey, c: number): number {
+function findCrossing(key: IVTFunctionKey, c: number): number {
   const { f, a, b } = ivtFunction(key);
   let lo = a;
   let hi = b;

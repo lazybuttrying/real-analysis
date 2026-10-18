@@ -10,7 +10,7 @@ import type { SceneModel } from '../../../contracts';
  *             converges iff p < 1, with limit 1/(1-p).
  */
 
-export type ImproperKind = 'tail' | 'singular';
+type ImproperKind = 'tail' | 'singular';
 
 export interface ImproperSample {
   x: number;
