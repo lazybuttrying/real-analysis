@@ -142,6 +142,46 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'supremum',
   },
   {
+    id: 'nth-root',
+    term: { ko: 'n제곱근', en: 'n-th root' },
+    definition: {
+      ko: String.raw`\(x^n = a\)를 만족하는 \(x \ge 0\). \(\sup\{x \ge 0 : x^n < a\}\)로 존재가 보장된다.`,
+      en: String.raw`The \(x \ge 0\) with \(x^n = a\); its existence is guaranteed by \(\sup\{x \ge 0 : x^n < a\}\).`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'nth-root',
+  },
+  {
+    id: 'axiom-of-choice',
+    term: { ko: '선택 공리', en: 'axiom of choice' },
+    definition: {
+      ko: String.raw`비어 있지 않은 집합들의 모음에서 각각 하나씩 원소를 고르는 함수가 존재한다는 공리.`,
+      en: `The axiom that a choice function exists for any collection of nonempty sets.`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'axiom-of-choice',
+  },
+  {
+    id: 'zorns-lemma',
+    term: { ko: '초른 보조정리', en: "Zorn's lemma" },
+    definition: {
+      ko: String.raw`모든 사슬이 상계를 가지면 극대 원소가 존재한다. 선택 공리와 동치이다.`,
+      en: `If every chain has an upper bound, a maximal element exists. Equivalent to the axiom of choice.`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'zorn-lemma',
+  },
+  {
+    id: 'cantors-theorem',
+    term: { ko: '칸토어 정리', en: "Cantor's theorem" },
+    definition: {
+      ko: String.raw`어떤 집합도 그 멱집합보다 작다: \(|X| < |\mathcal{P}(X)|\). 대각선 논법으로 증명한다.`,
+      en: String.raw`Every set is smaller than its power set: \(|X| < |\mathcal{P}(X)|\), proved by diagonalization.`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'cantor-theorem',
+  },
+  {
     id: 'countable-set',
     term: { ko: '가산집합', en: 'countable set' },
     definition: {
@@ -767,6 +807,26 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'tests',
   },
   {
+    id: 'integral-test',
+    term: { ko: '적분 판정법', en: 'integral test' },
+    definition: {
+      ko: String.raw`감소하는 양의 함수에 대해 급수와 이상적분이 수렴·발산을 함께한다.`,
+      en: `For a decreasing positive function, the series and the improper integral converge or diverge together.`,
+    },
+    chapterId: 'series',
+    sceneId: 'integral-test',
+  },
+  {
+    id: 'double-series',
+    term: { ko: '이중급수', en: 'double series' },
+    definition: {
+      ko: String.raw`항이 격자 \((m,n)\) 위에 놓인 급수. 절댓값이 수렴하면 행·열 어느 쪽으로 먼저 합해도 같다.`,
+      en: `A series with terms on the grid \((m,n)\); with absolute convergence, rows-first and columns-first sums agree.`,
+    },
+    chapterId: 'series',
+    sceneId: 'double-series',
+  },
+  {
     id: 'raabe-test',
     term: { ko: '라베 판정법', en: "Raabe's test" },
     definition: {
@@ -1150,6 +1210,16 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'mvt',
   },
   {
+    id: 'inverse-function-theorem',
+    term: { ko: '역함수 정리', en: 'inverse function theorem' },
+    definition: {
+      ko: String.raw`\(f'(a) \ne 0\)이면 \(f\)는 \(a\) 근처에서 역함수를 갖고, \((f^{-1})'(f(a)) = 1/f'(a)\).`,
+      en: String.raw`If \(f'(a) \ne 0\), \(f\) has a local inverse near \(a\) with \((f^{-1})'(f(a)) = 1/f'(a)\).`,
+    },
+    chapterId: 'differentiation',
+    sceneId: 'inverse-function-theorem',
+  },
+  {
     id: 'cauchy-mean-value',
     term: { ko: '코시 평균값 정리', en: 'Cauchy mean value theorem' },
     definition: {
@@ -1379,6 +1449,26 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'integration',
     sceneId: 'ftc',
+  },
+  {
+    id: 'integration-by-parts',
+    term: { ko: '부분적분', en: 'integration by parts' },
+    definition: {
+      ko: String.raw`\(\int u\,dv = [uv] - \int v\,du\). 곱의 미분법칙을 적분한 것이다.`,
+      en: String.raw`\(\int u\,dv = [uv] - \int v\,du\): the product rule, integrated.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'integration-by-parts',
+  },
+  {
+    id: 'change-of-variables',
+    term: { ko: '치환적분', en: 'change of variables' },
+    definition: {
+      ko: String.raw`\(u = \varphi(x)\)로 두면 \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\). 적분 구간이 치환을 따라간다.`,
+      en: String.raw`With \(u = \varphi(x)\), \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\): the limits follow the substitution.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'change-of-variables',
   },
   {
     id: 'bounded-variation',

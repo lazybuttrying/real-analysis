@@ -6,9 +6,11 @@ import { kummerTestProblems } from './problems/kummer-test';
 import { problems as abelTestProblems } from './problems/abel-test';
 import { problems as baselProblems } from './problems/basel';
 import { problems as dirichletTestProblems } from './problems/dirichlet-test';
+import { doubleSeriesProblems } from './problems/double-series';
 import { problems as geometricProblems } from './problems/geometric';
 import { problems as grandiProblems } from './problems/grandi';
 import { problems as harmonicProblems } from './problems/harmonic';
+import { integralTestProblems } from './problems/integral-test';
 import { problems as leibnizProblems } from './problems/leibniz';
 import { problems as raabeTestProblems } from './problems/raabe-test';
 import { problems as stirlingProblems } from './problems/stirling';
@@ -132,9 +134,28 @@ problems: leibnizProblems,
 problems: testsProblems,
     },
     {
+      id: 'integral-test',
+      title: { ko: '적분 판정법', en: 'The Integral Test' },
+      order: 7,
+      summary: {
+        ko: String.raw`감소하는 양의 함수에서는 직사각형이 곡선 아래·위에 딱 맞물려 \(\int_1^{N+1} f \le \sum_1^N f(n) \le f(1) + \int_1^{N+1} f\) — 급수와 이상적분이 운명을 같이합니다. \(p\)를 움직여 \(p\)-급수의 갈림을 보세요.`,
+        en: String.raw`For a decreasing positive function the rectangles lock above and below the curve: \(\int_1^{N+1} f \le \sum_1^N f(n) \le f(1) + \int_1^{N+1} f\) — series and improper integral share one fate. Move \(p\) to see the p-series fork.`,
+      },
+      tex: [
+        String.raw`\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f`,
+        String.raw`\sum \frac{1}{n^p} \text{ converges} \iff p > 1`,
+      ],
+      prerequisites: ['tests'],
+      controls: [
+        { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 1, max: 3, step: 0.1, init: 2 },
+        { kind: 'slider', key: 'N', label: { ko: '항 수 N', en: 'Terms N' }, min: 5, max: 40, step: 1, init: 12 },
+      ],
+      problems: integralTestProblems,
+    },
+    {
       id: 'raabe-test',
       title: { ko: '라베 판정법', en: "Raabe's Test" },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`비율이 1로 가서 비율 판정법이 항복할 때, 한 단계 더 깊이 본 양 \(R_n = n(a_n/a_{n+1} - 1)\)이 1 위/아래 어디에 안착하는지로 수렴을 가릅니다.`,
         en: String.raw`When the ratio drifts to 1 and the ratio test surrenders, the finer quantity \(R_n = n(a_n/a_{n+1} - 1)\) settles above or below 1 and decides convergence.`,
@@ -153,7 +174,7 @@ problems: raabeTestProblems,
     {
       id: 'kummer-test',
       title: { ko: '쿰머 판정법', en: "Kummer's Test" },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`양의 보조수열 \((p_n)\)로 비율을 가중하면 \(K_n = p_n\frac{a_n}{a_{n+1}} - p_{n+1}\)이 0 위/아래 어디에 머무는지로 수렴을 가릅니다. \(p_n = 1\)이면 비율 판정법, \(p_n = n\)이면 라베 판정법이 됩니다.`,
         en: String.raw`Weighting the ratio by a positive auxiliary sequence \((p_n)\), the sign of \(K_n = p_n\frac{a_n}{a_{n+1}} - p_{n+1}\) decides convergence. \(p_n = 1\) recovers the ratio test, \(p_n = n\) recovers Raabe's test.`,
@@ -173,7 +194,7 @@ problems: kummerTestProblems,
     {
       id: 'condensation',
       title: { ko: '코시 응축 판정법', en: 'Cauchy Condensation Test' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`\(a_n\)의 항들을 \([2^n, 2^{n+1})\) 블록으로 묶어 보세요 — 블록 합이 응축 항 \(2^n a_{2^n}\) 사이에 끼면서, 원래 급수와 응축된 급수가 운명을 같이합니다.`,
         en: String.raw`Group the terms \(a_n\) into blocks \([2^n, 2^{n+1})\): each block sum is sandwiched between condensed terms \(2^n a_{2^n}\), so the original and condensed series share their fate.`,
@@ -192,7 +213,7 @@ problems: kummerTestProblems,
     {
       id: 'telescoping',
       title: { ko: '망원급수', en: 'Telescoping Series' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`각 항을 \(\frac{1}{n} - \frac{1}{n+1}\)로 쪼개면 이웃끼리 서로 지워지고 처음의 1과 사라져 가는 꼬리만 남는 모습을 확인합니다.`,
         en: String.raw`Split each term into \(\frac{1}{n} - \frac{1}{n+1}\) and the neighbors cancel each other, leaving only the very first 1 and a vanishing tail.`,
@@ -207,7 +228,7 @@ problems: telescopingProblems,
     {
       id: 'geometric',
       title: { ko: '기하급수: 정사각형 채우기', en: 'Geometric Series: Filling the Square' },
-      order: 11,
+      order: 12,
       summary: {
         ko: '단위 정사각형을 남은 부분의 절반씩 채워 나가면 빈틈이 매 단계 절반으로 줄며 합이 1이 되는 모습을 확인합니다.',
         en: 'Fill a unit square by always taking half of what remains: the gap halves at every step and the total becomes 1.',
@@ -219,7 +240,7 @@ problems: geometricProblems,
     {
       id: 'wallis',
       title: { ko: '월리스 곱', en: 'Wallis Product' },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`유리수 인수들을 하나씩 곱해 나갈수록 실행 곱이 \(\frac{\pi}{2}\) 위아래로 흔들리며 조여드는 모습을 확인합니다.`,
         en: String.raw`Multiply the rational factors in one at a time and watch the running product swing above and below \(\frac{\pi}{2}\), closing in as the swings shrink.`,
@@ -231,7 +252,7 @@ problems: wallisProblems,
     {
       id: 'stirling',
       title: { ko: '스털링 근사', en: "Stirling's Approximation" },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`로그 눈금에서 \(n!\)와 스털링 근사가 거의 겹쳐지고 상대오차가 대략 \(\frac{1}{12n}\)으로 줄어드는 모습을 확인합니다. \(\pi\)가 들어오는 경로는 아이디어 수준에서만 짚습니다.`,
         en: String.raw`On a log scale, \(n!\) and the Stirling approximation nearly coincide, and the relative error shrinks like \(\frac{1}{12n}\). Where \(\pi\) enters is only sketched at the idea level.`,
@@ -243,7 +264,7 @@ problems: stirlingProblems,
     {
       id: 'grandi',
       title: { ko: '그란디 급수', en: 'Grandi Series' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`부분합이 1과 0을 영원히 오가므로 이 급수에는 합이 없습니다. \(\frac{1}{2}\)는 부분합들의 평균(체사로 평균)일 뿐, 급수의 합이 아닙니다.`,
         en: String.raw`The partial sums bounce between 1 and 0 forever, so this series has no sum. \(\frac{1}{2}\) is only the average of the partial sums (the Cesàro mean), not a sum of the series.`,
@@ -255,7 +276,7 @@ problems: grandiProblems,
     {
       id: 'dirichlet-test',
       title: { ko: '디리클레 판정법', en: "Dirichlet's Test" },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`부분합이 \(1/|\sin(x/2)|\) 안에 갇혀 흔들리는 \(\sin(kx)\)와 \(0\)으로 가라앉는 \(1/n\)이 만나 \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴합니다 — 디리클레 판정법.`,
         en: String.raw`The partial sums of \(\sin(kx)\) wobble, trapped inside \(1/|\sin(x/2)|\), and the \(1/n\) weight sinking to \(0\) tames them into the convergent series \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\) — Dirichlet's test.`,
@@ -274,7 +295,7 @@ problems: grandiProblems,
     {
       id: 'abel-test',
       title: { ko: '아벨 판정법', en: "Abel's Test" },
-      order: 16,
+      order: 17,
       summary: {
         ko: String.raw`\\(\\sum a_n\\)이 수렴하고 \\((b_n)\\)이 단조·유계이면 \\(\\sum a_n b_n\\)도 수렴합니다 — 디리클레 판정법의 짝꿍. \\((b_n)\\)이 0으로 가지 않아도 된다는 점이 다릅니다.`,
         en: String.raw`If \\(\\sum a_n\\) converges and \\((b_n)\\) is monotone and bounded, then \\(\\sum a_n b_n\\) converges — the companion to Dirichlet's test. The difference: \\((b_n)\\) need not tend to 0.`,
@@ -289,6 +310,31 @@ problems: grandiProblems,
         { kind: 'slider', key: 'n', label: { ko: '부분합 항 수', en: 'Partial sum terms' }, min: 10, max: 500, step: 10, init: 120 },
       ],
 problems: abelTestProblems,
+    },
+    {
+      id: 'double-series',
+      title: { ko: '이중급수와 푸비니', en: 'Double Series and Fubini' },
+      order: 18,
+      summary: {
+        ko: String.raw`격자를 행으로 먼저 합하든 열로 먼저 합하든 — 절댓값이 수렴하면 답이 같습니다. \(\sum_{m,n} \frac{1}{m^2n^2} = \left(\frac{\pi^2}{6}\right)^2 = \frac{\pi^4}{36}\). 조건부로만 수렴하면 순서가 답을 바꿉니다.`,
+        en: String.raw`Sum the grid by rows first or by columns first — with absolute convergence the answer is the same. \(\sum_{m,n} \frac{1}{m^2n^2} = \left(\frac{\pi^2}{6}\right)^2 = \frac{\pi^4}{36}\). Conditional convergence lets the order change the answer.`,
+      },
+      tex: [
+        String.raw`\sum_{m}\sum_{n} a_{m,n} = \sum_{n}\sum_{m} a_{m,n} = \sup_{\text{finite } F} \sum_{F} a_{m,n}`,
+        String.raw`\sum_{m,n \ge 1} \frac{1}{m^2n^2} = \frac{\pi^4}{36} \approx 2.7058`,
+      ],
+      prerequisites: ['tests'],
+      controls: [
+        { kind: 'slider', key: 'N', label: { ko: '격자 크기 N', en: 'Grid size N' }, min: 2, max: 8, step: 1, init: 5 },
+        {
+          kind: 'select',
+          key: 'series',
+          label: { ko: '급수', en: 'Series' },
+          options: ['1/(m^2 n^2)', '(-1)^(m+n)/(m^2 n^2)'],
+          init: '1/(m^2 n^2)',
+        },
+      ],
+      problems: doubleSeriesProblems,
     },
   ],
 };

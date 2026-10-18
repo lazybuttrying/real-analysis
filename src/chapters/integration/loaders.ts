@@ -13,6 +13,8 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'riemann': () => import('../calculus/scenes/riemann').then((module) => module.default),
   'volterra-function': () => import('../calculus/scenes/volterraFunction').then((module) => module.default),
   'ftc': () => import('../calculus/scenes/ftc').then((module) => module.default),
+  'integration-by-parts': () => import('../calculus/scenes/integrationByParts').then((module) => module.default),
+  'change-of-variables': () => import('../calculus/scenes/changeOfVariables').then((module) => module.default),
   'bounded-variation': () => import('../calculus/scenes/boundedVariation').then((module) => module.default),
   'jordan-decomposition': () => import('../calculus/scenes/jordanDecomposition').then((module) => module.default),
   'measure': () => import('../calculus/scenes/measure').then((module) => module.default),

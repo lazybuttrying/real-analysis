@@ -22,4 +22,6 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'grandi': () => import('./scenes/grandi').then((module) => module.default),
   'dirichlet-test': () => import('./scenes/dirichletTest').then((module) => module.default),
   'abel-test': () => import('./scenes/abelTest').then((module) => module.default),
+  'integral-test': () => import('./scenes/integralTest').then((module) => module.default),
+  'double-series': () => import('./scenes/doubleSeries').then((module) => module.default),
 };
