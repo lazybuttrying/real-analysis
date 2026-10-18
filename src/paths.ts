@@ -27,6 +27,10 @@ export const glossaryUrl = (base: string, lang: Lang): string => `${base}${lang}
 /** The learning paths index: /<lang>/paths/ */
 export const pathsUrl = (base: string, lang: Lang): string => `${base}${lang}/paths/`;
 
+/** One chapter's exercises page: /<lang>/<chapter id>/exercises/ */
+export const exercisesUrl = (base: string, lang: Lang, chapterId: string): string =>
+  `${base}${lang}/${chapterId}/exercises/`;
+
 /** One learning path: /<lang>/paths/<id>/ */
 export const pathDetailUrl = (base: string, lang: Lang, pathId: string): string =>
   `${base}${lang}/paths/${pathId}/`;

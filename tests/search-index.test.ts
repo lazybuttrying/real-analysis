@@ -28,6 +28,18 @@ describe('search index: buildSearchIndex', () => {
       expect(ids.size).toBe(glossary.length);
     }
   });
+
+  it('covers every chapter exercise in both languages', () => {
+    for (const lang of ['ko', 'en'] as const) {
+      const index = buildSearchIndex(lang);
+      expect(index.exercises).toHaveLength(36);
+      for (const exercise of index.exercises) {
+        expect(exercise.statement.trim().length).toBeGreaterThan(0);
+        expect(exercise.number).toBeGreaterThan(0);
+        expect(exercise.exerciseId.trim().length).toBeGreaterThan(0);
+      }
+    }
+  });
 });
 
 describe('search: filterSearchIndex', () => {
@@ -75,5 +87,20 @@ describe('search: filterSearchIndex', () => {
     const hits = filterSearchIndex(ko, '동형', BASE, 'ko');
     const term = hits.find((hit) => hit.kind === 'term');
     expect(term?.url).toBe(`${BASE}ko/glossary/#term-isomorphism`);
+  });
+
+  it('finds a chapter exercise by its localized number label', () => {
+    const hits = filterSearchIndex(ko, '연습문제 1', BASE, 'ko');
+    const exercise = hits.find((hit) => hit.kind === 'exercise');
+    expect(exercise).toBeDefined();
+    expect(exercise?.url).toContain('/exercises/#exercise-');
+    expect(exercise?.context).toContain('극한과 연속');
+  });
+
+  it('finds a chapter exercise in English by its number label', () => {
+    const hits = filterSearchIndex(en, 'Exercise 2', BASE, 'en');
+    const exercise = hits.find((hit) => hit.kind === 'exercise');
+    expect(exercise).toBeDefined();
+    expect(exercise?.url).toContain('/exercises/#exercise-');
   });
 });
