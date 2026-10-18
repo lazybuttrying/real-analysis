@@ -64,6 +64,7 @@ export const learningPaths: readonly LearningPath[] = [
       { chapterId: 'series', sceneId: 'm-test' },
       { chapterId: 'series', sceneId: 'dini' },
       { chapterId: 'series', sceneId: 'abel-theorem' },
+      { chapterId: 'series', sceneId: 'riemann-rearrangement' },
     ],
   },
   {
@@ -97,9 +98,11 @@ export const learningPaths: readonly LearningPath[] = [
       { chapterId: 'calculus', sceneId: 'ftc' },
       { chapterId: 'series', sceneId: 'improper' },
       { chapterId: 'series', sceneId: 'gamma' },
+      { chapterId: 'series', sceneId: 'bohr-mollerup' },
       { chapterId: 'series', sceneId: 'beta-function' },
       { chapterId: 'calculus', sceneId: 'measure' },
       { chapterId: 'calculus', sceneId: 'lebesgue' },
+      { chapterId: 'calculus', sceneId: 'absolute-continuity' },
     ],
   },
   {
@@ -129,6 +132,7 @@ export const learningPaths: readonly LearningPath[] = [
     scenes: [
       { chapterId: 'limits', sceneId: 'metric-spaces' },
       { chapterId: 'limits', sceneId: 'contraction' },
+      { chapterId: 'limits', sceneId: 'baire-category' },
       { chapterId: 'calculus', sceneId: 'banach' },
       { chapterId: 'limits', sceneId: 'compact' },
       { chapterId: 'limits', sceneId: 'bolzano-weierstrass' },

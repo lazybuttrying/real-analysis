@@ -1,4 +1,5 @@
 import type { ChapterMeta } from '../../contracts.ts';
+import { absoluteContinuityProblems } from './problems/absolute-continuity';
 import { problems as banachProblems } from './problems/banach';
 import { boundedVariationProblems } from './problems/bounded-variation';
 import { problems as cauchyMvtProblems } from './problems/cauchy-mvt';
@@ -348,6 +349,25 @@ problems: fourierProblems,
         { kind: 'slider', key: 'K', label: { ko: '유리수 개수 K', en: 'Rationals K' }, min: 1, max: 64, step: 1, init: 16 },
       ],
 problems: lebesgueProblems,
+    },
+    {
+      id: 'absolute-continuity',
+      title: { ko: '절대연속성', en: 'Absolute Continuity' },
+      order: 18,
+      summary: {
+        ko: String.raw`\(F(x) = x^2\)는 절대연속 — 구간들의 총 길이가 0으로 가면 \(\sum |\Delta F|\)도 0으로 갑니다. 칸토어 함수는 균등연속이지만 절대연속이 아닙니다: 총 길이 \(\left(\frac23\right)^n \to 0\)인데 \(\sum |\Delta c| = 1\)에 고정됩니다. 절대연속인 함수는 정확히 Lebesgue 적분 가능한 함수의 부정적분입니다.`,
+        en: String.raw`\(F(x) = x^2\) is absolutely continuous — when the intervals' total length goes to 0, so does \(\sum |\Delta F|\). The Cantor function is uniformly continuous but not absolutely continuous: total length \(\left(\frac23\right)^n \to 0\) while \(\sum |\Delta c| = 1\) stays frozen. Absolutely continuous functions are exactly the indefinite integrals of Lebesgue-integrable functions.`,
+      },
+      tex: [
+        String.raw`F \text{ absolutely continuous } \iff \forall \varepsilon > 0\, \exists \delta > 0: \sum (b_i - a_i) < \delta \Rightarrow \sum |F(b_i) - F(a_i)| < \varepsilon`,
+        String.raw`F(x) = F(a) + \int_a^x f\,dx\quad (f \in L^1) \iff F \text{ absolutely continuous}`,
+      ],
+      prerequisites: ['lebesgue', 'ftc'],
+      controls: [
+        { kind: 'select', key: 'func', label: { ko: '함수', en: 'Function' }, options: ['square', 'cantor'], init: 'square' },
+        { kind: 'slider', key: 'scale', label: { ko: 'δ / 단계 n', en: 'δ / stage n' }, min: 1, max: 10, step: 1, init: 4 },
+      ],
+problems: absoluteContinuityProblems,
     },
   ],
 };

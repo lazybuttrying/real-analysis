@@ -19,4 +19,5 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   fourier: () => import('./scenes/fourier').then((module) => module.default),
   measure: () => import('./scenes/measure').then((module) => module.default),
   lebesgue: () => import('./scenes/lebesgue').then((module) => module.default),
+  'absolute-continuity': () => import('./scenes/absoluteContinuity').then((module) => module.default),
 };

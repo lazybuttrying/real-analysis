@@ -5,6 +5,7 @@ import { problems as absoluteProblems } from './problems/absolute';
 import { problems as cauchyProductProblems } from './problems/cauchy-product';
 import { problems as baselProblems } from './problems/basel';
 import { problems as betaFunctionProblems } from './problems/beta-function';
+import { bohrMollerupProblems } from './problems/bohr-mollerup';
 import { condensationProblems } from './problems/condensation';
 import { problems as diniProblems } from './problems/dini';
 import { problems as dirichletTestProblems } from './problems/dirichlet-test';
@@ -20,6 +21,7 @@ import { kummerTestProblems } from './problems/kummer-test';
 import { problems as leibnizProblems } from './problems/leibniz';
 import { problems as mTestProblems } from './problems/m-test';
 import { problems as powerSeriesProblems } from './problems/power-series';
+import { riemannRearrangementProblems } from './problems/riemann-rearrangement';
 import { problems as rearrangementProblems } from './problems/rearrangement';
 import { problems as raabeTestProblems } from './problems/raabe-test';
 import { problems as stirlingProblems } from './problems/stirling';
@@ -335,9 +337,30 @@ problems: gammaProblems,
 problems: betaFunctionProblems,
     },
     {
+      id: 'bohr-mollerup',
+      title: { ko: '보어-몰레루프 정리', en: 'Bohr–Mollerup Theorem' },
+      order: 19,
+      summary: {
+        ko: String.raw`\(f(1) = 1\)과 \(f(x+1) = x\,f(x)\)만으로는 팩토리얼의 연속 확장이 하나로 정해지지 않습니다 — impostor \(\Gamma(x)(1 + a\sin 2\pi x)\)가 모든 정수점에서 \(\Gamma\)와 완전히 일치하면서도 살아남기 때문입니다. secant 테스트로 로그볼록성이 \(\Gamma\)의 진짜 지문임을 직접 확인하세요.`,
+        en: String.raw`\(f(1) = 1\) and \(f(x+1) = x\,f(x)\) do not pin down the continuous extension of the factorial — the impostor \(\Gamma(x)(1 + a\sin 2\pi x)\) matches \(\Gamma\) at every integer and survives. Watch the secant test expose log-convexity as \(\Gamma\)'s true fingerprint.`,
+      },
+      tex: [
+        String.raw`f(1) = 1`,
+        String.raw`f(x+1) = x\,f(x) \quad (x > 0)`,
+        String.raw`\ln f \text{ is convex on } (0,\infty)`,
+        String.raw`f = \Gamma`,
+      ],
+      prerequisites: ['gamma'],
+      controls: [
+        { kind: 'slider', key: 'amp', label: { ko: '진폭 a', en: 'Amplitude a' }, min: 0, max: 0.5, step: 0.05, init: 0.3 },
+        { kind: 'slider', key: 'probe', label: { ko: '현 테스트 위치 x₀', en: 'Secant probe x₀' }, min: 0.2, max: 1.8, step: 0.1, init: 0.6 },
+      ],
+problems: bohrMollerupProblems,
+    },
+    {
       id: 'grandi',
       title: { ko: '그란디 급수', en: 'Grandi Series' },
-      order: 19,
+      order: 20,
       summary: {
         ko: String.raw`부분합이 1과 0을 영원히 오가므로 이 급수에는 합이 없습니다. \(\frac{1}{2}\)는 부분합들의 평균(체사로 평균)일 뿐, 급수의 합이 아닙니다.`,
         en: String.raw`The partial sums bounce between 1 and 0 forever, so this series has no sum. \(\frac{1}{2}\) is only the average of the partial sums (the Cesàro mean), not a sum of the series.`,
@@ -349,7 +372,7 @@ problems: grandiProblems,
     {
       id: 'zeta4',
       title: { ko: 'ζ(4)와 짝수 거듭제곱', en: 'ζ(4) and Even Powers' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`\(\frac{1}{n^4}\)의 부분합이 \(\frac{\pi^4}{90}\)에 빠르게 닿는 모습과, 짝수 거듭제곱마다 \(\zeta\)값이 \(\pi\)의 거듭제곱으로 닫히는 패턴을 확인합니다.`,
         en: String.raw`The partial sums of \(\frac{1}{n^4}\) reach \(\frac{\pi^4}{90}\) quickly — and at every even power, the \(\zeta\) value closes into a power of \(\pi\).`,
@@ -364,7 +387,7 @@ problems: zeta4Problems,
     {
       id: 'rearrangement',
       title: { ko: '재배열 정리', en: 'Rearranging Changes the Sum' },
-      order: 21,
+      order: 22,
       summary: {
         ko: String.raw`조건수렴 급수는 순서를 바꾸면 합이 바뀝니다 — \(\ln 2 \approx 0.6931\)이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로. 라이프니츠 장면의 짝꿍입니다.`,
         en: String.raw`Reordering a conditionally convergent series changes its sum — \(\ln 2 \approx 0.6931\) becomes \(\frac{3}{2}\ln 2 \approx 1.0397\). Twin of the Leibniz scene.`,
@@ -377,7 +400,7 @@ problems: rearrangementProblems,
     {
       id: 'absolute',
       title: { ko: '절대수렴 정리', en: 'Absolute Convergence' },
-      order: 22,
+      order: 23,
       summary: {
         ko: String.raw`절댓값을 씌운 급수가 수렴하면 원래 급수도 수렴합니다 — 두 부분합 곡선 \(S_n\)과 \(T_n\)이 함께 안착하는 모습과, 조화급수처럼 절댓값은 발산해도 부호 덕분에 수렴하는 경우를 견주어 확인합니다.`,
         en: String.raw`If the absolute-value series converges, so does the original — compare the two partial-sum walks \(S_n\) and \(T_n\) settling together against the harmonic-like case where the signs rescue a divergent absolute series.`,
@@ -394,9 +417,27 @@ problems: rearrangementProblems,
 problems: absoluteProblems,
     },
     {
+      id: 'riemann-rearrangement',
+      title: { ko: '리만 재배열 정리', en: "Riemann's Rearrangement Theorem" },
+      order: 24,
+      summary: {
+        ko: String.raw`조건수렴 급수는 재배열로 어떤 실수든 만들 수 있습니다 — 탐욕 블록 규칙이 교대조화급수(원래 합 \(\ln 2\))를 당신이 고른 목표로 몰아넣는 과정을 직접 보세요.`,
+        en: String.raw`A conditionally convergent series can be rearranged to sum to any real number — watch the greedy block rule steer the alternating harmonic series (which sums to \(\ln 2\) in its natural order) onto a target of your choice.`,
+      },
+      tex: [
+        String.raw`\sum a_n\ \text{converges conditionally}\ \Longrightarrow\ \forall\, s\in\mathbb{R}\ \ \exists\ \text{rearrangement with sum } s`,
+      ],
+      prerequisites: ['rearrangement', 'absolute'],
+      controls: [
+        { kind: 'slider', key: 'target', label: { ko: '목표 합 s', en: 'Target sum s' }, min: -2, max: 3, step: 0.1, init: 1.0 },
+        { kind: 'slider', key: 'terms', label: { ko: '항의 개수', en: 'Number of terms' }, min: 20, max: 400, step: 20, init: 120 },
+      ],
+problems: riemannRearrangementProblems,
+    },
+    {
       id: 'cauchy-product',
       title: { ko: '코시 곱', en: 'The Cauchy Product' },
-      order: 23,
+      order: 25,
       summary: {
         ko: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\), \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — 대각선으로 격자를 휩쓰는 합. 메르텐스 정리(한쪽이 절대수렴하면 곱이 성립)와, 둘 다 조건수렴일 때 깨지는 반례를 봅니다.`,
         en: String.raw`\((\sum a_n)(\sum b_n) = \sum c_n\) with \(c_n = \sum_{k=0}^{n} a_k b_{n-k}\) — sweeping the lattice along diagonals. Mertens' theorem (absolute convergence on one side saves the product) and the counterexample when both converge only conditionally.`,
@@ -415,7 +456,7 @@ problems: absoluteProblems,
     {
       id: 'dirichlet-test',
       title: { ko: '디리클레 판정법', en: "Dirichlet's Test" },
-      order: 24,
+      order: 26,
       summary: {
         ko: String.raw`부분합이 \(1/|\sin(x/2)|\) 안에 갇혀 흔들리는 \(\sin(kx)\)와 \(0\)으로 가라앉는 \(1/n\)이 만나 \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴합니다 — 디리클레 판정법.`,
         en: String.raw`The partial sums of \(\sin(kx)\) wobble, trapped inside \(1/|\sin(x/2)|\), and the \(1/n\) weight sinking to \(0\) tames them into the convergent series \(\sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\) — Dirichlet's test.`,
@@ -434,7 +475,7 @@ problems: absoluteProblems,
     {
       id: 'abel-test',
       title: { ko: '아벨 판정법', en: "Abel's Test" },
-      order: 25,
+      order: 27,
       summary: {
         ko: String.raw`\\(\\sum a_n\\)이 수렴하고 \\((b_n)\\)이 단조·유계이면 \\(\\sum a_n b_n\\)도 수렴합니다 — 디리클레 판정법의 짝꿍. \\((b_n)\\)이 0으로 가지 않아도 된다는 점이 다릅니다.`,
         en: String.raw`If \\(\\sum a_n\\) converges and \\((b_n)\\) is monotone and bounded, then \\(\\sum a_n b_n\\) converges — the companion to Dirichlet's test. The difference: \\((b_n)\\) need not tend to 0.`,
@@ -453,7 +494,7 @@ problems: abelTestProblems,
     {
       id: 'm-test',
       title: { ko: 'M-판정법', en: 'The Weierstrass M-Test' },
-      order: 26,
+      order: 28,
       summary: {
         ko: String.raw`각 항을 모든 \(x\)에서 누르는 수열 \(M_n\)이 있으면 급수는 균등수렴합니다 — \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\), \(\sum M_n = \frac{\pi^2}{6}\)이므로 부분합 오차 띠가 전체 \(x\) 구간에서 한꺼번에 좁아집니다.`,
         en: String.raw`If a majorant \(M_n\) dominates every term at all \(x\) and \(\sum M_n\) converges, the series converges uniformly — here \(\left|\frac{\sin(nx)}{n^2}\right| \le \frac{1}{n^2} =: M_n\) and \(\sum M_n = \frac{\pi^2}{6}\), so the partial-sum error band tightens across the whole \(x\)-interval at once.`,
@@ -471,7 +512,7 @@ problems: abelTestProblems,
     {
       id: 'dini',
       title: { ko: '디니 정리', en: "Dini's Theorem" },
-      order: 27,
+      order: 29,
       summary: {
         ko: String.raw`컴팩트 집합 위에서는 단조인 연속함수열의 점별수렴이 균등수렴이 됩니다 — 열린 덮개 \(E_n\)들의 유한 부분덮개가 한 번에 잡아줍니다. M-판정법의 쌍대 도구.`,
         en: String.raw`On a compact set, a monotone sequence of continuous functions converging pointwise converges uniformly — a finite subcover of the open sets \(E_n\) grabs them all at once. The twin tool of the M-test.`,
@@ -490,7 +531,7 @@ problems: abelTestProblems,
     {
       id: 'improper',
       title: { ko: '이상적분', en: 'Improper Integrals' },
-      order: 28,
+      order: 30,
       summary: {
         ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
         en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,
