@@ -267,7 +267,7 @@ describe('evt: the cubic values and the counterexamples', () => {
 });
 
 describe('limits chapter meta: order, prerequisites, presets', () => {
-  it('has the final 37-scene order sequence', () => {
+  it('has the final 39-scene order sequence', () => {
     const ids = limits.scenes.map((s) => s.id);
     expect(ids).toEqual([
       'natural-numbers',
@@ -290,6 +290,7 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'metric-spaces',
       'contraction',
       'baire-category',
+      'baire-1',
       'sequence-spaces',
       'cauchy-schwarz',
       'holes',
@@ -307,8 +308,9 @@ describe('limits chapter meta: order, prerequisites, presets', () => {
       'arzela-ascoli',
       'weierstrass-approx',
       'stone-weierstrass',
+      'muntz-szasz',
     ]);
-    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]);
+    expect(limits.scenes.map((s) => s.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]);
   });
 
   it('sets the new scenes prerequisites', () => {

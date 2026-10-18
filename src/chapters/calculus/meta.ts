@@ -7,6 +7,7 @@ import { problems as convexProblems } from './problems/convex';
 import { problems as darbouxProblems } from './problems/darboux';
 import { problems as diffcontProblems } from './problems/diffcont';
 import { problems as fourierProblems } from './problems/fourier';
+import { jordanDecompositionProblems } from './problems/jordan-decomposition';
 import { problems as weierstrassFunctionProblems } from './problems/weierstrass-function';
 import { problems as ftcProblems } from './problems/ftc';
 import { fejerTheoremProblems } from './problems/fejer-theorem';
@@ -285,9 +286,28 @@ problems: ftcProblems,
 problems: boundedVariationProblems,
     },
     {
+      id: 'jordan-decomposition',
+      title: { ko: '조르당 분해', en: 'Jordan Decomposition' },
+      order: 14,
+      summary: {
+        ko: String.raw`유계변동 함수는 두 단조증가 함수의 차입니다 — \(f = g - h\), 여기서 \(g(x) = V_0^x(f)\)는 변동함수. \(x^2\sin\frac{1}{x}\) 위에서 점을 움직이며 분해가 점마다 성립하는 것을 확인하세요.`,
+        en: String.raw`Every BV function is a difference of two increasing functions — \(f = g - h\) with \(g(x) = V_0^x(f)\) the variation function. Drag the probe point over \(x^2\sin\frac{1}{x}\) and watch the identity hold pointwise.`,
+      },
+      tex: [
+        String.raw`f = g - h, \quad g(x) = V_a^x(f), \; h = g - f`,
+        String.raw`f(x) = x^2\sin\frac{1}{x}\ (x > 0), \; f(0) = 0`,
+      ],
+      prerequisites: ['bounded-variation'],
+      controls: [
+        { kind: 'slider', key: 'X0', label: { ko: '관찰점 X₀', en: 'Probe point X₀' }, min: 0, max: 1, step: 0.001, init: 0.7 },
+      ],
+      problems: jordanDecompositionProblems,
+    },
+
+    {
       id: 'newton',
       title: { ko: '뉴턴법', en: 'Riding Tangents to the Root' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`접선을 타고 내려가면 근에 닿습니다. 오차의 정확한 자릿수가 매 단계 두 배가 됩니다.`,
         en: String.raw`Ride the tangent down to the root. The number of correct digits doubles each step.`,
@@ -309,7 +329,7 @@ problems: newtonProblems,
     {
       id: 'banach',
       title: { ko: '바나흐 고정점', en: 'The Contraction Cobweb' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`\(y = x\)와 \(y = f(x)\) 사이를 오가는 거미줄이 한 점으로 빨려듭니다. 오차는 \(q^n\)으로 줄어듭니다.`,
         en: String.raw`The cobweb between \(y = x\) and \(y = f(x)\) gets sucked into one point. The error shrinks like \(q^n\).`,
@@ -331,7 +351,7 @@ problems: banachProblems,
     {
       id: 'fourier',
       title: { ko: '푸리에 정사각파', en: 'The Ringing That Never Dies' },
-      order: 16,
+      order: 17,
       summary: {
         ko: String.raw`정사각파에 사인파를 겹쳐봅니다. 점프점 옆의 울림은 \(N\)을 키워도 사라지지 않습니다.`,
         en: String.raw`Layer sine waves onto a square wave. The ringing beside each jump never dies out, no matter how large \(N\) gets.`,
@@ -343,7 +363,7 @@ problems: fourierProblems,
     {
       id: 'fejer-theorem',
       title: { ko: 'Fejér 정리', en: "Fejér's Theorem" },
-      order: 17,
+      order: 18,
       summary: {
         ko: String.raw`푸리에 부분합의 체자로 평균 \(\sigma_N\)은 연속함수에 균등수렴합니다 — Fejér kernel이 근사 항등원이기 때문입니다. 울림 많은 \(S_N\)과 매끈한 \(\sigma_N\)을 겹쳐보세요.`,
         en: String.raw`The Cesàro means \(\sigma_N\) of Fourier partial sums converge uniformly for continuous functions — because the Fejér kernel is an approximate identity. Overlay the ringing \(S_N\) with the smooth \(\sigma_N\).`,
@@ -359,7 +379,7 @@ problems: fejerTheoremProblems,
     {
       id: 'gibbs-phenomenon',
       title: { ko: 'Gibbs 현상', en: 'The Gibbs Phenomenon' },
-      order: 18,
+      order: 19,
       summary: {
         ko: String.raw`점프점 옆의 혹이 왜 사라지지 않는가 — 스케일을 \(t = 2Nx\)로 바꾸면 \(S_N\)이 \((2/\pi)\mathrm{Si}(t)\)에 붙고, 첫 봉우리는 \((2/\pi)\mathrm{Si}(\pi) \approx 1.179\)에 수렴합니다. 오버슈트는 점프의 약 8.95%.`,
         en: String.raw`Why the bump beside the jump never dies — rescaling by \(t = 2Nx\) collapses \(S_N\) onto \((2/\pi)\mathrm{Si}(t)\), and the first peak tends to \((2/\pi)\mathrm{Si}(\pi) \approx 1.179\). The overshoot is about 8.95% of the jump.`,
@@ -375,7 +395,7 @@ problems: gibbsPhenomenonProblems,
     {
       id: 'measure',
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
-      order: 19,
+      order: 20,
       summary: {
         ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
         en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
@@ -392,7 +412,7 @@ problems: gibbsPhenomenonProblems,
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
@@ -407,7 +427,7 @@ problems: lebesgueProblems,
     {
       id: 'absolute-continuity',
       title: { ko: '절대연속성', en: 'Absolute Continuity' },
-      order: 21,
+      order: 22,
       summary: {
         ko: String.raw`\(F(x) = x^2\)는 절대연속 — 구간들의 총 길이가 0으로 가면 \(\sum |\Delta F|\)도 0으로 갑니다. 칸토어 함수는 균등연속이지만 절대연속이 아닙니다: 총 길이 \(\left(\frac23\right)^n \to 0\)인데 \(\sum |\Delta c| = 1\)에 고정됩니다. 절대연속인 함수는 정확히 Lebesgue 적분 가능한 함수의 부정적분입니다.`,
         en: String.raw`\(F(x) = x^2\) is absolutely continuous — when the intervals' total length goes to 0, so does \(\sum |\Delta F|\). The Cantor function is uniformly continuous but not absolutely continuous: total length \(\left(\frac23\right)^n \to 0\) while \(\sum |\Delta c| = 1\) stays frozen. Absolutely continuous functions are exactly the indefinite integrals of Lebesgue-integrable functions.`,
