@@ -7,6 +7,7 @@ import { problems as holesProblems } from '../limits/problems/holes';
 import { problems as limsupLiminfProblems } from '../limits/problems/limsup-liminf';
 import { problems as monotoneCauchyProblems } from '../limits/problems/monotone-cauchy';
 import { problems as sequenceSpacesProblems } from '../limits/problems/sequence-spaces';
+import { problems as standardLimitsProblems } from '../limits/problems/standard-limits';
 import { problems as stolzCesaroProblems } from '../limits/problems/stolz-cesaro';
 
 /**
@@ -51,9 +52,30 @@ export const sequences: ChapterMeta = {
 problems: epsilonNProblems,
     },
     {
+      id: 'standard-limits',
+      title: { ko: '표준 극한: x^n과 x^{1/n}', en: 'Standard Limits: x^n and x^{1/n}' },
+      order: 2,
+      summary: {
+        ko: String.raw`\(|x| < 1\)이면 \(x^n\)이 \(0\)으로 가라앉고, \(x > 0\)이면 \(x^{1/n}\)이 \(1\)로 모입니다. \(x = -1\)에서는 진동하고, \(|x| > 1\)에서는 발산합니다. Bernoulli 부등식이 이 모든 경우를 다룹니다.`,
+        en: String.raw`\(x^n\) sinks to \(0\) when \(|x| < 1\); \(x^{1/n}\) gathers at \(1\) when \(x > 0\). At \(x = -1\) it oscillates, and for \(|x| > 1\) it diverges. Bernoulli's inequality handles every case.`,
+      },
+      tex: [
+        String.raw`|x|<1 \Rightarrow x^n \to 0`,
+        String.raw`x>1 \Rightarrow x^{1/n} \to 1`,
+        String.raw`n^{1/n} \to 1`,
+      ],
+      prerequisites: ['epsilon-n'],
+      controls: [
+        { kind: 'select', key: 'kind', label: { ko: '수열', en: 'Sequence' }, options: ['power', 'root'], init: 'power' },
+        { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -2, max: 2, step: 0.05, init: 0.5 },
+        { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 1, max: 60, step: 1, init: 20 },
+      ],
+      problems: standardLimitsProblems,
+    },
+    {
       id: 'sequence-spaces',
       title: { ko: '수열공간과 함수공간', en: 'Sequence and Function Spaces' },
-      order: 2,
+      order: 3,
       summary: {
         ko: String.raw`\(\ell^1, \ell^2, \ell^\infty\)와 \(C[0,1]\) — 점별 연산으로는 벡터공간이고, 노름 \(\|x - y\|\)로는 거리공간입니다. 노름공간이 두 세계를 잇는 다리입니다. \(x_n = 1/n^\alpha\)로 포함관계 \(\ell^1 \subset \ell^2 \subset \ell^\infty\)를 눈으로 확인합니다. \(\ell^p\)와 \(C[0,1]\)이 완비(바나흐 공간)라는 것은 알려진 정리로만 언급합니다.`,
         en: String.raw`\(\ell^1, \ell^2, \ell^\infty\) and \(C[0,1]\) — vector spaces under pointwise operations, metric spaces via the norm \(\|x - y\|\). A normed space bridges both worlds. Watch the inclusion chain \(\ell^1 \subset \ell^2 \subset \ell^\infty\) through \(x_n = 1/n^\alpha\). Completeness of \(\ell^p\) and \(C[0,1]\) (Banach spaces) is stated as a known theorem only.`,
@@ -74,7 +96,7 @@ problems: sequenceSpacesProblems,
     {
       id: 'cauchy-schwarz',
       title: { ko: '코시-슈바르츠 부등식', en: 'Cauchy\u2013Schwarz Inequality' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — 내적의 절댓값은 노름의 곱을 넘지 않습니다. \(0 \le \|x-ty\|^2\)의 판별식으로 증명하고, 등호는 두 벡터가 평행할 때만 성립합니다.`,
         en: String.raw`\(|\langle x,y\rangle| \le \|x\|\,\|y\|\) — the inner product never exceeds the product of the norms. Proved from the discriminant of \(0 \le \|x-ty\|^2\); equality holds exactly for parallel vectors.`,
@@ -93,7 +115,7 @@ problems: sequenceSpacesProblems,
     {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`\(x_{n+1}=\frac{x_n+2/x_n}{2}\)의 모든 항은 유리수지만, 극한 \(\sqrt{2}\)는 유리수가 아닙니다. 유리수 집합 \(\mathbb{Q}\)에는 구멍이 있다는 뜻입니다. 무리수임의 엄밀한 증명은 다루지 않고 아이디어 수준에서만 봅니다.`,
         en: String.raw`Every term of \(x_{n+1}=\frac{x_n+2/x_n}{2}\) is rational, yet the limit \(\sqrt{2}\) is not. The rationals \(\mathbb{Q}\) have a hole — shown at the idea level, without a full irrationality proof.`,
@@ -105,7 +127,7 @@ problems: holesProblems,
     {
       id: 'construction',
       title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`실수란 유리수 코시수열의 동치류입니다. \(\sqrt{2}\)의 소수점 자릿수를 늘려 가면 유리수 항들이 구멍으로 모여듭니다 — 그 모임 자체가 실수 \(\sqrt{2}\)입니다. 완비성의 정체는 이 구성에 있습니다.`,
         en: String.raw`A real number is an equivalence class of Cauchy sequences of rationals. Lengthening the decimal expansion of \(\sqrt{2}\) marches rational terms into the hole — the march itself is the real number \(\sqrt{2}\). Completeness is what this construction buys.`,
@@ -124,7 +146,7 @@ problems: constructionProblems,
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 6,
+      order: 7,
       summary: {
         ko: '유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 점이 무한히 모이는 쪽을 따라가면 됩니다.',
         en: 'Every bounded sequence hides a convergent subsequence. Halve the interval and follow the half holding infinitely many terms.',
@@ -139,7 +161,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`\(a_n = 1 - 2^{-n}\)은 증가하면서 위로 유계이므로 상한 \(1\)에 수렴합니다(단조수렴 정리). 꼬리 지름이 \(0\)으로 줄어드는 모습을 보며, 모든 수렴수열이 코시수열임을 확인합니다.`,
         en: String.raw`\(a_n = 1 - 2^{-n}\) increases and is bounded above, so it converges to its supremum \(1\) (monotone convergence). Watch the tail diameter shrink to \(0\): every convergent sequence is Cauchy.`,
@@ -158,7 +180,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'limsup-liminf',
       title: { ko: '상극한과 하극한', en: 'Lim sup and Lim inf' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`꼬리들의 상한과 하한이 모이는 곳: \(a_n = (-1)^n(1+1/n)\)에서 \(\limsup a_n = 1\), \(\liminf a_n = -1\). \(\limsup a_n = \liminf a_n \iff \lim a_n\) 존재.`,
         en: String.raw`Where the suprema and infima of tails settle: for \(a_n = (-1)^n(1+1/n)\), \(\limsup a_n = 1\) and \(\liminf a_n = -1\). \(\limsup a_n = \liminf a_n \iff \lim a_n\) exists.`,
@@ -177,7 +199,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'stolz-cesaro',
       title: { ko: '체자로 정리', en: 'Stolz–Cesàro Theorem' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`수열 버전 로피탈: \((b_n)\)이 엄격히 증가하며 무한대로 발산하고 \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\)이면 \(\lim \frac{a_n}{b_n} = L\). \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\)에서 차분 비율이 먼저, 전체 비율이 뒤따라 \(\frac{1}{3}\)에 모이는 것을 보세요.`,
         en: String.raw`The sequence version of l'Hôpital: if \((b_n)\) is strictly increasing and unbounded and \(\lim \frac{a_{n+1}-a_n}{b_{n+1}-b_n} = L\), then \(\lim \frac{a_n}{b_n} = L\). Watch the difference ratio settle at \(\frac{1}{3}\) first and the full ratio follow for \(a_n = 1^2+\cdots+n^2\), \(b_n = n^3\).`,

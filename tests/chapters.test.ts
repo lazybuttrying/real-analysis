@@ -11,7 +11,7 @@ import {
 /**
  * Integrity of the 10-chapter split:
  * - the catalog lists exactly the 10 logical chapters in order,
- * - no scene is lost or duplicated (102 unique),
+ * - no scene is lost or duplicated (109 unique),
  * - every chapter's scenes are ordered 1..N with 3 proven problems each.
  */
 
@@ -44,8 +44,8 @@ describe('catalog: the 10 chapters', () => {
 
   it('covers 102 scenes with no loss or duplication', () => {
     const ids = catalog.flatMap((chapter) => chapter.scenes.map((scene) => scene.id));
-    expect(ids).toHaveLength(102);
-    expect(new Set(ids).size).toBe(102);
+    expect(ids).toHaveLength(109);
+    expect(new Set(ids).size).toBe(109);
   });
 
   it('orders every chapter\'s scenes 1..N', () => {
@@ -128,8 +128,8 @@ describe('legacy canonical pages', () => {
     const catalogScenes = catalog.flatMap((chapter) =>
       chapter.scenes.map((scene) => [scene.id, chapter.id] as const),
     );
-    expect(catalogScenes).toHaveLength(102);
-    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(102);
+    expect(catalogScenes).toHaveLength(109);
+    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(109);
   });
 
   it('assigns every scene its pre-split chapter (39 limits + 22 calculus + 16 moved series)', () => {
@@ -210,7 +210,7 @@ describe('legacy canonical pages', () => {
         canonicalByScene.set(segments[2]!, page);
       }
     }
-    expect(canonicalByScene.size).toBe(102);
+    expect(canonicalByScene.size).toBe(109);
     for (const page of buildLegacyPages()) {
       const sceneId = page.segments('ko')[2]!;
       const canonical = canonicalByScene.get(sceneId);

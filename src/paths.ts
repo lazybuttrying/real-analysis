@@ -77,6 +77,13 @@ const POST_SPLIT_SCENES = new Set([
   'inverse-function-theorem',
   'integration-by-parts',
   'change-of-variables',
+  'sqrt2-irrational',
+  'density-of-rationals',
+  'standard-limits',
+  'continuity-equivalences',
+  'derivative-monotonicity',
+  'dirichlet-function',
+  'riemann-stieltjes',
 ]);
 
 /**

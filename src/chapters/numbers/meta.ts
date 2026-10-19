@@ -3,6 +3,7 @@ import { axiomOfChoiceProblems } from '../limits/problems/axiom-of-choice';
 import { problems as binomialProblems } from '../limits/problems/binomial';
 import { cantorTheoremProblems } from '../limits/problems/cantor-theorem';
 import { problems as countableProblems } from '../limits/problems/countable';
+import { densityOfRationalsProblems } from '../limits/problems/density-of-rationals';
 import { problems as dimensionRankProblems } from '../limits/problems/dimension-rank';
 import { problems as groupsFieldsProblems } from '../limits/problems/groups-fields';
 import { problems as integersRationalsProblems } from '../limits/problems/integers-rationals';
@@ -10,6 +11,7 @@ import { problems as naturalNumbersProblems } from '../limits/problems/natural-n
 import { nthRootProblems } from '../limits/problems/nth-root';
 import { problems as setsProblems } from '../limits/problems/sets';
 import { problems as supremumProblems } from '../limits/problems/supremum';
+import { sqrt2IrrationalProblems } from '../limits/problems/sqrt2-irrational';
 import { problems as vectorSpacesProblems } from '../limits/problems/vector-spaces';
 import { zornLemmaProblems } from '../limits/problems/zorn-lemma';
 
@@ -99,9 +101,53 @@ export const numbers: ChapterMeta = {
       problems: integersRationalsProblems,
     },
     {
+      id: 'sqrt2-irrational',
+      title: { ko: '√2는 무리수', en: '√2 is Irrational' },
+      order: 4,
+      summary: {
+        ko: String.raw`분모가 \(N\) 이하인 유리수 \(p/q\)를 \([1, 2]\) 위에 찍으면 \(\sqrt{2} \approx 1.4142\) 자리에 구멍이 남습니다 — \(N\)을 키워도 그 구멍은 절대 메워지지 않습니다. 명제 4.4.4: 어떤 유리수도 제곱해서 \(2\)가 될 수 없습니다.`,
+        en: String.raw`Plotting the rationals \(p/q\) with denominator at most \(N\) on \([1, 2]\) leaves a hole at \(\sqrt{2} \approx 1.4142\) — no \(N\) ever fills it. Proposition 4.4.4: no rational squares to \(2\).`,
+      },
+      tex: [
+        String.raw`\left(\frac{p}{q}\right)^2 \ne 2 \quad \forall\, \frac{p}{q} \in \mathbb{Q}`,
+        String.raw`\left|\frac{17}{12} - \sqrt{2}\right| \approx 0.00245 > 0`,
+      ],
+      prerequisites: ['integers-rationals'],
+      controls: [
+        { kind: 'slider', key: 'denom', label: { ko: '최대 분모', en: 'Max denominator' }, min: 1, max: 12, step: 1, init: 6 },
+      ],
+      problems: sqrt2IrrationalProblems,
+    },
+    {
+      id: 'density-of-rationals',
+      title: { ko: '유리수의 조밀성', en: 'Density of the Rationals' },
+      order: 5,
+      summary: {
+        ko: String.raw`어떤 열린 구간 \((x, y)\)에도 유리수가 들어갑니다: \(n = \lfloor 1/(y-x) \rfloor + 1\), \(m = \lfloor nx \rfloor + 1\)이라 두면 \(x < m/n < y\)입니다. 분모 상한을 키우면 구간 안의 유리수 눈금이 늘어나는 모습을 보세요.`,
+        en: String.raw`Every open interval \((x, y)\) contains a rational: with \(n = \lfloor 1/(y-x) \rfloor + 1\) and \(m = \lfloor nx \rfloor + 1\), \(x < m/n < y\). Watch the rational ticks inside the interval multiply as the denominator cap grows.`,
+      },
+      tex: [
+        String.raw`n = \left\lfloor\frac{1}{y-x}\right\rfloor + 1,\quad m = \lfloor nx \rfloor + 1`,
+        String.raw`x < \frac{m}{n} < y`,
+        String.raw`z = r + (s-r)\frac{\sqrt{2}}{2}\ \text{is irrational}`,
+      ],
+      prerequisites: ['integers-rationals'],
+      controls: [
+        {
+          kind: 'select',
+          key: 'preset',
+          label: { ko: '구간', en: 'Interval' },
+          options: ['a', 'b', 'c'],
+          init: 'a',
+        },
+        { kind: 'slider', key: 'denom', label: { ko: '최대 분모', en: 'Max denominator' }, min: 1, max: 200, step: 1, init: 24 },
+      ],
+      problems: densityOfRationalsProblems,
+    },
+    {
       id: 'sets',
       title: { ko: '집합과 함수', en: 'Sets and Functions' },
-      order: 4,
+      order: 6,
       summary: {
         ko: String.raw`집합의 연산 \(A \cup B\), \(A \cap B\), \(A^c\)와 드모르간 법칙, 그리고 단사·전사·전단사를 그림으로 확인합니다.`,
         en: String.raw`See set operations \(A \cup B\), \(A \cap B\), \(A^c\), De Morgan's laws, and injective / surjective / bijective maps as pictures.`,
@@ -131,7 +177,7 @@ problems: setsProblems,
     {
       id: 'axiom-of-choice',
       title: { ko: '선택 공리', en: 'The Axiom of Choice' },
-      order: 5,
+      order: 7,
       summary: {
         ko: String.raw`비어 있지 않은 집합들의 모음에서 각각 하나씩 원소를 고르는 함수 — 유한 모음에서는 공리 없이도 되지만, 무한 모음에서는 이 "고르기" 자체가 공리입니다. 각 줄에서 하나씩 찍어보세요.`,
         en: String.raw`A function picking one element from each set in a collection — for finite collections no axiom is needed, but for infinite ones this "picking" is itself an axiom. Pick one dot per row.`,
@@ -150,7 +196,7 @@ problems: setsProblems,
     {
       id: 'zorn-lemma',
       title: { ko: '초른 보조정리', en: "Zorn's Lemma" },
-      order: 6,
+      order: 8,
       summary: {
         ko: String.raw`모든 사슬이 상계를 가지면 극대 원소가 존재합니다 — 12의 약수들을 나누어떨어짐 순서로 놓고 사슬을 하나씩 비춰보세요. 선택 공리와 동치인, 대수학의 만능 열쇠입니다.`,
         en: String.raw`If every chain has an upper bound, a maximal element exists — light up the chains one by one in the divisibility poset of 12's divisors. Equivalent to the axiom of choice, the master key of algebra.`,
@@ -168,7 +214,7 @@ problems: setsProblems,
     {
       id: 'supremum',
       title: { ko: '상한과 완비성', en: 'The Supremum Axiom' },
-      order: 7,
+      order: 9,
       summary: {
         ko: String.raw`위로 유계인 집합은 가장 작은 상한 \(\sup S\)를 갖습니다 — 실수의 빈틈을 메우는 공리, 유리수의 구멍 장면의 짝꿍입니다.`,
         en: String.raw`Every bounded-above set has a least upper bound \(\sup S\) — the axiom filling the gaps in the rationals, twin of the rational-holes scene.`,
@@ -197,7 +243,7 @@ problems: supremumProblems,
     {
       id: 'nth-root',
       title: { ko: 'n제곱근의 존재', en: 'Existence of n-th Roots' },
-      order: 8,
+      order: 10,
       summary: {
         ko: String.raw`\(\{x \ge 0 : x^n < a\}\)의 상한이 바로 \(\sqrt[n]{a}\)입니다 — 상한 공리가 "빈틈"을 메워 제곱근을 만들어내는 순간을 보세요.`,
         en: String.raw`The supremum of \(\{x \ge 0 : x^n < a\}\) IS \(\sqrt[n]{a}\) — watch the supremum axiom fill a "gap" and manufacture a root.`,
@@ -216,7 +262,7 @@ problems: supremumProblems,
     {
       id: 'countable',
       title: { ko: '가산과 비가산', en: 'Countable vs Uncountable' },
-      order: 9,
+      order: 11,
       summary: {
         ko: String.raw`유리수는 한 줄로 나열할 수 있지만 실수는 그럴 수 없습니다 — 칸토어의 대각선 논법으로 확인합니다.`,
         en: String.raw`The rationals fit into a single list; the reals do not — verified by Cantor's diagonal argument.`,
@@ -237,7 +283,7 @@ problems: countableProblems,
     {
       id: 'cantor-theorem',
       title: { ko: '칸토어 정리', en: "Cantor's Theorem" },
-      order: 10,
+      order: 12,
       summary: {
         ko: String.raw`어떤 집합도 그 멱집합보다 작습니다 — \(|X| < |\mathcal{P}(X)|\). 대각선을 뒤집은 집합은 목록의 어느 행과도 다릅니다. (칸토어 "집합" 장면이 아니라 정리 자체입니다.)`,
         en: String.raw`Every set is smaller than its power set — \(|X| < |\mathcal{P}(X)|\). The diagonal-flipped set differs from every row of the list. (This is the theorem itself, not the Cantor "set" scene.)`,
@@ -255,7 +301,7 @@ problems: countableProblems,
     {
       id: 'groups-fields',
       title: { ko: '군과 체', en: 'Groups vs Fields' },
-      order: 11,
+      order: 13,
       summary: {
         ko: String.raw`군은 되돌릴 수 있는 움직임(결합·항등원·역원), 체는 사칙연산이 되는 세계입니다. 부분군 판정법과 \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\)의 차이를 봅니다.`,
         en: String.raw`A group is reversible moves (associativity, identity, inverses); a field is a world where all four operations work. Includes the subgroup test and \((\mathbb{Z},+)\) vs \((\mathbb{Q},+,\times)\).`,
@@ -278,7 +324,7 @@ problems: groupsFieldsProblems,
     {
       id: 'vector-spaces',
       title: { ko: '벡터공간과 동형', en: 'Vector Spaces and Isomorphism' },
-      order: 12,
+      order: 14,
       summary: {
         ko: String.raw`벡터공간은 체 위의 아벨군에 스칼라곱을 얹은 구조입니다 — \(\mathbb{R}^n\), 수열공간, 연속함수공간은 포장만 다를 뿐 같은 구조입니다. 계수 \((a, b)\)를 움직이면 직선 \(y = a+bx\)와 점 \((a, b)\)가 함께 움직입니다.`,
         en: String.raw`A vector space is an abelian group over a field with scalar multiplication — \(\mathbb{R}^n\), sequence spaces, and spaces of continuous functions are the same structure in different packaging. Move \((a, b)\) and the line \(y = a+bx\) and the point \((a, b)\) move together.`,
@@ -297,7 +343,7 @@ problems: vectorSpacesProblems,
     {
       id: 'dimension-rank',
       title: { ko: '차원과 랭크', en: 'Dimension and Rank' },
-      order: 13,
+      order: 15,
       summary: {
         ko: String.raw`동형이 "같은 구조"라면, 차원과 랭크는 그 구조의 크기를 재는 자입니다. 격자가 행렬에 눌려 펴지는 모습을 보며 \(\dim\ker T + \mathrm{rank}\,T = \dim V\)를 확인합니다.`,
         en: String.raw`If isomorphism means "same structure", dimension and rank measure its size. Watch the grid get squeezed by a matrix and verify \(\dim\ker T + \mathrm{rank}\,T = \dim V\).`,

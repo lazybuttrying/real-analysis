@@ -7,6 +7,7 @@ import type { SceneLoader } from '../../contracts';
  */
 export const loaders: Readonly<Record<string, SceneLoader>> = {
   'epsilon-n': () => import('../limits/scenes/epsilonN').then((module) => module.default),
+  'standard-limits': () => import('../limits/scenes/standardLimits').then((module) => module.default),
   'sequence-spaces': () => import('../limits/scenes/sequenceSpaces').then((module) => module.default),
   'cauchy-schwarz': () => import('../limits/scenes/cauchySchwarz').then((module) => module.default),
   'holes': () => import('../limits/scenes/holes').then((module) => module.default),

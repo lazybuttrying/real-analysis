@@ -276,6 +276,8 @@ describe('split chapters: the five ex-limits chapters', () => {
       'natural-numbers',
       'binomial',
       'integers-rationals',
+      'sqrt2-irrational',
+      'density-of-rationals',
       'sets',
       'axiom-of-choice',
       'zorn-lemma',
@@ -289,6 +291,7 @@ describe('split chapters: the five ex-limits chapters', () => {
     ]);
     expect(idsOf('sequences')).toEqual([
       'epsilon-n',
+      'standard-limits',
       'sequence-spaces',
       'cauchy-schwarz',
       'holes',
@@ -301,6 +304,7 @@ describe('split chapters: the five ex-limits chapters', () => {
     expect(idsOf('continuity')).toEqual([
       'epsdelta',
       'continuity',
+      'continuity-equivalences',
       'monotone-discontinuities',
       'uniform-continuity',
       'ivt',
