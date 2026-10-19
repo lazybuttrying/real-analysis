@@ -23,8 +23,12 @@ const MARGIN = { top: 36, right: 20, bottom: 44, left: 64 };
 function compareText(data: DifferentiationUnderIntegralData, lang: Lang): string {
   return localize(
     {
-      ko: String.raw`\(x = ${fmt(data.x, 2)}\), \(n = ${data.n}\): 수치적분 \(\int_0^1 t^x\,dt = ${fmt(data.numF, 8)}\) (해석값 \(\frac{1}{x+1} = ${fmt(data.analyticF, 8)}\)), 적분기호 아래 미분 \(\int_0^1 t^x \ln t\,dt = ${fmt(data.numG, 8)}\), 수치미분 \(= ${fmt(data.numFp, 8)}\) (해석값 \(-\frac{1}{(x+1)^2} = ${fmt(data.analyticFp, 8)}\)).`,
-      en: String.raw`\(x = ${fmt(data.x, 2)}\), \(n = ${data.n}\): quadrature \(\int_0^1 t^x\,dt = ${fmt(data.numF, 8)}\) (analytic \(\frac{1}{x+1} = ${fmt(data.analyticF, 8)}\)), under-integral derivative \(\int_0^1 t^x \ln t\,dt = ${fmt(data.numG, 8)}\), numerical derivative \(= ${fmt(data.numFp, 8)}\) (analytic \(-\frac{1}{(x+1)^2} = ${fmt(data.analyticFp, 8)}\)).`,
+      ko: String.raw`\(x = ${fmt(data.x, 2)}\), \(n = ${data.n}\):
+수치적분 \(\int_0^1 t^x\,dt = ${fmt(data.numF, 8)}\) (해석값 \(\frac{1}{x+1} = ${fmt(data.analyticF, 8)}\))
+적분기호 아래 미분 \(\int_0^1 t^x \ln t\,dt = ${fmt(data.numG, 8)}\), 수치미분 \(= ${fmt(data.numFp, 8)}\) (해석값 \(-\frac{1}{(x+1)^2} = ${fmt(data.analyticFp, 8)}\))`,
+      en: String.raw`\(x = ${fmt(data.x, 2)}\), \(n = ${data.n}\):
+quadrature \(\int_0^1 t^x\,dt = ${fmt(data.numF, 8)}\) (analytic \(\frac{1}{x+1} = ${fmt(data.analyticF, 8)}\))
+under-integral derivative \(\int_0^1 t^x \ln t\,dt = ${fmt(data.numG, 8)}\), numerical derivative \(= ${fmt(data.numFp, 8)}\) (analytic \(-\frac{1}{(x+1)^2} = ${fmt(data.analyticFp, 8)}\))`,
     },
     lang,
   );
@@ -33,8 +37,10 @@ function compareText(data: DifferentiationUnderIntegralData, lang: Lang): string
 function errorText(data: DifferentiationUnderIntegralData, lang: Lang): string {
   return localize(
     {
-      ko: String.raw`오차: \(|F_{\mathrm{num}} - F| = ${fmtSci(data.errF, 2)}\), \(|G_{\mathrm{num}} - F'| = ${fmtSci(data.errG, 2)}\), \(|F'_{\mathrm{num}} - F'| = ${fmtSci(data.errFp, 2)}\). \(n\)을 키우면 세 오차가 함께 0으로 갑니다 — 미분과 적분의 순서교환이 수치적으로 성립하는 모습입니다.`,
-      en: String.raw`Errors: \(|F_{\mathrm{num}} - F| = ${fmtSci(data.errF, 2)}\), \(|G_{\mathrm{num}} - F'| = ${fmtSci(data.errG, 2)}\), \(|F'_{\mathrm{num}} - F'| = ${fmtSci(data.errFp, 2)}\). Raising \(n\) drives all three errors to zero together — the interchange of differentiation and integration, numerically.`,
+      ko: String.raw`오차: \(|F_{\mathrm{num}} - F| = ${fmtSci(data.errF, 2)}\), \(|G_{\mathrm{num}} - F'| = ${fmtSci(data.errG, 2)}\), \(|F'_{\mathrm{num}} - F'| = ${fmtSci(data.errFp, 2)}\)
+\(n\)을 키우면 세 오차가 함께 0으로 갑니다 — 미분과 적분의 순서교환이 수치적으로 성립하는 모습입니다.`,
+      en: String.raw`Errors: \(|F_{\mathrm{num}} - F| = ${fmtSci(data.errF, 2)}\), \(|G_{\mathrm{num}} - F'| = ${fmtSci(data.errG, 2)}\), \(|F'_{\mathrm{num}} - F'| = ${fmtSci(data.errFp, 2)}\)
+Raising \(n\) drives all three errors to zero together — the interchange of differentiation and integration, numerically.`,
     },
     lang,
   );
@@ -43,8 +49,12 @@ function errorText(data: DifferentiationUnderIntegralData, lang: Lang): string {
 function explainText(_data: DifferentiationUnderIntegralData, lang: Lang): string {
   return localize(
     {
-      ko: String.raw`곡선은 \(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\), 점선은 \(x\)에서의 접선(기울기 \(F'(x) = -\frac{1}{(x+1)^2}\))입니다. \(t^x\)를 \(x\)로 편미분하면 \(t^x \ln t\) — 적분기호 안에서 미분한 것을 적분해도 같은 접선 기울기가 나옵니다 (아래 문제 1·2). \(n\)은 심슨 공식의 구간 수입니다.`,
-      en: String.raw`The curve is \(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\); the dashed line is the tangent at \(x\) (slope \(F'(x) = -\frac{1}{(x+1)^2}\)). Differentiating \(t^x\) in \(x\) gives \(t^x \ln t\) — integrating the inside-differentiated integrand yields the same tangent slope (problems 1–2 below). \(n\) is the Simpson panel count.`,
+      ko: String.raw`곡선은 \(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\), 점선은 \(x\)에서의 접선(기울기 \(F'(x) = -\frac{1}{(x+1)^2}\))입니다.
+\(t^x\)를 \(x\)로 편미분하면 \(t^x \ln t\) — 적분기호 안에서 미분한 것을 적분해도 같은 접선 기울기가 나옵니다 (아래 문제 1·2).
+\(n\)은 심슨 공식의 구간 수입니다.`,
+      en: String.raw`The curve is \(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\); the dashed line is the tangent at \(x\) (slope \(F'(x) = -\frac{1}{(x+1)^2}\)).
+Differentiating \(t^x\) in \(x\) gives \(t^x \ln t\) — integrating the inside-differentiated integrand yields the same tangent slope (problems 1–2 below).
+\(n\) is the Simpson panel count.`,
     },
     lang,
   );
@@ -141,8 +151,8 @@ export default defineSimpleScene<DifferentiationUnderIntegralData>({
   fallbackHeight: 320,
   drawMain,
   slots: [
-    { text: compareText, bold: true },
-    { text: errorText, bold: true, spaced: true },
-    { text: explainText, spaced: true },
+    { text: compareText, cssText: 'font-weight: 600; white-space: pre-line;' },
+    { text: errorText, cssText: 'font-weight: 600; white-space: pre-line; margin-top: 4px;' },
+    { text: explainText, cssText: 'white-space: pre-line; margin-top: 4px;' },
   ],
 });

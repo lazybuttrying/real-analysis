@@ -17,8 +17,14 @@ const MARGIN = { top: 36, right: 20, bottom: 44, left: 64 };
 function readoutText(data: MinkowskiData, lang: Lang): string {
   return localize(
     {
-      ko: String.raw`\(p = ${fmt(data.p, 2)}\), \(f(t) = t^{${fmt(data.a, 1)}}\), \(g(t) = (1-t)^{${fmt(data.b, 1)}}\): 좌변 \(\|f+g\|_p = ${fmt(data.lhs, 6)}\), 우변 \(\|f\|_p + \|g\|_p = ${fmt(data.normF, 6)} + ${fmt(data.normG, 6)} = ${fmt(data.rhs, 6)}\), 틈새 \(= ${fmt(data.gap, 6)} \ge 0\).`,
-      en: String.raw`\(p = ${fmt(data.p, 2)}\), \(f(t) = t^{${fmt(data.a, 1)}}\), \(g(t) = (1-t)^{${fmt(data.b, 1)}}\): left side \(\|f+g\|_p = ${fmt(data.lhs, 6)}\), right side \(\|f\|_p + \|g\|_p = ${fmt(data.normF, 6)} + ${fmt(data.normG, 6)} = ${fmt(data.rhs, 6)}\), gap \(= ${fmt(data.gap, 6)} \ge 0\).`,
+      ko: String.raw`\(p = ${fmt(data.p, 2)}\), \(f(t) = t^{${fmt(data.a, 1)}}\), \(g(t) = (1-t)^{${fmt(data.b, 1)}}\):
+좌변 \(\|f+g\|_p = ${fmt(data.lhs, 6)}\)
+우변 \(\|f\|_p + \|g\|_p = ${fmt(data.normF, 6)} + ${fmt(data.normG, 6)} = ${fmt(data.rhs, 6)}\)
+틈새 \(= ${fmt(data.gap, 6)} \ge 0\)`,
+      en: String.raw`\(p = ${fmt(data.p, 2)}\), \(f(t) = t^{${fmt(data.a, 1)}}\), \(g(t) = (1-t)^{${fmt(data.b, 1)}}\):
+left side \(\|f+g\|_p = ${fmt(data.lhs, 6)}\)
+right side \(\|f\|_p + \|g\|_p = ${fmt(data.normF, 6)} + ${fmt(data.normG, 6)} = ${fmt(data.rhs, 6)}\)
+gap \(= ${fmt(data.gap, 6)} \ge 0\)`,
     },
     lang,
   );
@@ -27,8 +33,12 @@ function readoutText(data: MinkowskiData, lang: Lang): string {
 function explainText(data: MinkowskiData, lang: Lang): string {
   const body = localize(
     {
-      ko: String.raw`왼쪽 막대가 \(\|f+g\|_p\), 오른쪽 막대가 \(\|f\|_p + \|g\|_p\)입니다. 두 막대 꼭대기 사이 음영이 부등식의 틈새 — \(p \ge 1\)에서는 항상 0 이상입니다 (아래 문제 1). \(p\)를 움직이면 틈새가 벌어졌다 좁아졌다 합니다.`,
-      en: String.raw`The left bar is \(\|f+g\|_p\); the right bar is \(\|f\|_p + \|g\|_p\). The shaded band between their tops is the inequality's slack — always nonnegative for \(p \ge 1\) (problem 1 below). Sliding \(p\) opens and closes the gap.`,
+      ko: String.raw`왼쪽 막대가 \(\|f+g\|_p\), 오른쪽 막대가 \(\|f\|_p + \|g\|_p\)입니다.
+두 막대 꼭대기 사이 음영이 부등식의 틈새 — \(p \ge 1\)에서는 항상 0 이상입니다 (아래 문제 1).
+\(p\)를 움직이면 틈새가 벌어졌다 좁아졌다 합니다.`,
+      en: String.raw`The left bar is \(\|f+g\|_p\); the right bar is \(\|f\|_p + \|g\|_p\).
+The shaded band between their tops is the inequality's slack — always nonnegative for \(p \ge 1\) (problem 1 below).
+Sliding \(p\) opens and closes the gap.`,
     },
     lang,
   );
@@ -177,8 +187,8 @@ export default defineSimpleScene<MinkowskiData>({
   fallbackHeight: 300,
   drawMain,
   slots: [
-    { text: readoutText, bold: true },
-    { text: explainText, spaced: true },
-    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+    { text: readoutText, cssText: 'font-weight: 600; white-space: pre-line;' },
+    { text: explainText, cssText: 'white-space: pre-line; margin-top: 4px;' },
+    { text: (_data, lang) => verdictText(lang), cssText: 'font-weight: 600; white-space: pre-line; margin-top: 4px;' },
   ],
 });
