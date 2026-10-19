@@ -1,13 +1,7 @@
 import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { betaModel, type BetaData } from '../models/betaFunction';
 
 /**
@@ -40,100 +34,53 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createBetaScene(): Scene<BetaData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: BetaData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: BetaData, lang: Lang): void {
+  const { g, width, height } = chart;
 
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
-    const { g, width, height } = chart;
+  const x = scaleLinear().domain([0, 1.04]).range([0, width]);
+  const y = scaleLinear().domain([0, Y_MAX]).range([height, 0]);
 
-    const x = scaleLinear().domain([0, 1.04]).range([0, width]);
-    const y = scaleLinear().domain([0, Y_MAX]).range([height, 0]);
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  g.append('g').call(axisLeft(y).ticks(5));
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(10));
 
-    g.append('g').call(axisLeft(y).ticks(5));
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(10));
+  const clippedY = (v: number): number => y(Math.min(Y_MAX, v));
 
-    const clippedY = (v: number): number => y(Math.min(Y_MAX, v));
+  // Shaded area under the integrand curve: that area is B(p, q).
+  const shade = area<BetaData['samples'][number]>()
+    .x((s) => x(s.t))
+    .y0(y(0))
+    .y1((s) => clippedY(s.y));
+  g.append('path')
+    .attr('d', shade(data.samples) ?? '')
+    .attr('fill', 'var(--accent)')
+    .attr('opacity', 0.25);
 
-    // Shaded area under the integrand curve: that area is B(p, q).
-    const shade = area<BetaData['samples'][number]>()
-      .x((s) => x(s.t))
-      .y0(y(0))
-      .y1((s) => clippedY(s.y));
-    g.append('path')
-      .attr('d', shade(data.samples) ?? '')
-      .attr('fill', 'var(--accent)')
-      .attr('opacity', 0.25);
+  // The integrand curve, clipped at the top of the y domain.
+  const curve = line<BetaData['samples'][number]>()
+    .x((s) => x(s.t))
+    .y((s) => clippedY(s.y));
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)')
+    .attr('d', curve(data.samples) ?? '');
 
-    // The integrand curve, clipped at the top of the y domain.
-    const curve = line<BetaData['samples'][number]>()
-      .x((s) => x(s.t))
-      .y((s) => clippedY(s.y));
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)')
-      .attr('d', curve(data.samples) ?? '');
-
-    const readout = localize({ ko: '넓이', en: 'area' }, lang);
-    g.append('text')
-      .attr('x', Math.min(x(0.62) + 8, width - 4))
-      .attr('y', 16)
-      .attr('text-anchor', 'start')
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(
-        `${readout}: B(${fmt(data.p, 1)}, ${fmt(data.q, 1)}) ≈ ${fmt(data.value, 6)}`,
-      );
-
-    if (factsSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(data, lang));
-      setRichText(verdictSlot, verdictText(lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  const readout = localize({ ko: '넓이', en: 'area' }, lang);
+  g.append('text')
+    .attr('x', Math.min(x(0.62) + 8, width - 4))
+    .attr('y', 16)
+    .attr('text-anchor', 'start')
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(
+      `${readout}: B(${fmt(data.p, 1)}, ${fmt(data.q, 1)}) ≈ ${fmt(data.value, 6)}`,
+    );
 }
 
-export default defineScene<BetaData>({ model: betaModel, createScene: createBetaScene });
+export default defineSimpleScene<BetaData>({
+  model: betaModel,
+  drawMain,
+  slots: [{ text: factsText, bold: true }, { text: (_data, lang) => verdictText(lang), bold: true }],
+});

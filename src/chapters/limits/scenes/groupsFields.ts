@@ -1,6 +1,7 @@
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { createRichSlot, setRichText } from '../../../view/richslot';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { groupsFieldsModel, type GroupsFieldsData } from '../models/groupsFields';
 
 /**
@@ -28,17 +29,7 @@ function verdictText(table: string, lang: Lang): string {
   );
 }
 
-function createGroupsFieldsScene(): Scene<GroupsFieldsData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: GroupsFieldsData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: GroupsFieldsData): void {
     const { g, width, height } = chart;
     const { size, rows } = data;
     g.selectAll('*').remove();
@@ -90,26 +81,23 @@ function createGroupsFieldsScene(): Scene<GroupsFieldsData> {
           .text(String(v));
       }
     }
+}
 
-    setRichText(verdictSlot, verdictText(data.table, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      const subgroup = document.createElement('div');
-      subgroup.style.cssText = 'margin-top: 4px; font-size: 12px; color: var(--muted);';
-      const subfield = document.createElement('div');
-      subfield.style.cssText = 'font-size: 12px; color: var(--muted);';
-      strips.append(verdict, subgroup, subfield);
-
-      verdictSlot = createRichSlot(verdict);
-      setRichText(
+export default defineSimpleScene<GroupsFieldsData>({
+  model: groupsFieldsModel,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: (data, lang) => verdictText(data.table, lang), bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const subgroup = document.createElement('div');
+    subgroup.style.cssText = 'margin-top: 4px; font-size: 12px; color: var(--muted);';
+    const subfield = document.createElement('div');
+    subfield.style.cssText = 'font-size: 12px; color: var(--muted);';
+    strips.append(subgroup);
+    strips.append(subfield);
+    setRichText(
         createRichSlot(subgroup),
         localize(
           {
@@ -119,7 +107,7 @@ function createGroupsFieldsScene(): Scene<GroupsFieldsData> {
           lang,
         ),
       );
-      setRichText(
+    setRichText(
         createRichSlot(subfield),
         localize(
           {
@@ -129,28 +117,5 @@ function createGroupsFieldsScene(): Scene<GroupsFieldsData> {
           lang,
         ),
       );
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<GroupsFieldsData>({ model: groupsFieldsModel, createScene: createGroupsFieldsScene });
+  },
+});

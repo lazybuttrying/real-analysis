@@ -1,16 +1,11 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { uniformModel, type UniformData, type UniformSample } from '../models/uniform';
 
-function createUniformScene(): Scene<UniformData> {
-  let chart: Chart | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: UniformData; state: ControlState } | undefined;
 
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: UniformData, lang: Lang): void {
     const { g, width, height } = chart;
     const { n, epsilon, samples, supNorm, escapeX } = data;
 
@@ -79,27 +74,9 @@ function createUniformScene(): Scene<UniformData> {
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
       .text(localize({ ko: '상한은 1에서 멈춤 — 0으로 가지 않는다', en: 'the sup stays at 1 — it never goes to 0' }, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      chart = createChart(host);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<UniformData>({ model: uniformModel, createScene: createUniformScene });
+export default defineSimpleScene<UniformData>({
+  model: uniformModel,
+  drawMain,
+});

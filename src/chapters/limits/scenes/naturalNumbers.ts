@@ -1,12 +1,6 @@
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { naturalNumbersModel, type NaturalNumbersData } from '../models/natural-numbers';
 
 /**
@@ -35,17 +29,7 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createNaturalNumbersScene(): Scene<NaturalNumbersData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: NaturalNumbersData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: NaturalNumbersData, lang: Lang): void {
     const { g, width, height } = chart;
     const { dominoes } = data;
     const n = dominoes.length;
@@ -118,47 +102,13 @@ function createNaturalNumbersScene(): Scene<NaturalNumbersData> {
       .attr('font-weight', '700')
       .attr('fill', 'var(--accent)')
       .text(localize({ ko: 'P(1): 먼저 쓰러뜨린다 (기저)', en: 'P(1): knocked over first (base case)' }, lang));
-
-    if (factsSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(lang));
-      setRichText(verdictSlot, verdictText(lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(_width, _height) {
-      chart?.setSize(_width, _height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<NaturalNumbersData>({ model: naturalNumbersModel, createScene: createNaturalNumbersScene });
+export default defineSimpleScene<NaturalNumbersData>({
+  model: naturalNumbersModel,
+  drawMain,
+  slots: [
+    { text: (_data, lang) => factsText(lang), bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true }
+  ],
+});

@@ -1,13 +1,8 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { createRichSlot, setRichText } from '../../../view/richslot';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { epsdeltaModel, type EpsDeltaData, type EpsDeltaSample } from '../models/epsdelta';
 
 /**
@@ -16,19 +11,20 @@ import { epsdeltaModel, type EpsDeltaData, type EpsDeltaSample } from '../models
  * and a grid check that the implication really holds.
  */
 
-function createEpsDeltaScene(): Scene<EpsDeltaData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: EpsDeltaData; state: ControlState } | undefined;
+function readoutText(data: EpsDeltaData, lang: Lang): string {
+  const { epsilon, delta, gridPass } = data;
+  return localize(
+        {
+          ko: String.raw`\(\varepsilon = ${fmt(epsilon)}\), \(\delta = \varepsilon/2 = ${fmt(delta)}\) — 격자 검사 ${gridPass ? '통과' : '실패'}: \(\lvert x-1\rvert < \delta\)인 모든 점에서 \(\lvert 2x-2\rvert < \varepsilon\)`,
+          en: String.raw`\(\varepsilon = ${fmt(epsilon)}\), \(\delta = \varepsilon/2 = ${fmt(delta)}\) — grid check ${gridPass ? 'passes' : 'fails'}: every sampled point with \(\lvert x-1\rvert < \delta\) satisfies \(\lvert 2x-2\rvert < \varepsilon\)`,
+        },
+        lang,
+      );
+}
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: EpsDeltaData): void {
     const { g, width, height } = chart;
-    const { a, l, epsilon, delta, samples, gridPass } = data;
+    const { a, l, epsilon, delta, samples } = data;
 
     const x = scaleLinear().domain([0, 2]).range([0, width]);
     const y = scaleLinear().domain([-0.5, 4.5]).range([height, 0]);
@@ -77,32 +73,20 @@ function createEpsDeltaScene(): Scene<EpsDeltaData> {
 
     g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(4));
     g.append('g').call(axisLeft(y).ticks(5));
+}
 
+export default defineSimpleScene<EpsDeltaData>({
+  model: epsdeltaModel,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const definition = document.createElement('div');
+    definition.style.cssText = 'font-size: 12px; color: var(--muted);';
+    strips.prepend(definition);
     setRichText(
-      readoutSlot,
-      localize(
-        {
-          ko: String.raw`\(\varepsilon = ${fmt(epsilon)}\), \(\delta = \varepsilon/2 = ${fmt(delta)}\) — 격자 검사 ${gridPass ? '통과' : '실패'}: \(\lvert x-1\rvert < \delta\)인 모든 점에서 \(\lvert 2x-2\rvert < \varepsilon\)`,
-          en: String.raw`\(\varepsilon = ${fmt(epsilon)}\), \(\delta = \varepsilon/2 = ${fmt(delta)}\) — grid check ${gridPass ? 'passes' : 'fails'}: every sampled point with \(\lvert x-1\rvert < \delta\) satisfies \(\lvert 2x-2\rvert < \varepsilon\)`,
-        },
-        lang,
-      ),
-    );
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const definition = document.createElement('div');
-      definition.style.cssText = 'font-size: 12px; color: var(--muted);';
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      strips.append(definition, readout);
-
-      setRichText(
         createRichSlot(definition),
         localize(
           {
@@ -112,29 +96,5 @@ function createEpsDeltaScene(): Scene<EpsDeltaData> {
           lang,
         ),
       );
-      readoutSlot = createRichSlot(readout);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<EpsDeltaData>({ model: epsdeltaModel, createScene: createEpsDeltaScene });
+  },
+});

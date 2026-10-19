@@ -1,16 +1,11 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { ivtModel, type IVTData, type IVTSample } from '../models/ivt';
 
-function createIVTScene(): Scene<IVTData> {
-  let chart: Chart | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: IVTData; state: ControlState } | undefined;
 
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: IVTData, lang: Lang): void {
     const { g, width, height } = chart;
     const { a, b, fa, fb, c, xi, samples } = data;
 
@@ -76,27 +71,9 @@ function createIVTScene(): Scene<IVTData> {
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
       .text(localize({ ko: '— 반드시 밟고 지나가는 점', en: '— the point the curve must step on' }, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      chart = createChart(host);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<IVTData>({ model: ivtModel, createScene: createIVTScene });
+export default defineSimpleScene<IVTData>({
+  model: ivtModel,
+  drawMain,
+});

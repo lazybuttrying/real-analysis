@@ -1,6 +1,7 @@
 import { axisBottom, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { supremumModel, type SupremumData } from '../models/supremum';
 
 const SET_LABEL = {
@@ -8,14 +9,7 @@ const SET_LABEL = {
   sqrt2: { ko: '√2의 유리수 절단값', en: 'rational truncations of √2' },
 } as const;
 
-function createSupremumScene(): Scene<SupremumData> {
-  let chart: Chart | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: SupremumData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: SupremumData, lang: Lang): void {
     const { set, sup, bound, gap, isUpper, points } = data;
     const { g, width, height } = chart;
     if (width < 40 || height < 120) return;
@@ -101,27 +95,9 @@ function createSupremumScene(): Scene<SupremumData> {
           lang,
         ),
       );
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      chart = createChart(host);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<SupremumData>({ model: supremumModel, createScene: createSupremumScene });
+export default defineSimpleScene<SupremumData>({
+  model: supremumModel,
+  drawMain,
+});

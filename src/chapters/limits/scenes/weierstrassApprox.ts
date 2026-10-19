@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { bernsteinModel, type BernsteinData, type BernsteinSample } from '../models/weierstrass-approx';
 
 /**
@@ -50,18 +44,7 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createWeierstrassScene(): Scene<BernsteinData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let ideaSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: BernsteinData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: BernsteinData, lang: Lang): void {
     const { g, width, height } = chart;
     const { n, maxErr, samples } = data;
 
@@ -99,51 +82,14 @@ function createWeierstrassScene(): Scene<BernsteinData> {
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
       .text(`${localize({ ko: '[0, 1] 최대 오차', en: 'max error on [0, 1]' }, lang)} ≈ ${fmt(maxErr, 4)}`);
-
-    if (factsSlot && ideaSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(lang));
-      setRichText(ideaSlot, ideaText(lang));
-      setRichText(verdictSlot, verdictText(lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const idea = document.createElement('div');
-      idea.style.opacity = '0.75';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, idea, verdict);
-
-      factsSlot = createRichSlot(facts);
-      ideaSlot = createRichSlot(idea);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      ideaSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<BernsteinData>({ model: bernsteinModel, createScene: createWeierstrassScene });
+export default defineSimpleScene<BernsteinData>({
+  model: bernsteinModel,
+  drawMain,
+  slots: [
+    { text: (_data, lang) => factsText(lang), bold: true },
+    { text: (_data, lang) => ideaText(lang), cssText: 'opacity: 0.75;' },
+    { text: (_data, lang) => verdictText(lang), bold: true }
+  ],
+});

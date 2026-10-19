@@ -1,16 +1,11 @@
 import { scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { bolzanoWeierstrassModel, type BolzanoWeierstrassData } from '../models/bolzanoWeierstrass';
 
-function createBolzanoWeierstrassScene(): Scene<BolzanoWeierstrassData> {
-  let chart: Chart | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: BolzanoWeierstrassData; state: ControlState } | undefined;
 
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: BolzanoWeierstrassData, lang: Lang): void {
     const { g, width, height } = chart;
     const { points, intervals, subsequence } = data;
 
@@ -77,27 +72,9 @@ function createBolzanoWeierstrassScene(): Scene<BolzanoWeierstrassData> {
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
       .text(localize({ ko: '구간이 한 점으로 조여들며 부분수열이 그 점으로 수렴', en: 'the interval squeezes to a point; the subsequence converges to it' }, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      chart = createChart(host);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<BolzanoWeierstrassData>({ model: bolzanoWeierstrassModel, createScene: createBolzanoWeierstrassScene });
+export default defineSimpleScene<BolzanoWeierstrassData>({
+  model: bolzanoWeierstrassModel,
+  drawMain,
+});

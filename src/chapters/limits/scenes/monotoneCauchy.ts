@@ -1,13 +1,8 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { createRichSlot, setRichText } from '../../../view/richslot';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { monotoneCauchyModel, type MonotoneCauchyData } from '../models/monotoneCauchy';
 
 /**
@@ -16,19 +11,20 @@ import { monotoneCauchyModel, type MonotoneCauchyData } from '../models/monotone
  * shrinks to 0: the sequence is Cauchy.
  */
 
-function createMonotoneCauchyScene(): Scene<MonotoneCauchyData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: MonotoneCauchyData; state: ControlState } | undefined;
+function readoutText(data: MonotoneCauchyData, lang: Lang): string {
+  const { n, aN, tailN, tailDiameter } = data;
+  return localize(
+        {
+          ko: String.raw`\(a_{${n}} = ${fmt(aN)}\) — 꼬리 지름(항 \( \geq ${tailN}\)): \( ${fmt(tailDiameter)} \)`,
+          en: String.raw`\(a_{${n}} = ${fmt(aN)}\) — tail diameter (terms \( \geq ${tailN}\)): \( ${fmt(tailDiameter)} \)`,
+        },
+        lang,
+      );
+}
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: MonotoneCauchyData, lang: Lang): void {
     const { g, width, height } = chart;
-    const { n, tailN, maxIndex, terms, aN, tailDiameter, sup } = data;
+    const { tailN, maxIndex, terms, sup } = data;
 
     const x = scaleLinear().domain([0, maxIndex + 1]).range([0, width]);
     const y = scaleLinear().domain([0, 1.15]).range([height, 0]);
@@ -74,32 +70,20 @@ function createMonotoneCauchyScene(): Scene<MonotoneCauchyData> {
       .attr('font-size', 12)
       .attr('fill', 'var(--bound)')
       .text(localize({ ko: '상한 1', en: 'sup 1' }, lang));
+}
 
+export default defineSimpleScene<MonotoneCauchyData>({
+  model: monotoneCauchyModel,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const legend = document.createElement('div');
+    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
+    strips.prepend(legend);
     setRichText(
-      readoutSlot,
-      localize(
-        {
-          ko: String.raw`\(a_{${n}} = ${fmt(aN)}\) — 꼬리 지름(항 \( \geq ${tailN}\)): \( ${fmt(tailDiameter)} \)`,
-          en: String.raw`\(a_{${n}} = ${fmt(aN)}\) — tail diameter (terms \( \geq ${tailN}\)): \( ${fmt(tailDiameter)} \)`,
-        },
-        lang,
-      ),
-    );
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const legend = document.createElement('div');
-      legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      strips.append(legend, readout);
-
-      setRichText(
         createRichSlot(legend),
         localize(
           {
@@ -109,29 +93,5 @@ function createMonotoneCauchyScene(): Scene<MonotoneCauchyData> {
           lang,
         ),
       );
-      readoutSlot = createRichSlot(readout);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<MonotoneCauchyData>({ model: monotoneCauchyModel, createScene: createMonotoneCauchyScene });
+  },
+});

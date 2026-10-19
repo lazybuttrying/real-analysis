@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { limsupLiminfModel, type LimsupLiminfData } from '../models/limsupLiminf';
 
 /**
@@ -40,17 +34,7 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createLimsupLiminfScene(): Scene<LimsupLiminfData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: LimsupLiminfData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: LimsupLiminfData, lang: Lang): void {
     const { g, width, height } = chart;
     const { count, points, limsup, liminf } = data;
     g.selectAll('*').remove();
@@ -125,47 +109,13 @@ function createLimsupLiminfScene(): Scene<LimsupLiminfData> {
         .style('fill', 'var(--accent)')
         .text(label);
     });
-
-    if (factsSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(data, lang));
-      setRichText(verdictSlot, verdictText(lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<LimsupLiminfData>({ model: limsupLiminfModel, createScene: createLimsupLiminfScene });
+export default defineSimpleScene<LimsupLiminfData>({
+  model: limsupLiminfModel,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true }
+  ],
+});

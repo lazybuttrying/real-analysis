@@ -1,7 +1,7 @@
 import { axisBottom, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { measureModel, type MeasureData } from '../models/measure';
 
 /**
@@ -31,99 +31,56 @@ function readoutText(data: MeasureData, lang: Lang): string {
   return localize({ ko, en }, lang);
 }
 
-function createMeasureScene(): Scene<MeasureData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: MeasureData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: MeasureData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { target, covers, K } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { target, covers, K } = data;
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  // Rows stack the covers so overlaps stay visible.
+  const rows = 8;
+  const rowH = (height - 70) / rows;
 
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
-    // Rows stack the covers so overlaps stay visible.
-    const rows = 8;
-    const rowH = (height - 70) / rows;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  // The unit interval.
+  g.append('line').attr('x1', 0).attr('x2', width).attr('y1', height - 40).attr('y2', height - 40).attr('stroke', 'currentColor').attr('stroke-width', 2);
+  g.append('g').attr('transform', `translate(0,${height - 40})`).call(axisBottom(x).ticks(5));
 
-    // The unit interval.
-    g.append('line').attr('x1', 0).attr('x2', width).attr('y1', height - 40).attr('y2', height - 40).attr('stroke', 'currentColor').attr('stroke-width', 2);
-    g.append('g').attr('transform', `translate(0,${height - 40})`).call(axisBottom(x).ticks(5));
+  covers.forEach((cover, i) => {
+    const row = i % rows;
+    const yTop = height - 48 - row * rowH - 3;
+    g.append('rect')
+      .attr('x', x(Math.max(0, cover.c - cover.w / 2)))
+      .attr('width', Math.max(1, x(Math.min(1, cover.c + cover.w / 2)) - x(Math.max(0, cover.c - cover.w / 2))))
+      .attr('y', Math.max(0, yTop - rowH + 4))
+      .attr('height', Math.max(1, rowH - 6))
+      .style('fill', 'var(--accent)')
+      .attr('opacity', 0.55);
+  });
 
-    covers.forEach((cover, i) => {
-      const row = i % rows;
-      const yTop = height - 48 - row * rowH - 3;
-      g.append('rect')
-        .attr('x', x(Math.max(0, cover.c - cover.w / 2)))
-        .attr('width', Math.max(1, x(Math.min(1, cover.c + cover.w / 2)) - x(Math.max(0, cover.c - cover.w / 2))))
-        .attr('y', Math.max(0, yTop - rowH + 4))
-        .attr('height', Math.max(1, rowH - 6))
-        .style('fill', 'var(--accent)')
-        .attr('opacity', 0.55);
-    });
+  // Mark the target point for the singleton witness.
+  if (target === 'singleton') {
+    g.append('circle')
+      .attr('cx', x(0.5))
+      .attr('cy', height - 40)
+      .attr('r', 4)
+      .attr('fill', 'var(--accent)');
+  }
 
-    // Mark the target point for the singleton witness.
-    if (target === 'singleton') {
-      g.append('circle')
-        .attr('cx', x(0.5))
-        .attr('cy', height - 40)
-        .attr('r', 4)
-        .attr('fill', 'var(--accent)');
-    }
-
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', 14)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text(
-        target === 'rationals'
-          ? `${localize({ ko: '덮개', en: 'covers' }, lang)}: ${covers.length} (K = ${K})`
-          : `${localize({ ko: '대상', en: 'target' }, lang)}: ${target === 'singleton' ? '{0.5}' : '[0,1]'}`,
-      );
-
-    setRichText(readoutSlot, readoutText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      strips.append(readout);
-
-      readoutSlot = createRichSlot(readout);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', 14)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text(
+      target === 'rationals'
+        ? `${localize({ ko: '덮개', en: 'covers' }, lang)}: ${covers.length} (K = ${K})`
+        : `${localize({ ko: '대상', en: 'target' }, lang)}: ${target === 'singleton' ? '{0.5}' : '[0,1]'}`,
+    );
 }
 
-export default defineScene<MeasureData>({ model: measureModel, createScene: createMeasureScene });
+export default defineSimpleScene<MeasureData>({
+  model: measureModel,
+  drawMain,
+  slots: [{ text: readoutText, bold: true }],
+});
