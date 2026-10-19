@@ -86,7 +86,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`8단계 확대 — \(|x|\)의 모서리 하나가 아니라, 이런 모서리가 모든 점에 있습니다.`,
             en: String.raw`Zoom level 8 — not one corner of \(|x|\), but such a corner at every point.`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`바이어슈트라스 정리: 모든 점에서 연속이지만 어떤 점에서도 미분가능하지 않은 함수가 존재합니다. 고전적인 예는 \(0 < a < 1\), \(ab > 1 + \frac{3\pi}{2}\)인 \(\sum_{n=0}^{\infty} a^n \cos(b^n \pi x)\) 형태의 급수입니다.`,

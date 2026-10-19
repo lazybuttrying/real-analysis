@@ -44,7 +44,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`오차 비율 \(|e_{n+1}|/e_n^2 \approx 0.354 = 1/(2\sqrt{2})\)를 확인하세요.`,
             en: String.raw`Check the error ratio \(|e_{n+1}|/e_n^2 \approx 0.354 = 1/(2\sqrt{2})\).`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`\(f(x^*) = 0\)인 근 근처에서 \(f\)를 2차까지 테일러 전개하면 \(0 = f(x^*) \approx f(x_n) + f'(x_n)(x^* - x_n) + \frac{f''(x^*)}{2}e_n^2\)입니다 (\(e_n = x_n - x^*\)).`,

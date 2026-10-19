@@ -76,7 +76,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`\(n=64\): 격자를 대각선으로 훑는 바로 그 방법입니다.`,
             en: String.raw`\(n=64\): the same diagonal sweep of the grid.`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`[스케치] \(A_1, A_2, \dots\)를 무한 격자의 행으로 배열합니다. 유리수를 나열할 때와 똑같이 대각선 순서로 훑으면, 각 원소는 언젠가 유한한 대각선 위치에서 등장합니다.`,

@@ -92,8 +92,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\sup = 1\): \(1\)은 상계입니다(\(f(x) < 1\)이므로). \(u < 1\)인 임의의 실수에 대해 \(x = \frac{u+1}{2} \in [0,1)\)라 두면 \(f(x) = \frac{u+1}{2} > u\)이므로 \(u\)는 상계가 아닙니다. 따라서 최소상계는 \(1\)입니다.`,
-                en: String.raw`\(\sup = 1\): \(1\) is an upper bound (since \(f(x) < 1\)). For any real \(u < 1\), \(x = \frac{u+1}{2} \in [0,1)\) gives \(f(x) = \frac{u+1}{2} > u\), so \(u\) is not an upper bound. Hence the least upper bound is \(1\).`,
+                ko: String.raw`\(\sup = 1\): \(1\)은 상계입니다(\(f(x) < 1\)이므로). \(u < 1\)인 임의의 실수에 대해 \(f(x) > u\)인 \(x \in [0,1)\)를 만듭니다. \(u < 0\)이면 \(x = 0\)으로 두면 \(f(0) = 0 > u\)입니다. \(0 \le u < 1\)이면 \(x = \frac{u+1}{2}\)로 두면 \(u \le \frac{u+1}{2} < 1\)이므로 \(x \in [0,1)\)이고 \(f(x) = \frac{u+1}{2} > u\)입니다. (주의: \(u < -1\)에서는 \(\frac{u+1}{2} < 0\)이 되어 \([0,1)\) 밖에 떨어지므로, 그 구간에서는 \(x = 0\)이 필요합니다.) 따라서 \(1\)보다 작은 수는 상계가 아니고, 최소상계는 \(1\)입니다.`,
+                en: String.raw`\(\sup = 1\): \(1\) is an upper bound (since \(f(x) < 1\)). For any real \(u < 1\), produce \(x \in [0,1)\) with \(f(x) > u\). If \(u < 0\), take \(x = 0\): \(f(0) = 0 > u\). If \(0 \le u < 1\), take \(x = \frac{u+1}{2}\): then \(u \le \frac{u+1}{2} < 1\), so \(x \in [0,1)\) and \(f(x) = \frac{u+1}{2} > u\). (Note: for \(u < -1\), \(\frac{u+1}{2} < 0\) falls outside \([0,1)\), which is why \(x = 0\) is needed there.) Hence no number below \(1\) is an upper bound, and the least upper bound is \(1\).`,
               },
             },
             {

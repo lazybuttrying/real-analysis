@@ -53,8 +53,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`평균값 정리에 의해 \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y| \le \sin(1)\,|x - y|\)이고, \(\sin(1) \approx 0.8415 < 1\)이므로 수축사상입니다.`,
-                en: String.raw`By the Mean Value Theorem, \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y| \le \sin(1)\,|x - y|\), and \(\sin(1) \approx 0.8415 < 1\), so \(\cos\) is a contraction.`,
+                ko: String.raw`평균값 정리에 의해 \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y| \le \sin(1)\,|x - y|\)이고, \(\sin(1) \approx 0.8415 < 1\)이므로 수축사상입니다. 또한 \(\cos\)는 \([0,1]\)에서 감소하므로 (\((\cos)' = -\sin < 0\)), \(\cos([0,1]) = [\cos 1, \cos 0] = [\cos 1, 1] \subset [0,1]\)입니다 (\(\cos 1 \approx 0.5403 > 0\)) — \([0,1]\)을 자기 자신 안으로 보내는 수축사상입니다.`,
+                en: String.raw`By the Mean Value Theorem, \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y| \le \sin(1)\,|x - y|\), and \(\sin(1) \approx 0.8415 < 1\), so \(\cos\) is a contraction. Also \(\cos\) is decreasing on \([0,1]\) (since \((\cos)' = -\sin < 0\)), so \(\cos([0,1]) = [\cos 1, \cos 0] = [\cos 1, 1] \subset [0,1]\) (with \(\cos 1 \approx 0.5403 > 0\)) — a contraction mapping \([0,1]\) into itself.`,
               },
             },
             {

@@ -65,8 +65,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`랭크 2인 \(2 \times 3\) 행렬의 핵은 정확히 1차원입니다(두 독립 방정식이 3차원을 1차원만큼 깎음). 따라서 널리티는 \(1\)이고, \(\operatorname{rank} T + \operatorname{nullity} T = 2 + 1 = 3 = \dim \mathbb{R}^3\)으로 차원–랭크 정리가 성립합니다.`,
-          en: String.raw`For a rank-2 \(2 \times 3\) matrix, the kernel is exactly one-dimensional (two independent equations cut three dimensions down to one). So the nullity is \(1\), and \(\operatorname{rank} T + \operatorname{nullity} T = 2 + 1 = 3 = \dim \mathbb{R}^3\), verifying the rank–nullity theorem.`,
+          ko: String.raw`이제 \((x, y, z)^T \in \ker T\)인 임의의 벡터를 봅니다. 두 방정식 \(x + 2y + 3z = 0\)과 \(4x + 5y + 6z = 0\)에서, 두 번째 식에서 첫 번째 식의 4배를 빼면 \(-3y - 6z = 0\), 즉 \(y = -2z\)입니다. 이를 첫 번째 식에 대입하면 \(x = -2y - 3z = 4z - 3z = z\)이므로, \((x, y, z) = (z, -2z, z) = z \cdot (1, -2, 1) = (-z) \cdot (-1, 2, -1)\)입니다. 즉 모든 핵 벡터는 \((-1, 2, -1)^T\)의 스칼라 배수이므로 \(\dim \ker T \le 1\)입니다. 앞 단계에서 \(\dim \ker T \ge 1\)을 보였으므로 널리티는 정확히 \(1\)이고, \(\operatorname{rank} T + \operatorname{nullity} T = 2 + 1 = 3 = \dim \mathbb{R}^3\)으로 차원–랭크 정리가 성립합니다 — 정리 자체를 인용하지 않고 양쪽을 직접 계산했습니다.`,
+          en: String.raw`Now take any \((x, y, z)^T \in \ker T\). From the two equations \(x + 2y + 3z = 0\) and \(4x + 5y + 6z = 0\), subtracting 4 times the first from the second gives \(-3y - 6z = 0\), i.e. \(y = -2z\). Substituting into the first equation, \(x = -2y - 3z = 4z - 3z = z\), so \((x, y, z) = (z, -2z, z) = z \cdot (1, -2, 1) = (-z) \cdot (-1, 2, -1)\). Every kernel vector is a scalar multiple of \((-1, 2, -1)^T\), so \(\dim \ker T \le 1\). The previous step gave \(\dim \ker T \ge 1\), so the nullity is exactly \(1\), and \(\operatorname{rank} T + \operatorname{nullity} T = 2 + 1 = 3 = \dim \mathbb{R}^3\), verifying the rank–nullity theorem — both sides computed directly, with no appeal to the theorem itself.`,
         },
       },
     ],

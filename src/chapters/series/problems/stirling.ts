@@ -17,7 +17,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`\(n = 10\): 로그 눈금에서 두 곡선이 겹칩니다.`,
             en: String.raw`\(n = 10\): the two curves overlap on the log scale.`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`\(10! = 3628800\)입니다. \(S(10) = \sqrt{20\pi}\left(\frac{10}{e}\right)^{10} \approx 3598695.62\)입니다.`,
@@ -50,7 +51,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`막대들의 합과 곡선 아래 넓이는 어슷비슷합니다.`,
             en: String.raw`The sum of the bars and the area under the curve are close.`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`\(\ln(n!) = \sum_{k=1}^{n}\ln k\)는 \(y = \ln x\) 그래프 아래에 세운 막대들의 넓이 합입니다.`,

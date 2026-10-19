@@ -83,7 +83,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`\(n = 9\): 다항식이 \([-\pi, \pi]\)에서 곡선과 거의 겹칩니다.`,
             en: String.raw`\(n = 9\): the polynomial nearly overlaps the curve on \([-\pi, \pi]\).`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`테일러 정리는 \(f(x) = T_n(x) + R_n(x)\)로 분해합니다. 다항식 부분은 우리가 아는 것이고, 모르는 것은 나머지 전부입니다.`,

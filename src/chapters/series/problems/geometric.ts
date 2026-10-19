@@ -80,6 +80,13 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
+                ko: String.raw`먼저 급수가 절대수렴함을 보입니다: \(\frac{n}{2^n} \le \left(\frac{3}{4}\right)^n \iff n \le \left(\frac{3}{2}\right)^n\)입니다. \(n = 4\)에서 \(4 \le \left(\frac{3}{2}\right)^4 = \frac{81}{16} = 5.0625\) ✓, 그리고 \(\left(\frac{3}{2}\right)^n \ge n\)이면 \(\left(\frac{3}{2}\right)^{n+1} = \frac{3}{2}\left(\frac{3}{2}\right)^n \ge \frac{3}{2}n = n + \frac{n}{2} \ge n+1\) (\(n \ge 2\))이므로, 귀납법으로 모든 \(n \ge 4\)에서 \(n \le \left(\frac{3}{2}\right)^n\)입니다. 따라서 \(n \ge 4\)에서 \(\frac{n}{2^n} \le \left(\frac{3}{4}\right)^n\)이고, \(\sum\left(\frac{3}{4}\right)^n\)은 공비 \(\frac34 < 1\)인 기하급수로 수렴하므로 비교판정법으로 \(\sum\frac{n}{2^n}\)은 절대수렴합니다.`,
+                en: String.raw`First, absolute convergence: \(\frac{n}{2^n} \le \left(\frac{3}{4}\right)^n \iff n \le \left(\frac{3}{2}\right)^n\). At \(n = 4\), \(4 \le \left(\frac{3}{2}\right)^4 = \frac{81}{16} = 5.0625\) ✓, and if \(\left(\frac{3}{2}\right)^n \ge n\) then \(\left(\frac{3}{2}\right)^{n+1} = \frac{3}{2}\left(\frac{3}{2}\right)^n \ge \frac{3}{2}n = n + \frac{n}{2} \ge n+1\) (\(n \ge 2\)), so by induction \(n \le \left(\frac{3}{2}\right)^n\) for all \(n \ge 4\). Hence \(\frac{n}{2^n} \le \left(\frac{3}{4}\right)^n\) for \(n \ge 4\); since \(\sum\left(\frac{3}{4}\right)^n\) converges (geometric, ratio \(\frac34 < 1\)), the comparison test gives absolute convergence of \(\sum\frac{n}{2^n}\).`,
+              },
+              display: [String.raw`\frac{n}{2^n} \le \left(\frac{3}{4}\right)^n \quad (n \ge 4) \;\Longrightarrow\; \sum_{n=1}^{\infty}\frac{n}{2^n} \text{ converges absolutely}`],
+            },
+            {
+              text: {
                 ko: String.raw`\(S = \sum_{n=1}^{\infty}\frac{n}{2^n}\)라 두면, \(\frac{S}{2} = \sum_{n=1}^{\infty}\frac{n}{2^{n+1}} = \sum_{n=2}^{\infty}\frac{n-1}{2^n}\)입니다 (지표 이동).`,
                 en: String.raw`Put \(S = \sum_{n=1}^{\infty}\frac{n}{2^n}\). Then \(\frac{S}{2} = \sum_{n=1}^{\infty}\frac{n}{2^{n+1}} = \sum_{n=2}^{\infty}\frac{n-1}{2^n}\) (reindexing).`,
               },
