@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { diniModel, type DiniData } from '../models/dini';
 
 /**
@@ -86,177 +80,134 @@ function linksHtml(lang: Lang): string {
   return `Why compactness is the engine of the proof → <a href="/${seg}/limits/compact/">compact scene</a> · Another uniform-convergence tool → <a href="/${seg}/series/m-test/">M-test</a>`;
 }
 
-function createDiniScene(): Scene<DiniData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: DiniData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: DiniData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n, domain, xs, curves, limit } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { n, domain, xs, curves, limit } = data;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
-
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
-    let yMin = Infinity;
-    let yMax = -Infinity;
-    for (const row of curves) {
-      for (const v of row) {
-        yMin = Math.min(yMin, v);
-        yMax = Math.max(yMax, v);
-      }
-    }
-    for (const v of limit) {
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  let yMin = Infinity;
+  let yMax = -Infinity;
+  for (const row of curves) {
+    for (const v of row) {
       yMin = Math.min(yMin, v);
       yMax = Math.max(yMax, v);
     }
-    const pad = (yMax - yMin) * 0.08 || 0.05;
-    const y = scaleLinear().domain([yMin - pad, yMax + pad]).range([height, 0]);
+  }
+  for (const v of limit) {
+    yMin = Math.min(yMin, v);
+    yMax = Math.max(yMax, v);
+  }
+  const pad = (yMax - yMin) * 0.08 || 0.05;
+  const y = scaleLinear().domain([yMin - pad, yMax + pad]).range([height, 0]);
 
-    g.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(axisBottom(x).tickValues([0, 0.25, 0.5, 0.75, 1]));
-    g.append('g').call(axisLeft(y).ticks(6));
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(axisBottom(x).tickValues([0, 0.25, 0.5, 0.75, 1]));
+  g.append('g').call(axisLeft(y).ticks(6));
 
-    const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
-    header1.text(
-      localize(
-        {
-          ko: '디니 정리 — 단조 연속함수열이 컴팩트 집합에서 연속 극한에 수렴하면 균등수렴',
-          en: "Dini's theorem — a monotone sequence of continuous functions converging to a continuous limit on a compact set converges uniformly",
-        },
-        lang,
-      ),
-    );
-    header2.text(header2Text(data, lang));
+  const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
+  header1.text(
+    localize(
+      {
+        ko: '디니 정리 — 단조 연속함수열이 컴팩트 집합에서 연속 극한에 수렴하면 균등수렴',
+        en: "Dini's theorem — a monotone sequence of continuous functions converging to a continuous limit on a compact set converges uniformly",
+      },
+      lang,
+    ),
+  );
+  header2.text(header2Text(data, lang));
 
-    // Faint earlier curves, then the current term bold.
-    for (let k = 0; k < curves.length; k++) {
-      const row = curves[k] ?? [];
-      const isLast = k === curves.length - 1;
-      const path = line<number>()
-        .x((_, i) => x(xs[i] ?? 0))
-        .y((_, i) => y(row[i] ?? 0));
-      g.append('path')
-        .datum(xs)
-        .attr('d', path)
-        .attr('fill', 'none')
-        .attr('stroke-width', isLast ? 2.5 : 1)
-        .style('stroke', 'var(--accent)')
-        .attr('opacity', isLast ? 1 : 0.12);
-    }
-
-    // The limit curve, dashed underneath.
-    const limitLine = line<number>()
+  // Faint earlier curves, then the current term bold.
+  for (let k = 0; k < curves.length; k++) {
+    const row = curves[k] ?? [];
+    const isLast = k === curves.length - 1;
+    const path = line<number>()
       .x((_, i) => x(xs[i] ?? 0))
-      .y((_, i) => y(limit[i] ?? 0));
+      .y((_, i) => y(row[i] ?? 0));
     g.append('path')
       .datum(xs)
-      .attr('d', limitLine)
+      .attr('d', path)
       .attr('fill', 'none')
-      .attr('stroke-width', 1.5)
-      .attr('stroke', 'currentColor')
-      .attr('stroke-dasharray', '6 4')
-      .attr('opacity', 0.7);
+      .attr('stroke-width', isLast ? 2.5 : 1)
+      .style('stroke', 'var(--accent)')
+      .attr('opacity', isLast ? 1 : 0.12);
+  }
 
-    // Gap marker at x = 1.
-    const markerTop = y(1);
-    const markerBottom = domain === 'compact' ? y(n / (n + 1)) : y(0);
-    g.append('line')
-      .attr('x1', x(1))
-      .attr('x2', x(1))
-      .attr('y1', markerTop)
-      .attr('y2', markerBottom)
-      .attr('stroke', 'var(--accent)')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '3 3');
+  // The limit curve, dashed underneath.
+  const limitLine = line<number>()
+    .x((_, i) => x(xs[i] ?? 0))
+    .y((_, i) => y(limit[i] ?? 0));
+  g.append('path')
+    .datum(xs)
+    .attr('d', limitLine)
+    .attr('fill', 'none')
+    .attr('stroke-width', 1.5)
+    .attr('stroke', 'currentColor')
+    .attr('stroke-dasharray', '6 4')
+    .attr('opacity', 0.7);
+
+  // Gap marker at x = 1.
+  const markerTop = y(1);
+  const markerBottom = domain === 'compact' ? y(n / (n + 1)) : y(0);
+  g.append('line')
+    .attr('x1', x(1))
+    .attr('x2', x(1))
+    .attr('y1', markerTop)
+    .attr('y2', markerBottom)
+    .attr('stroke', 'var(--accent)')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '3 3');
+  g.append('text')
+    .attr('x', x(1) - 6)
+    .attr('y', (markerTop + markerBottom) / 2)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'end')
+    .attr('fill', 'currentColor')
+    .text(
+      domain === 'compact'
+        ? localize({ ko: `간격 1/${n + 1}`, en: `gap 1/${n + 1}` }, lang)
+        : localize({ ko: 'sup 간격 1', en: 'sup gap 1' }, lang),
+    );
+
+  // Noncompact: the pointwise limit at x = 1 is g_n(1) = 1, a discontinuity.
+  if (domain === 'noncompact') {
+    g.append('circle').attr('cx', x(1)).attr('cy', y(1)).attr('r', 4).attr('fill', 'currentColor');
     g.append('text')
-      .attr('x', x(1) - 6)
-      .attr('y', (markerTop + markerBottom) / 2)
+      .attr('x', x(1) - 10)
+      .attr('y', y(1) - 10)
       .attr('font-size', 12)
       .attr('text-anchor', 'end')
       .attr('fill', 'currentColor')
-      .text(
-        domain === 'compact'
-          ? localize({ ko: `간격 1/${n + 1}`, en: `gap 1/${n + 1}` }, lang)
-          : localize({ ko: 'sup 간격 1', en: 'sup gap 1' }, lang),
-      );
+      .text(localize({ ko: 'g_n(1)=1 — 극한이 x=1에서 불연속', en: 'g_n(1)=1 — the limit is discontinuous at x=1' }, lang));
+  }
 
-    // Noncompact: the pointwise limit at x = 1 is g_n(1) = 1, a discontinuity.
-    if (domain === 'noncompact') {
-      g.append('circle').attr('cx', x(1)).attr('cy', y(1)).attr('r', 4).attr('fill', 'currentColor');
-      g.append('text')
-        .attr('x', x(1) - 10)
-        .attr('y', y(1) - 10)
-        .attr('font-size', 12)
-        .attr('text-anchor', 'end')
-        .attr('fill', 'currentColor')
-        .text(localize({ ko: 'g_n(1)=1 — 극한이 x=1에서 불연속', en: 'g_n(1)=1 — the limit is discontinuous at x=1' }, lang));
-    }
-
-    // Legend.
-    const legend = domain === 'compact'
-      ? localize({ ko: `■ f_${n} (진한) · - - f (점선) · i 선 = 최대 간격 1/(${n}+1)`, en: `■ f_${n} (bold) · - - f (dashed) · i line = worst gap 1/(${n}+1)` }, lang)
-      : localize({ ko: `■ g_${n} (진한) · - - g=0 (점선) · i 선 = sup 간격 1`, en: `■ g_${n} (bold) · - - g=0 (dashed) · i line = sup gap 1` }, lang);
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .attr('opacity', 0.7)
-      .text(legend);
-
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      const links = document.createElement('div');
-      links.style.cssText = 'padding-top: 4px;';
-      links.innerHTML = linksHtml(lang);
-      strips.append(facts, verdict, links);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Legend.
+  const legend = domain === 'compact'
+    ? localize({ ko: `■ f_${n} (진한) · - - f (점선) · i 선 = 최대 간격 1/(${n}+1)`, en: `■ f_${n} (bold) · - - f (dashed) · i line = worst gap 1/(${n}+1)` }, lang)
+    : localize({ ko: `■ g_${n} (진한) · - - g=0 (점선) · i 선 = sup 간격 1`, en: `■ g_${n} (bold) · - - g=0 (dashed) · i line = sup gap 1` }, lang);
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.7)
+    .text(legend);
 }
 
-export default defineScene<DiniData>({ model: diniModel, createScene: createDiniScene });
+function mountExtra(strips: HTMLElement, lang: Lang): void {
+  const links = document.createElement('div');
+  links.style.cssText = 'padding-top: 4px;';
+  links.innerHTML = linksHtml(lang);
+  strips.append(links);
+}
+
+export default defineSimpleScene<DiniData>({
+  model: diniModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: factsText, bold: true }, { text: (_data, lang) => verdictText(lang), bold: true }],
+  mountExtra,
+});

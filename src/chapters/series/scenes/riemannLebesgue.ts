@@ -1,13 +1,7 @@
 import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { riemannLebesgueModel, RL_TWO_PI, type RiemannLebesgueData } from '../models/riemannLebesgue';
 
 /**
@@ -98,175 +92,123 @@ function verdictText(data: RiemannLebesgueData, lang: Lang): string {
   );
 }
 
-function createRiemannLebesgueScene(): Scene<RiemannLebesgueData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: RiemannLebesgueData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: RiemannLebesgueData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: RiemannLebesgueData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  const gap = 14;
+  const topH = Math.max(0, (height - gap) * 0.55);
+  const botH = Math.max(0, height - gap - topH);
+  const botY = topH + gap;
 
-    const gap = 14;
-    const topH = Math.max(0, (height - gap) * 0.55);
-    const botH = Math.max(0, height - gap - topH);
-    const botY = topH + gap;
+  const k = kindLabel(data.kind);
 
-    const k = kindLabel(data.kind);
+  // --- Top panel: the probe integrand with signed-area fills. ---
+  const x = scaleLinear().domain([0, RL_TWO_PI]).range([0, width]);
+  const yMax = Math.max(1e-9, ...data.probeYs.map((v) => Math.abs(v))) * 1.1;
+  const y = scaleLinear().domain([-yMax, yMax]).range([topH, 0]);
+  const pos = data.probeYs.map((v) => Math.max(v, 0));
+  const neg = data.probeYs.map((v) => Math.min(v, 0));
+  const areaPos = area<number>()
+    .x((_, i) => x(data.probeXs[i]!))
+    .y0(y(0))
+    .y1((v) => y(v));
+  const areaNeg = area<number>()
+    .x((_, i) => x(data.probeXs[i]!))
+    .y0(y(0))
+    .y1((v) => y(v));
 
-    // --- Top panel: the probe integrand with signed-area fills. ---
-    const x = scaleLinear().domain([0, RL_TWO_PI]).range([0, width]);
-    const yMax = Math.max(1e-9, ...data.probeYs.map((v) => Math.abs(v))) * 1.1;
-    const y = scaleLinear().domain([-yMax, yMax]).range([topH, 0]);
-    const pos = data.probeYs.map((v) => Math.max(v, 0));
-    const neg = data.probeYs.map((v) => Math.min(v, 0));
-    const areaPos = area<number>()
-      .x((_, i) => x(data.probeXs[i]!))
-      .y0(y(0))
-      .y1((v) => y(v));
-    const areaNeg = area<number>()
-      .x((_, i) => x(data.probeXs[i]!))
-      .y0(y(0))
-      .y1((v) => y(v));
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -18)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `${modeName(data.mode, 'ko')}: 탐침 f(x)${trigLabel(data.kind, data.probeN)} — 부호 있는 넓이의 상쇄`,
+          en: `${modeName(data.mode, 'en')}: probe f(x)${trigLabel(data.kind, data.probeN)} — signed areas canceling`,
+        },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -18)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `${modeName(data.mode, 'ko')}: 탐침 f(x)${trigLabel(data.kind, data.probeN)} — 부호 있는 넓이의 상쇄`,
-            en: `${modeName(data.mode, 'en')}: probe f(x)${trigLabel(data.kind, data.probeN)} — signed areas canceling`,
-          },
-          lang,
-        ),
-      );
+  g.append('path').attr('d', areaPos(pos) ?? '').attr('fill', 'var(--accent)').attr('opacity', 0.45);
+  g.append('path').attr('d', areaNeg(neg) ?? '').attr('fill', 'var(--bound)').attr('opacity', 0.45);
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 1.5)
+    .attr('stroke', 'currentColor')
+    .attr(
+      'd',
+      line<number>()
+        .x((_, i) => x(data.probeXs[i]!))
+        .y((v) => y(v))(data.probeYs) ?? '',
+    );
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(0))
+    .attr('y2', y(0))
+    .attr('stroke-width', 1)
+    .attr('stroke', 'currentColor')
+    .attr('opacity', 0.6);
+  g.append('g').attr('transform', `translate(0,${topH})`).call(axisBottom(x).ticks(5));
+  g.append('g').call(axisLeft(y).ticks(4));
 
-    g.append('path').attr('d', areaPos(pos) ?? '').attr('fill', 'var(--accent)').attr('opacity', 0.45);
-    g.append('path').attr('d', areaNeg(neg) ?? '').attr('fill', 'var(--bound)').attr('opacity', 0.45);
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 1.5)
-      .attr('stroke', 'currentColor')
-      .attr(
-        'd',
-        line<number>()
-          .x((_, i) => x(data.probeXs[i]!))
-          .y((v) => y(v))(data.probeYs) ?? '',
-      );
-    g.append('line')
-      .attr('x1', 0)
-      .attr('x2', width)
-      .attr('y1', y(0))
-      .attr('y2', y(0))
-      .attr('stroke-width', 1)
-      .attr('stroke', 'currentColor')
-      .attr('opacity', 0.6);
-    g.append('g').attr('transform', `translate(0,${topH})`).call(axisBottom(x).ticks(5));
-    g.append('g').call(axisLeft(y).ticks(4));
+  // --- Bottom panel: stem plot of |coeff| decaying to 0. ---
+  const gb = g.append('g').attr('transform', `translate(0,${botY})`);
+  const xs = scaleLinear().domain([0, data.nMax + 1]).range([0, width]);
+  const yTop2 = Math.max(data.maxShown * 1.15, data.maxShown > 0 ? 0 : 1);
+  const ys = scaleLinear().domain([0, yTop2]).range([botH, 0]);
 
-    // --- Bottom panel: stem plot of |coeff| decaying to 0. ---
-    const gb = g.append('g').attr('transform', `translate(0,${botY})`);
-    const xs = scaleLinear().domain([0, data.nMax + 1]).range([0, width]);
-    const yTop2 = Math.max(data.maxShown * 1.15, data.maxShown > 0 ? 0 : 1);
-    const ys = scaleLinear().domain([0, yTop2]).range([botH, 0]);
+  for (let n = 1; n <= data.nMax; n++) {
+    const v = data.shown[n - 1]!;
+    gb.append('line')
+      .attr('x1', xs(n))
+      .attr('x2', xs(n))
+      .attr('y1', ys(0))
+      .attr('y2', ys(v))
+      .attr('stroke-width', 2)
+      .attr('stroke', 'var(--accent)')
+      .attr('opacity', 0.8);
+    gb.append('circle')
+      .attr('cx', xs(n))
+      .attr('cy', ys(v))
+      .attr('r', 2.5)
+      .attr('fill', 'var(--accent)');
+  }
+  gb.append('g').attr('transform', `translate(0,${botH})`).call(axisBottom(xs).ticks(Math.min(data.nMax, 10)));
+  gb.append('g').call(axisLeft(ys).ticks(4));
+  gb.append('text')
+    .attr('x', 8)
+    .attr('y', 14)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text(`|${k}_n|, n = 1..${data.nMax}`);
 
-    for (let n = 1; n <= data.nMax; n++) {
-      const v = data.shown[n - 1]!;
-      gb.append('line')
-        .attr('x1', xs(n))
-        .attr('x2', xs(n))
-        .attr('y1', ys(0))
-        .attr('y2', ys(v))
-        .attr('stroke-width', 2)
-        .attr('stroke', 'var(--accent)')
-        .attr('opacity', 0.8);
-      gb.append('circle')
-        .attr('cx', xs(n))
-        .attr('cy', ys(v))
-        .attr('r', 2.5)
-        .attr('fill', 'var(--accent)');
-    }
-    gb.append('g').attr('transform', `translate(0,${botH})`).call(axisBottom(xs).ticks(Math.min(data.nMax, 10)));
-    gb.append('g').call(axisLeft(ys).ticks(4));
-    gb.append('text')
-      .attr('x', 8)
-      .attr('y', 14)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text(`|${k}_n|, n = 1..${data.nMax}`);
-
-    // Readout numbers on the chart.
-    g.append('text')
-      .attr('x', width)
-      .attr('y', 14)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        `n = ${data.probeN} · ∫ ≈ ${fmt(data.probeIntegral, 6)} · max|${k}_n| = ${fmt(data.maxShown, 6)}`,
-      );
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(last.data, lang));
-    setRichText(verdictSlot, verdictText(last.data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Readout numbers on the chart.
+  g.append('text')
+    .attr('x', width)
+    .attr('y', 14)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      `n = ${data.probeN} · ∫ ≈ ${fmt(data.probeIntegral, 6)} · max|${k}_n| = ${fmt(data.maxShown, 6)}`,
+    );
 }
 
-export default defineScene<RiemannLebesgueData>({ model: riemannLebesgueModel, createScene: createRiemannLebesgueScene });
+export default defineSimpleScene<RiemannLebesgueData>({
+  model: riemannLebesgueModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: explainText, spaced: true },
+    { text: verdictText, bold: true, spaced: true },
+  ],
+});

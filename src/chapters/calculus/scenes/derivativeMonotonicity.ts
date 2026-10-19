@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   monotonicityModel,
   signOf,
@@ -94,202 +88,150 @@ function fnLabel(key: string, lang: Lang): string {
   return localize({ ko: 'x³ − 3x', en: 'x³ − 3x' }, lang);
 }
 
-function createMonotonicityScene(): Scene<MonotonicityData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: MonotonicityData; state: ControlState } | undefined;
+const curvePath = line<MonotonicitySample>()
+  .x((d) => d.x)
+  .y((d) => d.y);
 
-  const curvePath = line<MonotonicitySample>()
-    .x((d) => d.x)
-    .y((d) => d.y);
-
-  const drawMain = (data: MonotonicityData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
-
-    const ys = data.fSamples.map((s) => s.y);
-    let yMin = Math.min(...ys);
-    let yMax = Math.max(...ys);
-    const pad = Math.max(0.5, (yMax - yMin) * 0.12);
-    yMin -= pad;
-    yMax += pad;
-
-    const x = scaleLinear().domain([data.a, data.b]).range([0, width]);
-    const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
-    const px = curvePath.x((d) => x(d.x)).y((d) => y(d.y));
-
-    // Linear interpolation on the sampled f curve, for markers and chords.
-    const fAt = (t: number): number => {
-      const s = data.fSamples;
-      const idx = ((t - data.a) / (data.b - data.a)) * (s.length - 1);
-      const i0 = Math.max(0, Math.min(s.length - 2, Math.floor(idx)));
-      const frac = Math.max(0, Math.min(1, idx - i0));
-      const y0v = s[i0]?.y ?? 0;
-      const y1v = s[i0 + 1]?.y ?? 0;
-      return y0v + (y1v - y0v) * frac;
-    };
-
-    // Background sign bands.
-    for (const band of data.bands) {
-      if (band.x1 <= band.x0) continue;
-      g.append('rect')
-        .attr('x', x(band.x0))
-        .attr('width', Math.max(0, x(band.x1) - x(band.x0)))
-        .attr('y', 0)
-        .attr('height', height)
-        .attr('fill', signColor(band.sign))
-        .attr('opacity', 0.07);
-    }
-
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-    g.append('g').call(axisLeft(y).ticks(6));
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -20)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `y = ${fnLabel(data.key, lang)}: 배경은 f′ 부호 (초록 +, 빨강 −)`,
-            en: `y = ${fnLabel(data.key, lang)}: background is the sign of f′ (green +, red −)`,
-          },
-          lang,
-        ),
-      );
-
-    // The curve of f.
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)')
-      .attr('d', px(data.fSamples) ?? '');
-
-    // Critical points where f' = 0.
-    for (const c of data.criticalPoints) {
-      g.append('circle')
-        .attr('cx', x(c))
-        .attr('cy', y(fAt(c)))
-        .attr('r', 5)
-        .style('fill', 'var(--bound)');
-    }
-
-    // Secant chord over [x0 - h, x0 + h] (dashed, secant sign color).
-    const xl = Math.max(data.a, data.x0 - data.secantH);
-    const xr = Math.min(data.b, data.x0 + data.secantH);
-    if (xr > xl) {
-      g.append('line')
-        .attr('x1', x(xl))
-        .attr('x2', x(xr))
-        .attr('y1', y(fAt(xl)))
-        .attr('y2', y(fAt(xr)))
-        .attr('stroke-dasharray', '5 4')
-        .attr('stroke-width', 2)
-        .style('stroke', signColor(signOf(data.secantSlope)));
-    }
-
-    // Tangent segment at the dragged point, colored by the derivative sign.
-    const tHalf = (data.b - data.a) * 0.08;
-    const slope = data.fp0;
-    const tx0 = Math.max(data.a, data.x0 - tHalf);
-    const tx1 = Math.min(data.b, data.x0 + tHalf);
-    g.append('line')
-      .attr('x1', x(tx0))
-      .attr('x2', x(tx1))
-      .attr('y1', y(fAt(data.x0) + slope * (tx0 - data.x0)))
-      .attr('y2', y(fAt(data.x0) + slope * (tx1 - data.x0)))
-      .attr('stroke-width', 3.5)
-      .style('stroke', signColor(data.fpSign));
-    g.append('circle')
-      .attr('cx', x(data.x0))
-      .attr('cy', y(fAt(data.x0)))
-      .attr('r', 5)
-      .style('fill', signColor(data.fpSign))
-      .style('stroke', '#fff')
-      .attr('stroke-width', 1.5);
-
-    // Legend.
-    const legend = g.append('g').attr('transform', `translate(${width - 8}, 12)`);
-    const items: Array<[string, string]> = [
-      [localize({ ko: "f′ > 0 (증가)", en: "f′ > 0 (increasing)" }, lang), POS_COLOR],
-      [localize({ ko: "f′ < 0 (감소)", en: "f′ < 0 (decreasing)" }, lang), NEG_COLOR],
-    ];
-    items.forEach(([labelText, color], i) => {
-      legend
-        .append('rect')
-        .attr('x', -150)
-        .attr('y', i * 20 - 11)
-        .attr('width', 12)
-        .attr('height', 12)
-        .attr('fill', color)
-        .attr('opacity', 0.5);
-      legend
-        .append('text')
-        .attr('x', -132)
-        .attr('y', i * 20)
-        .attr('font-size', 12)
-        .attr('fill', 'currentColor')
-        .text(labelText);
-    });
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+/** Linear interpolation on the sampled f curve, for markers and chords. */
+function fAt(data: MonotonicityData, t: number): number {
+  const s = data.fSamples;
+  const idx = ((t - data.a) / (data.b - data.a)) * (s.length - 1);
+  const i0 = Math.max(0, Math.min(s.length - 2, Math.floor(idx)));
+  const frac = Math.max(0, Math.min(1, idx - i0));
+  const y0v = s[i0]?.y ?? 0;
+  const y1v = s[i0 + 1]?.y ?? 0;
+  return y0v + (y1v - y0v) * frac;
 }
 
-export default defineScene<MonotonicityData>({ model: monotonicityModel, createScene: createMonotonicityScene });
+function drawMain(chart: Chart, data: MonotonicityData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
+
+  const ys = data.fSamples.map((s) => s.y);
+  let yMin = Math.min(...ys);
+  let yMax = Math.max(...ys);
+  const pad = Math.max(0.5, (yMax - yMin) * 0.12);
+  yMin -= pad;
+  yMax += pad;
+
+  const x = scaleLinear().domain([data.a, data.b]).range([0, width]);
+  const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
+  const px = curvePath.x((d) => x(d.x)).y((d) => y(d.y));
+
+  // Background sign bands.
+  for (const band of data.bands) {
+    if (band.x1 <= band.x0) continue;
+    g.append('rect')
+      .attr('x', x(band.x0))
+      .attr('width', Math.max(0, x(band.x1) - x(band.x0)))
+      .attr('y', 0)
+      .attr('height', height)
+      .attr('fill', signColor(band.sign))
+      .attr('opacity', 0.07);
+  }
+
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+  g.append('g').call(axisLeft(y).ticks(6));
+
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -20)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `y = ${fnLabel(data.key, lang)}: 배경은 f′ 부호 (초록 +, 빨강 −)`,
+          en: `y = ${fnLabel(data.key, lang)}: background is the sign of f′ (green +, red −)`,
+        },
+        lang,
+      ),
+    );
+
+  // The curve of f.
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)')
+    .attr('d', px(data.fSamples) ?? '');
+
+  // Critical points where f' = 0.
+  for (const c of data.criticalPoints) {
+    g.append('circle')
+      .attr('cx', x(c))
+      .attr('cy', y(fAt(data, c)))
+      .attr('r', 5)
+      .style('fill', 'var(--bound)');
+  }
+
+  // Secant chord over [x0 - h, x0 + h] (dashed, secant sign color).
+  const xl = Math.max(data.a, data.x0 - data.secantH);
+  const xr = Math.min(data.b, data.x0 + data.secantH);
+  if (xr > xl) {
+    g.append('line')
+      .attr('x1', x(xl))
+      .attr('x2', x(xr))
+      .attr('y1', y(fAt(data, xl)))
+      .attr('y2', y(fAt(data, xr)))
+      .attr('stroke-dasharray', '5 4')
+      .attr('stroke-width', 2)
+      .style('stroke', signColor(signOf(data.secantSlope)));
+  }
+
+  // Tangent segment at the dragged point, colored by the derivative sign.
+  const tHalf = (data.b - data.a) * 0.08;
+  const slope = data.fp0;
+  const tx0 = Math.max(data.a, data.x0 - tHalf);
+  const tx1 = Math.min(data.b, data.x0 + tHalf);
+  g.append('line')
+    .attr('x1', x(tx0))
+    .attr('x2', x(tx1))
+    .attr('y1', y(fAt(data, data.x0) + slope * (tx0 - data.x0)))
+    .attr('y2', y(fAt(data, data.x0) + slope * (tx1 - data.x0)))
+    .attr('stroke-width', 3.5)
+    .style('stroke', signColor(data.fpSign));
+  g.append('circle')
+    .attr('cx', x(data.x0))
+    .attr('cy', y(fAt(data, data.x0)))
+    .attr('r', 5)
+    .style('fill', signColor(data.fpSign))
+    .style('stroke', '#fff')
+    .attr('stroke-width', 1.5);
+
+  // Legend.
+  const legend = g.append('g').attr('transform', `translate(${width - 8}, 12)`);
+  const items: Array<[string, string]> = [
+    [localize({ ko: "f′ > 0 (증가)", en: "f′ > 0 (increasing)" }, lang), POS_COLOR],
+    [localize({ ko: "f′ < 0 (감소)", en: "f′ < 0 (decreasing)" }, lang), NEG_COLOR],
+  ];
+  items.forEach(([labelText, color], i) => {
+    legend
+      .append('rect')
+      .attr('x', -150)
+      .attr('y', i * 20 - 11)
+      .attr('width', 12)
+      .attr('height', 12)
+      .attr('fill', color)
+      .attr('opacity', 0.5);
+    legend
+      .append('text')
+      .attr('x', -132)
+      .attr('y', i * 20)
+      .attr('font-size', 12)
+      .attr('fill', 'currentColor')
+      .text(labelText);
+  });
+}
+
+export default defineSimpleScene<MonotonicityData>({
+  model: monotonicityModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => explainText(lang), spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+  ],
+});

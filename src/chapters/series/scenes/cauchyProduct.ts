@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   alternatingAbsBound,
   cauchyProductModel,
@@ -86,246 +80,195 @@ function verdictText(data: CauchyProductData, lang: Lang): string {
   );
 }
 
-function createCauchyProductScene(): Scene<CauchyProductData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: CauchyProductData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: CauchyProductData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n, partials, prodPartials, limit, lattice, terms } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { n, partials, prodPartials, limit, lattice, terms } = data;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const topH = Math.max(150, Math.floor((height - 40) * 0.6));
+  const gapY = 40;
+  const botH = Math.max(70, height - topH - gapY);
+  const topG = g.append('g');
+  const botG = g.append('g').attr('transform', `translate(0,${topH + gapY})`);
 
-    const topH = Math.max(150, Math.floor((height - 40) * 0.6));
-    const gapY = 40;
-    const botH = Math.max(70, height - topH - gapY);
-    const topG = g.append('g');
-    const botG = g.append('g').attr('transform', `translate(0,${topH + gapY})`);
+  const xTop = scaleLinear().domain([0, Math.max(1, n)]).range([0, width]);
 
-    const xTop = scaleLinear().domain([0, Math.max(1, n)]).range([0, width]);
+  const topTitle = localize(
+    {
+      ko: '코시 곱 부분합 C_N vs A_N·B_N',
+      en: 'Cauchy-product partial sums C_N vs A_N·B_N',
+    },
+    lang,
+  );
+  const botTitle = localize(
+    {
+      ko: 'a_k·b_j 격자 — c_n은 k+j=n 대각선의 합 (강조된 대각선)',
+      en: 'The a_k·b_j lattice — c_n is the sum along the k+j=n diagonal (highlighted)',
+    },
+    lang,
+  );
 
-    const topTitle = localize(
-      {
-        ko: '코시 곱 부분합 C_N vs A_N·B_N',
-        en: 'Cauchy-product partial sums C_N vs A_N·B_N',
-      },
-      lang,
-    );
-    const botTitle = localize(
-      {
-        ko: 'a_k·b_j 격자 — c_n은 k+j=n 대각선의 합 (강조된 대각선)',
-        en: 'The a_k·b_j lattice — c_n is the sum along the k+j=n diagonal (highlighted)',
-      },
-      lang,
-    );
+  topG
+    .append('text')
+    .attr('x', 0)
+    .attr('y', -50)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(topTitle);
+  botG
+    .append('text')
+    .attr('x', 0)
+    .attr('y', -26)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(botTitle);
 
+  // ---- Top panel: C_N and A_N * B_N against N. ----
+  let yLo = Infinity;
+  let yHi = -Infinity;
+  for (let i = 0; i <= n; i++) {
+    const c = partials[i] ?? 0;
+    const p = prodPartials[i] ?? 0;
+    yLo = Math.min(yLo, c, p);
+    yHi = Math.max(yHi, c, p);
+  }
+  if (limit !== null) {
+    yLo = Math.min(yLo, limit);
+    yHi = Math.max(yHi, limit);
+  }
+  const yPad = (yHi - yLo) * 0.1 || 1;
+  const yTop = scaleLinear().domain([yLo - yPad, yHi + yPad]).range([topH, 0]);
+
+  topG.append('g').call(axisLeft(yTop).ticks(5));
+  topG
+    .append('g')
+    .attr('transform', `translate(0,${topH})`)
+    .call(axisBottom(xTop).ticks(Math.min(10, n + 1)));
+
+  if (limit !== null) {
+    topG
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', width)
+      .attr('y1', yTop(limit))
+      .attr('y2', yTop(limit))
+      .attr('stroke', 'var(--muted)')
+      .attr('stroke-width', 1.5)
+      .attr('stroke-dasharray', '6 4')
+      .attr('opacity', 0.8);
     topG
       .append('text')
-      .attr('x', 0)
-      .attr('y', -50)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(topTitle);
-    botG
-      .append('text')
-      .attr('x', 0)
-      .attr('y', -26)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(botTitle);
-
-    // ---- Top panel: C_N and A_N * B_N against N. ----
-    let yLo = Infinity;
-    let yHi = -Infinity;
-    for (let i = 0; i <= n; i++) {
-      const c = partials[i] ?? 0;
-      const p = prodPartials[i] ?? 0;
-      yLo = Math.min(yLo, c, p);
-      yHi = Math.max(yHi, c, p);
-    }
-    if (limit !== null) {
-      yLo = Math.min(yLo, limit);
-      yHi = Math.max(yHi, limit);
-    }
-    const yPad = (yHi - yLo) * 0.1 || 1;
-    const yTop = scaleLinear().domain([yLo - yPad, yHi + yPad]).range([topH, 0]);
-
-    topG.append('g').call(axisLeft(yTop).ticks(5));
-    topG
-      .append('g')
-      .attr('transform', `translate(0,${topH})`)
-      .call(axisBottom(xTop).ticks(Math.min(10, n + 1)));
-
-    if (limit !== null) {
-      topG
-        .append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
-        .attr('y1', yTop(limit))
-        .attr('y2', yTop(limit))
-        .attr('stroke', 'var(--muted)')
-        .attr('stroke-width', 1.5)
-        .attr('stroke-dasharray', '6 4')
-        .attr('opacity', 0.8);
-      topG
-        .append('text')
-        .attr('x', width - 4)
-        .attr('y', yTop(limit) - 6)
-        .attr('font-size', 12)
-        .attr('text-anchor', 'end')
-        .attr('fill', 'var(--muted)')
-        .text(`e² ≈ ${fmt(limit, 6)}`);
-    }
-
-    const seqLine = (vals: readonly number[]) =>
-      line<number>()
-        .x((_, i) => xTop(i))
-        .y((_, i) => yTop(vals[i] ?? 0));
-
-    topG
-      .append('path')
-      .datum(prodPartials)
-      .attr('d', seqLine(prodPartials))
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--bound)');
-    topG
-      .append('path')
-      .datum(partials)
-      .attr('d', seqLine(partials))
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)');
-
-    // End dots at N = n.
-    topG
-      .append('circle')
-      .attr('cx', xTop(n))
-      .attr('cy', yTop(partials[n] ?? 0))
-      .attr('r', 4)
-      .attr('fill', 'var(--accent)')
-      .append('title')
-      .text(`C_${n} = ${fmt(partials[n] ?? 0, 8)}`);
-    topG
-      .append('circle')
-      .attr('cx', xTop(n))
-      .attr('cy', yTop(prodPartials[n] ?? 0))
-      .attr('r', 4)
-      .attr('fill', 'var(--bound)')
-      .append('title')
-      .text(`A_${n}·B_${n} = ${fmt(prodPartials[n] ?? 0, 8)}`);
-
-    topG
-      .append('text')
-      .attr('x', 8)
-      .attr('y', topH + 34)
+      .attr('x', width - 4)
+      .attr('y', yTop(limit) - 6)
       .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: '■ C_N (코시 곱 부분합)', en: '■ C_N (Cauchy-product partial sums)' }, lang));
-    topG
-      .append('text')
-      .attr('x', width / 2)
-      .attr('y', topH + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--bound)')
-      .text(localize({ ko: '■ A_N·B_N (부분합의 곱)', en: '■ A_N·B_N (product of partial sums)' }, lang));
-
-    // ---- Bottom strip: the a_k * b_j lattice; c_d = sum of the k+j=d diagonal. ----
-    const cell = Math.min(width / (n + 1), botH / (n + 1));
-    const ox = (width - cell * (n + 1)) / 2;
-    const oy = (botH - cell * (n + 1)) / 2;
-    let maxAbs = 0;
-    for (const c of lattice) maxAbs = Math.max(maxAbs, Math.abs(c.value));
-    const scale = maxAbs > 0 ? maxAbs : 1;
-
-    for (const c of lattice) {
-      const fill = c.value >= 0 ? 'var(--accent)' : 'var(--bound)';
-      botG
-        .append('rect')
-        .attr('x', ox + c.k * cell)
-        .attr('y', oy + (n - c.j) * cell)
-        .attr('width', cell - 0.75)
-        .attr('height', cell - 0.75)
-        .attr('fill', fill)
-        .attr('opacity', 0.12 + 0.78 * (Math.abs(c.value) / scale))
-        .attr('stroke', c.d === n ? 'currentColor' : 'none')
-        .attr('stroke-width', c.d === n ? 1.25 : 0)
-        .append('title')
-        .text(
-          `a_${c.k}·b_${c.j} = ${fmt(c.value, 6)} (k+j=${c.d}, c_${c.d} = ${fmt(terms[c.d] ?? 0, 6)})`,
-        );
-    }
-    // k and j axis labels.
-    botG
-      .append('text')
-      .attr('x', ox + ((n + 1) * cell) / 2)
-      .attr('y', botH + 26)
-      .attr('font-size', 12)
-      .attr('text-anchor', 'middle')
+      .attr('text-anchor', 'end')
       .attr('fill', 'var(--muted)')
-      .text('k →');
+      .text(`e² ≈ ${fmt(limit, 6)}`);
+  }
+
+  const seqLine = (vals: readonly number[]) =>
+    line<number>()
+      .x((_, i) => xTop(i))
+      .y((_, i) => yTop(vals[i] ?? 0));
+
+  topG
+    .append('path')
+    .datum(prodPartials)
+    .attr('d', seqLine(prodPartials))
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--bound)');
+  topG
+    .append('path')
+    .datum(partials)
+    .attr('d', seqLine(partials))
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)');
+
+  // End dots at N = n.
+  topG
+    .append('circle')
+    .attr('cx', xTop(n))
+    .attr('cy', yTop(partials[n] ?? 0))
+    .attr('r', 4)
+    .attr('fill', 'var(--accent)')
+    .append('title')
+    .text(`C_${n} = ${fmt(partials[n] ?? 0, 8)}`);
+  topG
+    .append('circle')
+    .attr('cx', xTop(n))
+    .attr('cy', yTop(prodPartials[n] ?? 0))
+    .attr('r', 4)
+    .attr('fill', 'var(--bound)')
+    .append('title')
+    .text(`A_${n}·B_${n} = ${fmt(prodPartials[n] ?? 0, 8)}`);
+
+  topG
+    .append('text')
+    .attr('x', 8)
+    .attr('y', topH + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: '■ C_N (코시 곱 부분합)', en: '■ C_N (Cauchy-product partial sums)' }, lang));
+  topG
+    .append('text')
+    .attr('x', width / 2)
+    .attr('y', topH + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--bound)')
+    .text(localize({ ko: '■ A_N·B_N (부분합의 곱)', en: '■ A_N·B_N (product of partial sums)' }, lang));
+
+  // ---- Bottom strip: the a_k * b_j lattice; c_d = sum of the k+j=d diagonal. ----
+  const cell = Math.min(width / (n + 1), botH / (n + 1));
+  const ox = (width - cell * (n + 1)) / 2;
+  const oy = (botH - cell * (n + 1)) / 2;
+  let maxAbs = 0;
+  for (const c of lattice) maxAbs = Math.max(maxAbs, Math.abs(c.value));
+  const scale = maxAbs > 0 ? maxAbs : 1;
+
+  for (const c of lattice) {
+    const fill = c.value >= 0 ? 'var(--accent)' : 'var(--bound)';
     botG
-      .append('text')
-      .attr('x', ox - 14)
-      .attr('y', oy + ((n + 1) * cell) / 2)
-      .attr('font-size', 12)
-      .attr('text-anchor', 'middle')
-      .attr('fill', 'var(--muted)')
-      .text('↑ j');
-
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+      .append('rect')
+      .attr('x', ox + c.k * cell)
+      .attr('y', oy + (n - c.j) * cell)
+      .attr('width', cell - 0.75)
+      .attr('height', cell - 0.75)
+      .attr('fill', fill)
+      .attr('opacity', 0.12 + 0.78 * (Math.abs(c.value) / scale))
+      .attr('stroke', c.d === n ? 'currentColor' : 'none')
+      .attr('stroke-width', c.d === n ? 1.25 : 0)
+      .append('title')
+      .text(
+        `a_${c.k}·b_${c.j} = ${fmt(c.value, 6)} (k+j=${c.d}, c_${c.d} = ${fmt(terms[c.d] ?? 0, 6)})`,
+      );
+  }
+  // k and j axis labels.
+  botG
+    .append('text')
+    .attr('x', ox + ((n + 1) * cell) / 2)
+    .attr('y', botH + 26)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)')
+    .text('k →');
+  botG
+    .append('text')
+    .attr('x', ox - 14)
+    .attr('y', oy + ((n + 1) * cell) / 2)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'var(--muted)')
+    .text('↑ j');
 }
 
-export default defineScene<CauchyProductData>({
+export default defineSimpleScene<CauchyProductData>({
   model: cauchyProductModel,
-  createScene: createCauchyProductScene,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: factsText, bold: true }, { text: verdictText, bold: true }],
 });

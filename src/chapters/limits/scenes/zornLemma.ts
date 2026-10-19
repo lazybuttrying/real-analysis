@@ -1,13 +1,7 @@
 import { scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { zornLemmaModel, type ZornLemmaData } from '../models/zornLemma';
 
 /**
@@ -70,18 +64,8 @@ function captionText(lang: Lang): string {
   );
 }
 
-function createZornLemmaScene(): Scene<ZornLemmaData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let captionSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: ZornLemmaData; state: ControlState } | undefined;
-
-  const drawMain = (data: ZornLemmaData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
+function drawMain(chart: Chart, data: ZornLemmaData, lang: Lang): void {
+    const { g, width, height } = chart;
     g.selectAll('*').remove();
 
     const x = scaleLinear().domain([-1.7, 1.7]).range([0, width]);
@@ -182,51 +166,15 @@ function createZornLemmaScene(): Scene<ZornLemmaData> {
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
       .text(localize({ ko: '★ 극대원소', en: '★ maximal element' }, lang));
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !captionSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(captionSlot, captionText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const caption = document.createElement('div');
-      caption.style.marginTop = '4px';
-
-      shell.strips.append(readout, caption);
-      readoutSlot = createRichSlot(readout);
-      captionSlot = createRichSlot(caption);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      captionSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<ZornLemmaData>({ model: zornLemmaModel, createScene: createZornLemmaScene });
+export default defineSimpleScene<ZornLemmaData>({
+  model: zornLemmaModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => captionText(lang), spaced: true }
+  ],
+});

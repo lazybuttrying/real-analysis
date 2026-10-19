@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear, scaleLog } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { lhopitalModel, type LHopitalData } from '../models/lhopital';
 
 /**
@@ -63,276 +57,231 @@ function verdictText(data: LHopitalData, lang: Lang): string {
   );
 }
 
-function createLHopitalScene(): Scene<LHopitalData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: LHopitalData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: LHopitalData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { xs, fVals, gVals, ratioVals, derivRatioVals, limit } = data;
+  const n = xs.length;
+  const xLo = xs[0] ?? 1;
+  const xHi = xs[n - 1] ?? 1;
 
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { xs, fVals, gVals, ratioVals, derivRatioVals, limit } = data;
-    const n = xs.length;
-    const xLo = xs[0] ?? 1;
-    const xHi = xs[n - 1] ?? 1;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const topH = Math.max(130, Math.floor((height - 36) * 0.48));
+  const gapY = 36;
+  const botH = Math.max(90, height - topH - gapY);
+  const topG = g.append('g');
+  const botG = g.append('g').attr('transform', `translate(0,${topH + gapY})`);
 
-    const topH = Math.max(130, Math.floor((height - 36) * 0.48));
-    const gapY = 36;
-    const botH = Math.max(90, height - topH - gapY);
-    const topG = g.append('g');
-    const botG = g.append('g').attr('transform', `translate(0,${topH + gapY})`);
+  const x = scaleLog().domain([xLo, xHi]).range([0, width]);
 
-    const x = scaleLog().domain([xLo, xHi]).range([0, width]);
+  const topTitle =
+    data.pair === 'sin'
+      ? localize(
+          {
+            ko: 'f(x) = sin x, g(x) = x — x → 0⁺에서 둘 다 0으로 (0/0 꼴)',
+            en: 'f(x) = sin x, g(x) = x — both → 0 as x → 0⁺ (a 0/0 form)',
+          },
+          lang,
+        )
+      : localize(
+          {
+            ko: 'f(x) = ln x, g(x) = x — x → ∞에서 둘 다 ∞로 (∞/∞ 꼴)',
+            en: 'f(x) = ln x, g(x) = x — both → ∞ as x → ∞ (an ∞/∞ form)',
+          },
+          lang,
+        );
+  const botTitle =
+    data.pair === 'sin'
+      ? localize(
+          {
+            ko: 'f(x)/g(x) (진한 선)가 f′(x)/g′(x) (점선)를 따라 1로',
+            en: 'f(x)/g(x) (bold) tracks f′(x)/g′(x) (dashed) toward 1',
+          },
+          lang,
+        )
+      : localize(
+          {
+            ko: 'f(x)/g(x) (진한 선)가 f′(x)/g′(x) (점선)를 따라 0으로',
+            en: 'f(x)/g(x) (bold) tracks f′(x)/g′(x) (dashed) toward 0',
+          },
+          lang,
+        );
 
-    const topTitle =
-      data.pair === 'sin'
-        ? localize(
-            {
-              ko: 'f(x) = sin x, g(x) = x — x → 0⁺에서 둘 다 0으로 (0/0 꼴)',
-              en: 'f(x) = sin x, g(x) = x — both → 0 as x → 0⁺ (a 0/0 form)',
-            },
-            lang,
-          )
-        : localize(
-            {
-              ko: 'f(x) = ln x, g(x) = x — x → ∞에서 둘 다 ∞로 (∞/∞ 꼴)',
-              en: 'f(x) = ln x, g(x) = x — both → ∞ as x → ∞ (an ∞/∞ form)',
-            },
-            lang,
-          );
-    const botTitle =
-      data.pair === 'sin'
-        ? localize(
-            {
-              ko: 'f(x)/g(x) (진한 선)가 f′(x)/g′(x) (점선)를 따라 1로',
-              en: 'f(x)/g(x) (bold) tracks f′(x)/g′(x) (dashed) toward 1',
-            },
-            lang,
-          )
-        : localize(
-            {
-              ko: 'f(x)/g(x) (진한 선)가 f′(x)/g′(x) (점선)를 따라 0으로',
-              en: 'f(x)/g(x) (bold) tracks f′(x)/g′(x) (dashed) toward 0',
-            },
-            lang,
-          );
+  topG
+    .append('text')
+    .attr('x', 0)
+    .attr('y', -46)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(topTitle);
+  botG
+    .append('text')
+    .attr('x', 0)
+    .attr('y', -22)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(botTitle);
 
-    topG
-      .append('text')
-      .attr('x', 0)
-      .attr('y', -46)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(topTitle);
-    botG
-      .append('text')
-      .attr('x', 0)
-      .attr('y', -22)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(botTitle);
+  const curveLine = (vals: number[], y: (v: number) => number) =>
+    line<number>()
+      .x((_, i) => x(xs[i] ?? xLo))
+      .y((_, i) => y(vals[i] ?? 0));
 
-    const curveLine = (vals: number[], y: (v: number) => number) =>
-      line<number>()
-        .x((_, i) => x(xs[i] ?? xLo))
-        .y((_, i) => y(vals[i] ?? 0));
+  // Top panel: f and g.
+  let yMin = Infinity;
+  let yMax = -Infinity;
+  for (let i = 0; i < n; i++) {
+    yMin = Math.min(yMin, fVals[i] ?? Infinity, gVals[i] ?? Infinity);
+    yMax = Math.max(yMax, fVals[i] ?? -Infinity, gVals[i] ?? -Infinity);
+  }
+  const topPad = (yMax - yMin) * 0.08 || 1;
+  const yTop = scaleLinear().domain([yMin - topPad, yMax + topPad]).range([topH, 0]);
 
-    // Top panel: f and g.
-    let yMin = Infinity;
-    let yMax = -Infinity;
-    for (let i = 0; i < n; i++) {
-      yMin = Math.min(yMin, fVals[i] ?? Infinity, gVals[i] ?? Infinity);
-      yMax = Math.max(yMax, fVals[i] ?? -Infinity, gVals[i] ?? -Infinity);
-    }
-    const topPad = (yMax - yMin) * 0.08 || 1;
-    const yTop = scaleLinear().domain([yMin - topPad, yMax + topPad]).range([topH, 0]);
+  topG.append('g').call(axisLeft(yTop).ticks(5));
+  topG
+    .append('path')
+    .datum(xs)
+    .attr('d', curveLine(fVals, yTop))
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)');
+  topG
+    .append('path')
+    .datum(xs)
+    .attr('d', curveLine(gVals, yTop))
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--bound)');
 
-    topG.append('g').call(axisLeft(yTop).ticks(5));
-    topG
-      .append('path')
-      .datum(xs)
-      .attr('d', curveLine(fVals, yTop))
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)');
-    topG
-      .append('path')
-      .datum(xs)
-      .attr('d', curveLine(gVals, yTop))
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--bound)');
+  // Bottom panel: the two ratios and the limit line.
+  let rMin = limit;
+  let rMax = limit;
+  for (let i = 0; i < n; i++) {
+    rMin = Math.min(rMin, ratioVals[i] ?? Infinity, derivRatioVals[i] ?? Infinity);
+    rMax = Math.max(rMax, ratioVals[i] ?? -Infinity, derivRatioVals[i] ?? -Infinity);
+  }
+  const rPad = (rMax - rMin) * 0.1 || 0.05;
+  const yBot = scaleLinear().domain([rMin - rPad, rMax + rPad]).range([botH, 0]);
 
-    // Bottom panel: the two ratios and the limit line.
-    let rMin = limit;
-    let rMax = limit;
-    for (let i = 0; i < n; i++) {
-      rMin = Math.min(rMin, ratioVals[i] ?? Infinity, derivRatioVals[i] ?? Infinity);
-      rMax = Math.max(rMax, ratioVals[i] ?? -Infinity, derivRatioVals[i] ?? -Infinity);
-    }
-    const rPad = (rMax - rMin) * 0.1 || 0.05;
-    const yBot = scaleLinear().domain([rMin - rPad, rMax + rPad]).range([botH, 0]);
+  botG
+    .append('g')
+    .attr('transform', `translate(0,${botH})`)
+    .call(axisBottom(x).ticks(5));
+  botG.append('g').call(axisLeft(yBot).ticks(5));
 
-    botG
-      .append('g')
-      .attr('transform', `translate(0,${botH})`)
-      .call(axisBottom(x).ticks(5));
-    botG.append('g').call(axisLeft(yBot).ticks(5));
+  botG
+    .append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', yBot(limit))
+    .attr('y2', yBot(limit))
+    .attr('stroke', 'currentColor')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', '6 4')
+    .attr('opacity', 0.6);
+  botG
+    .append('text')
+    .attr('x', width - 4)
+    .attr('y', yBot(limit) - 6)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'end')
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.75)
+    .text(`→ ${limit}`);
 
-    botG
+  botG
+    .append('path')
+    .datum(xs)
+    .attr('d', curveLine(derivRatioVals, yBot))
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '6 4')
+    .style('stroke', 'var(--muted)');
+  botG
+    .append('path')
+    .datum(xs)
+    .attr('d', curveLine(ratioVals, yBot))
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)');
+
+  // Slider marker across both panels.
+  const mx = x(data.x);
+  for (const [panel, ph] of [
+    [topG, topH],
+    [botG, botH],
+  ] as const) {
+    panel
       .append('line')
-      .attr('x1', 0)
-      .attr('x2', width)
-      .attr('y1', yBot(limit))
-      .attr('y2', yBot(limit))
+      .attr('x1', mx)
+      .attr('x2', mx)
+      .attr('y1', 0)
+      .attr('y2', ph)
       .attr('stroke', 'currentColor')
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', '6 4')
-      .attr('opacity', 0.6);
-    botG
-      .append('text')
-      .attr('x', width - 4)
-      .attr('y', yBot(limit) - 6)
-      .attr('font-size', 12)
-      .attr('text-anchor', 'end')
-      .attr('fill', 'currentColor')
-      .attr('opacity', 0.75)
-      .text(`→ ${limit}`);
+      .attr('stroke-width', 1)
+      .attr('stroke-dasharray', '3 3')
+      .attr('opacity', 0.45);
+  }
+  topG
+    .append('circle')
+    .attr('cx', mx)
+    .attr('cy', yTop(data.f))
+    .attr('r', 4.5)
+    .attr('fill', 'var(--accent)')
+    .append('title')
+    .text(`f(x) = ${fmt(data.f, 6)}`);
+  topG
+    .append('circle')
+    .attr('cx', mx)
+    .attr('cy', yTop(data.g))
+    .attr('r', 4.5)
+    .attr('fill', 'var(--bound)')
+    .append('title')
+    .text(`g(x) = ${fmt(data.g, 6)}`);
+  botG
+    .append('circle')
+    .attr('cx', mx)
+    .attr('cy', yBot(data.ratio))
+    .attr('r', 4.5)
+    .attr('fill', 'var(--accent)')
+    .append('title')
+    .text(`f(x)/g(x) = ${fmt(data.ratio, 6)}`);
+  botG
+    .append('circle')
+    .attr('cx', mx)
+    .attr('cy', yBot(data.derivRatio))
+    .attr('r', 4.5)
+    .attr('fill', 'none')
+    .attr('stroke', 'var(--muted)')
+    .attr('stroke-width', 2)
+    .append('title')
+    .text(`f'(x)/g'(x) = ${fmt(data.derivRatio, 6)}`);
 
-    botG
-      .append('path')
-      .datum(xs)
-      .attr('d', curveLine(derivRatioVals, yBot))
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '6 4')
-      .style('stroke', 'var(--muted)');
-    botG
-      .append('path')
-      .datum(xs)
-      .attr('d', curveLine(ratioVals, yBot))
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)');
-
-    // Slider marker across both panels.
-    const mx = x(data.x);
-    for (const [panel, ph] of [
-      [topG, topH],
-      [botG, botH],
-    ] as const) {
-      panel
-        .append('line')
-        .attr('x1', mx)
-        .attr('x2', mx)
-        .attr('y1', 0)
-        .attr('y2', ph)
-        .attr('stroke', 'currentColor')
-        .attr('stroke-width', 1)
-        .attr('stroke-dasharray', '3 3')
-        .attr('opacity', 0.45);
-    }
-    topG
-      .append('circle')
-      .attr('cx', mx)
-      .attr('cy', yTop(data.f))
-      .attr('r', 4.5)
-      .attr('fill', 'var(--accent)')
-      .append('title')
-      .text(`f(x) = ${fmt(data.f, 6)}`);
-    topG
-      .append('circle')
-      .attr('cx', mx)
-      .attr('cy', yTop(data.g))
-      .attr('r', 4.5)
-      .attr('fill', 'var(--bound)')
-      .append('title')
-      .text(`g(x) = ${fmt(data.g, 6)}`);
-    botG
-      .append('circle')
-      .attr('cx', mx)
-      .attr('cy', yBot(data.ratio))
-      .attr('r', 4.5)
-      .attr('fill', 'var(--accent)')
-      .append('title')
-      .text(`f(x)/g(x) = ${fmt(data.ratio, 6)}`);
-    botG
-      .append('circle')
-      .attr('cx', mx)
-      .attr('cy', yBot(data.derivRatio))
-      .attr('r', 4.5)
-      .attr('fill', 'none')
-      .attr('stroke', 'var(--muted)')
-      .attr('stroke-width', 2)
-      .append('title')
-      .text(`f'(x)/g'(x) = ${fmt(data.derivRatio, 6)}`);
-
-    // Legend.
-    botG
-      .append('text')
-      .attr('x', 8)
-      .attr('y', botH + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: '■ f(x)/g(x)', en: '■ f(x)/g(x)' }, lang));
-    botG
-      .append('text')
-      .attr('x', width / 2)
-      .attr('y', botH + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--muted)')
-      .text(localize({ ko: '┄ f′(x)/g′(x) 도함수 비율', en: "┄ f′(x)/g′(x) derivative ratio" }, lang));
-
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Legend.
+  botG
+    .append('text')
+    .attr('x', 8)
+    .attr('y', botH + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: '■ f(x)/g(x)', en: '■ f(x)/g(x)' }, lang));
+  botG
+    .append('text')
+    .attr('x', width / 2)
+    .attr('y', botH + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--muted)')
+    .text(localize({ ko: '┄ f′(x)/g′(x) 도함수 비율', en: "┄ f′(x)/g′(x) derivative ratio" }, lang));
 }
 
-export default defineScene<LHopitalData>({ model: lhopitalModel, createScene: createLHopitalScene });
+export default defineSimpleScene<LHopitalData>({
+  model: lhopitalModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: verdictText, bold: true },
+  ],
+});

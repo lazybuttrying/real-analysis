@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   XRANGE,
   continuityEquivalencesModel,
@@ -150,18 +144,7 @@ function verdictText(data: ContinuityEquivalencesData, lang: Lang): string {
   );
 }
 
-function createContinuityEquivalencesScene(): Scene<ContinuityEquivalencesData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: ContinuityEquivalencesData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: ContinuityEquivalencesData, lang: Lang): void {
     const { g, width, height } = chart;
     const { fn, view, eps, x0, fx0, maxDelta, deltaWorks, terms, vLo, vHi, preimageIntervals, yMax } = data;
     g.selectAll('*').remove();
@@ -315,50 +298,15 @@ function createContinuityEquivalencesScene(): Scene<ContinuityEquivalencesData> 
         g.append('circle').attr('cx', cx).attr('cy', y(t.fxn)).attr('r', 3).style('fill', 'var(--accent)');
       }
     }
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      wrap = shell.chartWrap;
-      chart = createChart(wrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, verdict);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (chart && wrap) chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<ContinuityEquivalencesData>({
+export default defineSimpleScene<ContinuityEquivalencesData>({
   model: continuityEquivalencesModel,
-  createScene: createContinuityEquivalencesScene,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: verdictText, bold: true, spaced: true }
+  ],
 });

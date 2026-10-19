@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { riemannStieltjesModel, type RiemannStieltjesData } from '../models/riemannStieltjes';
 
 /**
@@ -83,183 +77,131 @@ function verdictText(data: RiemannStieltjesData, lang: Lang): string {
   );
 }
 
-function createRiemannStieltjesScene(): Scene<RiemannStieltjesData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: RiemannStieltjesData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: RiemannStieltjesData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: RiemannStieltjesData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  const gap = 14;
+  const topH = Math.max(0, (height - gap) * 0.55);
+  const botH = Math.max(0, height - gap - topH);
+  const botY = topH + gap;
 
-    const gap = 14;
-    const topH = Math.max(0, (height - gap) * 0.55);
-    const botH = Math.max(0, height - gap - topH);
-    const botY = topH + gap;
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  const yTop = scaleLinear().domain([0, 1.08]).range([topH, 0]);
 
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
-    const yTop = scaleLinear().domain([0, 1.08]).range([topH, 0]);
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -18)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        { ko: `f(x) = x, ${alphaName(data.alpha, 'ko')}: 리만합 막대 vs α-늘이기 막대`, en: `f(x) = x, ${alphaName(data.alpha, 'en')}: Riemann bars vs α-stretched bars` },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -18)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          { ko: `f(x) = x, ${alphaName(data.alpha, 'ko')}: 리만합 막대 vs α-늘이기 막대`, en: `f(x) = x, ${alphaName(data.alpha, 'en')}: Riemann bars vs α-stretched bars` },
-          lang,
-        ),
-      );
+  // --- Top panel: ordinary bars on [0,1]. ---
+  g.append('g').attr('transform', `translate(0,${topH})`).call(axisBottom(x).ticks(6));
+  g.append('g').call(axisLeft(yTop).ticks(4));
 
-    // --- Top panel: ordinary bars on [0,1]. ---
-    g.append('g').attr('transform', `translate(0,${topH})`).call(axisBottom(x).ticks(6));
-    g.append('g').call(axisLeft(yTop).ticks(4));
+  for (const seg of data.intervals) {
+    g.append('rect')
+      .attr('x', x(seg.x0))
+      .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
+      .attr('y', yTop(seg.hi))
+      .attr('height', Math.max(0, yTop(0) - yTop(seg.hi)))
+      .attr('fill', 'var(--bound)')
+      .attr('opacity', 0.22);
+  }
+  for (const seg of data.intervals) {
+    g.append('rect')
+      .attr('x', x(seg.x0))
+      .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
+      .attr('y', yTop(seg.lo))
+      .attr('height', Math.max(0, yTop(0) - yTop(seg.lo)))
+      .style('fill', 'var(--accent)')
+      .attr('opacity', 0.55);
+  }
+  const curvePts: Array<{ x: number; y: number }> = [];
+  for (let i = 0; i <= 100; i++) {
+    const px = i / 100;
+    curvePts.push({ x: px, y: px });
+  }
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke', 'currentColor')
+    .attr('d', line<{ x: number; y: number }>().x((p) => x(p.x)).y((p) => yTop(p.y))(curvePts) ?? '');
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', 14)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text(localize({ ko: 'x축 (균등 분할)', en: 'x-axis (uniform partition)' }, lang));
 
-    for (const seg of data.intervals) {
-      g.append('rect')
-        .attr('x', x(seg.x0))
-        .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
-        .attr('y', yTop(seg.hi))
-        .attr('height', Math.max(0, yTop(0) - yTop(seg.hi)))
-        .attr('fill', 'var(--bound)')
-        .attr('opacity', 0.22);
-    }
-    for (const seg of data.intervals) {
-      g.append('rect')
-        .attr('x', x(seg.x0))
-        .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
-        .attr('y', yTop(seg.lo))
-        .attr('height', Math.max(0, yTop(0) - yTop(seg.lo)))
-        .style('fill', 'var(--accent)')
-        .attr('opacity', 0.55);
-    }
-    const curvePts: Array<{ x: number; y: number }> = [];
-    for (let i = 0; i <= 100; i++) {
-      const px = i / 100;
-      curvePts.push({ x: px, y: px });
-    }
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
+  // --- Bottom panel: the alpha-stretched axis. ---
+  const aX = scaleLinear().domain([0, 1]).range([0, width]);
+  const yBot = scaleLinear().domain([0, 1.08]).range([botH, 0]);
+  const gb = g.append('g').attr('transform', `translate(0,${botY})`);
+
+  for (const seg of data.intervals) {
+    gb.append('rect')
+      .attr('x', aX(seg.a0))
+      .attr('width', Math.max(0, aX(seg.a1) - aX(seg.a0) - 0.5))
+      .attr('y', yBot(seg.hi))
+      .attr('height', Math.max(0, yBot(0) - yBot(seg.hi)))
+      .attr('fill', 'var(--bound)')
+      .attr('opacity', 0.22);
+  }
+  for (const seg of data.intervals) {
+    gb.append('rect')
+      .attr('x', aX(seg.a0))
+      .attr('width', Math.max(0, aX(seg.a1) - aX(seg.a0) - 0.5))
+      .attr('y', yBot(seg.lo))
+      .attr('height', Math.max(0, yBot(0) - yBot(seg.lo)))
+      .style('fill', 'var(--accent)')
+      .attr('opacity', 0.55);
+  }
+  // Markers where partition points land on the stretched axis.
+  for (const seg of data.intervals) {
+    gb.append('line')
+      .attr('x1', aX(seg.a1))
+      .attr('x2', aX(seg.a1))
+      .attr('y1', 0)
+      .attr('y2', botH)
+      .attr('stroke-width', 1)
       .attr('stroke', 'currentColor')
-      .attr('d', line<{ x: number; y: number }>().x((p) => x(p.x)).y((p) => yTop(p.y))(curvePts) ?? '');
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', 14)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text(localize({ ko: 'x축 (균등 분할)', en: 'x-axis (uniform partition)' }, lang));
+      .attr('opacity', 0.4);
+  }
+  gb.append('g').attr('transform', `translate(0,${botH})`).call(axisBottom(aX).ticks(6));
+  gb.append('text')
+    .attr('x', 8)
+    .attr('y', 14)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text(localize({ ko: 'α(x)축 (너비 = Δαᵢ)', en: 'α(x)-axis (width = Δαᵢ)' }, lang));
 
-    // --- Bottom panel: the alpha-stretched axis. ---
-    const aX = scaleLinear().domain([0, 1]).range([0, width]);
-    const yBot = scaleLinear().domain([0, 1.08]).range([botH, 0]);
-    const gb = g.append('g').attr('transform', `translate(0,${botY})`);
-
-    for (const seg of data.intervals) {
-      gb.append('rect')
-        .attr('x', aX(seg.a0))
-        .attr('width', Math.max(0, aX(seg.a1) - aX(seg.a0) - 0.5))
-        .attr('y', yBot(seg.hi))
-        .attr('height', Math.max(0, yBot(0) - yBot(seg.hi)))
-        .attr('fill', 'var(--bound)')
-        .attr('opacity', 0.22);
-    }
-    for (const seg of data.intervals) {
-      gb.append('rect')
-        .attr('x', aX(seg.a0))
-        .attr('width', Math.max(0, aX(seg.a1) - aX(seg.a0) - 0.5))
-        .attr('y', yBot(seg.lo))
-        .attr('height', Math.max(0, yBot(0) - yBot(seg.lo)))
-        .style('fill', 'var(--accent)')
-        .attr('opacity', 0.55);
-    }
-    // Markers where partition points land on the stretched axis.
-    for (const seg of data.intervals) {
-      gb.append('line')
-        .attr('x1', aX(seg.a1))
-        .attr('x2', aX(seg.a1))
-        .attr('y1', 0)
-        .attr('y2', botH)
-        .attr('stroke-width', 1)
-        .attr('stroke', 'currentColor')
-        .attr('opacity', 0.4);
-    }
-    gb.append('g').attr('transform', `translate(0,${botH})`).call(axisBottom(aX).ticks(6));
-    gb.append('text')
-      .attr('x', 8)
-      .attr('y', 14)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text(localize({ ko: 'α(x)축 (너비 = Δαᵢ)', en: 'α(x)-axis (width = Δαᵢ)' }, lang));
-
-    // Readout numbers on the chart.
-    g.append('text')
-      .attr('x', width)
-      .attr('y', 14)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(`n = ${data.n} · U = ${fmt(data.upper, 4)} · L = ${fmt(data.lower, 4)} · exact = ${fmt(data.exact, 4)}`);
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(last.data, lang));
-    setRichText(verdictSlot, verdictText(last.data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Readout numbers on the chart.
+  g.append('text')
+    .attr('x', width)
+    .attr('y', 14)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(`n = ${data.n} · U = ${fmt(data.upper, 4)} · L = ${fmt(data.lower, 4)} · exact = ${fmt(data.exact, 4)}`);
 }
 
-export default defineScene<RiemannStieltjesData>({ model: riemannStieltjesModel, createScene: createRiemannStieltjesScene });
+export default defineSimpleScene<RiemannStieltjesData>({
+  model: riemannStieltjesModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: explainText, spaced: true },
+    { text: verdictText, bold: true, spaced: true },
+  ],
+});

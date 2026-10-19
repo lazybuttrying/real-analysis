@@ -1,13 +1,7 @@
 import { axisBottom, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { borelCantelliModel, type BorelCantelliData } from '../models/borelCantelli';
 
 /**
@@ -94,176 +88,124 @@ function verdictText(data: BorelCantelliData, lang: Lang): string {
       );
 }
 
-function createBorelCantelliScene(): Scene<BorelCantelliData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: BorelCantelliData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: BorelCantelliData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: BorelCantelliData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
 
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -20)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `Borel–Cantelli: ${modeName(data.mode, 'ko')} — E_1부터 E_${data.n}까지`,
+          en: `Borel–Cantelli: ${modeName(data.mode, 'en')} — E_1 through E_${data.n}`,
+        },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -20)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `Borel–Cantelli: ${modeName(data.mode, 'ko')} — E_1부터 E_${data.n}까지`,
-            en: `Borel–Cantelli: ${modeName(data.mode, 'en')} — E_1 through E_${data.n}`,
-          },
-          lang,
-        ),
-      );
+  // Vertical layout: strips, heatmap, limsup band, axis.
+  const heatH = 16;
+  const limH = 10;
+  const axisH = 26;
+  const g1 = 10;
+  const g2 = 6;
+  const g3 = 8;
+  const stripsH = Math.max(40, height - (g1 + heatH + g2 + limH + g3 + axisH));
+  const heatY = stripsH + g1;
+  const limY = heatY + heatH + g2;
+  const axisY = limY + limH + g3;
 
-    // Vertical layout: strips, heatmap, limsup band, axis.
-    const heatH = 16;
-    const limH = 10;
-    const axisH = 26;
-    const g1 = 10;
-    const g2 = 6;
-    const g3 = 8;
-    const stripsH = Math.max(40, height - (g1 + heatH + g2 + limH + g3 + axisH));
-    const heatY = stripsH + g1;
-    const limY = heatY + heatH + g2;
-    const axisY = limY + limH + g3;
-
-    // Stacked interval strips.
-    const n = data.intervals.length;
-    const rowH = stripsH / Math.max(1, n);
+  // Stacked interval strips.
+  const n = data.intervals.length;
+  const rowH = stripsH / Math.max(1, n);
+  data.intervals.forEach((iv, i) => {
+    g.append('rect')
+      .attr('x', x(iv.l))
+      .attr('width', Math.max(0.5, x(iv.r) - x(iv.l)))
+      .attr('y', i * rowH + 0.5)
+      .attr('height', Math.max(0.5, rowH - 1.5))
+      .attr('fill', 'var(--accent)')
+      .attr('opacity', 0.55);
+  });
+  if (n <= 14) {
     data.intervals.forEach((iv, i) => {
-      g.append('rect')
-        .attr('x', x(iv.l))
-        .attr('width', Math.max(0.5, x(iv.r) - x(iv.l)))
-        .attr('y', i * rowH + 0.5)
-        .attr('height', Math.max(0.5, rowH - 1.5))
-        .attr('fill', 'var(--accent)')
-        .attr('opacity', 0.55);
+      void iv;
+      g.append('text')
+        .attr('x', -10)
+        .attr('y', i * rowH + rowH / 2 + 4)
+        .attr('text-anchor', 'end')
+        .attr('font-size', 10)
+        .attr('fill', 'currentColor')
+        .attr('opacity', 0.7)
+        .text(`E${i + 1}`);
     });
-    if (n <= 14) {
-      data.intervals.forEach((iv, i) => {
-        void iv;
-        g.append('text')
-          .attr('x', -10)
-          .attr('y', i * rowH + rowH / 2 + 4)
-          .attr('text-anchor', 'end')
-          .attr('font-size', 10)
-          .attr('fill', 'currentColor')
-          .attr('opacity', 0.7)
-          .text(`E${i + 1}`);
-      });
-    }
+  }
 
-    // Coverage-count heatmap.
-    const m = data.sampleX.length;
-    const cellW = width / m;
-    const maxC = Math.max(1, ...data.coverage);
-    data.sampleX.forEach((sx, i) => {
-      const c = data.coverage[i] ?? 0;
-      g.append('rect')
-        .attr('x', x(sx) - cellW / 2)
-        .attr('width', cellW + 0.4)
-        .attr('y', heatY)
-        .attr('height', heatH)
-        .attr('fill', 'var(--accent)')
-        .attr('opacity', 0.06 + (0.9 * c) / maxC);
-    });
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', heatY - 4)
-      .attr('font-size', 11)
-      .attr('fill', 'currentColor')
-      .text(localize({ ko: '점별 포함 횟수', en: 'per-point coverage count' }, lang));
+  // Coverage-count heatmap.
+  const m = data.sampleX.length;
+  const cellW = width / m;
+  const maxC = Math.max(1, ...data.coverage);
+  data.sampleX.forEach((sx, i) => {
+    const c = data.coverage[i] ?? 0;
+    g.append('rect')
+      .attr('x', x(sx) - cellW / 2)
+      .attr('width', cellW + 0.4)
+      .attr('y', heatY)
+      .attr('height', heatH)
+      .attr('fill', 'var(--accent)')
+      .attr('opacity', 0.06 + (0.9 * c) / maxC);
+  });
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', heatY - 4)
+    .attr('font-size', 11)
+    .attr('fill', 'currentColor')
+    .text(localize({ ko: '점별 포함 횟수', en: 'per-point coverage count' }, lang));
 
-    // Limsup approximation band (red).
-    data.sampleX.forEach((sx, i) => {
-      if (!data.limsupHit[i]) return;
-      g.append('rect')
-        .attr('x', x(sx) - cellW / 2)
-        .attr('width', cellW + 0.4)
-        .attr('y', limY)
-        .attr('height', limH)
-        .attr('fill', 'var(--bound)')
-        .attr('opacity', 0.9);
-    });
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', limY - 4)
-      .attr('font-size', 11)
+  // Limsup approximation band (red).
+  data.sampleX.forEach((sx, i) => {
+    if (!data.limsupHit[i]) return;
+    g.append('rect')
+      .attr('x', x(sx) - cellW / 2)
+      .attr('width', cellW + 0.4)
+      .attr('y', limY)
+      .attr('height', limH)
       .attr('fill', 'var(--bound)')
-      .text(
-        localize(
-          {
-            ko: `limsup 근사 (${data.threshold}개 이상 포함)`,
-            en: `limsup approximation (in ≥ ${data.threshold} sets)`,
-          },
-          lang,
-        ),
-      );
+      .attr('opacity', 0.9);
+  });
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', limY - 4)
+    .attr('font-size', 11)
+    .attr('fill', 'var(--bound)')
+    .text(
+      localize(
+        {
+          ko: `limsup 근사 (${data.threshold}개 이상 포함)`,
+          en: `limsup approximation (in ≥ ${data.threshold} sets)`,
+        },
+        lang,
+      ),
+    );
 
-    g.append('g').attr('transform', `translate(0,${axisY})`).call(axisBottom(x).ticks(6));
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(last.data, lang));
-    setRichText(verdictSlot, verdictText(last.data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('g').attr('transform', `translate(0,${axisY})`).call(axisBottom(x).ticks(6));
 }
 
-export default defineScene<BorelCantelliData>({ model: borelCantelliModel, createScene: createBorelCantelliScene });
+export default defineSimpleScene<BorelCantelliData>({
+  model: borelCantelliModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: explainText, spaced: true },
+    { text: verdictText, bold: true, spaced: true },
+  ],
+});

@@ -1,13 +1,7 @@
 import { axisBottom, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { compactModel, type CompactData, type CompactKind } from '../models/compact';
 
 /**
@@ -138,18 +132,7 @@ function legendText(kind: CompactKind, lang: Lang): string {
   );
 }
 
-function createCompactScene(): Scene<CompactData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let legendSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: CompactData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !legendSlot || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: CompactData, lang: Lang): void {
     const { g, width, height } = chart;
     const { kind, intervals, shown, union, coversAll, gapHi, tailLo, xLo, xHi, setLo, setHi } = data;
 
@@ -322,48 +305,15 @@ function createCompactScene(): Scene<CompactData> {
     }
 
     g.append('g').attr('transform', `translate(0,${axisY})`).call(axisBottom(x).ticks(6));
-
-    setRichText(legendSlot, legendText(kind, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const legend = document.createElement('div');
-      legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(legend, verdict);
-
-      legendSlot = createRichSlot(legend);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      legendSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<CompactData>({ model: compactModel, createScene: createCompactScene });
+export default defineSimpleScene<CompactData>({
+  model: compactModel,
+  margin: MARGIN,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: (data, lang) => legendText(data.kind, lang), cssText: 'font-size: 12px; color: var(--muted);' },
+    { text: verdictText, bold: true }
+  ],
+});
