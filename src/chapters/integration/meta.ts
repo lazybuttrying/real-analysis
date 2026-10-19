@@ -6,6 +6,8 @@ import { jordanDecompositionProblems } from '../calculus/problems/jordan-decompo
 import { problems as betaFunctionProblems } from '../series/problems/beta-function';
 import { problems as ftcProblems } from '../calculus/problems/ftc';
 import { changeOfVariablesProblems } from '../calculus/problems/change-of-variables';
+import { dirichletFunctionProblems } from '../calculus/problems/dirichlet-function';
+import { riemannStieltjesProblems } from '../calculus/problems/riemann-stieltjes';
 import { integrationByPartsProblems } from '../calculus/problems/integration-by-parts';
 import { problems as gammaProblems } from '../series/problems/gamma';
 import { problems as improperProblems } from '../series/problems/improper';
@@ -124,9 +126,25 @@ problems: improperProblems,
 problems: riemannProblems,
     },
     {
+      id: 'dirichlet-function',
+      title: { ko: '디리클레 함수', en: 'The Dirichlet Function' },
+      order: 6,
+      summary: {
+        ko: String.raw`\(\mathbf{1}_{\mathbb{Q}}\)는 \([0, 1]\) 위에서 유리수면 1, 무리수면 0 — 모든 부분구간에 유리수와 무리수가 둘 다 들어 있어서 위합은 항상 1, 아래합은 항상 0입니다. 분할을 잘게 쪼개도 틈이 닫히지 않는, 리만 적분 불가능의 대표 반례입니다.`,
+        en: String.raw`\(\mathbf{1}_{\mathbb{Q}}\) is 1 on the rationals and 0 on the irrationals of \([0, 1]\) — every subinterval holds both, so the upper sum is always 1 and the lower sum always 0. The canonical non-Riemann-integrable function: no refinement closes the gap.`,
+      },
+      tex: [
+        String.raw`U(f,P) = 1,\ L(f,P) = 0\ \forall P`,
+        String.raw`f = \mathbf{1}_{\mathbb{Q}}`,
+      ],
+      prerequisites: ['riemann'],
+      controls: [{ kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Subdivisions n' }, min: 1, max: 32, step: 1, init: 8 }],
+      problems: dirichletFunctionProblems,
+    },
+    {
       id: 'volterra-function',
       title: { ko: 'Volterra 함수', en: "Volterra's Function" },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`어디서나 미분가능하고 도함수가 유계인데, 그 도함수는 리만 적분 불가능 — 팻 칸토어 집합 위에 올린 \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)형 혹들의 합이 만드는 전설적인 반례입니다.`,
         en: String.raw`Differentiable everywhere with a bounded derivative — yet the derivative is not Riemann integrable. A sum of \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)-type bumps over a fat Cantor set builds this legendary counterexample.`,
@@ -145,7 +163,7 @@ problems: volterraFunctionProblems,
     {
       id: 'ftc',
       title: { ko: '미적분 기본정리', en: "The Area Function's Derivative Is the Function" },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`넓이함수 \(A(x) = \int_a^x f(t)\,dt\)의 기울기를 재보면 \(f(x)\)와 일치합니다. \(x\)를 움직여보세요.`,
         en: String.raw`Measure the slope of the area function \(A(x) = \int_a^x f(t)\,dt\) — it equals \(f(x)\). Drag \(x\).`,
@@ -166,7 +184,7 @@ problems: ftcProblems,
     {
       id: 'integration-by-parts',
       title: { ko: '부분적분', en: 'Integration by Parts' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`곱의 미분법칙을 적분하면 \(\int u\,dv = [uv] - \int v\,du\) — 면적을 두 조각으로 나누어 각각 계산합니다. \(b\)를 움직이면 양변이 소수점 아래로 일치합니다.`,
         en: String.raw`Integrate the product rule and get \(\int u\,dv = [uv] - \int v\,du\) — split the area into two pieces and compute each. Move \(b\): both sides agree to the last decimal.`,
@@ -191,7 +209,7 @@ problems: ftcProblems,
     {
       id: 'change-of-variables',
       title: { ko: '치환적분', en: 'Change of Variables' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`\(u = \varphi(x)\)로 축을 늘이고 줄이면 적분 구간이 따라 바뀝니다 — \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\). 두 치환이 같은 적분으로 모이는 것을 보세요.`,
         en: String.raw`Stretch and squeeze the axis with \(u = \varphi(x)\) and the limits follow — \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\). Watch two substitutions collapse onto the same integral.`,
@@ -216,7 +234,7 @@ problems: ftcProblems,
     {
       id: 'bounded-variation',
       title: { ko: '유계변동 함수', en: 'Functions of Bounded Variation' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`분할을 잘게 쪼갤 때 \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\)이 유한한 상한 안에 머무르면 유계변동 — 단조함수는 전부 해당하고, \(x\sin(1/x)\)처럼 0 근처에서 끝없이 출렁이면 탈락합니다.`,
         en: String.raw`A function has bounded variation when \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\) stays under a finite ceiling as partitions refine — every monotone function qualifies, while \(x\sin(1/x)\), wiggling endlessly near 0, does not.`,
@@ -239,9 +257,28 @@ problems: ftcProblems,
 problems: boundedVariationProblems,
     },
     {
+      id: 'riemann-stieltjes',
+      title: { ko: '리만-스틸체스 적분', en: 'The Riemann–Stieltjes Integral' },
+      order: 12,
+      summary: {
+        ko: String.raw`적분자를 바꾸는 법 — \(\int_a^b f\,d\alpha\)는 구간의 길이가 아니라 \(\Delta\alpha_i = \alpha(x_i) - \alpha(x_{i-1})\)로 무게를 잽니다. \(\alpha(x) = x\)이면 리만합 그 자체, 계단 \(\alpha\)면 점프 하나로 붕괴, \(\alpha(x) = x^2\)이면 \(\int f\alpha'\,dx\)가 됩니다.`,
+        en: String.raw`Changing the integrator — \(\int_a^b f\,d\alpha\) weighs intervals by \(\Delta\alpha_i = \alpha(x_i) - \alpha(x_{i-1})\) instead of length. \(\alpha(x) = x\) recovers Riemann sums, a step \(\alpha\) collapses to a single jump, \(\alpha(x) = x^2\) gives \(\int f\alpha'\,dx\).`,
+      },
+      tex: [
+        String.raw`U(f,P,\alpha) = \sum M_i\,\Delta\alpha_i`,
+        String.raw`\int_a^b f\,d\alpha`,
+      ],
+      prerequisites: ['bounded-variation'],
+      controls: [
+        { kind: 'select', key: 'alpha', label: { ko: '적분자 α', en: 'Integrator α' }, options: ['identity', 'square', 'step'], init: 'identity' },
+        { kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Subdivisions n' }, min: 1, max: 24, step: 1, init: 6 },
+      ],
+      problems: riemannStieltjesProblems,
+    },
+    {
       id: 'jordan-decomposition',
       title: { ko: '조르당 분해', en: 'Jordan Decomposition' },
-      order: 11,
+      order: 13,
       summary: {
         ko: String.raw`유계변동 함수는 두 단조증가 함수의 차입니다 — \(f = g - h\), 여기서 \(g(x) = V_0^x(f)\)는 변동함수. \(x^2\sin\frac{1}{x}\) 위에서 점을 움직이며 분해가 점마다 성립하는 것을 확인하세요.`,
         en: String.raw`Every BV function is a difference of two increasing functions — \(f = g - h\) with \(g(x) = V_0^x(f)\) the variation function. Drag the probe point over \(x^2\sin\frac{1}{x}\) and watch the identity hold pointwise.`,
@@ -259,7 +296,7 @@ problems: boundedVariationProblems,
     {
       id: 'measure',
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
-      order: 12,
+      order: 14,
       summary: {
         ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
         en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
@@ -276,7 +313,7 @@ problems: boundedVariationProblems,
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 13,
+      order: 15,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
@@ -291,7 +328,7 @@ problems: lebesgueProblems,
     {
       id: 'absolute-continuity',
       title: { ko: '절대연속성', en: 'Absolute Continuity' },
-      order: 14,
+      order: 16,
       summary: {
         ko: String.raw`\(F(x) = x^2\)는 절대연속 — 구간들의 총 길이가 0으로 가면 \(\sum |\Delta F|\)도 0으로 갑니다. 칸토어 함수는 균등연속이지만 절대연속이 아닙니다: 총 길이 \(\left(\frac23\right)^n \to 0\)인데 \(\sum |\Delta c| = 1\)에 고정됩니다. 절대연속인 함수는 정확히 Lebesgue 적분 가능한 함수의 부정적분입니다.`,
         en: String.raw`\(F(x) = x^2\) is absolutely continuous — when the intervals' total length goes to 0, so does \(\sum |\Delta F|\). The Cantor function is uniformly continuous but not absolutely continuous: total length \(\left(\frac23\right)^n \to 0\) while \(\sum |\Delta c| = 1\) stays frozen. Absolutely continuous functions are exactly the indefinite integrals of Lebesgue-integrable functions.`,

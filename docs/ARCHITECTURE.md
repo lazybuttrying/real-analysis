@@ -88,7 +88,7 @@ real-analysis/
 - [x] ~~**limits 챕터(극한과 연속) 씬 26개**~~ → 2026-10-18에 5개 챕터(numbers·sequences·continuity·topology·approximation)로 분할 (위 "챕터 10분할" 참조)
 - [x] ~~**series 챕터 씬 16개**~~ → 2026-10-18에 축소(16씬 유지) + power-series·function-series로 일부 이동 (위 "챕터 10분할" 참조)
 - [x] ~~**calculus 챕터(미분과 적분) 씬 13개**~~ → 2026-10-18에 differentiation·integration으로 분할 (위 "챕터 10분할" 참조)
-- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 102씬·306문제·36연습문제. 증명에 등장하는 수치는 전부 vitest로 검증
+- [x] 모든 씬에 예제 3개씩(진술+미니 시각화+접기식 엄밀 증명, 한영). 총 109씬·327문제·36연습문제. 증명에 등장하는 수치는 전부 vitest로 검증
 - [x] **챕터 연습문제**: `/ko/<챕터>/exercises/`·`/en/<챕터>/exercises/` (10개 챕터, 총 36문제, 챕터별 개수 상이 — 주제 적합도로 재배치, 난이도는 easy→hard 그룹 유지). 데이터는 `src/chapters/<id>/exercises.ts`가 `export const exercises: readonly ExerciseMeta[]`로 export하고, 모양은 `contracts.ts`의 `ExerciseMeta` 계약이 정한다(진술+display 수식+접기식 풀이, 같은 챕터 씬으로의 교차 링크 `topics`, 선택적 `viz`(씬 미니 시각화를 고정 preset으로 재사용)). 챕터 entry는 `startChapter(chapterId, loaders, exercisesLoader)`에 `() => import('./exercises')`를 넘겨 연습문제 페이지를 방문할 때만 동적 로드한다 — 챕터 entry 번들에 연습문제 텍스트가 들어가지 않는다(check-deps: 챕터 내 import이므로 허용). 셸 렌더러는 `src/shell/exercises-page.ts`(카드 번호 1..N, 난이도 그룹, 토픽 칩, 미니 시각화, `<details>` 풀이), 챕터 허브에 진입 링크+챕터 내비게이션 끝에 항목을 둔다. 프리렌더는 챕터당 언어별 1페이지씩(총 20페이지, zero-JS 정적 HTML), 검색 인덱스에 exercise 레코드 포함(문항 번호 라벨 "연습문제 N"/"Exercise N" 매칭, `#exercise-<id>` 앵커로 이동)
 - [x] **사이트 검색**: 모든 페이지 헤더의 검색창. 빌드(prerender) 시 언어별 `search-index.<lang>.json`을 생성(102개 씬의 제목·요약 + 용어 사전 전체 + 36개 연습문제의 진술)하고, 셸이 첫 입력 때 lazy fetch로 가져와 부분문자열(대소문자 무시)로 매칭한다. 결과 드롭다운은 씬/용어/연습문제를 구분해 링크하고(연습문제는 "연습문제 N" 라벨 매칭, 해당 카드 앵커로 이동), Enter(첫 결과 이동)·Escape(닫기)·방향키를 지원한다. 검색 인덱스는 번들에 포함되지 않아 페이지 무게가 늘지 않는다. (`src/search-index.ts`는 빌드/테스트 전용으로 챕터 연습문제 데이터를 직접 import한다 — check-deps에 명시된 좁은 예외, 클라이언트 번들에는 절대 들어가지 않는다)
 - [x] **용어 사전**: `/ko/glossary/`·`/en/glossary/` 프리렌더 페이지(사이트맵 포함, 홈·헤더에서 링크). `src/glossary.ts`에 152개 용어를 직접 작성(102개 씬 전부 최소 1개 이상, 정의 1–2문장, 한영, `\(...\)` 수식 허용, chapterId+sceneId로 씬에 연결). 챕터별(번호 순) 그룹, 용어별 정의·씬 링크·`#term-<id>` 앵커, 인페이지 필터 제공. 클라이언트 렌더러는 홈 entry에서 동적 import되어 용어 사전 페이지에서만 로드된다
@@ -98,12 +98,12 @@ real-analysis/
 - [x] 다국어(한국어·영어): URL 접두사, 헤더 전환, 언어별 메타 텍스트
 - [x] vitest 추가, 모델·상태·경로·생성기 단위 테스트 (`npm test`)
 - [x] 의존 방향 검사 (`scripts/check-deps.ts`: `models → view` 금지, `meta.ts` import 제한, three는 threekit만)
-- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 챕터 연습문제 페이지(챕터당 언어별 1개, 총 20개), 용어 사전 페이지, 학습 경로 목록·상세 페이지, 홈 하단 개념 지도 섹션(정적 폴백: 챕터별 씬 목록+선수 관계 링크 포함), 언어별 `search-index.<lang>.json`, `sitemap.xml`(244 URL, canonical만), 404.html, robots.txt, title 중복·`summary` 비어 있음·용어 사전/학습 경로/개념 지도/연습문제 무결성 검사, 퇴역 씬 URL용 legacy canonical 페이지 154개(언어별 77, sitemap 제외). 총 244페이지(언어별: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 7)
+- [x] `scripts/prerender.ts`: 언어별 씬 HTML(title, description, canonical, 본문, KaTeX), 챕터 연습문제 페이지(챕터당 언어별 1개, 총 20개), 용어 사전 페이지, 학습 경로 목록·상세 페이지, 홈 하단 개념 지도 섹션(정적 폴백: 챕터별 씬 목록+선수 관계 링크 포함), 언어별 `search-index.<lang>.json`, `sitemap.xml`(276 URL, canonical만), 404.html, robots.txt, title 중복·`summary` 비어 있음·용어 사전/학습 경로/개념 지도/연습문제 무결성 검사, 퇴역 씬 URL용 legacy canonical 페이지 154개(언어별 77, sitemap 제외). 총 276페이지(언어별 138: 홈 1 + 허브 10 + 씬 109 + 연습문제 10 + 용어 사전 1 + 경로 1 + 경로 상세 6)
 - [x] CI 검사와 챕터별 번들 예산(`size-limit`), `deploy.yml`에 test → check-deps → build → 프리렌더 검증 → size-limit 반영. PR은 검증만, 배포는 main push에서만
 
 ## 챕터 10분할 (2026-10-18)
 
-3개 챕터(limits 39씬·series 32씬·calculus 22씬)가 비대해져서 10개 논리 챕터로 분할했다. 총 씬 93개·문제 279개·연습문제 36개·용어 143개는 그대로. 2026-10-19에 Tao 정리 9씬 추가(nth-root·axiom-of-choice·zorn-lemma·cantor-theorem·integral-test·double-series·inverse-function-theorem·integration-by-parts·change-of-variables) → 102씬·306문제·152용어.
+3개 챕터(limits 39씬·series 32씬·calculus 22씬)가 비대해져서 10개 논리 챕터로 분할했다. 총 씬 93개·문제 279개·연습문제 36개·용어 143개는 그대로. 2026-10-19에 Tao 정리 9씬 추가(nth-root·axiom-of-choice·zorn-lemma·cantor-theorem·integral-test·double-series·inverse-function-theorem·integration-by-parts·change-of-variables) → 102씬·306문제·152용어. 2026-10-19에 Tao 인덱스 감사로 7씬 추가(sqrt2-irrational·density-of-rationals·standard-limits·continuity-equivalences·derivative-monotonicity·dirichlet-function·riemann-stieltjes) → 109씬·327문제·159용어.
 
 | # | id | ko / en | 씬 수 |
 |---|----|---------|-------|
@@ -136,12 +136,12 @@ real-analysis/
 - 구 hub `/<lang>/limits/`·`/<lang>/calculus/`, 구 exercises `/<lang>/limits/exercises/`·`/<lang>/calculus/exercises/`: 아무것도 생성하지 않음 (표준 404 페이지).
 - `series`는 id를 재사용하므로 hub/exercises/머무른 16씬은 legacy 페이지가 없다. 이동한 16씬만 legacy 페이지를 가진다.
 - 클라이언트: `src/shell/app.ts`의 startChapter는 legacy URL에서도 리다이렉트 없이 새 챕터 entry로 씬을 그 자리에서 렌더링한다. `<link rel="canonical">`은 정적 HTML에 박혀 그대로 유지된다(SPA는 canonical을 건드리지 않음).
-- Sitemap: 새 canonical URL만 244개.
+- Sitemap: 새 canonical URL만 276개.
 
 ### 새 카운트
 
-- 페이지: 244 (언어별 122: 홈 1 + 허브 10 + 씬 93 + 연습문제 10 + 용어 사전 1 + 경로 1 + 경로 상세 6) + legacy canonical 페이지 154 (sitemap 제외, 리다이렉트 0개)
-- 테스트: 1277개 (`tests/chapters.test.ts`: 카탈로그 구조·씬 유실/중복·legacy canonical 맵 커버리지·canonical HTML 단언)
+- 페이지: 276 (언어별 138: 홈 1 + 허브 10 + 씬 109 + 연습문제 10 + 용어 사전 1 + 경로 1 + 경로 상세 6) + legacy canonical 페이지 154 (sitemap 제외, 리다이렉트 0개)
+- 테스트: 1373개 (`tests/chapters.test.ts`: 카탈로그 구조·씬 유실/중복·legacy canonical 맵 커버리지·canonical HTML 단언)
 
 남음 (착수 순서)
 

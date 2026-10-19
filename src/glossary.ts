@@ -1550,4 +1550,74 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'integration',
     sceneId: 'absolute-continuity',
   },
+  {
+    id: 'sqrt2-irrational',
+    term: { ko: '√2의 무리수성', en: 'irrationality of √2' },
+    definition: {
+      ko: String.raw`어떤 유리수 \(p/q\)도 \((p/q)^2 = 2\)를 만족하지 않는다 — 기약분수 무한하강법으로 증명되며, 유리수 직선의 "구멍"을 보여준다.`,
+      en: String.raw`No rational \(p/q\) satisfies \((p/q)^2 = 2\) — proved by infinite descent on lowest terms, exposing a "hole" in the rational line.`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'sqrt2-irrational',
+  },
+  {
+    id: 'density-of-rationals',
+    term: { ko: '유리수의 조밀성', en: 'density of the rationals' },
+    definition: {
+      ko: String.raw`임의의 실수 \(x < y\) 사이에 유리수가 존재한다 — \(n > 1/(y-x)\)를 잡고 \(m = \lfloor nx \rfloor + 1\)이라 두면 \(x < m/n < y\).`,
+      en: String.raw`Between any reals \(x < y\) lies a rational — take \(n > 1/(y-x)\) and \(m = \lfloor nx \rfloor + 1\), then \(x < m/n < y\).`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'density-of-rationals',
+  },
+  {
+    id: 'standard-limits',
+    term: { ko: '표준 극한', en: 'standard limits' },
+    definition: {
+      ko: String.raw`\(|x| < 1\)이면 \(x^n \to 0\), \(x > 1\)이면 \(x^{1/n} \to 1\) — 거듭제곱과 거듭제곱근의 기본 운명.`,
+      en: String.raw`If \(|x| < 1\) then \(x^n \to 0\); if \(x > 1\) then \(x^{1/n} \to 1\) — the basic fates of powers and roots.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'standard-limits',
+  },
+  {
+    id: 'continuity-equivalences',
+    term: { ko: '연속성의 동치 조건', en: 'equivalent formulations of continuity' },
+    definition: {
+      ko: String.raw`\(\varepsilon\)-\(\delta\) 정의, 수열 보존, 열린집합의 역상이 열림 — 세 가지는 같은 연속성을 다른 렌즈로 본 것이다.`,
+      en: String.raw`The \(\varepsilon\)-\(\delta\) definition, sequential preservation, and open preimages of open sets — three lenses on the same continuity.`,
+    },
+    chapterId: 'continuity',
+    sceneId: 'continuity-equivalences',
+  },
+  {
+    id: 'derivative-monotonicity',
+    term: { ko: '도함수와 단조성', en: 'derivative and monotonicity' },
+    definition: {
+      ko: String.raw`\(f' \ge 0\)이면 \(f\)는 증가, \(f' > 0\)이면 엄격히 증가 (평균값 정리) — 도함수의 부호가 함수의 오르내림을 결정한다.`,
+      en: String.raw`\(f' \ge 0\) makes \(f\) increasing, \(f' > 0\) strictly increasing (by MVT) — the sign of the derivative decides rise and fall.`,
+    },
+    chapterId: 'differentiation',
+    sceneId: 'derivative-monotonicity',
+  },
+  {
+    id: 'dirichlet-function',
+    term: { ko: '디리클레 함수', en: 'Dirichlet function' },
+    definition: {
+      ko: String.raw`유리수에서 1, 무리수에서 0인 함수 — 모든 상합은 1, 모든 하합은 0이라 리만 적분 불가능하다.`,
+      en: String.raw`1 on rationals, 0 on irrationals — every upper sum is 1 and every lower sum 0, so it is not Riemann integrable.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'dirichlet-function',
+  },
+  {
+    id: 'riemann-stieltjes',
+    term: { ko: '리만-스틸체스 적분', en: 'Riemann–Stieltjes integral' },
+    definition: {
+      ko: String.raw`\(\int_a^b f\,d\alpha = \lim \sum f(\xi_i)\,\Delta\alpha_i\) — \(\alpha(x) = x\)이면 리만 적분으로 돌아오고, 점프가 있으면 그 점의 함숫값이 적분을 지배한다.`,
+      en: String.raw`\(\int_a^b f\,d\alpha = \lim \sum f(\xi_i)\,\Delta\alpha_i\) — reduces to the Riemann integral for \(\alpha(x) = x\); a jump lets one point's value dominate.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'riemann-stieltjes',
+  },
 ];
