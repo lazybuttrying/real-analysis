@@ -294,6 +294,7 @@ describe('split chapters: the five ex-limits chapters', () => {
       'standard-limits',
       'sequence-spaces',
       'cauchy-schwarz',
+      'holder',
       'holes',
       'construction',
       'bolzano-weierstrass',

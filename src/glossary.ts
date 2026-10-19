@@ -1620,4 +1620,74 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'integration',
     sceneId: 'riemann-stieltjes',
   },
+  {
+    id: 'lebesgue-convergence',
+    term: { ko: '르벡 수렴 정리', en: 'Lebesgue convergence theorems' },
+    definition: {
+      ko: String.raw`단조수렴·파투·지배수렴 — \(\int \lim f_n = \lim \int f_n\)이 성립하는 세 조건. 질량이 도망가면 깨진다.`,
+      en: String.raw`Monotone convergence, Fatou, dominated convergence — three conditions for \(\int \lim f_n = \lim \int f_n\). Escaping mass breaks them.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'lebesgue-convergence',
+  },
+  {
+    id: 'fubini-tonelli',
+    term: { ko: '푸비니-토넬리 정리', en: 'Fubini–Tonelli theorem' },
+    definition: {
+      ko: String.raw`음이 아닌 함수(Tonelli)나 적분 가능한 함수(Fubini)는 중적분을 어떤 순서로 계산해도 같다.`,
+      en: String.raw`For nonnegative (Tonelli) or integrable (Fubini) functions, iterated integrals agree in either order.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'fubini-tonelli',
+  },
+  {
+    id: 'egorov',
+    term: { ko: '에고로프 정리', en: "Egorov's theorem" },
+    definition: {
+      ko: String.raw`유한 측도에서 a.e. 수렴하면, 측도가 작은 집합을 덜어낸 나머지에선 균등수렴한다.`,
+      en: String.raw`On finite measure, a.e. convergence is uniform after removing a set of arbitrarily small measure.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'egorov',
+  },
+  {
+    id: 'borel-cantelli',
+    term: { ko: '보렐-칸텔리 보조정리', en: 'Borel–Cantelli lemmas' },
+    definition: {
+      ko: String.raw`\(\sum m(E_n) < \infty\)이면 무한히 자주 일어나는 점들의 측도는 0. 독립이면 역도 성립.`,
+      en: String.raw`If \(\sum m(E_n) < \infty\), the limsup set has measure 0; with independence the converse holds.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'borel-cantelli',
+  },
+  {
+    id: 'riemann-lebesgue',
+    term: { ko: '리만-르벡 보조정리', en: 'Riemann–Lebesgue lemma' },
+    definition: {
+      ko: String.raw`적분 가능한 함수의 푸리에 계수는 0으로 수렴한다 — 빠른 진동이 모든 굴곡을 평균내어 지운다.`,
+      en: String.raw`Fourier coefficients of an integrable function tend to 0 — rapid oscillation averages every bump away.`,
+    },
+    chapterId: 'function-series',
+    sceneId: 'riemann-lebesgue',
+  },
+  {
+    id: 'parseval',
+    term: { ko: '파르세발 항등식', en: "Parseval's identity" },
+    definition: {
+      ko: String.raw`\(\frac1\pi\int |f|^2 = \frac{a_0^2}{2} + \sum(a_n^2+b_n^2)\) — 에너지 보존.`,
+      en: String.raw`\(\frac1\pi\int |f|^2 = \frac{a_0^2}{2} + \sum(a_n^2+b_n^2)\) — conservation of energy.`,
+    },
+    chapterId: 'function-series',
+    sceneId: 'parseval',
+  },
+  {
+    id: 'holder',
+    term: { ko: '횔더 부등식', en: "Hölder's inequality" },
+    definition: {
+      ko: String.raw`\(\sum|a_kb_k| \le \|a\|_p\|b\|_q\) (\(\frac1p+\frac1q=1\)) — 코시-슈바르츠는 \(p=q=2\).`,
+      en: String.raw`\(\sum|a_kb_k| \le \|a\|_p\|b\|_q\) (\(\frac1p+\frac1q=1\)) — Cauchy–Schwarz is \(p=q=2\).`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'holder',
+  },
 ];

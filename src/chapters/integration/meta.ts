@@ -1,17 +1,21 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { absoluteContinuityProblems } from '../calculus/problems/absolute-continuity';
 import { bohrMollerupProblems } from '../series/problems/bohr-mollerup';
+import { borelCantelliProblems } from '../calculus/problems/borel-cantelli';
 import { boundedVariationProblems } from '../calculus/problems/bounded-variation';
 import { jordanDecompositionProblems } from '../calculus/problems/jordan-decomposition';
 import { problems as betaFunctionProblems } from '../series/problems/beta-function';
 import { problems as ftcProblems } from '../calculus/problems/ftc';
 import { changeOfVariablesProblems } from '../calculus/problems/change-of-variables';
 import { dirichletFunctionProblems } from '../calculus/problems/dirichlet-function';
+import { egorovProblems } from '../calculus/problems/egorov';
+import { fubiniTonelliProblems } from '../calculus/problems/fubini-tonelli';
 import { riemannStieltjesProblems } from '../calculus/problems/riemann-stieltjes';
 import { integrationByPartsProblems } from '../calculus/problems/integration-by-parts';
 import { problems as gammaProblems } from '../series/problems/gamma';
 import { problems as improperProblems } from '../series/problems/improper';
 import { problems as lebesgueProblems } from '../calculus/problems/lebesgue';
+import { lebesgueConvergenceProblems } from '../calculus/problems/lebesgue-convergence';
 import { problems as measureProblems } from '../calculus/problems/measure';
 import { problems as riemannProblems } from '../calculus/problems/riemann';
 import { volterraFunctionProblems } from '../calculus/problems/volterra-function';
@@ -311,9 +315,28 @@ problems: boundedVariationProblems,
       problems: measureProblems,
     },
     {
+      id: 'borel-cantelli',
+      title: { ko: '보렐-칸텔리 보조정리', en: 'Borel–Cantelli Lemmas' },
+      order: 15,
+      summary: {
+        ko: String.raw`길이의 총합이 유한하면 무한히 자주 일어나는 점은 측도 0입니다 — \(\sum m(E_n) < \infty \Rightarrow m(\limsup E_n) = 0\). 독립이면 역도 성립합니다.`,
+        en: String.raw`If the total length is finite, the points hit infinitely often form a null set — \(\sum m(E_n) < \infty \Rightarrow m(\limsup E_n) = 0\). With independence the converse holds.`,
+      },
+      tex: [
+        String.raw`m(\limsup_{n\to\infty} E_n) = 0 \quad \left(\sum_{n=1}^{\infty} m(E_n) < \infty\right)`,
+        String.raw`\sum m(E_n) = \infty,\ E_n \text{ independent } \Rightarrow m(\limsup E_n) = 1`,
+      ],
+      prerequisites: ['measure'],
+      controls: [
+        { kind: 'select', key: 'mode', label: { ko: '모드', en: 'Mode' }, options: ['summable', 'nonsummable'], init: 'summable' },
+        { kind: 'slider', key: 'n', label: { ko: '집합 개수 n', en: 'Number of sets n' }, min: 1, max: 60, step: 1, init: 20 },
+      ],
+      problems: borelCantelliProblems,
+    },
+    {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
         en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
@@ -326,9 +349,65 @@ problems: boundedVariationProblems,
 problems: lebesgueProblems,
     },
     {
+      id: 'lebesgue-convergence',
+      title: { ko: '르벡 수렴 정리', en: 'Lebesgue Convergence Theorems' },
+      order: 17,
+      summary: {
+        ko: String.raw`단조수렴·파투·지배수렴 — 극한과 적분의 순서를 바꾸는 세 기둥입니다. 질량이 도망가는(escape·spike) 예에서 가설이 왜 필요한지 눈으로 확인하세요.`,
+        en: String.raw`Monotone convergence, Fatou, dominated convergence — the three pillars for swapping limits and integrals. Watch mass escape (escape·spike) to see why each hypothesis is needed.`,
+      },
+      tex: [
+        String.raw`f_n \uparrow f \Rightarrow \int f_n \uparrow \int f`,
+        String.raw`\int \liminf f_n \le \liminf \int f_n`,
+        String.raw`|f_n| \le g,\ f_n \to f \text{ a.e. } \Rightarrow \int f_n \to \int f`,
+      ],
+      prerequisites: ['lebesgue'],
+      controls: [
+        { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['escape', 'spike', 'monotone'], init: 'escape' },
+        { kind: 'slider', key: 'n', label: { ko: 'n', en: 'n' }, min: 1, max: 40, step: 1, init: 10 },
+      ],
+      problems: lebesgueConvergenceProblems,
+    },
+    {
+      id: 'fubini-tonelli',
+      title: { ko: '푸비니-토넬리 정리', en: 'Fubini–Tonelli Theorem' },
+      order: 18,
+      summary: {
+        ko: String.raw`음이 아닌 함수(Tonelli)나 적분 가능한 함수(Fubini)는 적분 순서를 바꿔도 같습니다 — 행부터 더하나 열부터 더하나 같은 수. 적분 가능성 없이는 깨집니다.`,
+        en: String.raw`Nonnegative (Tonelli) or integrable (Fubini) functions give the same iterated integrals in either order — rows-first or columns-first. Without integrability it breaks.`,
+      },
+      tex: [
+        String.raw`\iint f = \int\!\!\left(\int f\,dx\right)\!dy = \int\!\!\left(\int f\,dy\right)\!dx`,
+      ],
+      prerequisites: ['lebesgue-convergence'],
+      controls: [
+        { kind: 'select', key: 'mode', label: { ko: '함수 모드', en: 'Function mode' }, options: ['separable', 'tent'], init: 'separable' },
+        { kind: 'slider', key: 'n', label: { ko: '격자 N', en: 'Grid N' }, min: 8, max: 64, step: 8, init: 32 },
+      ],
+      problems: fubiniTonelliProblems,
+    },
+    {
+      id: 'egorov',
+      title: { ko: '에고로프 정리', en: "Egorov's Theorem" },
+      order: 19,
+      summary: {
+        ko: String.raw`유한 측도에서 a.e. 수렴은 "거의" 균등수렴입니다 — 나쁜 집합의 측도를 \(\varepsilon\) 아래로 누르면 나머지에선 균등하게 수렴합니다.`,
+        en: String.raw`On finite measure, a.e. convergence is "almost" uniform — squeeze the bad set's measure below \(\varepsilon\) and convergence is uniform on the rest.`,
+      },
+      tex: [
+        String.raw`m(E \setminus F) < \varepsilon \Rightarrow f_n \to f \text{ uniformly on } F`,
+      ],
+      prerequisites: ['lebesgue-convergence'],
+      controls: [
+        { kind: 'slider', key: 'delta', label: { ko: 'δ (나쁜 집합 기준)', en: 'δ (bad-set threshold)' }, min: 0.1, max: 1, step: 0.05, init: 0.5 },
+        { kind: 'slider', key: 'n', label: { ko: '단계 n', en: 'Stage n' }, min: 1, max: 40, step: 1, init: 6 },
+      ],
+      problems: egorovProblems,
+    },
+    {
       id: 'absolute-continuity',
       title: { ko: '절대연속성', en: 'Absolute Continuity' },
-      order: 16,
+      order: 20,
       summary: {
         ko: String.raw`\(F(x) = x^2\)는 절대연속 — 구간들의 총 길이가 0으로 가면 \(\sum |\Delta F|\)도 0으로 갑니다. 칸토어 함수는 균등연속이지만 절대연속이 아닙니다: 총 길이 \(\left(\frac23\right)^n \to 0\)인데 \(\sum |\Delta c| = 1\)에 고정됩니다. 절대연속인 함수는 정확히 Lebesgue 적분 가능한 함수의 부정적분입니다.`,
         en: String.raw`\(F(x) = x^2\) is absolutely continuous — when the intervals' total length goes to 0, so does \(\sum |\Delta F|\). The Cantor function is uniformly continuous but not absolutely continuous: total length \(\left(\frac23\right)^n \to 0\) while \(\sum |\Delta c| = 1\) stays frozen. Absolutely continuous functions are exactly the indefinite integrals of Lebesgue-integrable functions.`,
