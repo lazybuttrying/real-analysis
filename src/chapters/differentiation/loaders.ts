@@ -7,6 +7,7 @@ import type { SceneLoader } from '../../contracts';
  */
 export const loaders: Readonly<Record<string, SceneLoader>> = {
   'diffcont': () => import('../calculus/scenes/diffCont').then((module) => module.default),
+  'discontinuous-derivative': () => import('../calculus/scenes/discontinuousDerivative').then((module) => module.default),
   'mvt': () => import('../calculus/scenes/mvt').then((module) => module.default),
   'derivative-monotonicity': () => import('../calculus/scenes/derivativeMonotonicity').then((module) => module.default),
   'inverse-function-theorem': () => import('../calculus/scenes/inverseFunctionTheorem').then((module) => module.default),

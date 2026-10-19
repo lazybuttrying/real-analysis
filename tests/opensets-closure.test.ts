@@ -222,8 +222,11 @@ describe('split chapters: topology chapter scenes', () => {
     const ids = [...topology.scenes].sort((a, b) => a.order - b.order).map((s) => s.id);
     expect(ids).toEqual([
       'opensets',
+      'clopen',
       'closure',
       'compact',
+      'topologist-sine',
+      'peano-curve',
       'metric-spaces',
       'contraction',
       'baire-category',

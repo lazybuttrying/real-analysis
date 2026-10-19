@@ -305,6 +305,7 @@ describe('split chapters: the five ex-limits chapters', () => {
     expect(idsOf('continuity')).toEqual([
       'epsdelta',
       'continuity',
+      'thomae',
       'continuity-equivalences',
       'monotone-discontinuities',
       'uniform-continuity',
@@ -314,8 +315,11 @@ describe('split chapters: the five ex-limits chapters', () => {
     ]);
     expect(idsOf('topology')).toEqual([
       'opensets',
+      'clopen',
       'closure',
       'compact',
+      'topologist-sine',
+      'peano-curve',
       'metric-spaces',
       'contraction',
       'baire-category',

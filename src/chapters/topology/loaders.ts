@@ -7,8 +7,11 @@ import type { SceneLoader } from '../../contracts';
  */
 export const loaders: Readonly<Record<string, SceneLoader>> = {
   'opensets': () => import('../limits/scenes/opensets').then((module) => module.default),
+  'clopen': () => import('../limits/scenes/clopen').then((module) => module.default),
   'closure': () => import('../limits/scenes/closure').then((module) => module.default),
   'compact': () => import('../limits/scenes/compact').then((module) => module.default),
+  'topologist-sine': () => import('../limits/scenes/topologistSine').then((module) => module.default),
+  'peano-curve': () => import('../limits/scenes/peanoCurve').then((module) => module.default),
   'metric-spaces': () => import('../limits/scenes/metricSpaces').then((module) => module.default),
   'contraction': () => import('../limits/scenes/contraction').then((module) => module.default),
   'baire-category': () => import('../limits/scenes/baireCategory').then((module) => module.default),

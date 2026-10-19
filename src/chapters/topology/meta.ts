@@ -1,7 +1,10 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { baireCategoryProblems } from '../limits/problems/baire-category';
 import { baireOneProblems } from '../limits/problems/baire-1';
+import { clopenProblems } from '../limits/problems/clopen';
 import { fatCantorProblems } from '../limits/problems/fat-cantor';
+import { peanoCurveProblems } from '../limits/problems/peano-curve';
+import { topologistSineProblems } from '../limits/problems/topologist-sine';
 import { problems as cantorFunctionProblems } from '../limits/problems/cantor-function';
 import { problems as cantorProblems } from '../limits/problems/cantor';
 import { problems as closureProblems } from '../limits/problems/closure';
@@ -51,9 +54,29 @@ export const topology: ChapterMeta = {
 problems: opensetsProblems,
     },
     {
+      id: 'clopen',
+      title: { ko: 'Clopen 집합', en: 'Clopen Sets' },
+      order: 2,
+      summary: {
+        ko: String.raw`열려 있으면서 닫혀 있는 집합 — clopen. \(\mathbb{R}\)에서는 \(\varnothing\)과 \(\mathbb{R}\)뿐이지만 (완전 증명), 주변 공간이 바뀌면 같은 집합의 운명이 바뀝니다. \([0,1]\)은 \(\mathbb{R}\)에서는 닫혀 있기만 하지만, \([0,1]\cup[2,3]\) 안에서는 clopen입니다.`,
+        en: String.raw`Sets that are both open and closed — clopen. In \(\mathbb{R}\) only \(\varnothing\) and \(\mathbb{R}\) qualify (proved in full), but change the ambient space and the same set's fate changes: \([0,1]\) is merely closed in \(\mathbb{R}\), yet clopen inside \([0,1]\cup[2,3]\).`,
+      },
+      tex: [
+        String.raw`A \text{ clopen in } X \iff A \text{ open in } X \text{ and closed in } X`,
+        String.raw`[0,1] = \bigl([0,1]\cup[2,3]\bigr) \cap (-0.5, 1.5) = \bigl([0,1]\cup[2,3]\bigr) \cap [-0.5, 1.5]`,
+      ],
+      prerequisites: ['opensets'],
+      controls: [
+        { kind: 'select', key: 'case', label: { ko: '경우', en: 'Case' }, options: ['open-interval', 'closed-interval', 'clopen-pieces', 'clopen-gap'], init: 'clopen-pieces' },
+        { kind: 'slider', key: 'x', label: { ko: '탐침 x', en: 'Probe x' }, min: -0.6, max: 3.6, step: 0.01, init: 0.5 },
+        { kind: 'slider', key: 'eps', label: { ko: '반지름 ε', en: 'Radius ε' }, min: 0.01, max: 2, step: 0.01, init: 0.2 },
+      ],
+      problems: clopenProblems,
+    },
+    {
       id: 'closure',
       title: { ko: '폐포와 유계', en: 'Closure and Boundedness' },
-      order: 2,
+      order: 3,
       summary: {
         ko: String.raw`집합 \(A\) 위에 바를 그으면 폐포 \(\overline{A}\) — 빠져나간 극한점들을 빨아들인 집합입니다. 닫힘 ⟺ 극한점을 다 품음 ⟺ 폐포와 같음, 그리고 닫힘 + 유계 ⟺ 컴팩트(하이네-보렐)의 돌림노래를 확인합니다.`,
         en: String.raw`Drawing a bar over \(A\) gives the closure \(\overline{A}\) — the set with its escaped limit points pulled back in. Follow the round-song: closed ⟺ contains its limit points ⟺ equals its closure, and closed + bounded ⟺ compact (Heine-Borel).`,
@@ -72,7 +95,7 @@ problems: closureProblems,
     {
       id: 'compact',
       title: { ko: '컴팩트 집합', en: 'Compact Sets' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`컴팩트 \(\iff\) 닫힘 + 유계(하이네–보렐): \([0,1]\)은 열린 커버의 처음 6개 구간으로 덮이지만, \((0,1]\)은 0 근처의 틈 때문에, \([0,\infty)\)는 무한대의 꼬리 때문에 유한 부분커버를 갖지 않습니다. 볼차노–바이어슈트라스의 수열 버전은 완전히 증명하고, 열린 커버 정의의 동치성은 아이디어 수준에서만 봅니다.`,
         en: String.raw`Compact \(\iff\) closed + bounded (Heine–Borel): \([0,1]\) is covered by the first 6 intervals of its open cover, while \((0,1]\) fails at the gap near 0 and \([0,\infty)\) fails at the infinite tail. Sequential compactness via Bolzano–Weierstrass is proved in full; the open-cover definition's equivalence is shown at the idea level.`,
@@ -90,9 +113,49 @@ problems: closureProblems,
       problems: compactProblems,
     },
     {
+      id: 'topologist-sine',
+      title: { ko: '위상수학자의 사인 곡선', en: "Topologist's Sine Curve" },
+      order: 5,
+      summary: {
+        ko: String.raw`\(\{(x, \sin(1/x)) : x > 0\}\)의 폐포는 \(y\)축 위의 선분 \(\{0\}\times[-1,1]\)을 덧붙입니다. 연결집합의 폐포라 연결이지만, 선분 위의 점에서 곡선으로 가는 길은 없습니다 — 연결이 path-연결보다 약한 이유의 살아있는 예시입니다.`,
+        en: String.raw`The closure of \(\{(x, \sin(1/x)) : x > 0\}\) adds the segment \(\{0\}\times[-1,1]\) on the \(y\)-axis. Connected as the closure of a connected set, yet no path runs from the segment into the curve — the living example of why connected is weaker than path-connected.`,
+      },
+      tex: [
+        String.raw`S = \{(x, \sin(1/x)) : x > 0\}, \quad \overline{S} = S \cup \bigl(\{0\} \times [-1,1]\bigr)`,
+        String.raw`\overline{S} \text{ connected},\quad \overline{S} \text{ not path-connected}`,
+      ],
+      prerequisites: ['compact', 'closure'],
+      controls: [
+        { kind: 'slider', key: 'xMin', label: { ko: '왼쪽 끝 x', en: 'Left end x' }, min: 0.005, max: 1, step: 0.005, init: 0.05 },
+        { kind: 'toggle', key: 'showSegment', label: { ko: '극한 선분 표시', en: 'Show limit segment' }, init: true },
+        { kind: 'toggle', key: 'showSeq', label: { ko: '수열 표시', en: 'Show sequences' }, init: true },
+      ],
+      problems: topologistSineProblems,
+    },
+    {
+      id: 'peano-curve',
+      title: { ko: '페아노 곡선', en: 'Peano Curve' },
+      order: 6,
+      summary: {
+        ko: String.raw`연속사상 \([0,1] \to [0,1]^2\)가 정사각형을 가득 채울 수 있습니다 — 9개 정사각형 뱀 행렬을 재귀적으로 반복하면 균등수렴하는 근사 곡선들이 전사 연속 극한을 만듭니다. 단사성은 불가능합니다 (Netto 정리, 완전 증명).`,
+        en: String.raw`A continuous map \([0,1] \to [0,1]^2\) can fill the whole square — recursively repeating the 9-subsquare snake yields uniformly convergent approximations with a surjective continuous limit. Injectivity is impossible (Netto's theorem, proved in full).`,
+      },
+      tex: [
+        String.raw`\gamma_n \to \gamma \text{ uniformly},\quad \gamma : [0,1] \to [0,1]^2 \text{ continuous and onto}`,
+        String.raw`\text{No continuous bijection } [0,1] \to [0,1]^2 \text{ exists}`,
+      ],
+      prerequisites: ['topologist-sine', 'uniform'],
+      controls: [
+        { kind: 'slider', key: 'order', label: { ko: '차수 n', en: 'Order n' }, min: 1, max: 4, step: 1, init: 2 },
+        { kind: 'slider', key: 't', label: { ko: '매개변수 t', en: 'Parameter t' }, min: 0, max: 1, step: 0.001, init: 0.5 },
+        { kind: 'toggle', key: 'showGrid', label: { ko: '격자 표시', en: 'Show grid' }, init: true },
+      ],
+      problems: peanoCurveProblems,
+    },
+    {
       id: 'metric-spaces',
       title: { ko: '거리공간', en: 'Metric Spaces' },
-      order: 4,
+      order: 7,
       summary: {
         ko: String.raw`거리를 공리화하면 \(\varepsilon\)-공이 일반화됩니다 — 열린 공 \(B(c, r)\)의 모양은 거리 \(d\)에 달려 있습니다. 유클리드 거리의 원판, 최대 노름의 정사각형, 그리고 극단적인 예시인 이산 거리를 비교합니다.`,
         en: String.raw`Axiomatizing distance generalizes the \(\varepsilon\)-ball — the shape of an open ball \(B(c, r)\) depends on the metric \(d\). Compare the Euclidean disk, the max-norm square, and the extreme discrete metric.`,
@@ -112,7 +175,7 @@ problems: closureProblems,
     {
       id: 'contraction',
       title: { ko: '축소사상 원리', en: 'Contraction Mapping Principle' },
-      order: 5,
+      order: 8,
       summary: {
         ko: String.raw`수축사상 \(d(Tx,Ty) \le q\,d(x,y)\) (\(q<1\))은 완비 거리공간에서 유일한 고정점을 갖습니다 — 피카르 반복 \(x_{n+1} = Tx_n\)은 오차공 \(\frac{q^n}{1-q}|x_1-x_0|\)과 함께 조여듭니다. \(T(x) = x/2\) on \((0,1]\)은 완비성이 왜 필수적인지 보여줍니다: 수축사상이지만 고정점이 없습니다.`,
         en: String.raw`A contraction \(d(Tx,Ty) \le q\,d(x,y)\) (\(q<1\)) on a complete metric space has a unique fixed point — the Picard iterates \(x_{n+1} = Tx_n\) tighten inside the error ball \(\frac{q^n}{1-q}|x_1-x_0|\). \(T(x) = x/2\) on \((0,1]\) shows why completeness is essential: a contraction with no fixed point.`,
@@ -133,7 +196,7 @@ problems: closureProblems,
     {
       id: 'baire-category',
       title: { ko: '베어 카테고리 정리', en: 'Baire Category Theorem' },
-      order: 6,
+      order: 9,
       summary: {
         ko: String.raw`완비 거리공간은 nowhere dense인 집합들의 가산합집합이 될 수 없습니다 — 이것이 Baire Category Theorem입니다. \([0, 1]\)의 유리수를 하나씩 피하는 중첩 닫힌구간 \(I_k\)를 따라가면, 길이가 \(0\)으로 수렴하는 교집합 속에 무리수 한 점이 남습니다.`,
         en: String.raw`A complete metric space cannot be a countable union of nowhere dense sets — that is the Baire Category Theorem. Dodging the rationals of \([0, 1]\) one by one with nested closed intervals \(I_k\) leaves a single irrational point in the intersection, whose lengths shrink to \(0\).`,
@@ -151,7 +214,7 @@ problems: baireCategoryProblems,
     {
       id: 'baire-1',
       title: { ko: '베어 1급 함수', en: 'Baire Class 1 Functions' },
-      order: 7,
+      order: 10,
       summary: {
         ko: String.raw`연속함수들의 점별 극한 — Baire 1급 함수. Thomae 함수 \(T(p/q) = 1/q\) (기약분수), \(T(x) = 0\) (무리수)는 서로 겹치지 않는 텐트들의 합 \(f_n\)의 점별 극한입니다. \(T\)는 무리수에서 연속, 유리수에서 불연속 — 연속점 집합이 조밀한 \(G_\delta\)라는 Baire 정리의 살아있는 예시입니다.`,
         en: String.raw`Pointwise limits of continuous functions — Baire class 1. Thomae's function \(T(p/q) = 1/q\) (reduced), \(T(x) = 0\) (irrational) is the pointwise limit of sums \(f_n\) of disjoint tents. \(T\) is continuous at irrationals, discontinuous at rationals — a living example of Baire's theorem that the continuity points contain a dense \(G_\delta\).`,
@@ -169,7 +232,7 @@ problems: baireCategoryProblems,
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 8,
+      order: 11,
       summary: {
         ko: String.raw`가운데 3분의 1을 계속 지우면 전체 길이는 \(\left(\frac{2}{3}\right)^n\to 0\)이 되지만, 남는 점은 셀 수 없이 많습니다. 비가산성은 아이디어 수준에서만 언급합니다.`,
         en: String.raw`Deleting middle thirds drives the total length \(\left(\frac{2}{3}\right)^n\to 0\), yet uncountably many points remain. Uncountability is stated at the idea level only.`,
@@ -181,7 +244,7 @@ problems: cantorProblems,
     {
       id: 'fat-cantor',
       title: { ko: '팻 칸토어 집합', en: 'The Fat Cantor Set' },
-      order: 9,
+      order: 12,
       summary: {
         ko: String.raw`가운데를 덜 파내면 어떻게 될까요 — 매 단계에서 길이 \(4^{-n}\)만 제거하면 남는 집합은 컴팩트하고 nowhere dense이며 perfect인데도 전체 길이가 \(\frac12\)로 수렴합니다. 측도와 위상적 크기는 독립적입니다.`,
         en: String.raw`What if we dig out less? Removing only length \(4^{-n}\) per interval leaves a set that is compact, nowhere dense and perfect — yet keeps total length \(\frac12\). Measure and topological size are independent notions.`,
@@ -197,7 +260,7 @@ problems: fatCantorProblems,
     {
       id: 'cantor-function',
       title: { ko: '칸토어 함수', en: 'The Cantor Function' },
-      order: 10,
+      order: 13,
       summary: {
         ko: String.raw`악마의 계단: 연속이고 단조롭게 \(0\)에서 \(1\)로 오르지만, 여집합 구간에서는 상수라서 \(f' = 0\)인 점들의 전체 길이가 \(1\)입니다. \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — 미적분학 기본정리가 "거의 모든 곳에서 미분가능"보다 더 강한 것을 요구하는 이유입니다.`,
         en: String.raw`The Devil's staircase: continuous and nondecreasing from \(0\) to \(1\), yet constant on every complementary interval, so \(f' = 0\) on a set of total length \(1\). \(f(1) - f(0) = 1 \neq \int_0^1 f'\) — why the FTC needs more than differentiability almost everywhere.`,

@@ -5,6 +5,7 @@ import { problems as continuityEquivalencesProblems } from '../limits/problems/c
 import { problems as epsdeltaProblems } from '../limits/problems/epsdelta';
 import { problems as evtProblems } from '../limits/problems/evt';
 import { problems as ivtProblems } from '../limits/problems/ivt';
+import { problems as thomaeProblems } from '../limits/problems/thomae';
 import { problems as uniformContinuityProblems } from '../limits/problems/uniform-continuity';
 import { problems as uniformProblems } from '../limits/problems/uniform';
 
@@ -64,9 +65,30 @@ problems: epsdeltaProblems,
 problems: continuityProblems,
     },
     {
+      id: 'thomae',
+      title: { ko: '토매 함수', en: "Thomae's Function" },
+      order: 3,
+      summary: {
+        ko: String.raw`팝콘 함수 \(f(p/q) = 1/q\) (기약분수), \(f(x) = 0\) (무리수): 모든 무리수에서 연속이고 모든 유리수에서 불연속입니다. \(\varepsilon\)을 주면 높이가 \(\varepsilon\) 이상인 점은 유한개뿐 — 그래서 무리수 근처에서는 \(\delta\)를 잡을 수 있습니다.`,
+        en: String.raw`The popcorn function \(f(p/q) = 1/q\) (reduced), \(f(x) = 0\) (irrational): continuous at every irrational, discontinuous at every rational. Given \(\varepsilon\), only finitely many dots reach height \(\varepsilon\) — so near an irrational a \(\delta\) can always be found.`,
+      },
+      tex: [
+        String.raw`f(x) = \begin{cases} 1/q & x = p/q \text{ in lowest terms} \\ 0 & x \notin \mathbb{Q} \end{cases}`,
+        String.raw`\{x : f(x) \ge \varepsilon\} = \{p/q : q \le 1/\varepsilon\} \text{ finite}`,
+      ],
+      prerequisites: ['continuity'],
+      controls: [
+        { kind: 'slider', key: 'Q', label: { ko: '최대 분모 Q', en: 'Max denominator Q' }, min: 1, max: 30, step: 1, init: 12 },
+        { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.02, max: 0.5, step: 0.01, init: 0.2 },
+        { kind: 'slider', key: 'center', label: { ko: '중심 x₀', en: 'Center x₀' }, min: 0, max: 1, step: 0.01, init: 0.5 },
+        { kind: 'slider', key: 'zoom', label: { ko: '확대 폭', en: 'Zoom width' }, min: 0.02, max: 0.5, step: 0.01, init: 0.2 },
+      ],
+      problems: thomaeProblems,
+    },
+    {
       id: 'continuity-equivalences',
       title: { ko: '연속성의 세 가지 얼굴', en: 'Three Faces of Continuity' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`연속성은 세 가지 얼굴을 가집니다: \(\varepsilon\)-\(\delta\) 논법, 수열을 통한 판정, 열린 집합의 역상. \(f(x) = x^2\)와 점프 함수를 나란히 두어 세 얼굴이 같은 말을 하고 있음을 확인합니다.`,
         en: String.raw`Continuity has three faces: the \(\varepsilon\)-\(\delta\) argument, the sequential test, and preimages of open sets. Placing \(f(x) = x^2\) next to a jump function shows the three faces saying the same thing.`,
@@ -87,7 +109,7 @@ problems: continuityProblems,
     {
       id: 'monotone-discontinuities',
       title: { ko: '단조함수의 불연속점', en: 'Discontinuities of Monotone Functions' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`단조함수는 모든 점에서 좌극한과 우극한을 가지므로, 불연속점은 모두 점프입니다. 점프 크기가 \(1/n\)을 넘는 점은 유한 개뿐이므로, 불연속점은 아무리 많아도 가산 개입니다.`,
         en: String.raw`A monotone function has left and right limits everywhere, so every discontinuity is a jump. Only finitely many jumps can exceed \(1/n\), so the discontinuities are at most countable — no matter how many there are.`,
@@ -106,7 +128,7 @@ problems: monotoneDiscontinuitiesProblems,
     {
       id: 'uniform-continuity',
       title: { ko: '균등연속', en: 'Uniform Continuity' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`균등연속에서는 하나의 \(\delta\)가 모든 점 \(x\)에서 통한다 — \(\delta\)는 \(\varepsilon\)에만 의존하고 \(x\)에는 의존하지 않는다. \(f(x) = x^2\)에서는 \(x\)가 커질수록 필요한 \(\delta\)가 줄어들어 \(\mathbb{R}\) 전체를 감당하는 \(\delta\)가 없음을 직접 확인해 보자.`,
         en: String.raw`Uniform continuity demands one \(\delta\) that works at every point \(x\) — \(\delta\) may depend on \(\varepsilon\) alone, never on \(x\). Watch the required \(\delta\) shrink as \(x\) grows for \(f(x) = x^2\), so no single \(\delta\) covers all of \(\mathbb{R}\).`,
@@ -126,7 +148,7 @@ problems: monotoneDiscontinuitiesProblems,
     {
       id: 'ivt',
       title: { ko: '중간값 정리', en: "You Can't Climb Without Crossing Every Height" },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`연속함수는 \([a,b]\)에서 \(f(a)\)와 \(f(b)\) 사이의 모든 값을 반드시 밟고 지나갑니다. 목표 높이 \(c\)를 움직이며 건너는 점 \(\xi\)를 찾아봅니다.`,
         en: String.raw`A continuous function on \([a,b]\) must step on every value between \(f(a)\) and \(f(b)\). Move the target level \(c\) and find the crossing \(\xi\).`,
@@ -141,7 +163,7 @@ problems: ivtProblems,
     {
       id: 'evt',
       title: { ko: '최댓값 정리', en: 'The Extreme Value Theorem' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`닫힌 구간 위의 연속함수는 최댓값과 최솟값을 반드시 취합니다. \(f(x) = x^3 - 3x\) on \([-2,2]\)에서 확인하고, 열린 구간과 불연속 반례로 두 가설이 모두 필요함을 봅니다.`,
         en: String.raw`A continuous function on a closed interval always attains its max and min. Verify it for \(f(x) = x^3 - 3x\) on \([-2,2]\), and see from the open-interval and discontinuous counterexamples that both hypotheses are necessary.`,
@@ -165,7 +187,7 @@ problems: evtProblems,
     {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`\(f_n(x)=x^n\)은 \([0,1]\)의 각 점에서는 수렴하지만, \(\sup|f_n-f|=1\not\to 0\)이라 균등하게 수렴하지는 않습니다. 극한함수가 \(x=1\)에서 끊어지는 모습을 확인합니다.`,
         en: String.raw`\(f_n(x)=x^n\) converges at every point of \([0,1]\), yet \(\sup|f_n-f|=1\not\to 0\): not uniformly. Watch the limit break at \(x=1\).`,
