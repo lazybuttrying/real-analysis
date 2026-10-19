@@ -86,8 +86,14 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`대각선 \(m_j = n^{(j)}_j\)를 둡니다. \(k\)를 고정하면, \(j \ge k\)인 꼬리 \((m_j)_{j \ge k}\)는 \((n^{(k)}_j)\)의 부분수열입니다 (중첩 구조 덕분에 \(m_j = n^{(j)}_j\)가 \(n^{(k)}\)의 항들 중에서 strictly increasing하게 뽑히기 때문). 따라서 \(f_{m_j}(x_k)\)가 수렴합니다. \(k\)가 임의였으므로 \((f_{m_j})\)는 모든 \(x_k\)에서 수렴합니다 — 조밀 집합 위의 점별 수렴입니다.`,
-          en: String.raw`Set the diagonal \(m_j = n^{(j)}_j\). Fixing \(k\), the tail \((m_j)_{j \ge k}\) is a subsequence of \((n^{(k)}_j)\) (nesting makes \(m_j = n^{(j)}_j\) a strictly increasing pick from the terms of \(n^{(k)}\)). Hence \(f_{m_j}(x_k)\) converges. Since \(k\) was arbitrary, \((f_{m_j})\) converges at every \(x_k\) — pointwise convergence on the dense set.`,
+          ko: String.raw`대각선 \(m_j = n^{(j)}_j\)를 둡니다. 먼저 \((m_j)\)는 엄격증가 수열입니다: \(n^{(j+1)}\)이 \(n^{(j)}\)의 부분수열이므로 엄격증가 사상 \(\sigma^{(j)}: \mathbb{N} \to \mathbb{N}\)에 대해 \(n^{(j+1)}_i = n^{(j)}_{\sigma^{(j)}(i)}\)라 쓰면, \(m_{j+1} = n^{(j+1)}_{j+1} = n^{(j)}_{\sigma^{(j)}(j+1)} > n^{(j)}_j = m_j\)입니다 (단 \(\sigma^{(j)}(j+1) > j+1 > j\)).`,
+          en: String.raw`Set the diagonal \(m_j = n^{(j)}_j\). First, \((m_j)\) is strictly increasing: writing \(n^{(j+1)}_i = n^{(j)}_{\sigma^{(j)}(i)}\) with the strictly increasing refinement map \(\sigma^{(j)}: \mathbb{N} \to \mathbb{N}\), we get \(m_{j+1} = n^{(j+1)}_{j+1} = n^{(j)}_{\sigma^{(j)}(j+1)} > n^{(j)}_j = m_j\) (since \(\sigma^{(j)}(j+1) > j+1 > j\)).`,
+        },
+      },
+      {
+        text: {
+          ko: String.raw`\(k\)를 고정합니다. \(j \ge k\)인 각 \(j\)에 대해 \(m_j = n^{(j)}_j\)는 \((n^{(k)}_i)\)의 항이므로 \(m_j = n^{(k)}_{i_j}\)인 \(i_j\)가 존재합니다. 중첩 합성 \(\psi_k(j) = \sigma^{(k)} \circ \cdots \circ \sigma^{(j-1)}(j)\)에 대해 \(i_j = \psi_k(j)\)이고, 엄격증가 합성은 엄격증가를 보존하므로 지표 부등식 \(i_{j+1} = \psi_k(j+1) > \psi_k(j) = i_j\)를 얻습니다. 따라서 꼬리 \((m_j)_{j \ge k} = (n^{(k)}_{i_j})_{j \ge k}\)는 \((n^{(k)}_i)\)의 부분수열이고, \(f_{m_j}(x_k)\)는 수렴 수열 \((f_{n^{(k)}_i}(x_k))_i\)의 부분수열이므로 수렴합니다. \(k\)가 임의였으므로 \((f_{m_j})\)는 모든 \(x_k\)에서 수렴합니다 — 조밀 집합 위의 점별 수렴입니다.`,
+          en: String.raw`Fix \(k\). For each \(j \ge k\), \(m_j = n^{(j)}_j\) is a term of \((n^{(k)}_i)\), so write \(m_j = n^{(k)}_{i_j}\). The nested composition \(\psi_k(j) = \sigma^{(k)} \circ \cdots \circ \sigma^{(j-1)}(j)\) gives \(i_j = \psi_k(j)\), and strictly increasing composition preserves strict increase, yielding the index inequality \(i_{j+1} = \psi_k(j+1) > \psi_k(j) = i_j\). Hence the tail \((m_j)_{j \ge k} = (n^{(k)}_{i_j})_{j \ge k}\) is a subsequence of \((n^{(k)}_i)\), and \(f_{m_j}(x_k)\) is a subsequence of the convergent sequence \((f_{n^{(k)}_i}(x_k))_i\), so it converges. Since \(k\) was arbitrary, \((f_{m_j})\) converges at every \(x_k\) — pointwise convergence on the dense set.`,
         },
       },
       {

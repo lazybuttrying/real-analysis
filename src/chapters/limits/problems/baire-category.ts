@@ -120,6 +120,7 @@ export const baireCategoryProblems: readonly ProblemMeta[] = [
       ko: String.raw`stage 10: \(I_{10} = [0.796875,\, 0.8125]\), 생존자 \(x \approx 0.8046875\) — 세 번의 축소로 \(q_1\), \(q_2\), \(q_7\)을 구간 안에서 회피했습니다. 같은 중첩공 아이디어를 \(C[0, 1]\)에 적용하면 미분 불가능한 함수가 typical해집니다.`,
       en: String.raw`stage 10: \(I_{10} = [0.796875,\, 0.8125]\), survivor \(x \approx 0.8046875\) — three shrinkings dodged \(q_1\), \(q_2\), \(q_7\) inside. The same nested-ball idea, applied in \(C[0,1]\), makes nowhere-differentiable functions typical.`,
     },
+    isHint: true,
     proof: [
       {
         text: {

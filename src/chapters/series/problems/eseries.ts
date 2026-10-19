@@ -74,10 +74,10 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'compound',
           statement: {
-            ko: String.raw`\(\left(1+\frac{1}{n}\right)^n\)이 \(e\) 아래에서 증가함을 보이세요. (단조성의 엄밀한 증명은 생략하고 아이디어 수준으로 짚습니다.)`,
-            en: String.raw`Show \(\left(1+\frac{1}{n}\right)^n\) increases toward \(e\) from below. (Monotonicity is sketched at idea level.)`,
+            ko: String.raw`\(\left(1+\frac{1}{n}\right)^n\)이 \(e\) 아래에서 증가함을 보이세요.`,
+            en: String.raw`Show \(\left(1+\frac{1}{n}\right)^n\) increases toward \(e\) from below.`,
           },
-          display: [String.raw`\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{n}\frac{1}{k!}\prod_{j=0}^{k-1}\left(1-\frac{j}{n}\right) < e`],
+          display: [String.raw`\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{n}\frac{1}{k!}\prod_{j=0}^{k-1}\left(1-\frac{j}{n}\right) < e`, String.raw`s_{n+1} - s_n \ge (a_{n+1,2} - a_{n,2}) + a_{n+1,n+1} > 0`],
           preset: { n: 30 },
           presetCaption: {
             ko: String.raw`\(n = 30\): 복리 길은 \(e\)에 한참 못 미칩니다.`,
@@ -86,20 +86,26 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`이항정리로 \(\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{n}\binom{n}{k}\frac{1}{n^k} = \sum_{k=0}^{n}\frac{1}{k!}(1)\left(1-\frac{1}{n}\right)\cdots\left(1-\frac{k-1}{n}\right)\)입니다.`,
-                en: String.raw`By the binomial theorem, \(\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{n}\binom{n}{k}\frac{1}{n^k} = \sum_{k=0}^{n}\frac{1}{k!}(1)\left(1-\frac{1}{n}\right)\cdots\left(1-\frac{k-1}{n}\right)\).`,
+                ko: String.raw`\(s_n = \left(1+\frac{1}{n}\right)^n\)라 둡니다. 이항정리로 \(s_n = \sum_{k=0}^{n}\binom{n}{k}\frac{1}{n^k}\)이고, \(\binom{n}{k}\frac{1}{n^k} = \frac{1}{k!}\prod_{j=0}^{k-1}\left(1-\frac{j}{n}\right)\) (\(k = 0\)이면 빈 곱 \(= 1\))이므로 \(s_n = \sum_{k=0}^{n} a_{n,k}\) (단 \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}\left(1-\frac{j}{n}\right)\))입니다.`,
+                en: String.raw`Put \(s_n = \left(1+\frac{1}{n}\right)^n\). By the binomial theorem \(s_n = \sum_{k=0}^{n}\binom{n}{k}\frac{1}{n^k}\), and since \(\binom{n}{k}\frac{1}{n^k} = \frac{1}{k!}\prod_{j=0}^{k-1}\left(1-\frac{j}{n}\right)\) (empty product \(= 1\) for \(k = 0\)), \(s_n = \sum_{k=0}^{n} a_{n,k}\) with \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}\left(1-\frac{j}{n}\right)\).`,
               },
             },
             {
               text: {
-                ko: String.raw`각 인자 \(\left(1-\frac{j}{n}\right) < 1\)이므로, \(\left(1+\frac{1}{n}\right)^n < \sum_{k=0}^{n}\frac{1}{k!} < e\)입니다.`,
-                en: String.raw`Each factor \(\left(1-\frac{j}{n}\right) < 1\), so \(\left(1+\frac{1}{n}\right)^n < \sum_{k=0}^{n}\frac{1}{k!} < e\).`,
+                ko: String.raw`항별 비교: 고정된 \(k \ge 1\)에 대해 \(0 < j \le k-1\)이면 \(\left(1-\frac{j}{n}\right) < \left(1-\frac{j}{n+1}\right)\) (\(n\)이 커지면 빼는 양이 작아짐)이므로 \(a_{n,k} \le a_{n+1,k}\) — \(k \ge 2\)이면 인자 \(j = 1\)에서 엄밀히 작아져 \(a_{n,k} < a_{n+1,k}\)입니다. 모든 항은 양수입니다.`,
+                en: String.raw`Termwise comparison: for fixed \(k \ge 1\) and \(0 < j \le k-1\), \(\left(1-\frac{j}{n}\right) < \left(1-\frac{j}{n+1}\right)\) (larger \(n\) subtracts less), so \(a_{n,k} \le a_{n+1,k}\) — and for \(k \ge 2\) the factor \(j = 1\) is strictly smaller, giving \(a_{n,k} < a_{n+1,k}\). All terms are positive.`,
               },
             },
             {
               text: {
-                ko: String.raw`\(n\)이 커지면 인자 \(\left(1-\frac{j}{n}\right)\)들이 \(1\)에 가까워지므로 수열은 증가합니다 (엄밀한 단조성 증명은 생략합니다 — 아이디어 수준).`,
-                en: String.raw`As \(n\) grows, the factors \(\left(1-\frac{j}{n}\right)\) approach \(1\), so the sequence increases (the rigorous monotonicity proof is omitted — idea level).`,
+                ko: String.raw`따라서 \(s_{n+1} = \sum_{k=0}^{n+1} a_{n+1,k} = \sum_{k=0}^{n} a_{n+1,k} + a_{n+1,n+1} \ge \sum_{k=0}^{n} a_{n,k} + \underbrace{(a_{n+1,2} - a_{n,2})}_{>\,0} + \underbrace{a_{n+1,n+1}}_{>\,0} > s_n\)입니다 — 항별 증가에 항 하나 추가가 더해진 것입니다. 즉 \(s_n\)은 엄밀히 증가합니다.`,
+                en: String.raw`Hence \(s_{n+1} = \sum_{k=0}^{n+1} a_{n+1,k} = \sum_{k=0}^{n} a_{n+1,k} + a_{n+1,n+1} \ge \sum_{k=0}^{n} a_{n,k} + \underbrace{(a_{n+1,2} - a_{n,2})}_{>\,0} + \underbrace{a_{n+1,n+1}}_{>\,0} > s_n\) — termwise increase plus one extra term. So \(s_n\) is strictly increasing.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`각 인자 \(\left(1-\frac{j}{n}\right) < 1\)이므로 \(a_{n,k} < \frac{1}{k!}\)이고, \(s_n < \sum_{k=0}^{n}\frac{1}{k!} < \sum_{k=0}^{\infty}\frac{1}{k!} = e\) — \(s_n\)은 \(e\) 아래에서 증가합니다. 모든 단계가 완성되었습니다.`,
+                en: String.raw`Each factor \(\left(1-\frac{j}{n}\right) < 1\), so \(a_{n,k} < \frac{1}{k!}\) and \(s_n < \sum_{k=0}^{n}\frac{1}{k!} < \sum_{k=0}^{\infty}\frac{1}{k!} = e\) — \(s_n\) increases from below toward \(e\). Every step is complete.`,
               },
             },
           ],

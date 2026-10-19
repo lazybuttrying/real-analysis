@@ -133,14 +133,28 @@ export const bohrMollerupProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`마지막으로 (ii)로 확장합니다: \(x > 0\)을 \(x = y + m\) (\(0 < y \le 1\), 정수 \(m \ge 0\))이라 쓰면 \(f(x) = y(y+1)\cdots(y+m-1)\,f(y)\)이고 \(\Gamma\)도 같은 점화식을 만족하므로, \((0,1]\)에서의 일치가 모든 \(x > 0\)으로 확장되어 \(f = \Gamma\)입니다.`,
-          en: String.raw`Finally extend by (ii): writing \(x > 0\) as \(x = y + m\) with \(0 < y \le 1\) and integer \(m \ge 0\), \(f(x) = y(y+1)\cdots(y+m-1)\,f(y)\), and since \(\Gamma\) satisfies the same recurrence, the agreement on \((0,1]\) extends to all \(x > 0\): \(f = \Gamma\).`,
+          ko: String.raw`Gauss 극한과 Euler 적분을 연결합니다. 절단 적분 \(I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt\)에 \(s = \frac{t}{n}\)을 대입하면 \(I_n(x) = n^x\int_0^1 s^{x-1}(1-s)^n\,ds\)입니다. 부분적분을 반복하면 \(\int_0^1 s^{x-1}(1-s)^k\,ds = \frac{k}{x}\int_0^1 s^{x}(1-s)^{k-1}\,ds\)이므로 (경계항은 \(x > 0\)에서 0), \(\int_0^1 s^{x-1}(1-s)^n\,ds = \frac{n!}{x(x+1)\cdots(x+n)}\) — 따라서 \(I_n(x) = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n\)입니다 (\(U_n\)은 위의 위쪽 조임 bound).`,
+          en: String.raw`Connecting the Gauss limit to Euler's integral. In the truncated integral \(I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt\), substitute \(s = \frac{t}{n}\) to get \(I_n(x) = n^x\int_0^1 s^{x-1}(1-s)^n\,ds\). Repeated integration by parts gives \(\int_0^1 s^{x-1}(1-s)^k\,ds = \frac{k}{x}\int_0^1 s^{x}(1-s)^{k-1}\,ds\) (boundary terms vanish for \(x > 0\)), so \(\int_0^1 s^{x-1}(1-s)^n\,ds = \frac{n!}{x(x+1)\cdots(x+n)}\) — hence \(I_n(x) = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n\), where \(U_n\) is the upper squeeze bound above.`,
+        },
+        display: [String.raw`I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n`],
+      },
+      {
+        text: {
+          ko: String.raw`이제 \(n \to \infty\): 각 \(t\)에서 \(\left(1-\frac{t}{n}\right)^n \to e^{-t}\)이므로 피적분함수는 \(t^{x-1}e^{-t}\)로 점별 수렴합니다. 지배는 \(\ln(1-u) \le -u\)에서 나옵니다: \(0 \le t \le n\)일 때 \(\left(1-\frac{t}{n}\right)^n = e^{n\ln(1-t/n)} \le e^{-t}\)이므로 지배함수 \(t^{x-1}e^{-t}\) (\(x > 0\)에서 \((0,\infty)\) 위 적분 가능)를 얻습니다. 지배수렴정리로 \(I_n(x) \to \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x)\)입니다.`,
+          en: String.raw`Now \(n \to \infty\): for each \(t\), \(\left(1-\frac{t}{n}\right)^n \to e^{-t}\), so the integrand converges pointwise to \(t^{x-1}e^{-t}\). Domination comes from \(\ln(1-u) \le -u\): for \(0 \le t \le n\), \(\left(1-\frac{t}{n}\right)^n = e^{n\ln(1-t/n)} \le e^{-t}\), giving the integrable dominating function \(t^{x-1}e^{-t}\) on \((0,\infty)\) (for \(x > 0\)). By dominated convergence, \(I_n(x) \to \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x)\).`,
+        },
+        display: [String.raw`I_n(x) \longrightarrow \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x) \qquad (n \to \infty)`],
+      },
+      {
+        text: {
+          ko: String.raw`두 극한이 일치합니다: \(I_n(x) = \frac{n}{n+x}\,U_n\)에서 \(\frac{n}{n+x} \to 1\)이고 \(U_n \to G(x)\) (조임)이므로 \(I_n(x) \to G(x)\)인데, 동시에 \(I_n(x) \to \Gamma(x)\)이므로 \(G(x) = \Gamma(x)\) (\(0 < x < 1\)) — Gauss 곱 공식이 Euler 적분과 같음이 완전히 증명되었습니다.`,
+          en: String.raw`The two limits agree: from \(I_n(x) = \frac{n}{n+x}\,U_n\), since \(\frac{n}{n+x} \to 1\) and \(U_n \to G(x)\) (squeeze), \(I_n(x) \to G(x)\); but also \(I_n(x) \to \Gamma(x)\). Hence \(G(x) = \Gamma(x)\) for \(0 < x < 1\) — Gauss's product formula equals Euler's integral, fully proved.`,
         },
       },
       {
         text: {
-          ko: String.raw`정직한 표시: \(G(x) = \Gamma(x)\)라는 동일시는 \(\Gamma\)의 Gauss 곱 공식이며, 그 증명(\((1-t/n)^n \nearrow e^{-t}\)와 베타 적분을 이용)은 이 사이트에서는 아이디어 수준으로만 스케치하고 여기서는 증명하지 않습니다.`,
-          en: String.raw`Honest label: the identification \(G(x) = \Gamma(x)\) is Gauss's product formula for \(\Gamma\); its proof (via \((1-t/n)^n \nearrow e^{-t}\) and the beta integral) is sketched at idea level on this site, not proved here.`,
+          ko: String.raw`마지막으로 (ii)로 확장합니다: \(x > 0\)을 \(x = y + m\) (\(0 < y \le 1\), 정수 \(m \ge 0\))이라 쓰면 \(f(x) = y(y+1)\cdots(y+m-1)\,f(y)\)이고 \(\Gamma\)도 같은 점화식을 만족하므로, \((0,1]\)에서의 일치가 모든 \(x > 0\)으로 확장되어 \(f = \Gamma\)입니다.`,
+          en: String.raw`Finally extend by (ii): writing \(x > 0\) as \(x = y + m\) with \(0 < y \le 1\) and integer \(m \ge 0\), \(f(x) = y(y+1)\cdots(y+m-1)\,f(y)\), and since \(\Gamma\) satisfies the same recurrence, the agreement on \((0,1]\) extends to all \(x > 0\): \(f = \Gamma\).`,
         },
       },
     ],
