@@ -1,13 +1,7 @@
 import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { nthRootModel, type NthRootData, type NthRootSample } from '../models/nthRoot';
 
 /**
@@ -51,27 +45,17 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createNthRootScene(): Scene<NthRootData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: NthRootData; state: ControlState } | undefined;
+const curvePath = line<NthRootSample>()
+  .x((d) => d.x)
+  .y((d) => d.y);
 
-  const curvePath = line<NthRootSample>()
-    .x((d) => d.x)
-    .y((d) => d.y);
-  const shadeArea = area<NthRootSample>()
-    .x((d) => d.x)
-    .y0((d) => d.y)
-    .y1((d) => d.y);
+const shadeArea = area<NthRootSample>()
+  .x((d) => d.x)
+  .y0((d) => d.y)
+  .y1((d) => d.y);
 
-  const drawMain = (data: NthRootData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
+function drawMain(chart: Chart, data: NthRootData, lang: Lang): void {
+    const { g, width, height } = chart;
     g.selectAll('*').remove();
 
     const yMax = Math.pow(data.xMax, data.n) * 1.06;
@@ -148,57 +132,16 @@ function createNthRootScene(): Scene<NthRootData> {
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
       .text(localize({ ko: 's = sup E', en: 's = sup E' }, lang));
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<NthRootData>({ model: nthRootModel, createScene: createNthRootScene });
+export default defineSimpleScene<NthRootData>({
+  model: nthRootModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => explainText(lang), spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true }
+  ],
+});

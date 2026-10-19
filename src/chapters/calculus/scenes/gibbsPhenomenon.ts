@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { gibbsModel, OVERSHOOT_FRACTION, type GibbsData, type GibbsPoint } from '../models/gibbsPhenomenon';
 
 /**
@@ -44,179 +38,138 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createGibbsPhenomenonScene(): Scene<GibbsData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: GibbsData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: GibbsData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n, points, measuredPeak, measuredPeakT, theoreticalPeak } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
-    const { n, points, measuredPeak, measuredPeakT, theoreticalPeak } = data;
+  g.selectAll('*').remove();
 
-    const { g, width, height } = chart;
-    g.selectAll('*').remove();
+  const x = scaleLinear()
+    .domain([0, 4 * Math.PI])
+    .range([0, width]);
+  const y = scaleLinear().domain([-0.15, 1.35]).range([height, 0]);
 
-    const x = scaleLinear()
-      .domain([0, 4 * Math.PI])
-      .range([0, width]);
-    const y = scaleLinear().domain([-0.15, 1.35]).range([height, 0]);
+  const ticks = [0, Math.PI, 2 * Math.PI, 3 * Math.PI, 4 * Math.PI];
+  const tickLabels = ['0', 'π', '2π', '3π', '4π'];
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(axisBottom(x).tickValues(ticks).tickFormat((_, i) => tickLabels[i] ?? ''));
+  g.append('g').call(axisLeft(y).ticks(6));
+  g.append('text')
+    .attr('x', width)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'end')
+    .attr('fill', 'currentColor')
+    .text('t = 2Nx');
 
-    const ticks = [0, Math.PI, 2 * Math.PI, 3 * Math.PI, 4 * Math.PI];
-    const tickLabels = ['0', 'π', '2π', '3π', '4π'];
-    g.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(axisBottom(x).tickValues(ticks).tickFormat((_, i) => tickLabels[i] ?? ''));
-    g.append('g').call(axisLeft(y).ticks(6));
-    g.append('text')
-      .attr('x', width)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .attr('text-anchor', 'end')
-      .attr('fill', 'currentColor')
-      .text('t = 2Nx');
+  const header = g
+    .append('text')
+    .attr('x', 0)
+    .attr('y', -28)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor');
+  header.text(
+    localize(
+      {
+        ko: `재조정된 축 위의 붕괴: N = ${n}일 때 S_N(t/2N)이 (2/π)Si(t) 위에 겹쳐집니다`,
+        en: `Collapse on the rescaled axis: S_N(t/2N) lands on (2/π)Si(t) for N = ${n}`,
+      },
+      lang,
+    ),
+  );
 
-    const header = g
-      .append('text')
-      .attr('x', 0)
-      .attr('y', -28)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor');
-    header.text(
-      localize(
-        {
-          ko: `재조정된 축 위의 붕괴: N = ${n}일 때 S_N(t/2N)이 (2/π)Si(t) 위에 겹쳐집니다`,
-          en: `Collapse on the rescaled axis: S_N(t/2N) lands on (2/π)Si(t) for N = ${n}`,
-        },
-        lang,
-      ),
-    );
+  // The N-independent limit curve (dashed).
+  const limitLine = line<GibbsPoint>()
+    .x((p) => x(p.t))
+    .y((p) => y(p.siLimit));
+  g.append('path')
+    .datum(points)
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '6,4')
+    .style('stroke', LIMIT_COLOR)
+    .attr('d', limitLine);
 
-    // The N-independent limit curve (dashed).
-    const limitLine = line<GibbsPoint>()
-      .x((p) => x(p.t))
-      .y((p) => y(p.siLimit));
-    g.append('path')
-      .datum(points)
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '6,4')
-      .style('stroke', LIMIT_COLOR)
-      .attr('d', limitLine);
+  // The partial sum on the rescaled axis.
+  const sumLine = line<GibbsPoint>()
+    .x((p) => x(p.t))
+    .y((p) => y(p.sN));
+  g.append('path')
+    .datum(points)
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', SUM_COLOR)
+    .attr('d', sumLine);
 
-    // The partial sum on the rescaled axis.
-    const sumLine = line<GibbsPoint>()
-      .x((p) => x(p.t))
-      .y((p) => y(p.sN));
-    g.append('path')
-      .datum(points)
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', SUM_COLOR)
-      .attr('d', sumLine);
+  // Dashed line at the theoretical peak.
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(theoreticalPeak))
+    .attr('y2', y(theoreticalPeak))
+    .attr('stroke', 'currentColor')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', '6,4')
+    .attr('opacity', 0.7);
+  g.append('text')
+    .attr('x', width - 4)
+    .attr('y', y(theoreticalPeak) - 8)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'end')
+    .attr('fill', 'currentColor')
+    .text(`(2/π)Si(π) ≈ ${fmt(theoreticalPeak, 5)}`);
 
-    // Dashed line at the theoretical peak.
-    g.append('line')
-      .attr('x1', 0)
-      .attr('x2', width)
-      .attr('y1', y(theoreticalPeak))
-      .attr('y2', y(theoreticalPeak))
-      .attr('stroke', 'currentColor')
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', '6,4')
-      .attr('opacity', 0.7);
-    g.append('text')
-      .attr('x', width - 4)
-      .attr('y', y(theoreticalPeak) - 8)
-      .attr('font-size', 12)
-      .attr('text-anchor', 'end')
-      .attr('fill', 'currentColor')
-      .text(`(2/π)Si(π) ≈ ${fmt(theoreticalPeak, 5)}`);
+  // Peak markers: measured on the sum, theoretical on the limit curve.
+  g.append('circle')
+    .attr('cx', x(measuredPeakT))
+    .attr('cy', y(measuredPeak))
+    .attr('r', 4.5)
+    .style('fill', SUM_COLOR);
+  g.append('circle')
+    .attr('cx', x(Math.PI))
+    .attr('cy', y(theoreticalPeak))
+    .attr('r', 4.5)
+    .style('fill', LIMIT_COLOR);
 
-    // Peak markers: measured on the sum, theoretical on the limit curve.
-    g.append('circle')
-      .attr('cx', x(measuredPeakT))
-      .attr('cy', y(measuredPeak))
-      .attr('r', 4.5)
-      .style('fill', SUM_COLOR);
-    g.append('circle')
-      .attr('cx', x(Math.PI))
-      .attr('cy', y(theoreticalPeak))
-      .attr('r', 4.5)
-      .style('fill', LIMIT_COLOR);
-
-    // Legend.
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .attr('fill', SUM_COLOR)
-      .text(localize({ ko: '— S_N(t/2N)', en: '— S_N(t/2N)' }, lang));
-    g.append('text')
-      .attr('x', width / 2)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .attr('fill', LIMIT_COLOR)
-      .text(localize({ ko: '- - (2/π)Si(t) 한계곡선', en: '- - (2/π)Si(t) limit curve' }, lang));
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-
-      // Cross-link: the Fourier scene whose numerical observation this derives.
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const fourierLink = document.createElement('a');
-      fourierLink.href = '../fourier/';
-      fourierLink.textContent = localize(
-        {
-          ko: '푸리에 정사각파 씬 — 울림의 수치적 관찰',
-          en: 'Fourier square-wave scene — the numerical observation',
-        },
-        lang,
-      );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), fourierLink);
-
-      shell.strips.append(readout, verdict, seeAlso);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      wrap = shell.chartWrap;
-      chart = createChart(shell.chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Legend.
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', SUM_COLOR)
+    .text(localize({ ko: '— S_N(t/2N)', en: '— S_N(t/2N)' }, lang));
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', LIMIT_COLOR)
+    .text(localize({ ko: '- - (2/π)Si(t) 한계곡선', en: '- - (2/π)Si(t) limit curve' }, lang));
 }
 
-export default defineScene<GibbsData>({ model: gibbsModel, createScene: createGibbsPhenomenonScene });
+export default defineSimpleScene<GibbsData>({
+  model: gibbsModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+  ],
+  mountExtra: (strips, lang) => {
+    // Cross-link: the Fourier scene whose numerical observation this derives.
+    const seeAlso = document.createElement('div');
+    seeAlso.style.marginTop = '4px';
+    const fourierLink = document.createElement('a');
+    fourierLink.href = '../fourier/';
+    fourierLink.textContent = localize(
+      {
+        ko: '푸리에 정사각파 씬 — 울림의 수치적 관찰',
+        en: 'Fourier square-wave scene — the numerical observation',
+      },
+      lang,
+    );
+    seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), fourierLink);
+    strips.append(seeAlso);
+  },
+});

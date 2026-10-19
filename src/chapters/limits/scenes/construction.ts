@@ -1,13 +1,7 @@
 import { scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { constructionModel, type ConstructionData } from '../models/construction';
 
 /**
@@ -47,17 +41,7 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createConstructionScene(): Scene<ConstructionData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: ConstructionData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: ConstructionData, lang: Lang): void {
     const { g, width, height } = chart;
     const { terms } = data;
     const sqrt2 = Math.SQRT2;
@@ -122,47 +106,13 @@ function createConstructionScene(): Scene<ConstructionData> {
           ),
         );
     }
-
-    if (factsSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(data, lang));
-      setRichText(verdictSlot, verdictText(lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<ConstructionData>({ model: constructionModel, createScene: createConstructionScene });
+export default defineSimpleScene<ConstructionData>({
+  model: constructionModel,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true }
+  ],
+});

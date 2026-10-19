@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   weierstrassModel,
   type WeierstrassData,
@@ -47,133 +41,85 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createWeierstrassScene(): Scene<WeierstrassData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: WeierstrassData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: WeierstrassData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { xs, vals, yMin, yMax, n } = data;
+  const count = xs.length;
 
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { xs, vals, yMin, yMax, n } = data;
-    const count = xs.length;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const title = localize(
+    {
+      ko: `Wₙ(x) — ${n}개 항의 부분합 (슬라이더: 항 개수 n)`,
+      en: `Wₙ(x) — partial sum of ${n} terms (slider: term count n)`,
+    },
+    lang,
+  );
 
-    const title = localize(
-      {
-        ko: `Wₙ(x) — ${n}개 항의 부분합 (슬라이더: 항 개수 n)`,
-        en: `Wₙ(x) — partial sum of ${n} terms (slider: term count n)`,
-      },
-      lang,
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -46)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(title);
+
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  const pad = (yMax - yMin) * 0.08 || 1;
+  const y = scaleLinear()
+    .domain([yMin - pad, yMax + pad])
+    .range([height, 0]);
+
+  g.append('g').call(axisLeft(y).ticks(6));
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
+
+  const curve = line<number>()
+    .x((_, i) => x(xs[i] ?? 0))
+    .y((_, i) => y(vals[i] ?? 0));
+
+  g.append('path')
+    .datum(xs)
+    .attr('d', curve)
+    .attr('fill', 'none')
+    .attr('stroke-width', 1.5)
+    .style('stroke', 'var(--accent)');
+
+  // Anchor dots: W_N(0) = 2 - (1/2)^n and W_N(1) = -(2 - (1/2)^n).
+  for (const [px, pv, label] of [
+    [0, vals[0] ?? 0, `Wₙ(0) = ${fmt(vals[0] ?? 0, 4)}`],
+    [1, vals[count - 1] ?? 0, `Wₙ(1) = ${fmt(vals[count - 1] ?? 0, 4)}`],
+  ] as const) {
+    g.append('circle')
+      .attr('cx', x(px))
+      .attr('cy', y(pv))
+      .attr('r', 4)
+      .attr('fill', 'var(--accent)')
+      .append('title')
+      .text(label);
+  }
+
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(
+      localize(
+        {
+          ko: `■ Wₙ(x) = Σ aᵏcos(bᵏπx) (k = 0..${n})`,
+          en: `■ Wₙ(x) = Σ aᵏcos(bᵏπx) (k = 0..${n})`,
+        },
+        lang,
+      ),
     );
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -46)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(title);
-
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
-    const pad = (yMax - yMin) * 0.08 || 1;
-    const y = scaleLinear()
-      .domain([yMin - pad, yMax + pad])
-      .range([height, 0]);
-
-    g.append('g').call(axisLeft(y).ticks(6));
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
-
-    const curve = line<number>()
-      .x((_, i) => x(xs[i] ?? 0))
-      .y((_, i) => y(vals[i] ?? 0));
-
-    g.append('path')
-      .datum(xs)
-      .attr('d', curve)
-      .attr('fill', 'none')
-      .attr('stroke-width', 1.5)
-      .style('stroke', 'var(--accent)');
-
-    // Anchor dots: W_N(0) = 2 - (1/2)^n and W_N(1) = -(2 - (1/2)^n).
-    for (const [px, pv, label] of [
-      [0, vals[0] ?? 0, `Wₙ(0) = ${fmt(vals[0] ?? 0, 4)}`],
-      [1, vals[count - 1] ?? 0, `Wₙ(1) = ${fmt(vals[count - 1] ?? 0, 4)}`],
-    ] as const) {
-      g.append('circle')
-        .attr('cx', x(px))
-        .attr('cy', y(pv))
-        .attr('r', 4)
-        .attr('fill', 'var(--accent)')
-        .append('title')
-        .text(label);
-    }
-
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(
-        localize(
-          {
-            ko: `■ Wₙ(x) = Σ aᵏcos(bᵏπx) (k = 0..${n})`,
-            en: `■ Wₙ(x) = Σ aᵏcos(bᵏπx) (k = 0..${n})`,
-          },
-          lang,
-        ),
-      );
-
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<WeierstrassData>({
+export default defineSimpleScene<WeierstrassData>({
   model: weierstrassModel,
-  createScene: createWeierstrassScene,
+  margin: MARGIN,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+  ],
 });

@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { cantorFunctionModel, type CantorFunctionData } from '../models/cantorFunction';
 
 /**
@@ -46,18 +40,7 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createCantorFunctionScene(): Scene<CantorFunctionData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: CantorFunctionData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: CantorFunctionData, lang: Lang): void {
     const { g, width, height } = chart;
     const { xs, fVals, intervals, stage } = data;
 
@@ -160,48 +143,15 @@ function createCantorFunctionScene(): Scene<CantorFunctionData> {
           lang,
         ),
       );
-
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<CantorFunctionData>({ model: cantorFunctionModel, createScene: createCantorFunctionScene });
+export default defineSimpleScene<CantorFunctionData>({
+  model: cantorFunctionModel,
+  margin: MARGIN,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true }
+  ],
+});

@@ -1,7 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { absoluteModel, type AbsoluteData } from '../models/absolute';
 
 // Two partial-sum walks: S_n of the signed series and T_n of the
@@ -22,186 +22,145 @@ function noteText(lang: Lang): string {
   );
 }
 
-function createAbsoluteScene(): Scene<AbsoluteData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let noteSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: AbsoluteData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: AbsoluteData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n, signed, absolute, signedLimit, absoluteLimit } = data;
+  const sLast = signed[n - 1] ?? signedLimit;
+  const tLast = absolute[n - 1] ?? 0;
 
-  const draw = (): void => {
-    if (!chart || !last || !noteSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { n, signed, absolute, signedLimit, absoluteLimit } = data;
-    const sLast = signed[n - 1] ?? signedLimit;
-    const tLast = absolute[n - 1] ?? 0;
+  const bounds = [...signed, ...absolute, signedLimit];
+  if (absoluteLimit !== null) bounds.push(absoluteLimit);
+  const lo = Math.min(...bounds);
+  const hi = Math.max(...bounds);
+  const pad = (hi - lo) * 0.12 || 0.05;
 
-    const bounds = [...signed, ...absolute, signedLimit];
-    if (absoluteLimit !== null) bounds.push(absoluteLimit);
-    const lo = Math.min(...bounds);
-    const hi = Math.max(...bounds);
-    const pad = (hi - lo) * 0.12 || 0.05;
+  const x = scaleLinear().domain([1, Math.max(2, n)]).range([0, width]);
+  const y = scaleLinear().domain([lo - pad, hi + pad]).range([height, 0]);
 
-    const x = scaleLinear().domain([1, Math.max(2, n)]).range([0, width]);
-    const y = scaleLinear().domain([lo - pad, hi + pad]).range([height, 0]);
+  const curve = line<number>()
+    .x((_, i) => x(i + 1))
+    .y((v) => y(v));
 
-    const curve = line<number>()
-      .x((_, i) => x(i + 1))
-      .y((v) => y(v));
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+  g.append('g').call(axisLeft(y).ticks(6));
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-    g.append('g').call(axisLeft(y).ticks(6));
+  const tTarget =
+    absoluteLimit === null
+      ? localize({ ko: '발산 (조화급수, ~ ln n)', en: 'diverges (harmonic, ~ ln n)' }, lang)
+      : fmt(absoluteLimit, 7);
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -48)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `S_n = ${fmt(sLast, 7)} → ${fmt(signedLimit, 7)} · T_n = ${fmt(tLast, 7)} → ${tTarget}`,
+          en: `S_n = ${fmt(sLast, 7)} → ${fmt(signedLimit, 7)} · T_n = ${fmt(tLast, 7)} → ${tTarget}`,
+        },
+        lang,
+      ),
+    );
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -26)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.75)
+    .text(
+      localize(
+        {
+          ko:
+            data.series === 'abs'
+              ? '절대수렴: Σ|a_k|가 수렴하므로 Σa_k도 수렴합니다'
+              : '조건수렴: Σ|a_k|는 발산하지만 Σa_k는 수렴합니다',
+          en:
+            data.series === 'abs'
+              ? 'absolute convergence: Σ|a_k| converges, so Σa_k converges too'
+              : 'conditional convergence: Σ|a_k| diverges, but Σa_k converges',
+        },
+        lang,
+      ),
+    );
 
-    const tTarget =
-      absoluteLimit === null
-        ? localize({ ko: '발산 (조화급수, ~ ln n)', en: 'diverges (harmonic, ~ ln n)' }, lang)
-        : fmt(absoluteLimit, 7);
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -48)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `S_n = ${fmt(sLast, 7)} → ${fmt(signedLimit, 7)} · T_n = ${fmt(tLast, 7)} → ${tTarget}`,
-            en: `S_n = ${fmt(sLast, 7)} → ${fmt(signedLimit, 7)} · T_n = ${fmt(tLast, 7)} → ${tTarget}`,
-          },
-          lang,
-        ),
-      );
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -26)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .attr('opacity', 0.75)
-      .text(
-        localize(
-          {
-            ko:
-              data.series === 'abs'
-                ? '절대수렴: Σ|a_k|가 수렴하므로 Σa_k도 수렴합니다'
-                : '조건수렴: Σ|a_k|는 발산하지만 Σa_k는 수렴합니다',
-            en:
-              data.series === 'abs'
-                ? 'absolute convergence: Σ|a_k| converges, so Σa_k converges too'
-                : 'conditional convergence: Σ|a_k| diverges, but Σa_k converges',
-          },
-          lang,
-        ),
-      );
+  // Signed limit line.
+  g.append('line')
+    .attr('x1', x(1))
+    .attr('x2', x(n))
+    .attr('y1', y(signedLimit))
+    .attr('y2', y(signedLimit))
+    .attr('stroke-dasharray', '6 4')
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--accent)');
+  g.append('text')
+    .attr('x', x(n) - 4)
+    .attr('y', y(signedLimit) - 8)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('fill', 'var(--accent)')
+    .text(fmt(signedLimit, 5));
 
-    // Signed limit line.
+  // Absolute limit line, when it exists.
+  if (absoluteLimit !== null) {
     g.append('line')
       .attr('x1', x(1))
       .attr('x2', x(n))
-      .attr('y1', y(signedLimit))
-      .attr('y2', y(signedLimit))
+      .attr('y1', y(absoluteLimit))
+      .attr('y2', y(absoluteLimit))
       .attr('stroke-dasharray', '6 4')
       .attr('stroke-width', 2)
-      .style('stroke', 'var(--accent)');
+      .style('stroke', 'var(--bound)');
     g.append('text')
       .attr('x', x(n) - 4)
-      .attr('y', y(signedLimit) - 8)
+      .attr('y', y(absoluteLimit) - 8)
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
-      .attr('fill', 'var(--accent)')
-      .text(fmt(signedLimit, 5));
-
-    // Absolute limit line, when it exists.
-    if (absoluteLimit !== null) {
-      g.append('line')
-        .attr('x1', x(1))
-        .attr('x2', x(n))
-        .attr('y1', y(absoluteLimit))
-        .attr('y2', y(absoluteLimit))
-        .attr('stroke-dasharray', '6 4')
-        .attr('stroke-width', 2)
-        .style('stroke', 'var(--bound)');
-      g.append('text')
-        .attr('x', x(n) - 4)
-        .attr('y', y(absoluteLimit) - 8)
-        .attr('text-anchor', 'end')
-        .attr('font-size', 12)
-        .attr('fill', 'var(--bound)')
-        .text(fmt(absoluteLimit, 5));
-    } else {
-      g.append('text')
-        .attr('x', x(n) - 4)
-        .attr('y', y(tLast) - 10)
-        .attr('text-anchor', 'end')
-        .attr('font-size', 12)
-        .attr('fill', 'var(--bound)')
-        .text(localize({ ko: 'T_n ~ ln n (발산)', en: 'T_n ~ ln n (diverges)' }, lang));
-    }
-
-    // The two walks.
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)')
-      .attr('d', curve(signed) ?? '');
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--bound)')
-      .attr('d', curve(absolute) ?? '');
-
-    // Legend.
+      .attr('fill', 'var(--bound)')
+      .text(fmt(absoluteLimit, 5));
+  } else {
     g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .attr('fill', 'var(--accent)')
-      .text(localize({ ko: '— S_n: 부호 있는 부분합', en: '— S_n: signed partial sums' }, lang));
-    g.append('text')
-      .attr('x', width / 2)
-      .attr('y', height + 34)
+      .attr('x', x(n) - 4)
+      .attr('y', y(tLast) - 10)
+      .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .attr('fill', 'var(--bound)')
-      .text(localize({ ko: '— T_n: 절댓값 부분합', en: '— T_n: absolute partial sums' }, lang));
+      .text(localize({ ko: 'T_n ~ ln n (발산)', en: 'T_n ~ ln n (diverges)' }, lang));
+  }
 
-    setRichText(noteSlot, noteText(lang));
-  };
+  // The two walks.
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)')
+    .attr('d', curve(signed) ?? '');
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--bound)')
+    .attr('d', curve(absolute) ?? '');
 
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const note = document.createElement('div');
-      strips.append(note);
-
-      noteSlot = createRichSlot(note);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      noteSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Legend.
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', 'var(--accent)')
+    .text(localize({ ko: '— S_n: 부호 있는 부분합', en: '— S_n: signed partial sums' }, lang));
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', 'var(--bound)')
+    .text(localize({ ko: '— T_n: 절댓값 부분합', en: '— T_n: absolute partial sums' }, lang));
 }
 
-export default defineScene<AbsoluteData>({ model: absoluteModel, createScene: createAbsoluteScene });
+export default defineSimpleScene<AbsoluteData>({
+  model: absoluteModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: (_data, lang) => noteText(lang) }],
+});

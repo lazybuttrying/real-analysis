@@ -1,13 +1,8 @@
 import { axisBottom, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { createRichSlot, setRichText } from '../../../view/richslot';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { closureModel, type ClosureData, type ClosureKind } from '../models/closure';
 
 /**
@@ -66,18 +61,7 @@ function verdictText(data: ClosureData, lang: Lang): string {
   );
 }
 
-function createClosureScene(): Scene<ClosureData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let closureSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: ClosureData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !closureSlot || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: ClosureData): void {
     const { g, width, height } = chart;
     const { kind, m, closureExtras, terms } = data;
 
@@ -154,26 +138,21 @@ function createClosureScene(): Scene<ClosureData> {
     }
 
     g.append('g').attr('transform', `translate(0,${height - 8})`).call(axisBottom(xScale).ticks(10));
+}
 
-    setRichText(closureSlot, closureText(kind, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const legend = document.createElement('div');
-      legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-      const closureLine = document.createElement('div');
-      closureLine.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(legend, closureLine, verdict);
-
-      setRichText(
+export default defineSimpleScene<ClosureData>({
+  model: closureModel,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: (data, lang) => closureText(data.kind, lang), bold: true },
+    { text: verdictText, bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const legend = document.createElement('div');
+    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
+    strips.prepend(legend);
+    setRichText(
         createRichSlot(legend),
         localize(
           {
@@ -183,31 +162,5 @@ function createClosureScene(): Scene<ClosureData> {
           lang,
         ),
       );
-      closureSlot = createRichSlot(closureLine);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      closureSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<ClosureData>({ model: closureModel, createScene: createClosureScene });
+  },
+});

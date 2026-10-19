@@ -1,14 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  stripInlineMath,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang, stripInlineMath } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   stoneWeierstrassModel,
   type StoneWeierstrassData,
@@ -59,17 +52,7 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createStoneWeierstrassScene(): Scene<StoneWeierstrassData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: StoneWeierstrassData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: StoneWeierstrassData, lang: Lang): void {
     const { samples } = data;
     const { g, width, height } = chart;
 
@@ -130,55 +113,26 @@ function createStoneWeierstrassScene(): Scene<StoneWeierstrassData> {
       .attr('fill', 'currentColor')
       .attr('opacity', 0.65)
       .text(localize({ ko: '┄ f (삼각파)', en: '┄ f (triangle wave)' }, lang));
+}
 
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-
-      // Cross-link: the ordinary Weierstrass theorem this scene generalizes.
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const link = document.createElement('a');
-      link.href = '../weierstrass-approx/';
-      link.textContent = localize(
+export default defineSimpleScene<StoneWeierstrassData>({
+  model: stoneWeierstrassModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const seeAlso = document.createElement('div');
+    seeAlso.style.marginTop = '4px';
+    const link = document.createElement('a');
+    link.href = '../weierstrass-approx/';
+    link.textContent = localize(
         { ko: '바이어슈트라스 근사 정리 씬 — 대수적 다항식의 경우', en: 'Weierstrass approximation scene — the algebraic-polynomial case' },
         lang,
       );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), link);
-      strips.append(readout, verdict, seeAlso);
-
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<StoneWeierstrassData>({ model: stoneWeierstrassModel, createScene: createStoneWeierstrassScene });
+    seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), link);
+    strips.append(seeAlso);
+  },
+});

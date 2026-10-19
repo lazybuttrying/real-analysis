@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { stolzCesaroModel, type StolzCesaroData } from '../models/stolzCesaro';
 
 /**
@@ -53,17 +47,7 @@ function crossLinkText(lang: Lang): string {
   );
 }
 
-function createStolzCesaroScene(): Scene<StolzCesaroData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: StolzCesaroData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: StolzCesaroData, lang: Lang): void {
     const { g, width, height } = chart;
     const { count, points, limit } = data;
     g.selectAll('*').remove();
@@ -160,52 +144,21 @@ function createStolzCesaroScene(): Scene<StolzCesaroData> {
       .attr('stroke-width', 2)
       .attr('stroke-dasharray', '7 4');
     legend.append('text').attr('x', 32).attr('y', 24).attr('fill', 'currentColor').text(legendDiff);
-
-    if (factsSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(data, lang));
-      setRichText(verdictSlot, verdictText(lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      const cross = document.createElement('div');
-      const link = document.createElement('a');
-      link.href = '../calculus/lhopital/';
-      link.textContent = crossLinkText(pageLang);
-      cross.append(link);
-      strips.append(facts, verdict, cross);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<StolzCesaroData>({ model: stolzCesaroModel, createScene: createStolzCesaroScene });
+export default defineSimpleScene<StolzCesaroData>({
+  model: stolzCesaroModel,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const cross = document.createElement('div');
+    const link = document.createElement('a');
+    link.href = '../calculus/lhopital/';
+    link.textContent = crossLinkText(lang);
+    cross.append(link);
+    strips.append(cross);
+  },
+});

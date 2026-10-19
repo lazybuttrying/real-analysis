@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { ZETA2, eulerProductModel, type EulerProductData } from '../models/eulerProduct';
 
 /**
@@ -41,142 +35,96 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createEulerProductScene(): Scene<EulerProductData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: EulerProductData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: EulerProductData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { k, terms, product } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
-    const { k, terms, product } = data;
+  // --- Partial products climbing toward the zeta(2) asymptote ---
+  g.selectAll('*').remove();
+  const x = scaleLinear().domain([1, Math.max(2, k)]).range([0, width]);
+  let lo = Math.min(product, 1.3);
+  const hi = ZETA2 * 1.01;
+  for (const t of terms) lo = Math.min(lo, t.product);
+  const y = scaleLinear().domain([lo - 0.02, hi]).range([height, 0]);
 
-    // --- Partial products climbing toward the zeta(2) asymptote ---
-    {
-      const { g, width, height } = chart;
-      g.selectAll('*').remove();
-      const x = scaleLinear().domain([1, Math.max(2, k)]).range([0, width]);
-      let lo = Math.min(product, 1.3);
-      const hi = ZETA2 * 1.01;
-      for (const t of terms) lo = Math.min(lo, t.product);
-      const y = scaleLinear().domain([lo - 0.02, hi]).range([height, 0]);
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(Math.min(k, 15)));
+  g.append('g').call(axisLeft(y).ticks(6));
 
-      g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(Math.min(k, 15)));
-      g.append('g').call(axisLeft(y).ticks(6));
+  const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  header.text(
+    localize(
+      { ko: `P_k = ∏ 1/(1 − p_i⁻²) — 점선 점근선 ζ(2) = π²/6 ≈ 1.6449를 향해 오릅니다`, en: `P_k = ∏ 1/(1 − p_i⁻²) — climbing toward the dashed asymptote ζ(2) = π²/6 ≈ 1.6449` },
+      lang,
+    ),
+  );
 
-      const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-      header.text(
-        localize(
-          { ko: `P_k = ∏ 1/(1 − p_i⁻²) — 점선 점근선 ζ(2) = π²/6 ≈ 1.6449를 향해 오릅니다`, en: `P_k = ∏ 1/(1 − p_i⁻²) — climbing toward the dashed asymptote ζ(2) = π²/6 ≈ 1.6449` },
-          lang,
-        ),
-      );
+  // Dashed asymptote at zeta(2).
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(ZETA2))
+    .attr('y2', y(ZETA2))
+    .attr('stroke', 'var(--accent)')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '6,4');
+  g.append('text')
+    .attr('x', width - 4)
+    .attr('y', y(ZETA2) - 6)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'end')
+    .style('fill', 'var(--accent)')
+    .text('ζ(2) = π²/6 ≈ 1.6449');
 
-      // Dashed asymptote at zeta(2).
-      g.append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
-        .attr('y1', y(ZETA2))
-        .attr('y2', y(ZETA2))
-        .attr('stroke', 'var(--accent)')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '6,4');
-      g.append('text')
-        .attr('x', width - 4)
-        .attr('y', y(ZETA2) - 6)
-        .attr('font-size', 12)
-        .attr('text-anchor', 'end')
-        .style('fill', 'var(--accent)')
-        .text('ζ(2) = π²/6 ≈ 1.6449');
+  // Partial product curve.
+  const productLine = line<{ k: number; v: number }>()
+    .x((d) => x(d.k))
+    .y((d) => y(d.v));
+  const pts = terms.map((t) => ({ k: t.k, v: t.product }));
+  if (pts.length > 1) {
+    g.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'currentColor').attr('stroke-width', 2).attr('d', productLine);
+  }
+  // Mark each prime step with a dot.
+  for (const t of terms) {
+    g.append('circle').attr('cx', x(t.k)).attr('cy', y(t.product)).attr('r', 3.5).style('fill', 'var(--accent)');
+  }
+  if (k >= 1) {
+    g.append('circle').attr('cx', x(k)).attr('cy', y(product)).attr('r', 5).style('fill', 'var(--accent)');
+  }
 
-      // Partial product curve.
-      const productLine = line<{ k: number; v: number }>()
-        .x((d) => x(d.k))
-        .y((d) => y(d.v));
-      const pts = terms.map((t) => ({ k: t.k, v: t.product }));
-      if (pts.length > 1) {
-        g.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'currentColor').attr('stroke-width', 2).attr('d', productLine);
-      }
-      // Mark each prime step with a dot.
-      for (const t of terms) {
-        g.append('circle').attr('cx', x(t.k)).attr('cy', y(t.product)).attr('r', 3.5).style('fill', 'var(--accent)');
-      }
-      if (k >= 1) {
-        g.append('circle').attr('cx', x(k)).attr('cy', y(product)).attr('r', 5).style('fill', 'var(--accent)');
-      }
-
-      g.append('text')
-        .attr('x', 8)
-        .attr('y', height + 32)
-        .attr('font-size', 12)
-        .style('fill', 'var(--accent)')
-        .text(localize({ ko: '● P_k (체로 거른 소수 k개)', en: '● P_k (k sieved primes)' }, lang));
-      g.append('text')
-        .attr('x', width / 2)
-        .attr('y', height + 32)
-        .attr('font-size', 12)
-        .attr('fill', 'currentColor')
-        .attr('opacity', 0.7)
-        .text(localize({ ko: '점선: ζ(2) = π²/6', en: 'Dashed: ζ(2) = π²/6' }, lang));
-    }
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-
-      // Cross-link to the Basel scene (relative: ../basel/).
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const link = document.createElement('a');
-      link.href = '../basel/';
-      link.textContent = localize(
-        { ko: '바젤 문제 씬 — ζ(2) = π²/6을 구하는 합 쪽 이야기', en: 'Basel problem scene — the sum side of ζ(2) = π²/6' },
-        lang,
-      );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), link);
-
-      strips.append(readout, verdict, seeAlso);
-
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 320);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 32)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: '● P_k (체로 거른 소수 k개)', en: '● P_k (k sieved primes)' }, lang));
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 32)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.7)
+    .text(localize({ ko: '점선: ζ(2) = π²/6', en: 'Dashed: ζ(2) = π²/6' }, lang));
 }
 
-export default defineScene<EulerProductData>({ model: eulerProductModel, createScene: createEulerProductScene });
+function mountExtra(strips: HTMLElement, lang: Lang): void {
+  // Cross-link to the Basel scene (relative: ../basel/).
+  const seeAlso = document.createElement('div');
+  seeAlso.style.marginTop = '4px';
+  const link = document.createElement('a');
+  link.href = '../basel/';
+  link.textContent = localize(
+    { ko: '바젤 문제 씬 — ζ(2) = π²/6을 구하는 합 쪽 이야기', en: 'Basel problem scene — the sum side of ζ(2) = π²/6' },
+    lang,
+  );
+  seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), link);
+  strips.append(seeAlso);
+}
+
+export default defineSimpleScene<EulerProductData>({
+  model: eulerProductModel,
+  margin: MARGIN,
+  fallbackHeight: 320,
+  drawMain,
+  slots: [{ text: readoutText, bold: true }, { text: (_data, lang) => verdictText(lang), bold: true }],
+  mountExtra,
+});

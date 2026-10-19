@@ -1,13 +1,7 @@
 import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { mTestModel, type MTestData } from '../models/mTest';
 
 /**
@@ -44,152 +38,104 @@ function verdictText(lang: Lang): string {
 const X_TICKS: readonly number[] = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI];
 const X_LABELS: readonly string[] = ['0', 'π/2', 'π', '3π/2', '2π'];
 
-function createMTestScene(): Scene<MTestData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: MTestData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: MTestData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n, xs, partial, limit, tailBound } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { n, xs, partial, limit, tailBound } = data;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const x = scaleLinear().domain([0, 2 * Math.PI]).range([0, width]);
+  const upper: number[] = new Array<number>(xs.length);
+  const lower: number[] = new Array<number>(xs.length);
+  let yMin = Infinity;
+  let yMax = -Infinity;
+  for (let i = 0; i < xs.length; i++) {
+    const li = limit[i] ?? 0;
+    upper[i] = li + tailBound;
+    lower[i] = li - tailBound;
+    yMin = Math.min(yMin, upper[i] ?? Infinity, lower[i] ?? Infinity);
+    yMax = Math.max(yMax, upper[i] ?? -Infinity, lower[i] ?? -Infinity);
+  }
+  const pad = (yMax - yMin) * 0.08 || 0.05;
+  const y = scaleLinear().domain([yMin - pad, yMax + pad]).range([height, 0]);
 
-    const x = scaleLinear().domain([0, 2 * Math.PI]).range([0, width]);
-    const upper: number[] = new Array<number>(xs.length);
-    const lower: number[] = new Array<number>(xs.length);
-    let yMin = Infinity;
-    let yMax = -Infinity;
-    for (let i = 0; i < xs.length; i++) {
-      const li = limit[i] ?? 0;
-      upper[i] = li + tailBound;
-      lower[i] = li - tailBound;
-      yMin = Math.min(yMin, upper[i] ?? Infinity, lower[i] ?? Infinity);
-      yMax = Math.max(yMax, upper[i] ?? -Infinity, lower[i] ?? -Infinity);
-    }
-    const pad = (yMax - yMin) * 0.08 || 0.05;
-    const y = scaleLinear().domain([yMin - pad, yMax + pad]).range([height, 0]);
-
-    g.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(
-        axisBottom(x)
-          .tickValues([...X_TICKS])
-          .tickFormat((d) => X_LABELS[X_TICKS.indexOf(Number(d))] ?? ''),
-      );
-    g.append('g').call(axisLeft(y).ticks(6));
-
-    const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
-    header1.text(
-      localize(
-        { ko: `S(x) = Σ sin(kx)/k² — N = ${n}인 부분합과 균등 오차 밴드`, en: `S(x) = Σ sin(kx)/k² — partial sum with N = ${n} and the uniform error band` },
-        lang,
-      ),
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(
+      axisBottom(x)
+        .tickValues([...X_TICKS])
+        .tickFormat((d) => X_LABELS[X_TICKS.indexOf(Number(d))] ?? ''),
     );
-    header2.text(
-      localize(
-        { ko: `S_${n}(x) (진한 선), 한계곡선 L(x) (옅은 선), 밴드 L(x) ± ${tailBound.toFixed(4)}`, en: `S_${n}(x) (bold), limit curve L(x) (faint), band L(x) ± ${tailBound.toFixed(4)}` },
-        lang,
-      ),
-    );
+  g.append('g').call(axisLeft(y).ticks(6));
 
-    // Uniform error band: limit +/- tailBound, filled once, independent of x.
-    const band = area<number>()
-      .x((_, i) => x(xs[i] ?? 0))
-      .y0((_, i) => y(lower[i] ?? 0))
-      .y1((_, i) => y(upper[i] ?? 0));
-    g.append('path')
-      .datum(xs)
-      .attr('d', band)
-      .style('fill', 'var(--accent)')
-      .attr('opacity', 0.15);
+  const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
+  header1.text(
+    localize(
+      { ko: `S(x) = Σ sin(kx)/k² — N = ${n}인 부분합과 균등 오차 밴드`, en: `S(x) = Σ sin(kx)/k² — partial sum with N = ${n} and the uniform error band` },
+      lang,
+    ),
+  );
+  header2.text(
+    localize(
+      { ko: `S_${n}(x) (진한 선), 한계곡선 L(x) (옅은 선), 밴드 L(x) ± ${tailBound.toFixed(4)}`, en: `S_${n}(x) (bold), limit curve L(x) (faint), band L(x) ± ${tailBound.toFixed(4)}` },
+      lang,
+    ),
+  );
 
-    // Limit curve, drawn faintly underneath.
-    const limitLine = line<number>()
-      .x((_, i) => x(xs[i] ?? 0))
-      .y((_, i) => y(limit[i] ?? 0));
-    g.append('path')
-      .datum(xs)
-      .attr('d', limitLine)
-      .attr('fill', 'none')
-      .attr('stroke-width', 1.5)
-      .attr('stroke', 'currentColor')
-      .attr('opacity', 0.35);
+  // Uniform error band: limit +/- tailBound, filled once, independent of x.
+  const band = area<number>()
+    .x((_, i) => x(xs[i] ?? 0))
+    .y0((_, i) => y(lower[i] ?? 0))
+    .y1((_, i) => y(upper[i] ?? 0));
+  g.append('path')
+    .datum(xs)
+    .attr('d', band)
+    .style('fill', 'var(--accent)')
+    .attr('opacity', 0.15);
 
-    // The partial sum S_N, the curve the band is squeezing.
-    const partialLine = line<number>()
-      .x((_, i) => x(xs[i] ?? 0))
-      .y((_, i) => y(partial[i] ?? 0));
-    g.append('path')
-      .datum(xs)
-      .attr('d', partialLine)
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)');
+  // Limit curve, drawn faintly underneath.
+  const limitLine = line<number>()
+    .x((_, i) => x(xs[i] ?? 0))
+    .y((_, i) => y(limit[i] ?? 0));
+  g.append('path')
+    .datum(xs)
+    .attr('d', limitLine)
+    .attr('fill', 'none')
+    .attr('stroke-width', 1.5)
+    .attr('stroke', 'currentColor')
+    .attr('opacity', 0.35);
 
-    // Legend.
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: `■ S_${n}(x) 부분합`, en: `■ S_${n}(x) partial sum` }, lang));
-    g.append('text')
-      .attr('x', width / 2)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .attr('opacity', 0.6)
-      .text(localize({ ko: '─ L(x) 한계곡선 · 밴드 = 균등 오차', en: '─ L(x) limit · band = uniform error' }, lang));
+  // The partial sum S_N, the curve the band is squeezing.
+  const partialLine = line<number>()
+    .x((_, i) => x(xs[i] ?? 0))
+    .y((_, i) => y(partial[i] ?? 0));
+  g.append('path')
+    .datum(xs)
+    .attr('d', partialLine)
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)');
 
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Legend.
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: `■ S_${n}(x) 부분합`, en: `■ S_${n}(x) partial sum` }, lang));
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.6)
+    .text(localize({ ko: '─ L(x) 한계곡선 · 밴드 = 균등 오차', en: '─ L(x) limit · band = uniform error' }, lang));
 }
 
-export default defineScene<MTestData>({ model: mTestModel, createScene: createMTestScene });
+export default defineSimpleScene<MTestData>({
+  model: mTestModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: factsText, bold: true }, { text: (_data, lang) => verdictText(lang), bold: true }],
+});

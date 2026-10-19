@@ -1,7 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { testsModel, type TestsData } from '../models/tests';
 
 // Ratio-test series: scatter of r_k = a_{k+1}/a_k against the dashed limit
@@ -38,177 +38,135 @@ function verdictText(data: TestsData, lang: Lang): string {
   );
 }
 
-function createTestsScene(): Scene<TestsData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: TestsData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: TestsData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { n } = data;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
 
-    const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
+  if (data.ratios !== null && data.limit !== null) {
+    const ratios = data.ratios;
+    const limit = data.limit;
+    const hi = Math.max(...ratios, limit) * 1.15;
+    const x = scaleLinear().domain([1, Math.max(2, n)]).range([0, width]);
+    const y = scaleLinear().domain([0, hi]).range([height, 0]);
 
-    if (data.ratios !== null && data.limit !== null) {
-      const ratios = data.ratios;
-      const limit = data.limit;
-      const hi = Math.max(...ratios, limit) * 1.15;
-      const x = scaleLinear().domain([1, Math.max(2, n)]).range([0, width]);
-      const y = scaleLinear().domain([0, hi]).range([height, 0]);
+    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+    g.append('g').call(axisLeft(y).ticks(6));
 
-      g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-      g.append('g').call(axisLeft(y).ticks(6));
+    header1.text(
+      localize(
+        {
+          ko: `${seriesLabel(data.series, lang)} — 비율 r_k = a_{k+1}/a_k → L = ${fmt(limit)}`,
+          en: `${seriesLabel(data.series, lang)} — ratio r_k = a_{k+1}/a_k → L = ${fmt(limit)}`,
+        },
+        lang,
+      ),
+    );
+    header2.text(
+      localize(
+        {
+          ko: `r_1 = ${fmt(ratios[0] ?? 0)}에서 시작해 L을 향해 감소합니다`,
+          en: `decreasing from r_1 = ${fmt(ratios[0] ?? 0)} toward L`,
+        },
+        lang,
+      ),
+    );
 
-      header1.text(
-        localize(
-          {
-            ko: `${seriesLabel(data.series, lang)} — 비율 r_k = a_{k+1}/a_k → L = ${fmt(limit)}`,
-            en: `${seriesLabel(data.series, lang)} — ratio r_k = a_{k+1}/a_k → L = ${fmt(limit)}`,
-          },
-          lang,
-        ),
-      );
-      header2.text(
-        localize(
-          {
-            ko: `r_1 = ${fmt(ratios[0] ?? 0)}에서 시작해 L을 향해 감소합니다`,
-            en: `decreasing from r_1 = ${fmt(ratios[0] ?? 0)} toward L`,
-          },
-          lang,
-        ),
-      );
+    // Limit line.
+    g.append('line')
+      .attr('x1', x(1))
+      .attr('x2', x(n))
+      .attr('y1', y(limit))
+      .attr('y2', y(limit))
+      .attr('stroke-dasharray', '6 4')
+      .attr('stroke-width', 2)
+      .style('stroke', 'var(--bound)');
+    g.append('text')
+      .attr('x', x(n) - 4)
+      .attr('y', y(limit) - 8)
+      .attr('text-anchor', 'end')
+      .attr('font-size', 12)
+      .attr('fill', 'var(--bound)')
+      .text(`L = ${fmt(limit)}`);
 
-      // Limit line.
-      g.append('line')
-        .attr('x1', x(1))
-        .attr('x2', x(n))
-        .attr('y1', y(limit))
-        .attr('y2', y(limit))
-        .attr('stroke-dasharray', '6 4')
-        .attr('stroke-width', 2)
-        .style('stroke', 'var(--bound)');
-      g.append('text')
-        .attr('x', x(n) - 4)
-        .attr('y', y(limit) - 8)
-        .attr('text-anchor', 'end')
-        .attr('font-size', 12)
-        .attr('fill', 'var(--bound)')
-        .text(`L = ${fmt(limit)}`);
+    // The ratio points.
+    ratios.forEach((r, i) => {
+      g.append('circle')
+        .attr('cx', x(i + 1))
+        .attr('cy', y(r))
+        .attr('r', 4)
+        .style('fill', 'var(--accent)');
+    });
+  } else if (data.majors !== null) {
+    const terms = data.terms;
+    const majors = data.majors;
+    const x = scaleLinear().domain([0.5, n + 0.5]).range([0, width]);
+    const y = scaleLinear().domain([0, (majors[0] ?? 1) * 1.1]).range([height, 0]);
+    const band = width / n;
 
-      // The ratio points.
-      ratios.forEach((r, i) => {
-        g.append('circle')
-          .attr('cx', x(i + 1))
-          .attr('cy', y(r))
-          .attr('r', 4)
-          .style('fill', 'var(--accent)');
-      });
-    } else if (data.majors !== null) {
-      const terms = data.terms;
-      const majors = data.majors;
-      const x = scaleLinear().domain([0.5, n + 0.5]).range([0, width]);
-      const y = scaleLinear().domain([0, (majors[0] ?? 1) * 1.1]).range([height, 0]);
-      const band = width / n;
+    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+    g.append('g').call(axisLeft(y).ticks(6));
 
-      g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-      g.append('g').call(axisLeft(y).ticks(6));
+    header1.text(
+      localize(
+        {
+          ko: `${seriesLabel(data.series, lang)} — 모든 k에서 a_k = 1/(k²+1) < b_k = 1/k²`,
+          en: `${seriesLabel(data.series, lang)} — a_k = 1/(k²+1) < b_k = 1/k² at every k`,
+        },
+        lang,
+      ),
+    );
+    header2.text(
+      localize(
+        {
+          ko: `Σb_k = π²/6 ≈ 1.64493 수렴 → 비교 판정법으로 Σa_k 수렴`,
+          en: `Σb_k = π²/6 ≈ 1.64493 converges → Σa_k converges by comparison`,
+        },
+        lang,
+      ),
+    );
 
-      header1.text(
-        localize(
-          {
-            ko: `${seriesLabel(data.series, lang)} — 모든 k에서 a_k = 1/(k²+1) < b_k = 1/k²`,
-            en: `${seriesLabel(data.series, lang)} — a_k = 1/(k²+1) < b_k = 1/k² at every k`,
-          },
-          lang,
-        ),
-      );
-      header2.text(
-        localize(
-          {
-            ko: `Σb_k = π²/6 ≈ 1.64493 수렴 → 비교 판정법으로 Σa_k 수렴`,
-            en: `Σb_k = π²/6 ≈ 1.64493 converges → Σa_k converges by comparison`,
-          },
-          lang,
-        ),
-      );
-
-      for (let k = 1; k <= n; k++) {
-        const b = majors[k - 1] ?? 0;
-        const a = terms[k - 1] ?? 0;
-        g.append('rect')
-          .attr('x', x(k) - band * 0.36)
-          .attr('y', y(b))
-          .attr('width', band * 0.72)
-          .attr('height', Math.max(0, y(0) - y(b)))
-          .attr('fill', 'var(--muted)')
-          .attr('opacity', 0.55);
-        g.append('rect')
-          .attr('x', x(k) - band * 0.22)
-          .attr('y', y(a))
-          .attr('width', band * 0.44)
-          .attr('height', Math.max(0, y(0) - y(a)))
-          .style('fill', 'var(--accent)');
-      }
-
-      // Legend.
-      g.append('text')
-        .attr('x', 8)
-        .attr('y', height + 34)
-        .attr('font-size', 12)
-        .attr('fill', 'var(--accent)')
-        .text(localize({ ko: '■ a_k = 1/(k²+1)', en: '■ a_k = 1/(k²+1)' }, lang));
-      g.append('text')
-        .attr('x', width / 2)
-        .attr('y', height + 34)
-        .attr('font-size', 12)
+    for (let k = 1; k <= n; k++) {
+      const b = majors[k - 1] ?? 0;
+      const a = terms[k - 1] ?? 0;
+      g.append('rect')
+        .attr('x', x(k) - band * 0.36)
+        .attr('y', y(b))
+        .attr('width', band * 0.72)
+        .attr('height', Math.max(0, y(0) - y(b)))
         .attr('fill', 'var(--muted)')
-        .text(localize({ ko: '■ b_k = 1/k² (위에서 누름)', en: '■ b_k = 1/k² (dominating above)' }, lang));
+        .attr('opacity', 0.55);
+      g.append('rect')
+        .attr('x', x(k) - band * 0.22)
+        .attr('y', y(a))
+        .attr('width', band * 0.44)
+        .attr('height', Math.max(0, y(0) - y(a)))
+        .style('fill', 'var(--accent)');
     }
 
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(verdict);
-
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+    // Legend.
+    g.append('text')
+      .attr('x', 8)
+      .attr('y', height + 34)
+      .attr('font-size', 12)
+      .attr('fill', 'var(--accent)')
+      .text(localize({ ko: '■ a_k = 1/(k²+1)', en: '■ a_k = 1/(k²+1)' }, lang));
+    g.append('text')
+      .attr('x', width / 2)
+      .attr('y', height + 34)
+      .attr('font-size', 12)
+      .attr('fill', 'var(--muted)')
+      .text(localize({ ko: '■ b_k = 1/k² (위에서 누름)', en: '■ b_k = 1/k² (dominating above)' }, lang));
+  }
 }
 
-export default defineScene<TestsData>({ model: testsModel, createScene: createTestsScene });
+export default defineSimpleScene<TestsData>({
+  model: testsModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: verdictText, bold: true }],
+});

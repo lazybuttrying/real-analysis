@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { baireOneModel, type BaireOneData, type BaireOneSample } from '../models/baireOne';
 
 /**
@@ -57,23 +51,12 @@ function constructionText(data: BaireOneData, lang: Lang): string {
   );
 }
 
-function createBaireOneScene(): Scene<BaireOneData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let constructionSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: BaireOneData; state: ControlState } | undefined;
+const path = line<BaireOneSample>()
+  .x((d) => d.x)
+  .y((d) => d.y);
 
-  const path = line<BaireOneSample>()
-    .x((d) => d.x)
-    .y((d) => d.y);
-
-  const drawMain = (data: BaireOneData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
+function drawMain(chart: Chart, data: BaireOneData, lang: Lang): void {
+    const { g, width, height } = chart;
     g.selectAll('*').remove();
     const x = scaleLinear().domain([0, 1]).range([0, width]);
     const y = scaleLinear().domain([-0.06, 1.15]).range([height, 0]);
@@ -129,56 +112,16 @@ function createBaireOneScene(): Scene<BaireOneData> {
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
       .text(localize({ ko: '● 탐침점', en: '● probe points' }, lang));
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !verdictSlot || !constructionSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-    setRichText(constructionSlot, constructionText(last.data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      const construction = document.createElement('div');
-      construction.style.marginTop = '4px';
-
-      shell.strips.append(readout, verdict, construction);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      constructionSlot = createRichSlot(construction);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      constructionSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<BaireOneData>({ model: baireOneModel, createScene: createBaireOneScene });
+export default defineSimpleScene<BaireOneData>({
+  model: baireOneModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+    { text: constructionText, spaced: true }
+  ],
+});

@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   lebesgueConvergenceModel,
   VIEW_MAX,
@@ -69,137 +63,85 @@ function explainText(data: LebesgueConvergenceData, lang: Lang): string {
   return body + escapeNote;
 }
 
-function createLebesgueConvergenceScene(): Scene<LebesgueConvergenceData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: LebesgueConvergenceData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: LebesgueConvergenceData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: LebesgueConvergenceData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  const x = scaleLinear().domain([VIEW_MIN, VIEW_MAX]).range([0, width]);
+  const y = scaleLinear().domain([0, data.maxHeight * 1.15]).range([height, 0]);
 
-    const x = scaleLinear().domain([VIEW_MIN, VIEW_MAX]).range([0, width]);
-    const y = scaleLinear().domain([0, data.maxHeight * 1.15]).range([height, 0]);
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -18)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        { ko: `${exampleName(data.example, 'ko')}: f_n (채움) vs 점별 극한 (점선)`, en: `${exampleName(data.example, 'en')}: f_n (filled) vs pointwise limit (dashed)` },
+        lang,
+      ),
+    );
 
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+  g.append('g').call(axisLeft(y).ticks(5));
+
+  // Pointwise limit, dashed outline.
+  for (const r of data.limitRects) {
+    g.append('rect')
+      .attr('x', x(r.x0))
+      .attr('width', Math.max(0, x(r.x1) - x(r.x0)))
+      .attr('y', y(r.height))
+      .attr('height', Math.max(0, y(0) - y(r.height)))
+      .attr('fill', 'none')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '6 4')
+      .attr('stroke', 'currentColor')
+      .attr('opacity', 0.8);
+  }
+
+  // f_n, filled bars.
+  for (const r of data.rects) {
+    g.append('rect')
+      .attr('x', x(r.x0))
+      .attr('width', Math.max(0, x(r.x1) - x(r.x0) - 0.5))
+      .attr('y', y(r.height))
+      .attr('height', Math.max(0, y(0) - y(r.height)))
+      .style('fill', 'var(--accent)')
+      .attr('opacity', 0.65);
+  }
+
+  if (data.rects.length === 0) {
     g.append('text')
-      .attr('x', 0)
-      .attr('y', -18)
+      .attr('x', width / 2)
+      .attr('y', height / 2)
+      .attr('text-anchor', 'middle')
       .attr('font-size', 13)
-      .attr('font-weight', 600)
+      .attr('font-style', 'italic')
       .attr('fill', 'currentColor')
-      .text(
-        localize(
-          { ko: `${exampleName(data.example, 'ko')}: f_n (채움) vs 점별 극한 (점선)`, en: `${exampleName(data.example, 'en')}: f_n (filled) vs pointwise limit (dashed)` },
-          lang,
-        ),
-      );
+      .attr('opacity', 0.7)
+      .text(localize({ ko: '스파이크가 [0, 2] 창 밖에 있습니다 →', en: 'the spike is outside the [0, 2] window →' }, lang));
+  }
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-    g.append('g').call(axisLeft(y).ticks(5));
-
-    // Pointwise limit, dashed outline.
-    for (const r of data.limitRects) {
-      g.append('rect')
-        .attr('x', x(r.x0))
-        .attr('width', Math.max(0, x(r.x1) - x(r.x0)))
-        .attr('y', y(r.height))
-        .attr('height', Math.max(0, y(0) - y(r.height)))
-        .attr('fill', 'none')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '6 4')
-        .attr('stroke', 'currentColor')
-        .attr('opacity', 0.8);
-    }
-
-    // f_n, filled bars.
-    for (const r of data.rects) {
-      g.append('rect')
-        .attr('x', x(r.x0))
-        .attr('width', Math.max(0, x(r.x1) - x(r.x0) - 0.5))
-        .attr('y', y(r.height))
-        .attr('height', Math.max(0, y(0) - y(r.height)))
-        .style('fill', 'var(--accent)')
-        .attr('opacity', 0.65);
-    }
-
-    if (data.rects.length === 0) {
-      g.append('text')
-        .attr('x', width / 2)
-        .attr('y', height / 2)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', 13)
-        .attr('font-style', 'italic')
-        .attr('fill', 'currentColor')
-        .attr('opacity', 0.7)
-        .text(localize({ ko: '스파이크가 [0, 2] 창 밖에 있습니다 →', en: 'the spike is outside the [0, 2] window →' }, lang));
-    }
-
-    // Readout numbers on the chart.
-    g.append('text')
-      .attr('x', width)
-      .attr('y', 14)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(`n = ${data.n} · ∫f_n = ${fmt(data.integral, 4)} · ∫lim = ${fmt(data.limitIntegral, 4)} · gap = ${fmt(data.gap, 4)}`);
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(last.data, lang));
-    setRichText(verdictSlot, localize(last.data.verdict, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Readout numbers on the chart.
+  g.append('text')
+    .attr('x', width)
+    .attr('y', 14)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(`n = ${data.n} · ∫f_n = ${fmt(data.integral, 4)} · ∫lim = ${fmt(data.limitIntegral, 4)} · gap = ${fmt(data.gap, 4)}`);
 }
 
-export default defineScene<LebesgueConvergenceData>({ model: lebesgueConvergenceModel, createScene: createLebesgueConvergenceScene });
+export default defineSimpleScene<LebesgueConvergenceData>({
+  model: lebesgueConvergenceModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: explainText, spaced: true },
+    { text: (data, lang) => localize(data.verdict, lang), bold: true, spaced: true },
+  ],
+});
