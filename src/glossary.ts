@@ -644,6 +644,36 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'topology',
     sceneId: 'cantor-function',
   },
+  {
+    id: 'clopen-set',
+    term: { ko: 'clopen 집합', en: 'clopen set' },
+    definition: {
+      ko: String.raw`열려 있으면서 닫혀 있는 집합. \(\mathbb{R}\)에서는 \(\varnothing\)과 \(\mathbb{R}\)뿐이지만, 부분공간에서는 자명하지 않은 예가 있다.`,
+      en: String.raw`A set that is both open and closed. In \(\mathbb{R}\) only \(\varnothing\) and \(\mathbb{R}\) qualify, but subspaces admit nontrivial examples.`,
+    },
+    chapterId: 'topology',
+    sceneId: 'clopen',
+  },
+  {
+    id: 'topologist-sine-curve',
+    term: { ko: '위상수학자의 사인 곡선', en: "topologist's sine curve" },
+    definition: {
+      ko: String.raw`\(\{(x, \sin(1/x)) : x > 0\}\)의 폐포 — 연결이지만 path-연결이 아닌 곡선의 대표 예시.`,
+      en: String.raw`The closure of \(\{(x, \sin(1/x)) : x > 0\}\) — the canonical example of a connected but not path-connected curve.`,
+    },
+    chapterId: 'topology',
+    sceneId: 'topologist-sine',
+  },
+  {
+    id: 'peano-curve',
+    term: { ko: '페아노 곡선', en: 'Peano curve' },
+    definition: {
+      ko: String.raw`\([0,1]\)에서 \([0,1]^2\)로의 연속 전사사상 — 공간 채움 곡선. 단사성은 불가능하다.`,
+      en: String.raw`A continuous surjection \([0,1] \to [0,1]^2\) — a space-filling curve. Injectivity is impossible.`,
+    },
+    chapterId: 'topology',
+    sceneId: 'peano-curve',
+  },
   // ---------------------------------------------------------------- approximation
   {
     id: 'equicontinuous',
@@ -1689,5 +1719,45 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'sequences',
     sceneId: 'holder',
+  },
+  {
+    id: 'thomae-function',
+    term: { ko: '토매 함수', en: "Thomae's function" },
+    definition: {
+      ko: String.raw`\(f(p/q) = 1/q\) (기약분수), \(f(x) = 0\) (무리수) — 모든 무리수에서 연속, 모든 유리수에서 불연속인 팝콘 함수.`,
+      en: String.raw`\(f(p/q) = 1/q\) (reduced), \(f(x) = 0\) (irrational) — the popcorn function, continuous at every irrational and discontinuous at every rational.`,
+    },
+    chapterId: 'continuity',
+    sceneId: 'thomae',
+  },
+  {
+    id: 'discontinuous-derivative',
+    term: { ko: '불연속인 도함수', en: 'discontinuous derivative' },
+    definition: {
+      ko: String.raw`\(x^2\sin(1/x)\)는 모든 점에서 미분가능하지만 도함수는 \(0\)에서 불연속 — 미분가능 ⟹ 도함수 연속은 거짓.`,
+      en: String.raw`\(x^2\sin(1/x)\) is differentiable everywhere, yet its derivative is discontinuous at \(0\) — differentiable does not imply continuously differentiable.`,
+    },
+    chapterId: 'differentiation',
+    sceneId: 'discontinuous-derivative',
+  },
+  {
+    id: 'gabriel-horn',
+    term: { ko: '가브리엘의 나팔', en: "Gabriel's horn" },
+    definition: {
+      ko: String.raw`\(y = 1/x\) (\(x \ge 1\))의 회전체 — 부피 \(\pi\)는 유한, 겉넓이는 무한대. 화가의 역설.`,
+      en: String.raw`The solid of revolution of \(y = 1/x\) (\(x \ge 1\)) — finite volume \(\pi\), infinite surface area. The painter's paradox.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'gabriel-horn',
+  },
+  {
+    id: 'vitali-set',
+    term: { ko: '비탈리 집합', en: 'Vitali set' },
+    definition: {
+      ko: String.raw`선택공리로 \(\mathbb{R}/\mathbb{Q}\)에서 뽑은 대표원들의 집합 — 르벡 측도를 잴 수 없다.`,
+      en: String.raw`A choice-set of representatives of \(\mathbb{R}/\mathbb{Q}\) via the axiom of choice — not Lebesgue measurable.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'vitali',
   },
 ];

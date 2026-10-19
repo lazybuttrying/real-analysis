@@ -91,6 +91,13 @@ const POST_SPLIT_SCENES = new Set([
   'riemann-lebesgue',
   'parseval',
   'holder',
+  'clopen',
+  'topologist-sine',
+  'peano-curve',
+  'thomae',
+  'discontinuous-derivative',
+  'gabriel-horn',
+  'vitali',
 ]);
 
 /**
