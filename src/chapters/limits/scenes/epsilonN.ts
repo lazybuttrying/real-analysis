@@ -1,16 +1,11 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { epsilonNModel, type EpsilonNData } from '../models/epsilonN';
 
-function createEpsilonNScene(): Scene<EpsilonNData> {
-  let chart: Chart | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: EpsilonNData; state: ControlState } | undefined;
 
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: EpsilonNData, lang: Lang): void {
     const { g, width, height } = chart;
     const { limit: L, epsilon, terms, firstN } = data;
 
@@ -78,27 +73,9 @@ function createEpsilonNScene(): Scene<EpsilonNData> {
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
       .text(localize({ ko: '— ε 띠 안의 꼬리', en: '— the tail inside the ε-band' }, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      chart = createChart(host);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<EpsilonNData>({ model: epsilonNModel, createScene: createEpsilonNScene });
+export default defineSimpleScene<EpsilonNData>({
+  model: epsilonNModel,
+  drawMain,
+});

@@ -1,7 +1,7 @@
 import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { taylorThmModel, type TaylorThmData, type TaylorThmSample } from '../models/taylorThm';
 
 /**
@@ -23,93 +23,50 @@ function readoutText(data: TaylorThmData, lang: Lang): string {
   return localize({ ko, en }, lang);
 }
 
-function createTaylorThmScene(): Scene<TaylorThmData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: TaylorThmData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: TaylorThmData, _lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n, samples } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { n, samples } = data;
+  const x = scaleLinear().domain([-Math.PI, Math.PI]).range([0, width]);
+  const allY = samples.flatMap((p) => [p.y, p.p, p.p + p.bound, p.p - p.bound]);
+  const yMax = Math.max(2, ...allY.map(Math.abs));
+  const y = scaleLinear().domain([-yMax, yMax]).range([height, 0]);
 
-    const x = scaleLinear().domain([-Math.PI, Math.PI]).range([0, width]);
-    const allY = samples.flatMap((p) => [p.y, p.p, p.p + p.bound, p.p - p.bound]);
-    const yMax = Math.max(2, ...allY.map(Math.abs));
-    const y = scaleLinear().domain([-yMax, yMax]).range([height, 0]);
+  const fLine = line<TaylorThmSample>()
+    .x((p) => x(p.x))
+    .y((p) => y(p.y));
+  const pLine = line<TaylorThmSample>()
+    .x((p) => x(p.x))
+    .y((p) => y(p.p));
+  const band = area<TaylorThmSample>()
+    .x((p) => x(p.x))
+    .y0((p) => y(p.p - p.bound))
+    .y1((p) => y(p.p + p.bound));
 
-    const fLine = line<TaylorThmSample>()
-      .x((p) => x(p.x))
-      .y((p) => y(p.y));
-    const pLine = line<TaylorThmSample>()
-      .x((p) => x(p.x))
-      .y((p) => y(p.p));
-    const band = area<TaylorThmSample>()
-      .x((p) => x(p.x))
-      .y0((p) => y(p.p - p.bound))
-      .y1((p) => y(p.p + p.bound));
+  g.selectAll('*').remove();
+  g.append('g').attr('transform', `translate(0,${y(0)})`).call(axisBottom(x).ticks(7));
+  g.append('g').call(axisLeft(y).ticks(5));
 
-    g.selectAll('*').remove();
-    g.append('g').attr('transform', `translate(0,${y(0)})`).call(axisBottom(x).ticks(7));
-    g.append('g').call(axisLeft(y).ticks(5));
+  // The Lagrange envelope T_n +/- bound.
+  g.append('path').attr('d', band(samples) ?? '').attr('fill', 'var(--bound)').attr('opacity', 0.22);
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '5 4')
+    .attr('opacity', 0.65)
+    .attr('d', fLine(samples) ?? '');
+  g.append('path').attr('fill', 'none').attr('stroke-width', 2.5).style('stroke', 'var(--accent)').attr('d', pLine(samples) ?? '');
 
-    // The Lagrange envelope T_n +/- bound.
-    g.append('path').attr('d', band(samples) ?? '').attr('fill', 'var(--bound)').attr('opacity', 0.22);
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '5 4')
-      .attr('opacity', 0.65)
-      .attr('d', fLine(samples) ?? '');
-    g.append('path').attr('fill', 'none').attr('stroke-width', 2.5).style('stroke', 'var(--accent)').attr('d', pLine(samples) ?? '');
-
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', 14)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text(`T_${n}(x)  ±  |x|^${n + 1}/${n + 1}!`);
-
-    setRichText(readoutSlot, readoutText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      strips.append(readout);
-
-      readoutSlot = createRichSlot(readout);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', 14)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text(`T_${n}(x)  ±  |x|^${n + 1}/${n + 1}!`);
 }
 
-export default defineScene<TaylorThmData>({ model: taylorThmModel, createScene: createTaylorThmScene });
+export default defineSimpleScene<TaylorThmData>({
+  model: taylorThmModel,
+  drawMain,
+  slots: [{ text: readoutText, bold: true }],
+});

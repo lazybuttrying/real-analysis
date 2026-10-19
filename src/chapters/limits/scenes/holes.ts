@@ -1,16 +1,11 @@
 import { scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { holesModel, type HolesData } from '../models/holes';
 
-function createHolesScene(): Scene<HolesData> {
-  let chart: Chart | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: HolesData; state: ControlState } | undefined;
 
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: HolesData, lang: Lang): void {
     const { g, width, height } = chart;
     const { steps } = data;
     const sqrt2 = Math.SQRT2;
@@ -75,27 +70,9 @@ function createHolesScene(): Scene<HolesData> {
           ),
         );
     }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      chart = createChart(host);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<HolesData>({ model: holesModel, createScene: createHolesScene });
+export default defineSimpleScene<HolesData>({
+  model: holesModel,
+  drawMain,
+});
