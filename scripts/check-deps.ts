@@ -20,16 +20,18 @@ import { fileURLToPath } from 'node:url';
  *     10-chapter split, a logical chapter may import scene-store files
  *     (models/, scenes/, problems/) from the legacy stores
  *     chapters/{limits,series,calculus}/ — but never their retired wiring
- *     (meta.ts, loaders.ts, entry.ts, exercises.ts), which are dead files.
+ *     (meta.ts, loaders.ts, entry.ts, exercises.ts of limits/calculus,
+ *     deleted 2026-10-18).
  *  5. Outside the chapters, only src/catalog.ts may import chapter code
  *     (it is the aggregation point for chapter meta), with one narrow
  *     exception: src/search-index.ts may aggregate the chapter exercise data
  *     modules, because it is build/test-only and provably never enters a
  *     client bundle (no value import of search-index.ts from src/ is allowed).
  *  6. The retired wiring files (chapters/{limits,calculus}/
- *     {meta,loaders,entry,exercises}.ts) are dead: nothing in src/ may import
- *     them. (The new 'series' chapter reuses src/chapters/series/ for its own
- *     wiring, so it is not covered by this rule.)
+ *     {meta,loaders,entry,exercises}.ts, deleted 2026-10-18): nothing in src/
+ *     may import them if re-created. (The new 'series' chapter reuses
+ *     src/chapters/series/ for its own wiring, so it is not covered by
+ *     this rule.)
  *
  * Exits non-zero and prints every violation it finds.
  */

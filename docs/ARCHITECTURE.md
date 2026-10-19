@@ -120,7 +120,7 @@ real-analysis/
 
 ### Physical vs logical
 
-푸시 도구에 delete/rename이 없어서 279개 씬 파일(models/, scenes/, problems/)을 옮기지 않았다. `src/chapters/{limits,series,calculus}/`는 **scene store**(레거시 물리 디렉토리)로 남고, 10개 논리 챕터 디렉토리는 `meta.ts`·`loaders.ts`·`entry.ts`·`exercises.ts` 4개 파일만 가진다. 논리 챕터의 meta/loaders는 상대경로(`../limits/scenes/foo`, `../limits/problems/foo`)로 store를 참조한다. 단 `series`는 예외: 새 Series 챕터(16씬)가 기존 `src/chapters/series/` 디렉토리를 그대로 재사용하므로, 이 디렉토리의 meta/loaders/entry/exercises는 살아 있고 limits/calculus의 4개 wiring 파일만 dead file이다.
+푸시 도구에 delete/rename이 없어서 279개 씬 파일(models/, scenes/, problems/)을 옮기지 않았다. `src/chapters/{limits,series,calculus}/`는 **scene store**(레거시 물리 디렉토리)로 남고, 10개 논리 챕터 디렉토리는 `meta.ts`·`loaders.ts`·`entry.ts`·`exercises.ts` 4개 파일만 가진다. 논리 챕터의 meta/loaders는 상대경로(`../limits/scenes/foo`, `../limits/problems/foo`)로 store를 참조한다. 단 `series`는 예외: 새 Series 챕터가 기존 `src/chapters/series/` 디렉토리를 그대로 재사용하므로, 이 디렉토리의 meta/loaders/entry/exercises는 살아 있다. limits/calculus의 구 wiring 파일(meta/loaders/entry/exercises)은 2026-10-18에 삭제됨 — check-deps 규칙 6이 retired wiring import를 계속 검사한다.
 
 - `src/catalog.ts`는 10개 논리 챕터만 등록한다. 배열 순서 = 표시 번호(1..10).
 - check-deps 규칙 2 개정: meta.ts는 `./problems/*`뿐 아니라 `../{limits,series,calculus}/problems/*` 순수 데이터 모듈도 import할 수 있다(번들 무게 근거는 동일 — problems/*는 순수 데이터).
