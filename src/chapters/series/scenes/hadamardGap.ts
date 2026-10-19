@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { hadamardGapModel, type HadamardData, type HadamardPoint } from '../models/hadamardGap';
 
 /**
@@ -55,167 +49,120 @@ function mechanismText(lang: Lang): string {
   );
 }
 
-function createHadamardGapScene(): Scene<HadamardData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let mechanismSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: HadamardData; state: ControlState } | undefined;
+const path = line<HadamardPoint>()
+  .x((d) => d.theta)
+  .y((d) => d.y);
 
-  const path = line<HadamardPoint>()
-    .x((d) => d.theta)
-    .y((d) => d.y);
+function drawMain(chart: Chart, data: HadamardData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
+  const x = scaleLinear().domain([0, 2 * Math.PI]).range([0, width]);
+  let yMax = 0;
+  for (const curve of data.curves) for (const p of curve.points) if (p.y > yMax) yMax = p.y;
+  for (const p of data.contrast) if (p.y > yMax) yMax = p.y;
+  const y = scaleLinear()
+    .domain([0, yMax > 0 ? yMax * 1.08 : 1])
+    .range([height, 0]);
+  const px = path.x((d) => x(d.theta)).y((d) => y(d.y));
 
-  const drawMain = (data: HadamardData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
-    const x = scaleLinear().domain([0, 2 * Math.PI]).range([0, width]);
-    let yMax = 0;
-    for (const curve of data.curves) for (const p of curve.points) if (p.y > yMax) yMax = p.y;
-    for (const p of data.contrast) if (p.y > yMax) yMax = p.y;
-    const y = scaleLinear()
-      .domain([0, yMax > 0 ? yMax * 1.08 : 1])
-      .range([height, 0]);
-    const px = path.x((d) => x(d.theta)).y((d) => y(d.y));
+  const tickVals = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI];
+  const tickLabels = ['0', 'π/2', 'π', '3π/2', '2π'];
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(
+      axisBottom(x)
+        .tickValues(tickVals)
+        .tickFormat((_, i) => tickLabels[i] ?? ''),
+    );
+  g.append('g').call(axisLeft(y).ticks(5));
 
-    const tickVals = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI];
-    const tickLabels = ['0', 'π/2', 'π', '3π/2', '2π'];
-    g.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(
-        axisBottom(x)
-          .tickValues(tickVals)
-          .tickFormat((_, i) => tickLabels[i] ?? ''),
-      );
-    g.append('g').call(axisLeft(y).ticks(5));
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -20)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `|S_${data.n}(r·e^{iθ})| 대 각도 θ — 간극 급수 (실선) vs 간극 없는 대조군 (점선)`,
-            en: `|S_${data.n}(r·e^{iθ})| vs angle θ — gappy series (solid) vs gap-free contrast (dashed)`,
-          },
-          lang,
-        ),
-      );
-
-    // Contrast first (behind): dashed gray.
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '6 4')
-      .attr('opacity', 0.55)
-      .attr('stroke', 'currentColor')
-      .attr('d', px(data.contrast) ?? '');
-
-    // The three radii: r = 0.99 strongest, inner radii faded.
-    const opacities = [0.32, 0.58, 1];
-    const widths = [1.5, 1.75, 2.25];
-    data.curves.forEach((curve, ci) => {
-      g.append('path')
-        .attr('fill', 'none')
-        .attr('stroke-width', widths[ci] ?? 2)
-        .attr('opacity', opacities[ci] ?? 1)
-        .style('stroke', 'var(--bound)')
-        .attr('d', px(curve.points) ?? '');
-    });
-
-    // Legend.
-    const legendY = height + 34;
-    const labels =
-      lang === 'ko'
-        ? ['— r = 0.90', '— r = 0.95', '— r = 0.99', '┄ T_N (간극 없음)']
-        : ['— r = 0.90', '— r = 0.95', '— r = 0.99', '┄ T_N (gap-free)'];
-    const xs = [8, width * 0.24, width * 0.4, width * 0.58];
-    labels.forEach((label, i) => {
-      const t = g
-        .append('text')
-        .attr('x', xs[i] ?? 8)
-        .attr('y', legendY)
-        .attr('font-size', 12)
-        .attr('fill', 'currentColor')
-        .text(label);
-      if (i < 3) {
-        t.style('stroke', 'var(--bound)').attr('opacity', opacities[i] ?? 1);
-      } else {
-        t.attr('opacity', 0.55);
-      }
-    });
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !verdictSlot || !mechanismSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-    setRichText(mechanismSlot, mechanismText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      const mechanism = document.createElement('div');
-      mechanism.style.marginTop = '4px';
-
-      // Cross-link: the power-series scene this one deepens (why the
-      // radius of sum z^{2^k} is exactly 1).
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const powerLink = document.createElement('a');
-      powerLink.href = '../power-series/';
-      powerLink.textContent = localize(
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -20)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
         {
-          ko: '멱급수와 수렴반경 씬 — 수렴반경이 정확히 1인 이유',
-          en: 'Power series scene — why the radius is exactly 1',
+          ko: `|S_${data.n}(r·e^{iθ})| 대 각도 θ — 간극 급수 (실선) vs 간극 없는 대조군 (점선)`,
+          en: `|S_${data.n}(r·e^{iθ})| vs angle θ — gappy series (solid) vs gap-free contrast (dashed)`,
         },
         lang,
-      );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), powerLink);
+      ),
+    );
 
-      shell.strips.append(readout, verdict, mechanism, seeAlso);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      mechanismSlot = createRichSlot(mechanism);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      mechanismSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Contrast first (behind): dashed gray.
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '6 4')
+    .attr('opacity', 0.55)
+    .attr('stroke', 'currentColor')
+    .attr('d', px(data.contrast) ?? '');
+
+  // The three radii: r = 0.99 strongest, inner radii faded.
+  const opacities = [0.32, 0.58, 1];
+  const widths = [1.5, 1.75, 2.25];
+  data.curves.forEach((curve, ci) => {
+    g.append('path')
+      .attr('fill', 'none')
+      .attr('stroke-width', widths[ci] ?? 2)
+      .attr('opacity', opacities[ci] ?? 1)
+      .style('stroke', 'var(--bound)')
+      .attr('d', px(curve.points) ?? '');
+  });
+
+  // Legend.
+  const legendY = height + 34;
+  const labels =
+    lang === 'ko'
+      ? ['— r = 0.90', '— r = 0.95', '— r = 0.99', '┄ T_N (간극 없음)']
+      : ['— r = 0.90', '— r = 0.95', '— r = 0.99', '┄ T_N (gap-free)'];
+  const xs = [8, width * 0.24, width * 0.4, width * 0.58];
+  labels.forEach((label, i) => {
+    const t = g
+      .append('text')
+      .attr('x', xs[i] ?? 8)
+      .attr('y', legendY)
+      .attr('font-size', 12)
+      .attr('fill', 'currentColor')
+      .text(label);
+    if (i < 3) {
+      t.style('stroke', 'var(--bound)').attr('opacity', opacities[i] ?? 1);
+    } else {
+      t.attr('opacity', 0.55);
+    }
+  });
 }
 
-export default defineScene<HadamardData>({ model: hadamardGapModel, createScene: createHadamardGapScene });
+function mountExtra(strips: HTMLElement, lang: Lang): void {
+  // Cross-link: the power-series scene this one deepens (why the
+  // radius of sum z^{2^k} is exactly 1).
+  const seeAlso = document.createElement('div');
+  seeAlso.style.marginTop = '4px';
+  const powerLink = document.createElement('a');
+  powerLink.href = '../power-series/';
+  powerLink.textContent = localize(
+    {
+      ko: '멱급수와 수렴반경 씬 — 수렴반경이 정확히 1인 이유',
+      en: 'Power series scene — why the radius is exactly 1',
+    },
+    lang,
+  );
+  seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), powerLink);
+  strips.append(seeAlso);
+}
+
+export default defineSimpleScene<HadamardData>({
+  model: hadamardGapModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+    { text: (_data, lang) => mechanismText(lang), spaced: true },
+  ],
+  mountExtra,
+});

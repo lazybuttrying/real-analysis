@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { thomaeModel, type ThomaeData } from '../models/thomae';
 
 /**
@@ -70,19 +64,8 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createThomaeScene(): Scene<ThomaeData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: ThomaeData; state: ControlState } | undefined;
-
-  const drawMain = (data: ThomaeData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
+function drawMain(chart: Chart, data: ThomaeData, lang: Lang): void {
+    const { g, width, height } = chart;
     g.selectAll('*').remove();
 
     const lo = data.center - data.zoom;
@@ -186,57 +169,16 @@ function createThomaeScene(): Scene<ThomaeData> {
           lang,
         ),
       );
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<ThomaeData>({ model: thomaeModel, createScene: createThomaeScene });
+export default defineSimpleScene<ThomaeData>({
+  model: thomaeModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => explainText(lang), spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true }
+  ],
+});

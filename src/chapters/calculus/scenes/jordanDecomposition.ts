@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { jordanDecompositionModel, type JordanData, type JordanSample } from '../models/jordanDecomposition';
 
 /**
@@ -78,195 +72,141 @@ function bvNoteText(lang: Lang): string {
   );
 }
 
-function createJordanDecompositionScene(): Scene<JordanData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let gridNoteSlot: RichSlot | undefined;
-  let bvNoteSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: JordanData; state: ControlState } | undefined;
+const path = line<JordanSample>()
+  .x((d) => d.x)
+  .y((d) => d.y);
 
-  const path = line<JordanSample>()
-    .x((d) => d.x)
-    .y((d) => d.y);
+function drawMain(chart: Chart, data: JordanData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: JordanData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  let ymin = Infinity;
+  let ymax = -Infinity;
+  for (const s of data.f) {
+    if (s.y < ymin) ymin = s.y;
+    if (s.y > ymax) ymax = s.y;
+  }
+  for (const s of data.g) {
+    if (s.y > ymax) ymax = s.y;
+  }
+  const pad = (ymax - ymin) * 0.06;
+  const y = scaleLinear()
+    .domain([ymin - pad, ymax + pad])
+    .range([height, 0]);
+  const px = path.x((d) => x(d.x)).y((d) => y(d.y));
 
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
-    let ymin = Infinity;
-    let ymax = -Infinity;
-    for (const s of data.f) {
-      if (s.y < ymin) ymin = s.y;
-      if (s.y > ymax) ymax = s.y;
-    }
-    for (const s of data.g) {
-      if (s.y > ymax) ymax = s.y;
-    }
-    const pad = (ymax - ymin) * 0.06;
-    const y = scaleLinear()
-      .domain([ymin - pad, ymax + pad])
-      .range([height, 0]);
-    const px = path.x((d) => x(d.x)).y((d) => y(d.y));
+  g.append('g').attr('transform', `translate(0,${y(0)})`).call(axisBottom(x).ticks(10));
+  g.append('g').call(axisLeft(y).ticks(6));
 
-    g.append('g').attr('transform', `translate(0,${y(0)})`).call(axisBottom(x).ticks(10));
-    g.append('g').call(axisLeft(y).ticks(6));
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -20)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: 'f(x) = x²·sin(1/x)의 조르당 분해 — f(회색) = g(악센트) − h(테두리 색)',
-            en: 'Jordan decomposition of f(x) = x²·sin(1/x) — f (gray) = g (accent) − h (bound color)',
-          },
-          lang,
-        ),
-      );
-
-    // f, dashed gray.
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '6 4')
-      .attr('opacity', 0.6)
-      .attr('stroke', 'currentColor')
-      .attr('d', px(data.f) ?? '');
-    // g, accent: increasing.
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)')
-      .attr('d', px(data.g) ?? '');
-    // h, bound color: increasing.
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--bound)')
-      .attr('d', px(data.h) ?? '');
-
-    // X0 marker: vertical dashed line plus dots on the three curves.
-    const { x0 } = data;
-    g.append('line')
-      .attr('x1', x(x0))
-      .attr('x2', x(x0))
-      .attr('y1', 0)
-      .attr('y2', height)
-      .attr('stroke', 'currentColor')
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', '4 3')
-      .attr('opacity', 0.7);
-    const mark = (samples: JordanSample[], color: string): void => {
-      g.append('circle')
-        .attr('cx', x(x0))
-        .attr('cy', y(atX0(samples, x0)))
-        .attr('r', 4.5)
-        .style('fill', color)
-        .attr('stroke', 'currentColor')
-        .attr('stroke-width', 1);
-    };
-    mark(data.g, 'var(--accent)');
-    mark(data.h, 'var(--bound)');
-    mark(data.f, 'currentColor');
-
-    // Legend.
-    const legendY = height + 34;
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', legendY)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text(localize({ ko: '┄ f (x²·sin(1/x))', en: '┄ f (x²·sin(1/x))' }, lang));
-    g.append('text')
-      .attr('x', width * 0.32)
-      .attr('y', legendY)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: '— g (격자 변동, 단조증가)', en: '— g (grid variation, increasing)' }, lang));
-    g.append('text')
-      .attr('x', width * 0.66)
-      .attr('y', legendY)
-      .attr('font-size', 12)
-      .style('fill', 'var(--bound)')
-      .text(localize({ ko: '— h = g − f (단조증가)', en: '— h = g − f (increasing)' }, lang));
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !verdictSlot || !gridNoteSlot || !bvNoteSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-    setRichText(gridNoteSlot, gridNoteText(lang));
-    setRichText(bvNoteSlot, bvNoteText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      const gridNote = document.createElement('div');
-      gridNote.style.marginTop = '4px';
-      const bvNote = document.createElement('div');
-      bvNote.style.marginTop = '4px';
-
-      // Cross-link: the BV scene this decomposition deepens.
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const bvLink = document.createElement('a');
-      bvLink.href = '../bounded-variation/';
-      bvLink.textContent = localize(
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -20)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
         {
-          ko: '유계변동 함수 씬 — 분해가 필요한 함수들',
-          en: 'Bounded variation scene — the functions that need this decomposition',
+          ko: 'f(x) = x²·sin(1/x)의 조르당 분해 — f(회색) = g(악센트) − h(테두리 색)',
+          en: 'Jordan decomposition of f(x) = x²·sin(1/x) — f (gray) = g (accent) − h (bound color)',
         },
         lang,
-      );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), bvLink);
+      ),
+    );
 
-      shell.strips.append(readout, verdict, gridNote, bvNote, seeAlso);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      gridNoteSlot = createRichSlot(gridNote);
-      bvNoteSlot = createRichSlot(bvNote);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      gridNoteSlot = undefined;
-      bvNoteSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
+  // f, dashed gray.
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '6 4')
+    .attr('opacity', 0.6)
+    .attr('stroke', 'currentColor')
+    .attr('d', px(data.f) ?? '');
+  // g, accent: increasing.
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)')
+    .attr('d', px(data.g) ?? '');
+  // h, bound color: increasing.
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--bound)')
+    .attr('d', px(data.h) ?? '');
+
+  // X0 marker: vertical dashed line plus dots on the three curves.
+  const { x0 } = data;
+  g.append('line')
+    .attr('x1', x(x0))
+    .attr('x2', x(x0))
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('stroke', 'currentColor')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', '4 3')
+    .attr('opacity', 0.7);
+  const mark = (samples: JordanSample[], color: string): void => {
+    g.append('circle')
+      .attr('cx', x(x0))
+      .attr('cy', y(atX0(samples, x0)))
+      .attr('r', 4.5)
+      .style('fill', color)
+      .attr('stroke', 'currentColor')
+      .attr('stroke-width', 1);
   };
+  mark(data.g, 'var(--accent)');
+  mark(data.h, 'var(--bound)');
+  mark(data.f, 'currentColor');
+
+  // Legend.
+  const legendY = height + 34;
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', legendY)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text(localize({ ko: '┄ f (x²·sin(1/x))', en: '┄ f (x²·sin(1/x))' }, lang));
+  g.append('text')
+    .attr('x', width * 0.32)
+    .attr('y', legendY)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: '— g (격자 변동, 단조증가)', en: '— g (grid variation, increasing)' }, lang));
+  g.append('text')
+    .attr('x', width * 0.66)
+    .attr('y', legendY)
+    .attr('font-size', 12)
+    .style('fill', 'var(--bound)')
+    .text(localize({ ko: '— h = g − f (단조증가)', en: '— h = g − f (increasing)' }, lang));
 }
 
-export default defineScene<JordanData>({ model: jordanDecompositionModel, createScene: createJordanDecompositionScene });
+export default defineSimpleScene<JordanData>({
+  model: jordanDecompositionModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+    { text: (_data, lang) => gridNoteText(lang), spaced: true },
+    { text: (_data, lang) => bvNoteText(lang), spaced: true },
+  ],
+  mountExtra: (strips, lang) => {
+    // Cross-link: the BV scene this decomposition deepens.
+    const seeAlso = document.createElement('div');
+    seeAlso.style.marginTop = '4px';
+    const bvLink = document.createElement('a');
+    bvLink.href = '../bounded-variation/';
+    bvLink.textContent = localize(
+      {
+        ko: '유계변동 함수 씬 — 분해가 필요한 함수들',
+        en: 'Bounded variation scene — the functions that need this decomposition',
+      },
+      lang,
+    );
+    seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), bvLink);
+    strips.append(seeAlso);
+  },
+});

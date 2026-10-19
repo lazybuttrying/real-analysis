@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   MAX_DRAWN_CROSSINGS,
   darbouxModel,
@@ -60,255 +54,210 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createDarbouxScene(): Scene<DarbouxData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: DarbouxData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: DarbouxData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { xs, fVals, fpVals, envPos, envNeg, crossings, level, showF, halfWidth: h } = data;
+  const n = xs.length;
 
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { xs, fVals, fpVals, envPos, envNeg, crossings, level, showF, halfWidth: h } = data;
-    const n = xs.length;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const topH = Math.max(130, Math.floor((height - 36) * 0.48));
+  const gapY = 36;
+  const botH = Math.max(90, height - topH - gapY);
+  const topG = g.append('g');
+  const botG = g.append('g').attr('transform', `translate(0,${topH + gapY})`);
 
-    const topH = Math.max(130, Math.floor((height - 36) * 0.48));
-    const gapY = 36;
-    const botH = Math.max(90, height - topH - gapY);
-    const topG = g.append('g');
-    const botG = g.append('g').attr('transform', `translate(0,${topH + gapY})`);
+  const x = scaleLinear().domain([-h, h]).range([0, width]);
 
-    const x = scaleLinear().domain([-h, h]).range([0, width]);
+  const topTitle = localize(
+    {
+      ko: 'f(x) = x² sin(1/x), f(0) = 0 — ±x² 띠 안에 갇힌 매끈한 곡선',
+      en: 'f(x) = x² sin(1/x), f(0) = 0 — a smooth-looking curve trapped in the ±x² envelope',
+    },
+    lang,
+  );
+  const botTitle = localize(
+    {
+      ko: 'f′(x) = 2x sin(1/x) − cos(1/x), f′(0) = 0 — ±1 띠 사이에서 격렬하게 진동하지만 모든 높이를 만남',
+      en: 'f′(x) = 2x sin(1/x) − cos(1/x), f′(0) = 0 — oscillates wildly between the ±1 bands, yet hits every level',
+    },
+    lang,
+  );
 
-    const topTitle = localize(
-      {
-        ko: 'f(x) = x² sin(1/x), f(0) = 0 — ±x² 띠 안에 갇힌 매끈한 곡선',
-        en: 'f(x) = x² sin(1/x), f(0) = 0 — a smooth-looking curve trapped in the ±x² envelope',
-      },
-      lang,
-    );
-    const botTitle = localize(
-      {
-        ko: 'f′(x) = 2x sin(1/x) − cos(1/x), f′(0) = 0 — ±1 띠 사이에서 격렬하게 진동하지만 모든 높이를 만남',
-        en: 'f′(x) = 2x sin(1/x) − cos(1/x), f′(0) = 0 — oscillates wildly between the ±1 bands, yet hits every level',
-      },
-      lang,
-    );
+  topG
+    .append('text')
+    .attr('x', 0)
+    .attr('y', -46)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(topTitle);
+  botG
+    .append('text')
+    .attr('x', 0)
+    .attr('y', -22)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(botTitle);
 
+  const curveLine = (vals: number[], y: (v: number) => number) =>
+    line<number>()
+      .x((_, i) => x(xs[i] ?? 0))
+      .y((_, i) => y(vals[i] ?? 0));
+
+  // Top panel: f between the +/-x^2 envelope.
+  let fMin = Infinity;
+  let fMax = -Infinity;
+  for (let i = 0; i < n; i++) {
+    fMin = Math.min(fMin, fVals[i] ?? Infinity, envNeg[i] ?? Infinity);
+    fMax = Math.max(fMax, fVals[i] ?? -Infinity, envPos[i] ?? -Infinity);
+  }
+  const fPad = (fMax - fMin) * 0.08 || 1;
+  const yTop = scaleLinear().domain([fMin - fPad, fMax + fPad]).range([topH, 0]);
+
+  topG.append('g').call(axisLeft(yTop).ticks(4));
+  topG
+    .append('g')
+    .attr('transform', `translate(0,${topH})`)
+    .call(axisBottom(x).ticks(5));
+  for (const env of [envPos, envNeg]) {
     topG
-      .append('text')
-      .attr('x', 0)
-      .attr('y', -46)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(topTitle);
-    botG
-      .append('text')
-      .attr('x', 0)
-      .attr('y', -22)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(botTitle);
-
-    const curveLine = (vals: number[], y: (v: number) => number) =>
-      line<number>()
-        .x((_, i) => x(xs[i] ?? 0))
-        .y((_, i) => y(vals[i] ?? 0));
-
-    // Top panel: f between the +/-x^2 envelope.
-    let fMin = Infinity;
-    let fMax = -Infinity;
-    for (let i = 0; i < n; i++) {
-      fMin = Math.min(fMin, fVals[i] ?? Infinity, envNeg[i] ?? Infinity);
-      fMax = Math.max(fMax, fVals[i] ?? -Infinity, envPos[i] ?? -Infinity);
-    }
-    const fPad = (fMax - fMin) * 0.08 || 1;
-    const yTop = scaleLinear().domain([fMin - fPad, fMax + fPad]).range([topH, 0]);
-
-    topG.append('g').call(axisLeft(yTop).ticks(4));
+      .append('path')
+      .datum(xs)
+      .attr('d', curveLine(env, yTop))
+      .attr('fill', 'none')
+      .attr('stroke-width', 1.5)
+      .attr('stroke-dasharray', '6 4')
+      .style('stroke', 'var(--muted)');
+  }
+  if (showF) {
     topG
-      .append('g')
-      .attr('transform', `translate(0,${topH})`)
-      .call(axisBottom(x).ticks(5));
-    for (const env of [envPos, envNeg]) {
-      topG
-        .append('path')
-        .datum(xs)
-        .attr('d', curveLine(env, yTop))
-        .attr('fill', 'none')
-        .attr('stroke-width', 1.5)
-        .attr('stroke-dasharray', '6 4')
-        .style('stroke', 'var(--muted)');
-    }
-    if (showF) {
-      topG
-        .append('path')
-        .datum(xs)
-        .attr('d', curveLine(fVals, yTop))
-        .attr('fill', 'none')
-        .attr('stroke-width', 2.5)
-        .style('stroke', 'var(--accent)');
-      topG
-        .append('circle')
-        .attr('cx', x(0))
-        .attr('cy', yTop(0))
-        .attr('r', 4)
-        .attr('fill', 'var(--accent)')
-        .append('title')
-        .text('f(0) = 0');
-    }
+      .append('path')
+      .datum(xs)
+      .attr('d', curveLine(fVals, yTop))
+      .attr('fill', 'none')
+      .attr('stroke-width', 2.5)
+      .style('stroke', 'var(--accent)');
+    topG
+      .append('circle')
+      .attr('cx', x(0))
+      .attr('cy', yTop(0))
+      .attr('r', 4)
+      .attr('fill', 'var(--accent)')
+      .append('title')
+      .text('f(0) = 0');
+  }
 
-    // Bottom panel: f' between the +/-1 bands, with the IVP test line y = level.
-    const yBot = scaleLinear().domain([-1.35, 1.35]).range([botH, 0]);
+  // Bottom panel: f' between the +/-1 bands, with the IVP test line y = level.
+  const yBot = scaleLinear().domain([-1.35, 1.35]).range([botH, 0]);
 
-    botG
-      .append('g')
-      .attr('transform', `translate(0,${botH})`)
-      .call(axisBottom(x).ticks(5));
-    botG.append('g').call(axisLeft(yBot).ticks(5));
+  botG
+    .append('g')
+    .attr('transform', `translate(0,${botH})`)
+    .call(axisBottom(x).ticks(5));
+  botG.append('g').call(axisLeft(yBot).ticks(5));
 
-    for (const band of [-1, 1]) {
-      botG
-        .append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
-        .attr('y1', yBot(band))
-        .attr('y2', yBot(band))
-        .attr('stroke', 'var(--muted)')
-        .attr('stroke-width', 1.5)
-        .attr('stroke-dasharray', '6 4')
-        .attr('opacity', 0.7);
-    }
-    botG
-      .append('text')
-      .attr('x', 4)
-      .attr('y', yBot(1) - 6)
-      .attr('font-size', 12)
-      .attr('fill', 'var(--muted)')
-      .text('+1');
-    botG
-      .append('text')
-      .attr('x', 4)
-      .attr('y', yBot(-1) + 16)
-      .attr('font-size', 12)
-      .attr('fill', 'var(--muted)')
-      .text('−1');
-
-    // The IVP test line y = c: solid red, drawn under the curve.
+  for (const band of [-1, 1]) {
     botG
       .append('line')
       .attr('x1', 0)
       .attr('x2', width)
-      .attr('y1', yBot(level))
-      .attr('y2', yBot(level))
-      .attr('stroke', 'var(--bound)')
-      .attr('stroke-width', 2)
-      .attr('opacity', 0.85);
-    botG
-      .append('text')
-      .attr('x', width - 4)
-      .attr('y', yBot(level) - 6)
-      .attr('font-size', 12)
-      .attr('text-anchor', 'end')
-      .style('fill', 'var(--bound)')
-      .text(`y = ${fmt(level, 2)}`);
+      .attr('y1', yBot(band))
+      .attr('y2', yBot(band))
+      .attr('stroke', 'var(--muted)')
+      .attr('stroke-width', 1.5)
+      .attr('stroke-dasharray', '6 4')
+      .attr('opacity', 0.7);
+  }
+  botG
+    .append('text')
+    .attr('x', 4)
+    .attr('y', yBot(1) - 6)
+    .attr('font-size', 12)
+    .attr('fill', 'var(--muted)')
+    .text('+1');
+  botG
+    .append('text')
+    .attr('x', 4)
+    .attr('y', yBot(-1) + 16)
+    .attr('font-size', 12)
+    .attr('fill', 'var(--muted)')
+    .text('−1');
 
-    botG
-      .append('path')
-      .datum(xs)
-      .attr('d', curveLine(fpVals, yBot))
-      .attr('fill', 'none')
-      .attr('stroke-width', 1.75)
-      .style('stroke', 'var(--accent)');
+  // The IVP test line y = c: solid red, drawn under the curve.
+  botG
+    .append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', yBot(level))
+    .attr('y2', yBot(level))
+    .attr('stroke', 'var(--bound)')
+    .attr('stroke-width', 2)
+    .attr('opacity', 0.85);
+  botG
+    .append('text')
+    .attr('x', width - 4)
+    .attr('y', yBot(level) - 6)
+    .attr('font-size', 12)
+    .attr('text-anchor', 'end')
+    .style('fill', 'var(--bound)')
+    .text(`y = ${fmt(level, 2)}`);
 
-    // Crossing markers where f' meets y = c.
-    const drawn = crossings.slice(0, MAX_DRAWN_CROSSINGS);
-    for (const cx of drawn) {
-      botG
-        .append('circle')
-        .attr('cx', x(cx))
-        .attr('cy', yBot(level))
-        .attr('r', 2.5)
-        .attr('fill', 'var(--bound)')
-        .append('title')
-        .text(`f' = ${fmt(level, 2)} at x ≈ ${fmt(cx, 8)}`);
-    }
+  botG
+    .append('path')
+    .datum(xs)
+    .attr('d', curveLine(fpVals, yBot))
+    .attr('fill', 'none')
+    .attr('stroke-width', 1.75)
+    .style('stroke', 'var(--accent)');
 
-    // Center marker at x = 0 (where f' is defined but discontinuous).
+  // Crossing markers where f' meets y = c.
+  const drawn = crossings.slice(0, MAX_DRAWN_CROSSINGS);
+  for (const cx of drawn) {
     botG
       .append('circle')
-      .attr('cx', x(0))
-      .attr('cy', yBot(0))
-      .attr('r', 4.5)
-      .attr('fill', 'var(--accent)')
+      .attr('cx', x(cx))
+      .attr('cy', yBot(level))
+      .attr('r', 2.5)
+      .attr('fill', 'var(--bound)')
       .append('title')
-      .text("f'(0) = 0 (defined by the derivative, though f' is discontinuous here)");
+      .text(`f' = ${fmt(level, 2)} at x ≈ ${fmt(cx, 8)}`);
+  }
 
-    // Legend.
-    botG
-      .append('text')
-      .attr('x', 8)
-      .attr('y', botH + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: '■ f′(x)', en: "■ f′(x)" }, lang));
-    botG
-      .append('text')
-      .attr('x', width / 2)
-      .attr('y', botH + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--bound)')
-      .text(localize({ ko: '─ 테스트 높이 y = c', en: '─ test level y = c' }, lang));
+  // Center marker at x = 0 (where f' is defined but discontinuous).
+  botG
+    .append('circle')
+    .attr('cx', x(0))
+    .attr('cy', yBot(0))
+    .attr('r', 4.5)
+    .attr('fill', 'var(--accent)')
+    .append('title')
+    .text("f'(0) = 0 (defined by the derivative, though f' is discontinuous here)");
 
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Legend.
+  botG
+    .append('text')
+    .attr('x', 8)
+    .attr('y', botH + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: '■ f′(x)', en: "■ f′(x)" }, lang));
+  botG
+    .append('text')
+    .attr('x', width / 2)
+    .attr('y', botH + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--bound)')
+    .text(localize({ ko: '─ 테스트 높이 y = c', en: '─ test level y = c' }, lang));
 }
 
-export default defineScene<DarbouxData>({ model: darbouxModel, createScene: createDarbouxScene });
+export default defineSimpleScene<DarbouxData>({
+  model: darbouxModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+  ],
+});

@@ -1,6 +1,6 @@
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { cauchySchwarzModel, type CauchySchwarzData, type Vec2 } from '../models/cauchySchwarz';
 
 /**
@@ -58,17 +58,7 @@ function verdictText(data: CauchySchwarzData, lang: Lang): string {
   );
 }
 
-function createCauchySchwarzScene(): Scene<CauchySchwarzData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: CauchySchwarzData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: CauchySchwarzData, lang: Lang): void {
     const { g, width, height } = chart;
     const { theta, x, y, projection, isParallel, showProjection } = data;
     g.selectAll('*').remove();
@@ -220,47 +210,13 @@ function createCauchySchwarzScene(): Scene<CauchySchwarzData> {
           .attr('opacity', i === 0 ? 0.25 : 0.6);
       });
     }
-
-    if (factsSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(data, lang));
-      setRichText(verdictSlot, verdictText(data, lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<CauchySchwarzData>({ model: cauchySchwarzModel, createScene: createCauchySchwarzScene });
+export default defineSimpleScene<CauchySchwarzData>({
+  model: cauchySchwarzModel,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: verdictText, bold: true }
+  ],
+});

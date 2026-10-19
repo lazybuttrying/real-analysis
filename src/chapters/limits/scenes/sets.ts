@@ -1,5 +1,6 @@
-import { defineScene, localize, type ControlState, type Lang, type LocalizedText, type Scene } from '../../../contracts';
-import { createChart, type Chart } from '../../../view/d3kit';
+import { localize, type Lang, type LocalizedText } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { setsModel, type SetsData } from '../models/sets';
 
 const OP_TEX: Record<string, string> = {
@@ -206,14 +207,7 @@ function drawArrows(
     .text(verdict);
 }
 
-function createSetsScene(): Scene<SetsData> {
-  let chart: Chart | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: SetsData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: SetsData, lang: Lang): void {
     const { g, width, height } = chart;
     if (width < 40 || height < 160) return;
     const hTop = height * 0.54;
@@ -221,27 +215,9 @@ function createSetsScene(): Scene<SetsData> {
     g.selectAll('*').remove();
     drawVenn(g, width, hTop, data, lang);
     drawArrows(g, width, height, hTop, data, lang);
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      chart = createChart(host);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<SetsData>({ model: setsModel, createScene: createSetsScene });
+export default defineSimpleScene<SetsData>({
+  model: setsModel,
+  drawMain,
+});

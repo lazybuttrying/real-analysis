@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { PLOT_CLIP, standardLimitsModel, type StandardLimitsData } from '../models/standardLimits';
 
 /**
@@ -97,19 +91,7 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createStandardLimitsScene(): Scene<StandardLimitsData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: StandardLimitsData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: StandardLimitsData, lang: Lang): void {
     const { g, width, height } = chart;
     const { kind, n, points, regime, limit } = data;
     g.selectAll('*').remove();
@@ -195,52 +177,16 @@ function createStandardLimitsScene(): Scene<StandardLimitsData> {
         .style('fill', 'var(--bound)')
         .text(localize({ ko: `극한 = ${fmt(limit)}`, en: `limit = ${fmt(limit)}` }, lang));
     }
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(explainSlot, explainText(lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      wrap = shell.chartWrap;
-      chart = createChart(wrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (chart && wrap) chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<StandardLimitsData>({ model: standardLimitsModel, createScene: createStandardLimitsScene });
+export default defineSimpleScene<StandardLimitsData>({
+  model: standardLimitsModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => explainText(lang), spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true }
+  ],
+});

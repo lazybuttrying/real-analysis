@@ -1,13 +1,7 @@
 import { scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { absoluteContinuityModel, type AbsoluteContinuityData } from '../models/absoluteContinuity';
 
 /**
@@ -63,176 +57,127 @@ function verdictText(data: AbsoluteContinuityData, lang: Lang): string {
   );
 }
 
-function createAbsoluteContinuityScene(): Scene<AbsoluteContinuityData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: AbsoluteContinuityData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
-    const { func, totalLen, varSum } = data;
-
-    const { g, width, height } = chart;
-    g.selectAll('*').remove();
-
-    const rows = [
-      {
-        key: 'length',
-        label: localize(
-          { ko: '구간들의 총 길이 (δ로 만들기)', en: 'Total interval length (the δ we control)' },
-          lang,
-        ),
-        value: totalLen,
-      },
-      {
-        key: 'variation',
-        label: localize(
-          { ko: 'Σ |ΔF| — ε로 만들어야 함', en: 'Σ |ΔF| — must be made < ε' },
-          lang,
-        ),
-        value: varSum,
-      },
-    ];
-
-    // Manual band layout for the two rows (avoids pulling d3-scale's
-    // scaleBand into the shared vendor chunk for two bars).
-    const rowH = height / rows.length;
-    const bw = rowH * 0.65;
-    const yPos = (i: number): number => i * rowH + (rowH - bw) / 2;
-    const hi = Math.max(0.5, totalLen, varSum);
-    const x = scaleLinear().domain([0, hi]).range([0, width]);
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -32)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `절대연속성 테스트 — ${func === 'square' ? 'F(x) = x² (막대 둘 다 → 0)' : '칸토어 함수 c (길이만 → 0, Σ|Δc| = 1 고정)'}`,
-            en: `Absolute continuity test — ${func === 'square' ? 'F(x) = x² (both bars → 0)' : 'Cantor function c (length → 0 only, Σ|Δc| frozen at 1)'}`,
-          },
-          lang,
-        ),
-      );
-
-    rows.forEach((row, i) => {
-      g.append('text')
-        .attr('x', -8)
-        .attr('y', yPos(i) + bw / 2 + 4)
-        .attr('font-size', 12)
-        .attr('text-anchor', 'end')
-        .attr('fill', 'currentColor')
-        .text(row.label);
-    });
-
-    rows.forEach((row, i) => {
-      g.append('rect')
-        .attr('y', yPos(i))
-        .attr('height', bw)
-        .attr('x', 0)
-        .attr('width', x(row.value))
-        .style('fill', row.key === 'variation' ? 'var(--accent)' : 'currentColor')
-        .attr('opacity', 0.85);
-      g.append('text')
-        .attr('x', x(row.value) + 6)
-        .attr('y', yPos(i) + bw / 2 + 4)
-        .attr('font-size', 12)
-        .attr('fill', 'currentColor')
-        .text(row.value.toFixed(4));
-    });
-
-    // Marker at 1 on the variation scale: where the Cantor function lives.
-    g.append('line')
-      .attr('x1', x(1))
-      .attr('x2', x(1))
-      .attr('y1', 0)
-      .attr('y2', height)
-      .attr('stroke', 'var(--accent)')
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', '6,4')
-      .attr('opacity', 0.7);
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-
-      // Honest scope note: the hard direction is stated, not proved, here.
-      const scopeNote = document.createElement('div');
-      scopeNote.style.marginTop = '2px';
-      scopeNote.style.opacity = '0.75';
-
-      // Cross-chapter link: the Cantor function scene in the limits chapter.
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const cantorLink = document.createElement('a');
-      cantorLink.href = '../../limits/cantor-function/';
-      cantorLink.textContent = localize(
-        {
-          ko: '칸토어 함수 씬 — 균등연속이지만 절대연속이 아닌 예',
-          en: 'Cantor function scene — uniformly continuous but not absolutely continuous',
-        },
-        lang,
-      );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), cantorLink);
-
-      strips.append(readout, verdict, scopeNote, seeAlso);
-
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      const scopeSlot = createRichSlot(scopeNote);
-      setRichText(
-        scopeSlot,
-        localize(
-          {
-            ko: String.raw`역방향도 성립합니다 — 절대연속이면 \(F' = f\) a.e.이고 \(F(x) - F(a) = \int_a^x f\) — 하지만 그 증명(유계변동과 Lebesgue 미분 정리를 경유)은 여기서 증명하지 않고 아이디어 수준으로만 언급합니다.`,
-            en: String.raw`The converse also holds — AC implies \(F' = f\) a.e. with \(F(x) - F(a) = \int_a^x f\) — but its proof (via bounded variation and the Lebesgue differentiation theorem) is stated at idea level here, not proved.`,
-          },
-          lang,
-        ),
-      );
-
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
+/** Honest scope note: the hard direction is stated, not proved, here. */
+function scopeNoteText(lang: Lang): string {
+  return localize(
+    {
+      ko: String.raw`역방향도 성립합니다 — 절대연속이면 \(F' = f\) a.e.이고 \(F(x) - F(a) = \int_a^x f\) — 하지만 그 증명(유계변동과 Lebesgue 미분 정리를 경유)은 여기서 증명하지 않고 아이디어 수준으로만 언급합니다.`,
+      en: String.raw`The converse also holds — AC implies \(F' = f\) a.e. with \(F(x) - F(a) = \int_a^x f\) — but its proof (via bounded variation and the Lebesgue differentiation theorem) is stated at idea level here, not proved.`,
     },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+    lang,
+  );
 }
 
-export default defineScene<AbsoluteContinuityData>({ model: absoluteContinuityModel, createScene: createAbsoluteContinuityScene });
+function drawMain(chart: Chart, data: AbsoluteContinuityData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { func, totalLen, varSum } = data;
+
+  g.selectAll('*').remove();
+
+  const rows = [
+    {
+      key: 'length',
+      label: localize(
+        { ko: '구간들의 총 길이 (δ로 만들기)', en: 'Total interval length (the δ we control)' },
+        lang,
+      ),
+      value: totalLen,
+    },
+    {
+      key: 'variation',
+      label: localize(
+        { ko: 'Σ |ΔF| — ε로 만들어야 함', en: 'Σ |ΔF| — must be made < ε' },
+        lang,
+      ),
+      value: varSum,
+    },
+  ];
+
+  // Manual band layout for the two rows (avoids pulling d3-scale's
+  // scaleBand into the shared vendor chunk for two bars).
+  const rowH = height / rows.length;
+  const bw = rowH * 0.65;
+  const yPos = (i: number): number => i * rowH + (rowH - bw) / 2;
+  const hi = Math.max(0.5, totalLen, varSum);
+  const x = scaleLinear().domain([0, hi]).range([0, width]);
+
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -32)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `절대연속성 테스트 — ${func === 'square' ? 'F(x) = x² (막대 둘 다 → 0)' : '칸토어 함수 c (길이만 → 0, Σ|Δc| = 1 고정)'}`,
+          en: `Absolute continuity test — ${func === 'square' ? 'F(x) = x² (both bars → 0)' : 'Cantor function c (length → 0 only, Σ|Δc| frozen at 1)'}`,
+        },
+        lang,
+      ),
+    );
+
+  rows.forEach((row, i) => {
+    g.append('text')
+      .attr('x', -8)
+      .attr('y', yPos(i) + bw / 2 + 4)
+      .attr('font-size', 12)
+      .attr('text-anchor', 'end')
+      .attr('fill', 'currentColor')
+      .text(row.label);
+  });
+
+  rows.forEach((row, i) => {
+    g.append('rect')
+      .attr('y', yPos(i))
+      .attr('height', bw)
+      .attr('x', 0)
+      .attr('width', x(row.value))
+      .style('fill', row.key === 'variation' ? 'var(--accent)' : 'currentColor')
+      .attr('opacity', 0.85);
+    g.append('text')
+      .attr('x', x(row.value) + 6)
+      .attr('y', yPos(i) + bw / 2 + 4)
+      .attr('font-size', 12)
+      .attr('fill', 'currentColor')
+      .text(row.value.toFixed(4));
+  });
+
+  // Marker at 1 on the variation scale: where the Cantor function lives.
+  g.append('line')
+    .attr('x1', x(1))
+    .attr('x2', x(1))
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('stroke', 'var(--accent)')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', '6,4')
+    .attr('opacity', 0.7);
+}
+
+export default defineSimpleScene<AbsoluteContinuityData>({
+  model: absoluteContinuityModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: verdictText, bold: true },
+    { text: (_data, lang) => scopeNoteText(lang), cssText: 'margin-top: 2px; opacity: 0.75;' },
+  ],
+  mountExtra: (strips, lang) => {
+    // Cross-chapter link: the Cantor function scene in the limits chapter.
+    const seeAlso = document.createElement('div');
+    seeAlso.style.marginTop = '4px';
+    const cantorLink = document.createElement('a');
+    cantorLink.href = '../../limits/cantor-function/';
+    cantorLink.textContent = localize(
+      {
+        ko: '칸토어 함수 씬 — 균등연속이지만 절대연속이 아닌 예',
+        en: 'Cantor function scene — uniformly continuous but not absolutely continuous',
+      },
+      lang,
+    );
+    seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), cantorLink);
+    strips.append(seeAlso);
+  },
+});

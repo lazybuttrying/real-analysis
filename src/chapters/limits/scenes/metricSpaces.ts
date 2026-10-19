@@ -1,13 +1,8 @@
 import { axisBottom, axisLeft, scaleLinear, type Selection } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { createRichSlot, setRichText } from '../../../view/richslot';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { metricSpacesModel, type MetricSpacesData } from '../models/metric-spaces';
 
 /**
@@ -92,18 +87,7 @@ function centerMark(g: Selection<SVGGElement, unknown, null, undefined>, cx: num
     .attr('fill', 'var(--accent)');
 }
 
-function createMetricSpacesScene(): Scene<MetricSpacesData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: MetricSpacesData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: MetricSpacesData): void {
     const { g, width, height } = chart;
     const { metric, r, points, inBall } = data;
 
@@ -186,26 +170,21 @@ function createMetricSpacesScene(): Scene<MetricSpacesData> {
 
     g.append('g').attr('transform', `translate(0,${height - 8})`).call(axisBottom(xScale).ticks(8));
     g.append('g').call(axisLeft(yScale).ticks(8));
+}
 
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const legend = document.createElement('div');
-      legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(legend, facts, verdict);
-
-      setRichText(
+export default defineSimpleScene<MetricSpacesData>({
+  model: metricSpacesModel,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: factsText, bold: true },
+    { text: verdictText, bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const legend = document.createElement('div');
+    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
+    strips.prepend(legend);
+    setRichText(
         createRichSlot(legend),
         localize(
           {
@@ -215,31 +194,5 @@ function createMetricSpacesScene(): Scene<MetricSpacesData> {
           lang,
         ),
       );
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<MetricSpacesData>({ model: metricSpacesModel, createScene: createMetricSpacesScene });
+  },
+});

@@ -1,13 +1,7 @@
-import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { axisBottom, axisLeft, line, scaleLinear, type ScaleLinear } from 'd3';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   R_MAX,
   R_MIN,
@@ -60,192 +54,152 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createTauberScene(): Scene<TauberData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let checkSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: TauberData; state: ControlState } | undefined;
+const path = line<TauberSample>()
+  .x((d) => d.r)
+  .y((d) => d.y);
 
-  const path = line<TauberSample>()
-    .x((d) => d.r)
-    .y((d) => d.y);
-
-  const drawMain = (data: TauberData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
-
-    const x = scaleLinear().domain([R_MIN, R_MAX]).range([0, width]);
-    const yMin = 0.45;
-    const yMax = 1.2;
-    const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
-    const px = path.x((d) => x(d.r)).y((d) => y(d.y));
-
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
-    g.append('g').call(axisLeft(y).ticks(6));
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -20)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `Abel 합 곡선: A_G(r) = 1/(1+r) (그란디) vs A_D(r) (D, 4000항)`,
-            en: `Abel-sum curves: A_G(r) = 1/(1+r) (Grandi) vs A_D(r) (D, 4000 terms)`,
-          },
-          lang,
-        ),
-      );
-
-    // Dashed levels: 1/2 (Grandi's Abel sum) and S_D (D's ordinary sum).
-    const level = (value: number, color: string) => {
-      g.append('line')
-        .attr('x1', x(R_MIN))
-        .attr('x2', x(R_MAX))
-        .attr('y1', y(value))
-        .attr('y2', y(value))
-        .attr('stroke-dasharray', '5 4')
-        .attr('stroke-width', 1.5)
-        .style('stroke', color);
-    };
-    level(0.5, 'var(--bound)');
-    level(data.sumD, 'var(--accent)');
-    g.append('text')
-      .attr('x', x(R_MAX))
-      .attr('y', y(0.5) - 6)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .style('fill', 'var(--bound)')
-      .text('1/2');
-    g.append('text')
-      .attr('x', x(R_MAX))
-      .attr('y', y(data.sumD) - 6)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: `S_D ≈ ${fmt(data.sumD, 4)}`, en: `S_D ≈ ${fmt(data.sumD, 4)}` }, lang));
-
-    // Grandi curve, bound color (the failing case).
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--bound)')
-      .attr('d', px(data.grandiCurve) ?? '');
-    // D curve, accent color (the theorem working).
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)')
-      .attr('d', px(data.dCurve) ?? '');
-
-    // Vertical marker at the slider r, with dots on both curves.
-    g.append('line')
-      .attr('x1', x(data.r))
-      .attr('x2', x(data.r))
-      .attr('y1', 0)
-      .attr('y2', height)
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', '4 3')
-      .attr('stroke', 'currentColor')
-      .attr('opacity', 0.6);
-    g.append('circle')
-      .attr('cx', x(data.r))
-      .attr('cy', y(data.abelGrandiAtR))
-      .attr('r', 4)
-      .style('fill', 'var(--bound)');
-    g.append('circle')
-      .attr('cx', x(data.r))
-      .attr('cy', y(data.abelDAtR))
-      .attr('r', 4)
-      .style('fill', 'var(--accent)');
-
-    // Legend.
-    const legendY = height + 34;
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', legendY)
-      .attr('font-size', 12)
-      .style('fill', 'var(--bound)')
-      .text(localize({ ko: '— A_G(r) (그란디, 가설 실패)', en: '— A_G(r) (Grandi, hypothesis fails)' }, lang));
-    g.append('text')
-      .attr('x', width * 0.45)
-      .attr('y', legendY)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: '— A_D(r) (D, 가설 성립)', en: '— A_D(r) (D, hypothesis holds)' }, lang));
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !checkSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(checkSlot, checkText(last.data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const check = document.createElement('div');
-      check.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      // Cross-link: the Grandi scene, whose divergent partial sums this
-      // scene's failing half is built on.
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const grandiLink = document.createElement('a');
-      grandiLink.href = '../grandi/';
-      grandiLink.textContent = localize(
-        {
-          ko: '그란디 급수 씬 — 1, 0, 1, 0… 영원히 오가는 부분합',
-          en: 'Grandi series scene — partial sums bouncing 1, 0, 1, 0… forever',
-        },
-        lang,
-      );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), grandiLink);
-
-      shell.strips.append(readout, check, verdict, seeAlso);
-      readoutSlot = createRichSlot(readout);
-      checkSlot = createRichSlot(check);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      checkSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+// A dashed horizontal level line (an Abel-sum target) across the panel.
+function level(
+  g: Chart['g'],
+  value: number,
+  color: string,
+  x: ScaleLinear<number, number>,
+  y: ScaleLinear<number, number>,
+): void {
+  g.append('line')
+    .attr('x1', x(R_MIN))
+    .attr('x2', x(R_MAX))
+    .attr('y1', y(value))
+    .attr('y2', y(value))
+    .attr('stroke-dasharray', '5 4')
+    .attr('stroke-width', 1.5)
+    .style('stroke', color);
 }
 
-export default defineScene<TauberData>({ model: tauberModel, createScene: createTauberScene });
+function drawMain(chart: Chart, data: TauberData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
+
+  const x = scaleLinear().domain([R_MIN, R_MAX]).range([0, width]);
+  const yMin = 0.45;
+  const yMax = 1.2;
+  const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
+  const px = path.x((d) => x(d.r)).y((d) => y(d.y));
+
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
+  g.append('g').call(axisLeft(y).ticks(6));
+
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -20)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `Abel 합 곡선: A_G(r) = 1/(1+r) (그란디) vs A_D(r) (D, 4000항)`,
+          en: `Abel-sum curves: A_G(r) = 1/(1+r) (Grandi) vs A_D(r) (D, 4000 terms)`,
+        },
+        lang,
+      ),
+    );
+
+  // Dashed levels: 1/2 (Grandi's Abel sum) and S_D (D's ordinary sum).
+  level(g, 0.5, 'var(--bound)', x, y);
+  level(g, data.sumD, 'var(--accent)', x, y);
+  g.append('text')
+    .attr('x', x(R_MAX))
+    .attr('y', y(0.5) - 6)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .style('fill', 'var(--bound)')
+    .text('1/2');
+  g.append('text')
+    .attr('x', x(R_MAX))
+    .attr('y', y(data.sumD) - 6)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: `S_D ≈ ${fmt(data.sumD, 4)}`, en: `S_D ≈ ${fmt(data.sumD, 4)}` }, lang));
+
+  // Grandi curve, bound color (the failing case).
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--bound)')
+    .attr('d', px(data.grandiCurve) ?? '');
+  // D curve, accent color (the theorem working).
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)')
+    .attr('d', px(data.dCurve) ?? '');
+
+  // Vertical marker at the slider r, with dots on both curves.
+  g.append('line')
+    .attr('x1', x(data.r))
+    .attr('x2', x(data.r))
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', '4 3')
+    .attr('stroke', 'currentColor')
+    .attr('opacity', 0.6);
+  g.append('circle')
+    .attr('cx', x(data.r))
+    .attr('cy', y(data.abelGrandiAtR))
+    .attr('r', 4)
+    .style('fill', 'var(--bound)');
+  g.append('circle')
+    .attr('cx', x(data.r))
+    .attr('cy', y(data.abelDAtR))
+    .attr('r', 4)
+    .style('fill', 'var(--accent)');
+
+  // Legend.
+  const legendY = height + 34;
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', legendY)
+    .attr('font-size', 12)
+    .style('fill', 'var(--bound)')
+    .text(localize({ ko: '— A_G(r) (그란디, 가설 실패)', en: '— A_G(r) (Grandi, hypothesis fails)' }, lang));
+  g.append('text')
+    .attr('x', width * 0.45)
+    .attr('y', legendY)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: '— A_D(r) (D, 가설 성립)', en: '— A_D(r) (D, hypothesis holds)' }, lang));
+}
+
+function mountExtra(strips: HTMLElement, lang: Lang): void {
+  // Cross-link: the Grandi scene, whose divergent partial sums this
+  // scene's failing half is built on.
+  const seeAlso = document.createElement('div');
+  seeAlso.style.marginTop = '4px';
+  const grandiLink = document.createElement('a');
+  grandiLink.href = '../grandi/';
+  grandiLink.textContent = localize(
+    {
+      ko: '그란디 급수 씬 — 1, 0, 1, 0… 영원히 오가는 부분합',
+      en: 'Grandi series scene — partial sums bouncing 1, 0, 1, 0… forever',
+    },
+    lang,
+  );
+  seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), grandiLink);
+  strips.append(seeAlso);
+}
+
+export default defineSimpleScene<TauberData>({
+  model: tauberModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: checkText, spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+  ],
+  mountExtra,
+});

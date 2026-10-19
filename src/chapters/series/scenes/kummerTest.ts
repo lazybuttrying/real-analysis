@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { kummerModel, type KummerData } from '../models/kummerTest';
 
 /**
@@ -90,167 +84,122 @@ function verdictText(data: KummerData, lang: Lang): string {
   );
 }
 
-function createKummerTestScene(): Scene<KummerData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: KummerData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: KummerData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { pKind, aSel, n, ks, kummer, limit } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
-    const { pKind, aSel, n, ks, kummer, limit } = data;
+  g.selectAll('*').remove();
+  const x = scaleLinear().domain([1, Math.max(2, n)]).range([0, width]);
+  let lo = 0;
+  let hi = 0;
+  for (const v of kummer) {
+    lo = Math.min(lo, v);
+    hi = Math.max(hi, v);
+  }
+  if (pKind === 'pn') {
+    lo = Math.min(lo, limit);
+    hi = Math.max(hi, limit);
+  }
+  const pad = Math.max(0.05, (hi - lo) * 0.15);
+  const y = scaleLinear().domain([lo - pad, hi + pad]).range([height, 0]);
 
-    const { g, width, height } = chart;
-    g.selectAll('*').remove();
-    const x = scaleLinear().domain([1, Math.max(2, n)]).range([0, width]);
-    let lo = 0;
-    let hi = 0;
-    for (const v of kummer) {
-      lo = Math.min(lo, v);
-      hi = Math.max(hi, v);
-    }
-    if (pKind === 'pn') {
-      lo = Math.min(lo, limit);
-      hi = Math.max(hi, limit);
-    }
-    const pad = Math.max(0.05, (hi - lo) * 0.15);
-    const y = scaleLinear().domain([lo - pad, hi + pad]).range([height, 0]);
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
+  g.append('g').call(axisLeft(y).ticks(6));
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
-    g.append('g').call(axisLeft(y).ticks(6));
+  const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  header.text(
+    localize(
+      {
+        ko: `Kummer 몫 K_k = p_k·(a_k/a_{k+1}) − p_{k+1} — a = ${aSel === 'ahalf' ? '1/2' : '2'} (Gauss h = ${aSel === 'ahalf' ? '1/2' : '2'})`,
+        en: `Kummer quotient K_k = p_k·(a_k/a_{k+1}) − p_{k+1} — a = ${aSel === 'ahalf' ? '1/2' : '2'} (Gauss h = ${aSel === 'ahalf' ? '1/2' : '2'})`,
+      },
+      lang,
+    ),
+  );
 
-    const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    header.text(
-      localize(
-        {
-          ko: `Kummer 몫 K_k = p_k·(a_k/a_{k+1}) − p_{k+1} — a = ${aSel === 'ahalf' ? '1/2' : '2'} (Gauss h = ${aSel === 'ahalf' ? '1/2' : '2'})`,
-          en: `Kummer quotient K_k = p_k·(a_k/a_{k+1}) − p_{k+1} — a = ${aSel === 'ahalf' ? '1/2' : '2'} (Gauss h = ${aSel === 'ahalf' ? '1/2' : '2'})`,
-        },
-        lang,
-      ),
-    );
+  // The 0-line: staying strictly above means convergence, strictly below
+  // (with sum 1/p_n divergent) means divergence.
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(0))
+    .attr('y2', y(0))
+    .attr('stroke', 'currentColor')
+    .attr('stroke-width', 1.5)
+    .attr('opacity', 0.5);
 
-    // The 0-line: staying strictly above means convergence, strictly below
-    // (with sum 1/p_n divergent) means divergence.
+  // Dashed asymptote at the theoretical limit for p_k = k.
+  if (pKind === 'pn') {
     g.append('line')
       .attr('x1', 0)
       .attr('x2', width)
-      .attr('y1', y(0))
-      .attr('y2', y(0))
-      .attr('stroke', 'currentColor')
-      .attr('stroke-width', 1.5)
-      .attr('opacity', 0.5);
-
-    // Dashed asymptote at the theoretical limit for p_k = k.
-    if (pKind === 'pn') {
-      g.append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
-        .attr('y1', y(limit))
-        .attr('y2', y(limit))
-        .attr('stroke', 'var(--accent)')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '6,4');
-      g.append('text')
-        .attr('x', width - 4)
-        .attr('y', y(limit) - 6)
-        .attr('font-size', 12)
-        .attr('text-anchor', 'end')
-        .style('fill', 'var(--accent)')
-        .text(`a − 1 = ${limit}`);
-    }
-
-    // The K_k curve.
-    const kummerLine = line<{ k: number; v: number }>()
-      .x((d) => x(d.k))
-      .y((d) => y(d.v));
-    const pts = ks.map((k, i) => ({ k, v: kummer[i] ?? 0 }));
-    if (pts.length > 1) {
-      g.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'currentColor').attr('stroke-width', 2).attr('d', kummerLine);
-    }
-    const kN = kummer[kummer.length - 1] ?? 0;
-    g.append('circle').attr('cx', x(n)).attr('cy', y(kN)).attr('r', 4).style('fill', 'var(--accent)');
-
+      .attr('y1', y(limit))
+      .attr('y2', y(limit))
+      .attr('stroke', 'var(--accent)')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '6,4');
     g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 32)
+      .attr('x', width - 4)
+      .attr('y', y(limit) - 6)
       .attr('font-size', 12)
+      .attr('text-anchor', 'end')
       .style('fill', 'var(--accent)')
-      .text(
-        localize(
-          { ko: `■ K_k 곡선 (p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : 'k ln(k+1)'})`, en: `■ K_k curve (p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : 'k ln(k+1)'})` },
-          lang,
-        ),
-      );
+      .text(`a − 1 = ${limit}`);
+  }
 
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
+  // The K_k curve.
+  const kummerLine = line<{ k: number; v: number }>()
+    .x((d) => x(d.k))
+    .y((d) => y(d.v));
+  const pts = ks.map((k, i) => ({ k, v: kummer[i] ?? 0 }));
+  if (pts.length > 1) {
+    g.append('path').datum(pts).attr('fill', 'none').attr('stroke', 'currentColor').attr('stroke-width', 2).attr('d', kummerLine);
+  }
+  const kN = kummer[kummer.length - 1] ?? 0;
+  g.append('circle').attr('cx', x(n)).attr('cy', y(kN)).attr('r', 4).style('fill', 'var(--accent)');
 
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-
-      // Cross-links: Raabe's test (Kummer with p_n = n) and the test survey.
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const raabeLink = document.createElement('a');
-      raabeLink.href = '../raabe-test/';
-      raabeLink.textContent = localize(
-        { ko: 'Raabe 판정법 씬 — Kummer의 p_n = n 특수경우', en: "Raabe's test scene — Kummer with p_n = n" },
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 32)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(
+      localize(
+        { ko: `■ K_k 곡선 (p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : 'k ln(k+1)'})`, en: `■ K_k curve (p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : 'k ln(k+1)'})` },
         lang,
-      );
-      const testsLink = document.createElement('a');
-      testsLink.href = '../tests/';
-      testsLink.textContent = localize(
-        { ko: '수렴 판정법 모음', en: 'Convergence tests survey' },
-        lang,
-      );
-      seeAlso.append(
-        document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)),
-        raabeLink,
-        document.createTextNode(' · '),
-        testsLink,
-      );
-
-      strips.append(readout, verdict, seeAlso);
-
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+      ),
+    );
 }
 
-export default defineScene<KummerData>({ model: kummerModel, createScene: createKummerTestScene });
+function mountExtra(strips: HTMLElement, lang: Lang): void {
+  // Cross-links: Raabe's test (Kummer with p_n = n) and the test survey.
+  const seeAlso = document.createElement('div');
+  seeAlso.style.marginTop = '4px';
+  const raabeLink = document.createElement('a');
+  raabeLink.href = '../raabe-test/';
+  raabeLink.textContent = localize(
+    { ko: 'Raabe 판정법 씬 — Kummer의 p_n = n 특수경우', en: "Raabe's test scene — Kummer with p_n = n" },
+    lang,
+  );
+  const testsLink = document.createElement('a');
+  testsLink.href = '../tests/';
+  testsLink.textContent = localize(
+    { ko: '수렴 판정법 모음', en: 'Convergence tests survey' },
+    lang,
+  );
+  seeAlso.append(
+    document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)),
+    raabeLink,
+    document.createTextNode(' · '),
+    testsLink,
+  );
+  strips.append(seeAlso);
+}
+
+export default defineSimpleScene<KummerData>({
+  model: kummerModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: readoutText, bold: true }, { text: verdictText, bold: true }],
+  mountExtra,
+});
