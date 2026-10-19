@@ -28,4 +28,6 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'fubini-tonelli': () => import('../calculus/scenes/fubiniTonelli').then((module) => module.default),
   'egorov': () => import('../calculus/scenes/egorov').then((module) => module.default),
   'absolute-continuity': () => import('../calculus/scenes/absoluteContinuity').then((module) => module.default),
+  'differentiation-under-integral': () => import('../calculus/scenes/differentiationUnderIntegral').then((module) => module.default),
+  'minkowski': () => import('../calculus/scenes/minkowski').then((module) => module.default),
 };

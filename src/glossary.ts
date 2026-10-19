@@ -1760,4 +1760,24 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'integration',
     sceneId: 'vitali',
   },
+  {
+    id: 'differentiation-under-integral',
+    term: { ko: '적분기호 아래에서의 미분', en: 'differentiation under the integral sign' },
+    definition: {
+      ko: String.raw`\(\frac{d}{dx}\int_a^b f(x,t)\,dt = \int_a^b \frac{\partial f}{\partial x}(x,t)\,dt\) — \(\frac{\partial f}{\partial x}\)가 연속이면 성립한다. 라이프니츠 규칙이라고도 한다.`,
+      en: String.raw`\(\frac{d}{dx}\int_a^b f(x,t)\,dt = \int_a^b \frac{\partial f}{\partial x}(x,t)\,dt\) — holds when \(\frac{\partial f}{\partial x}\) is continuous. Also called Leibniz's rule.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'differentiation-under-integral',
+  },
+  {
+    id: 'minkowski-inequality',
+    term: { ko: '민코프스키 부등식', en: "Minkowski's inequality" },
+    definition: {
+      ko: String.raw`\(L^p\) 삼각부등식 \(\|f+g\|_p \le \|f\|_p + \|g\|_p\) (\(p \ge 1\)) — 횔더 부등식으로부터 유도된다.`,
+      en: String.raw`The \(L^p\) triangle inequality \(\|f+g\|_p \le \|f\|_p + \|g\|_p\) (\(p \ge 1\)) — derived from Hölder's inequality.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'minkowski',
+  },
 ];

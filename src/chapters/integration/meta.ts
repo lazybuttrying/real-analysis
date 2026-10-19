@@ -8,6 +8,8 @@ import { problems as betaFunctionProblems } from '../series/problems/beta-functi
 import { problems as ftcProblems } from '../calculus/problems/ftc';
 import { changeOfVariablesProblems } from '../calculus/problems/change-of-variables';
 import { dirichletFunctionProblems } from '../calculus/problems/dirichlet-function';
+import { differentiationUnderIntegralProblems } from '../calculus/problems/differentiation-under-integral';
+import { minkowskiProblems } from '../calculus/problems/minkowski';
 import { egorovProblems } from '../calculus/problems/egorov';
 import { fubiniTonelliProblems } from '../calculus/problems/fubini-tonelli';
 import { gabrielHornProblems } from '../calculus/problems/gabriel-horn';
@@ -460,6 +462,44 @@ problems: lebesgueProblems,
         { kind: 'slider', key: 'scale', label: { ko: 'δ / 단계 n', en: 'δ / stage n' }, min: 1, max: 10, step: 1, init: 4 },
       ],
 problems: absoluteContinuityProblems,
+    },
+    {
+      id: 'differentiation-under-integral',
+      title: { ko: '적분기호 아래에서의 미분', en: 'Differentiation Under the Integral Sign' },
+      order: 23,
+      summary: {
+        ko: String.raw`\(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\) — 곡선 위의 점과 접선을 움직이며, 적분기호 안에서 미분한 \(\int_0^1 t^x \ln t\,dt\)가 접선의 기울기 \(-\frac{1}{(x+1)^2}\)와 일치함을 수치로 확인합니다.`,
+        en: String.raw`\(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\) — drag along the curve and its tangent while the numerics confirm that differentiating inside the integral, \(\int_0^1 t^x \ln t\,dt\), gives the tangent slope \(-\frac{1}{(x+1)^2}\).`,
+      },
+      tex: [
+        String.raw`\frac{d}{dx}\int_0^1 t^x\,dt = \int_0^1 t^x \ln t\,dt = -\frac{1}{(x+1)^2}`,
+      ],
+      prerequisites: ['improper'],
+      controls: [
+        { kind: 'slider', key: 'x', label: { ko: 'x (지수)', en: 'x (exponent)' }, min: 0.2, max: 4, step: 0.05, init: 1 },
+        { kind: 'slider', key: 'n', label: { ko: 'n (심슨 구간 수)', en: 'n (Simpson panels)' }, min: 8, max: 2000, step: 2, init: 200 },
+      ],
+      problems: differentiationUnderIntegralProblems,
+    },
+    {
+      id: 'minkowski',
+      title: { ko: '민코프스키 부등식', en: "Minkowski's Inequality" },
+      order: 24,
+      summary: {
+        ko: String.raw`\(L^p\) 삼각부등식 — \([0,1]\) 위에서 \(\|f+g\|_p \le \|f\|_p + \|g\|_p\). \(f(t) = t^a\), \(g(t) = (1-t)^b\)로 두고 \(p\)를 움직이면 두 막대 사이 틈새가 벌어졌다 좁아집니다. \(p = 1\)에서는 적분의 선형성 때문에 틈새가 0으로 닫힙니다.`,
+        en: String.raw`The \(L^p\) triangle inequality — \(\|f+g\|_p \le \|f\|_p + \|g\|_p\) on \([0,1]\). With \(f(t) = t^a\), \(g(t) = (1-t)^b\), sliding \(p\) opens and closes the gap between the two bars. At \(p = 1\) linearity of the integral closes the gap to 0.`,
+      },
+      tex: [
+        String.raw`\|f+g\|_p \le \|f\|_p + \|g\|_p \quad (1 \le p < \infty)`,
+        String.raw`\|f\|_p = \left(\int_0^1 |f|^p\right)^{1/p}`,
+      ],
+      prerequisites: ['improper'],
+      controls: [
+        { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 1, max: 4, step: 0.05, init: 2 },
+        { kind: 'slider', key: 'a', label: { ko: '지수 a (f(t) = t^a)', en: 'Exponent a' }, min: 0, max: 3, step: 0.1, init: 1 },
+        { kind: 'slider', key: 'b', label: { ko: '지수 b (g(t) = (1-t)^b)', en: 'Exponent b' }, min: 0, max: 3, step: 0.1, init: 1 },
+      ],
+      problems: minkowskiProblems,
     },
   ],
 };
