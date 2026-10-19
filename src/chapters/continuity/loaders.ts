@@ -8,6 +8,7 @@ import type { SceneLoader } from '../../contracts';
 export const loaders: Readonly<Record<string, SceneLoader>> = {
   'epsdelta': () => import('../limits/scenes/epsdelta').then((module) => module.default),
   'continuity': () => import('../limits/scenes/continuity').then((module) => module.default),
+  'continuity-equivalences': () => import('../limits/scenes/continuityEquivalences').then((module) => module.default),
   'monotone-discontinuities': () => import('../limits/scenes/monotoneDiscontinuities').then((module) => module.default),
   'uniform-continuity': () => import('../limits/scenes/uniformContinuity').then((module) => module.default),
   'ivt': () => import('../limits/scenes/ivt').then((module) => module.default),
