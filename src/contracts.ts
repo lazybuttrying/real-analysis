@@ -123,6 +123,11 @@ export interface ProblemMeta {
   presetCaption: LocalizedText;
   /** The rigorous proof, shown behind a toggle. */
   proof: readonly ProofStep[];
+  /**
+   * True when the steps are a hint/sketch rather than a complete proof.
+   * Renderers show "Show hint" instead of "Show proof".
+   */
+  isHint?: boolean;
 }
 
 /** Difficulty of a chapter exercise: 1 = easy, 2 = medium, 3 = hard. */

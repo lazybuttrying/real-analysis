@@ -144,7 +144,7 @@ function renderProblems(
     vizJobs.push({ host: vizHost, preset: problem.preset });
 
     const details = h('details', { class: 'problem-proof' });
-    details.append(h('summary', {}, tr(lang, 'showProof')));
+    details.append(h('summary', {}, tr(lang, problem.isHint ? 'showHint' : 'showProof')));
     const list = h('ol', {});
     for (const step of problem.proof) {
       const item = h('li', {}, stripInlineMath(localize(step.text, lang)));

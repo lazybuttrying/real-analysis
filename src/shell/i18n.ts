@@ -33,6 +33,7 @@ export const STRINGS = {
   },
   problemsHeading: { ko: '예제', en: 'Examples & Exercises' },
   showProof: { ko: '증명 보기', en: 'Show proof' },
+  showHint: { ko: '힌트 보기', en: 'Show hint' },
   showSolution: { ko: '풀이 보기', en: 'Show solution' },
   exercises: { ko: '연습문제', en: 'Exercises' },
   exercisesIntro: {
