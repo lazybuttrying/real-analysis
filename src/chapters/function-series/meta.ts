@@ -4,6 +4,8 @@ import { gibbsPhenomenonProblems } from '../calculus/problems/gibbs-phenomenon';
 import { problems as diniProblems } from '../series/problems/dini';
 import { problems as fourierProblems } from '../calculus/problems/fourier';
 import { problems as mTestProblems } from '../series/problems/m-test';
+import { parsevalProblems } from '../series/problems/parseval';
+import { riemannLebesgueProblems } from '../series/problems/riemann-lebesgue';
 
 /**
  * Pure data. Imports types plus per-scene problems data modules
@@ -75,9 +77,29 @@ export const functionSeries: ChapterMeta = {
 problems: fourierProblems,
     },
     {
+      id: 'riemann-lebesgue',
+      title: { ko: '리만-르벡 보조정리', en: 'Riemann–Lebesgue Lemma' },
+      order: 4,
+      summary: {
+        ko: String.raw`푸리에 계수는 0으로 갑니다 — \(\int f(x)\sin(nx)\,dx \to 0\). 빠르게 진동하는 파동은 \(f\)의 울퉁불퉁함을 평균내어 지워버립니다.`,
+        en: String.raw`Fourier coefficients die out — \(\int f(x)\sin(nx)\,dx \to 0\). Rapid oscillation averages away every bump of \(f\).`,
+      },
+      tex: [
+        String.raw`a_n = \frac1\pi\int_{-\pi}^{\pi} f(x)\cos(nx)\,dx \to 0`,
+        String.raw`b_n = \frac1\pi\int_{-\pi}^{\pi} f(x)\sin(nx)\,dx \to 0`,
+      ],
+      prerequisites: ['fourier'],
+      controls: [
+        { kind: 'select', key: 'mode', label: { ko: '함수', en: 'Function' }, options: ['step', 'tent', 'smooth'], init: 'step' },
+        { kind: 'slider', key: 'n', label: { ko: '진동수 n', en: 'Frequency n' }, min: 1, max: 40, step: 1, init: 12 },
+        { kind: 'select', key: 'kind', label: { ko: '계수', en: 'Coefficient' }, options: ['a', 'b'], init: 'b' },
+      ],
+      problems: riemannLebesgueProblems,
+    },
+    {
       id: 'fejer-theorem',
       title: { ko: 'Fejér 정리', en: "Fejér's Theorem" },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`푸리에 부분합의 체자로 평균 \(\sigma_N\)은 연속함수에 균등수렴합니다 — Fejér kernel이 근사 항등원이기 때문입니다. 울림 많은 \(S_N\)과 매끈한 \(\sigma_N\)을 겹쳐보세요.`,
         en: String.raw`The Cesàro means \(\sigma_N\) of Fourier partial sums converge uniformly for continuous functions — because the Fejér kernel is an approximate identity. Overlay the ringing \(S_N\) with the smooth \(\sigma_N\).`,
@@ -91,9 +113,27 @@ problems: fourierProblems,
 problems: fejerTheoremProblems,
     },
     {
+      id: 'parseval',
+      title: { ko: '파르세발 항등식', en: "Parseval's Identity" },
+      order: 6,
+      summary: {
+        ko: String.raw`에너지는 보존됩니다 — \(\frac1\pi\int_{-\pi}^{\pi} |f|^2 = \frac{a_0^2}{2} + \sum (a_n^2 + b_n^2)\). 처음 \(N\)개 모드가 잡아내는 에너지 비율을 보세요.`,
+        en: String.raw`Energy is conserved — \(\frac1\pi\int_{-\pi}^{\pi} |f|^2 = \frac{a_0^2}{2} + \sum (a_n^2 + b_n^2)\). Watch the fraction of energy captured by the first \(N\) modes.`,
+      },
+      tex: [
+        String.raw`\frac1\pi\int_{-\pi}^{\pi} |f|^2 = \frac{a_0^2}{2} + \sum_{n=1}^{\infty}(a_n^2 + b_n^2)`,
+      ],
+      prerequisites: ['fejer-theorem'],
+      controls: [
+        { kind: 'select', key: 'mode', label: { ko: '함수', en: 'Function' }, options: ['square', 'sawtooth', 'parabola'], init: 'square' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 수 N', en: 'Terms N' }, min: 1, max: 40, step: 1, init: 12 },
+      ],
+      problems: parsevalProblems,
+    },
+    {
       id: 'gibbs-phenomenon',
       title: { ko: 'Gibbs 현상', en: 'The Gibbs Phenomenon' },
-      order: 5,
+      order: 7,
       summary: {
         ko: String.raw`점프점 옆의 혹이 왜 사라지지 않는가 — 스케일을 \(t = 2Nx\)로 바꾸면 \(S_N\)이 \((2/\pi)\mathrm{Si}(t)\)에 붙고, 첫 봉우리는 \((2/\pi)\mathrm{Si}(\pi) \approx 1.179\)에 수렴합니다. 오버슈트는 점프의 약 8.95%.`,
         en: String.raw`Why the bump beside the jump never dies — rescaling by \(t = 2Nx\) collapses \(S_N\) onto \((2/\pi)\mathrm{Si}(t)\), and the first peak tends to \((2/\pi)\mathrm{Si}(\pi) \approx 1.179\). The overshoot is about 8.95% of the jump.`,

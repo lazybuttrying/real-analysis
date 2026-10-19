@@ -10,6 +10,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'standard-limits': () => import('../limits/scenes/standardLimits').then((module) => module.default),
   'sequence-spaces': () => import('../limits/scenes/sequenceSpaces').then((module) => module.default),
   'cauchy-schwarz': () => import('../limits/scenes/cauchySchwarz').then((module) => module.default),
+  'holder': () => import('../limits/scenes/holder').then((module) => module.default),
   'holes': () => import('../limits/scenes/holes').then((module) => module.default),
   'construction': () => import('../limits/scenes/construction').then((module) => module.default),
   'bolzano-weierstrass': () => import('../limits/scenes/bolzanoWeierstrass').then((module) => module.default),

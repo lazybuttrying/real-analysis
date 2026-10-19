@@ -84,6 +84,13 @@ const POST_SPLIT_SCENES = new Set([
   'derivative-monotonicity',
   'dirichlet-function',
   'riemann-stieltjes',
+  'lebesgue-convergence',
+  'fubini-tonelli',
+  'egorov',
+  'borel-cantelli',
+  'riemann-lebesgue',
+  'parseval',
+  'holder',
 ]);
 
 /**

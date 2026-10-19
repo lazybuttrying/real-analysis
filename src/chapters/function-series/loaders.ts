@@ -9,6 +9,8 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'm-test': () => import('../series/scenes/mTest').then((module) => module.default),
   'dini': () => import('../series/scenes/dini').then((module) => module.default),
   'fourier': () => import('../calculus/scenes/fourier').then((module) => module.default),
+  'riemann-lebesgue': () => import('../series/scenes/riemannLebesgue').then((module) => module.default),
   'fejer-theorem': () => import('../calculus/scenes/fejerTheorem').then((module) => module.default),
+  'parseval': () => import('../series/scenes/parseval').then((module) => module.default),
   'gibbs-phenomenon': () => import('../calculus/scenes/gibbsPhenomenon').then((module) => module.default),
 };

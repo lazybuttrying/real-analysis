@@ -20,6 +20,10 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'riemann-stieltjes': () => import('../calculus/scenes/riemannStieltjes').then((module) => module.default),
   'jordan-decomposition': () => import('../calculus/scenes/jordanDecomposition').then((module) => module.default),
   'measure': () => import('../calculus/scenes/measure').then((module) => module.default),
+  'borel-cantelli': () => import('../calculus/scenes/borelCantelli').then((module) => module.default),
   'lebesgue': () => import('../calculus/scenes/lebesgue').then((module) => module.default),
+  'lebesgue-convergence': () => import('../calculus/scenes/lebesgueConvergence').then((module) => module.default),
+  'fubini-tonelli': () => import('../calculus/scenes/fubiniTonelli').then((module) => module.default),
+  'egorov': () => import('../calculus/scenes/egorov').then((module) => module.default),
   'absolute-continuity': () => import('../calculus/scenes/absoluteContinuity').then((module) => module.default),
 };
