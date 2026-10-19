@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { parsevalModel, type ParsevalData } from '../models/parseval';
 
 /**
@@ -81,152 +75,100 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createParsevalScene(): Scene<ParsevalData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: ParsevalData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: ParsevalData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: ParsevalData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -18)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        { ko: `${modeName(data.mode, 'ko')}: 누적 에너지 S_N → L² 노름`, en: `${modeName(data.mode, 'en')}: cumulative energy S_N → L² norm` },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -18)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          { ko: `${modeName(data.mode, 'ko')}: 누적 에너지 S_N → L² 노름`, en: `${modeName(data.mode, 'en')}: cumulative energy S_N → L² norm` },
-          lang,
-        ),
-      );
+  const x = scaleLinear().domain([0, data.nMax + 1]).range([0, width]);
+  const yTop = Math.max(data.norm2, data.captured) * 1.08;
+  const y = scaleLinear().domain([0, yTop]).range([height, 0]);
 
-    const x = scaleLinear().domain([0, data.nMax + 1]).range([0, width]);
-    const yTop = Math.max(data.norm2, data.captured) * 1.08;
-    const y = scaleLinear().domain([0, yTop]).range([height, 0]);
+  // Cumulative-energy bars.
+  const barW = Math.max(1, (x(2) - x(1)) * 0.7);
+  for (const t of data.terms) {
+    g.append('rect')
+      .attr('x', x(t.n) - barW / 2)
+      .attr('width', barW)
+      .attr('y', y(t.partial))
+      .attr('height', Math.max(0, y(0) - y(t.partial)))
+      .attr('fill', 'var(--accent)')
+      .attr('opacity', 0.55);
+  }
+  // The S_N polyline on top of the bars.
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 1.5)
+    .attr('stroke', 'var(--accent)')
+    .attr(
+      'd',
+      line<ParsevalData['terms'][number]>()
+        .x((t) => x(t.n))
+        .y((t) => y(t.partial))(data.terms) ?? '',
+    );
+  // The L^2-norm target line.
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(data.norm2))
+    .attr('y2', y(data.norm2))
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', '7 4')
+    .attr('stroke', 'currentColor')
+    .attr('opacity', 0.85);
+  g.append('text')
+    .attr('x', width)
+    .attr('y', y(data.norm2) - 6)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        { ko: `L² 노름 = ${fmt(data.norm2, 4)}`, en: `L² norm = ${fmt(data.norm2, 4)}` },
+        lang,
+      ),
+    );
 
-    // Cumulative-energy bars.
-    const barW = Math.max(1, (x(2) - x(1)) * 0.7);
-    for (const t of data.terms) {
-      g.append('rect')
-        .attr('x', x(t.n) - barW / 2)
-        .attr('width', barW)
-        .attr('y', y(t.partial))
-        .attr('height', Math.max(0, y(0) - y(t.partial)))
-        .attr('fill', 'var(--accent)')
-        .attr('opacity', 0.55);
-    }
-    // The S_N polyline on top of the bars.
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 1.5)
-      .attr('stroke', 'var(--accent)')
-      .attr(
-        'd',
-        line<ParsevalData['terms'][number]>()
-          .x((t) => x(t.n))
-          .y((t) => y(t.partial))(data.terms) ?? '',
-      );
-    // The L^2-norm target line.
-    g.append('line')
-      .attr('x1', 0)
-      .attr('x2', width)
-      .attr('y1', y(data.norm2))
-      .attr('y2', y(data.norm2))
-      .attr('stroke-width', 2)
-      .attr('stroke-dasharray', '7 4')
-      .attr('stroke', 'currentColor')
-      .attr('opacity', 0.85);
-    g.append('text')
-      .attr('x', width)
-      .attr('y', y(data.norm2) - 6)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          { ko: `L² 노름 = ${fmt(data.norm2, 4)}`, en: `L² norm = ${fmt(data.norm2, 4)}` },
-          lang,
-        ),
-      );
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(Math.min(data.nMax, 10)));
+  g.append('g').call(axisLeft(y).ticks(5));
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', 14)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .text('S_N');
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(Math.min(data.nMax, 10)));
-    g.append('g').call(axisLeft(y).ticks(5));
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', 14)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .text('S_N');
-
-    // Readout numbers on the chart.
-    g.append('text')
-      .attr('x', width)
-      .attr('y', 14)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(`N = ${data.nMax} · S_N = ${fmt(data.captured, 4)} · captured = ${fmt(data.fraction * 100, 2)}%`);
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(last.data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Readout numbers on the chart.
+  g.append('text')
+    .attr('x', width)
+    .attr('y', 14)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(`N = ${data.nMax} · S_N = ${fmt(data.captured, 4)} · captured = ${fmt(data.fraction * 100, 2)}%`);
 }
 
-export default defineScene<ParsevalData>({ model: parsevalModel, createScene: createParsevalScene });
+export default defineSimpleScene<ParsevalData>({
+  model: parsevalModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: explainText, spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+  ],
+});

@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { dirichletFunctionModel, type DirichletData } from '../models/dirichletFunction';
 
 /**
@@ -51,172 +45,120 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createDirichletFunctionScene(): Scene<DirichletData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: DirichletData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: DirichletData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: DirichletData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  const y = scaleLinear().domain([0, 1.15]).range([height, 0]);
 
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
-    const y = scaleLinear().domain([0, 1.15]).range([height, 0]);
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+  g.append('g').call(axisLeft(y).ticks(3));
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-    g.append('g').call(axisLeft(y).ticks(3));
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -20)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        { ko: '디리클레 함수 빗살: 위합은 항상 1, 아래합은 항상 0', en: 'The Dirichlet comb: the upper sum is always 1, the lower sum always 0' },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -20)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          { ko: '디리클레 함수 빗살: 위합은 항상 1, 아래합은 항상 0', en: 'The Dirichlet comb: the upper sum is always 1, the lower sum always 0' },
-          lang,
-        ),
-      );
-
-    // Upper rectangles (light red, height 1) for every subinterval.
-    for (const seg of data.partition) {
-      g.append('rect')
-        .attr('x', x(seg.x0))
-        .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
-        .attr('y', y(1))
-        .attr('height', Math.max(0, y(0) - y(1)))
-        .attr('fill', 'var(--bound)')
-        .attr('opacity', 0.18);
-    }
-    // Lower bars (thin blue, height 0) for every subinterval.
-    for (const seg of data.partition) {
-      g.append('rect')
-        .attr('x', x(seg.x0))
-        .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
-        .attr('y', y(0) - 1.5)
-        .attr('height', 3)
-        .style('fill', 'var(--accent)')
-        .attr('opacity', 0.7);
-    }
-
-    // Constant lines y = 1 (red) and y = 0 (blue).
-    g.append('line')
-      .attr('x1', x(0))
-      .attr('x2', x(1))
-      .attr('y1', y(1))
-      .attr('y2', y(1))
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--bound)');
-    g.append('text')
-      .attr('x', x(1))
-      .attr('y', y(1) - 8)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .style('fill', 'var(--bound)')
-      .text(localize({ ko: 'y = 1 (유리수 위)', en: 'y = 1 (over the rationals)' }, lang));
-    g.append('line')
-      .attr('x1', x(0))
-      .attr('x2', x(1))
-      .attr('y1', y(0))
-      .attr('y2', y(0))
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--accent)');
-    g.append('text')
-      .attr('x', x(1))
-      .attr('y', y(0) - 8)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
+  // Upper rectangles (light red, height 1) for every subinterval.
+  for (const seg of data.partition) {
+    g.append('rect')
+      .attr('x', x(seg.x0))
+      .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
+      .attr('y', y(1))
+      .attr('height', Math.max(0, y(0) - y(1)))
+      .attr('fill', 'var(--bound)')
+      .attr('opacity', 0.18);
+  }
+  // Lower bars (thin blue, height 0) for every subinterval.
+  for (const seg of data.partition) {
+    g.append('rect')
+      .attr('x', x(seg.x0))
+      .attr('width', Math.max(0, x(seg.x1) - x(seg.x0) - 0.5))
+      .attr('y', y(0) - 1.5)
+      .attr('height', 3)
       .style('fill', 'var(--accent)')
-      .text(localize({ ko: 'y = 0 (무리수 위)', en: 'y = 0 (over the irrationals)' }, lang));
+      .attr('opacity', 0.7);
+  }
 
-    // Rational dots on the red line.
-    for (const dot of data.dots) {
-      g.append('circle')
-        .attr('cx', x(dot.x))
-        .attr('cy', y(1))
-        .attr('r', 2.4)
-        .style('fill', 'var(--bound)');
-    }
+  // Constant lines y = 1 (red) and y = 0 (blue).
+  g.append('line')
+    .attr('x1', x(0))
+    .attr('x2', x(1))
+    .attr('y1', y(1))
+    .attr('y2', y(1))
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--bound)');
+  g.append('text')
+    .attr('x', x(1))
+    .attr('y', y(1) - 8)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .style('fill', 'var(--bound)')
+    .text(localize({ ko: 'y = 1 (유리수 위)', en: 'y = 1 (over the rationals)' }, lang));
+  g.append('line')
+    .attr('x1', x(0))
+    .attr('x2', x(1))
+    .attr('y1', y(0))
+    .attr('y2', y(0))
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--accent)');
+  g.append('text')
+    .attr('x', x(1))
+    .attr('y', y(0) - 8)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: 'y = 0 (무리수 위)', en: 'y = 0 (over the irrationals)' }, lang));
 
-    // Partition lines.
-    for (const seg of data.partition) {
-      if (seg.x0 === 0) continue;
-      g.append('line')
-        .attr('x1', x(seg.x0))
-        .attr('x2', x(seg.x0))
-        .attr('y1', 0)
-        .attr('y2', height)
-        .attr('stroke-dasharray', '3 3')
-        .attr('stroke-width', 1)
-        .attr('stroke', 'currentColor')
-        .attr('opacity', 0.35);
-    }
+  // Rational dots on the red line.
+  for (const dot of data.dots) {
+    g.append('circle')
+      .attr('cx', x(dot.x))
+      .attr('cy', y(1))
+      .attr('r', 2.4)
+      .style('fill', 'var(--bound)');
+  }
 
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', 16)
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(`n = ${data.n} · U = ${fmt(data.upper, 4)} · L = ${fmt(data.lower, 4)}`);
-  };
+  // Partition lines.
+  for (const seg of data.partition) {
+    if (seg.x0 === 0) continue;
+    g.append('line')
+      .attr('x1', x(seg.x0))
+      .attr('x2', x(seg.x0))
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke-dasharray', '3 3')
+      .attr('stroke-width', 1)
+      .attr('stroke', 'currentColor')
+      .attr('opacity', 0.35);
+  }
 
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', 16)
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(`n = ${data.n} · U = ${fmt(data.upper, 4)} · L = ${fmt(data.lower, 4)}`);
 }
 
-export default defineScene<DirichletData>({ model: dirichletFunctionModel, createScene: createDirichletFunctionScene });
+export default defineSimpleScene<DirichletData>({
+  model: dirichletFunctionModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => explainText(lang), spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+  ],
+});

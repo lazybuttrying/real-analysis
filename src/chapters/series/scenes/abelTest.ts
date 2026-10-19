@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { abelTestModel, type AbelTestData } from '../models/abelTest';
 
 /**
@@ -49,172 +43,126 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createAbelTestScene(): Scene<AbelTestData> {
-  let chart: Chart | undefined;
-  let shell: SceneShell | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: AbelTestData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: AbelTestData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { n, example, partialSums, weights, limit, limitExact } = data;
+  g.selectAll('*').remove();
 
-  const draw = (): void => {
-    if (!chart || !last) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { n, example, partialSums, weights, limit, limitExact } = data;
-    g.selectAll('*').remove();
+  const allValues = [...partialSums, ...weights, limit];
+  const lo = Math.min(...allValues);
+  const hi = Math.max(...allValues);
+  const pad = Math.max(0.2, (hi - lo) * 0.08);
+  const xScale = scaleLinear().domain([1, n]).range([0, width]);
+  const yScale = scaleLinear()
+    .domain([lo - pad, hi + pad])
+    .range([height, 0]);
 
-    const allValues = [...partialSums, ...weights, limit];
-    const lo = Math.min(...allValues);
-    const hi = Math.max(...allValues);
-    const pad = Math.max(0.2, (hi - lo) * 0.08);
-    const xScale = scaleLinear().domain([1, n]).range([0, width]);
-    const yScale = scaleLinear()
-      .domain([lo - pad, hi + pad])
-      .range([height, 0]);
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(xScale).ticks(8));
+  g.append('g').call(axisLeft(yScale).ticks(6));
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(xScale).ticks(8));
-    g.append('g').call(axisLeft(yScale).ticks(6));
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -36)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `N = ${n}    S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} → ${fmt(limit, 4)}${limitExact ? ' (정확값)' : ' (수치 근사)'}`,
+          en: `N = ${n}    S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} → ${fmt(limit, 4)}${limitExact ? ' (exact)' : ' (numerical estimate)'}`,
+        },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -36)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `N = ${n}    S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} → ${fmt(limit, 4)}${limitExact ? ' (정확값)' : ' (수치 근사)'}`,
-            en: `N = ${n}    S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} → ${fmt(limit, 4)}${limitExact ? ' (exact)' : ' (numerical estimate)'}`,
-          },
-          lang,
-        ),
-      );
+  // Limit band: the horizontal target the weighted sums settle onto.
+  g.append('line')
+    .attr('x1', xScale(1))
+    .attr('x2', xScale(n))
+    .attr('y1', yScale(limit))
+    .attr('y2', yScale(limit))
+    .attr('stroke-dasharray', '6 4')
+    .attr('stroke-width', 2)
+    .style('stroke', GOLD);
+  g.append('text')
+    .attr('x', xScale(n) - 4)
+    .attr('y', yScale(limit) - 8)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('fill', GOLD)
+    .text(
+      example === 'shifted'
+        ? `−2 ln 2 − π²/12 = ${fmt(limit, 3)}`
+        : localize(
+            { ko: `극한 ≈ ${fmt(limit, 3)}`, en: `limit ≈ ${fmt(limit, 3)}` },
+            lang,
+          ),
+    );
 
-    // Limit band: the horizontal target the weighted sums settle onto.
-    g.append('line')
-      .attr('x1', xScale(1))
-      .attr('x2', xScale(n))
-      .attr('y1', yScale(limit))
-      .attr('y2', yScale(limit))
-      .attr('stroke-dasharray', '6 4')
-      .attr('stroke-width', 2)
-      .style('stroke', GOLD);
-    g.append('text')
-      .attr('x', xScale(n) - 4)
-      .attr('y', yScale(limit) - 8)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('fill', GOLD)
-      .text(
-        example === 'shifted'
-          ? `−2 ln 2 − π²/12 = ${fmt(limit, 3)}`
-          : localize(
-              { ko: `극한 ≈ ${fmt(limit, 3)}`, en: `limit ≈ ${fmt(limit, 3)}` },
-              lang,
-            ),
-      );
+  // Weight sequence b_k: monotone and bounded, hovering away from 0.
+  const weightLine = line<{ k: number; v: number }>()
+    .x((p) => xScale(p.k))
+    .y((p) => yScale(p.v));
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 1.8)
+    .attr('stroke-dasharray', '4 3')
+    .style('stroke', 'var(--accent)')
+    .attr('opacity', 0.8)
+    .attr('d', weightLine(weights.map((v, i) => ({ k: i + 1, v }))) ?? '');
+  const bFirst = weights[0] ?? 0;
+  g.append('text')
+    .attr('x', xScale(1))
+    .attr('y', yScale(bFirst) - 8)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: `b_k (단조·유계, 0으로 안 감)`, en: `b_k (monotone, bounded, ↛ 0)` }, lang));
 
-    // Weight sequence b_k: monotone and bounded, hovering away from 0.
-    const weightLine = line<{ k: number; v: number }>()
-      .x((p) => xScale(p.k))
-      .y((p) => yScale(p.v));
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 1.8)
-      .attr('stroke-dasharray', '4 3')
-      .style('stroke', 'var(--accent)')
-      .attr('opacity', 0.8)
-      .attr('d', weightLine(weights.map((v, i) => ({ k: i + 1, v }))) ?? '');
-    const bFirst = weights[0] ?? 0;
-    g.append('text')
-      .attr('x', xScale(1))
-      .attr('y', yScale(bFirst) - 8)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: `b_k (단조·유계, 0으로 안 감)`, en: `b_k (monotone, bounded, ↛ 0)` }, lang));
+  // Settling weighted partial sums.
+  const settle = line<{ k: number; v: number }>()
+    .x((p) => xScale(p.k))
+    .y((p) => yScale(p.v));
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', GOLD)
+    .attr('d', settle(partialSums.map((v, i) => ({ k: i + 1, v }))) ?? '');
+  const step = Math.max(1, Math.floor(n / 60));
+  partialSums.forEach((v, i) => {
+    const isLast = i === partialSums.length - 1;
+    if (!isLast && i % step !== 0) return;
+    g.append('circle')
+      .attr('cx', xScale(i + 1))
+      .attr('cy', yScale(v))
+      .attr('r', isLast ? 5 : 2.6)
+      .style('fill', GOLD)
+      .attr('opacity', isLast ? 1 : 0.55);
+  });
 
-    // Settling weighted partial sums.
-    const settle = line<{ k: number; v: number }>()
-      .x((p) => xScale(p.k))
-      .y((p) => yScale(p.v));
-    g.append('path')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', GOLD)
-      .attr('d', settle(partialSums.map((v, i) => ({ k: i + 1, v }))) ?? '');
-    const step = Math.max(1, Math.floor(n / 60));
-    partialSums.forEach((v, i) => {
-      const isLast = i === partialSums.length - 1;
-      if (!isLast && i % step !== 0) return;
-      g.append('circle')
-        .attr('cx', xScale(i + 1))
-        .attr('cy', yScale(v))
-        .attr('r', isLast ? 5 : 2.6)
-        .style('fill', GOLD)
-        .attr('opacity', isLast ? 1 : 0.55);
-    });
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', height - 6)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(
-        localize(
-          { ko: '점선: b_k — 단조·유계이나 0으로 가지 않음', en: 'Dashed: b_k — monotone and bounded, but not → 0' },
-          lang,
-        ),
-      );
-    g.append('text')
-      .attr('x', width)
-      .attr('y', height - 6)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('fill', GOLD)
-      .text(localize({ ko: '금색: S_N = Σ a_k b_k (수렴)', en: 'Gold: S_N = Σ a_k b_k (converging)' }, lang));
-
-    if (factsSlot && verdictSlot) {
-      setRichText(factsSlot, factsText(data, lang));
-      setRichText(verdictSlot, verdictText(lang));
-    }
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize(width, height) {
-      chart?.setSize(width, height);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', height - 6)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(
+      localize(
+        { ko: '점선: b_k — 단조·유계이나 0으로 가지 않음', en: 'Dashed: b_k — monotone and bounded, but not → 0' },
+        lang,
+      ),
+    );
+  g.append('text')
+    .attr('x', width)
+    .attr('y', height - 6)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('fill', GOLD)
+    .text(localize({ ko: '금색: S_N = Σ a_k b_k (수렴)', en: 'Gold: S_N = Σ a_k b_k (converging)' }, lang));
 }
 
-export default defineScene<AbelTestData>({ model: abelTestModel, createScene: createAbelTestScene });
+export default defineSimpleScene<AbelTestData>({
+  model: abelTestModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: factsText, bold: true }, { text: (_data, lang) => verdictText(lang), bold: true }],
+});

@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   condensationModel,
   type BlockData,
@@ -78,152 +72,104 @@ function verdictText(lang: Lang): string {
 const X_TICKS: readonly number[] = [1, 2, 4, 8, 16, 32, 64, 128];
 const X_LABELS: readonly string[] = ['1', '2', '4', '8', '16', '32', '64', '128'];
 
-function createCondensationScene(): Scene<CondensationData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: CondensationData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: CondensationData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { series, blockIndex, blocks, highlight, partialUpToBlock, condensedPartial } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { series, blockIndex, blocks, highlight, partialUpToBlock, condensedPartial } = data;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const x = scaleLinear().domain([0.5, 128.5]).range([0, width]);
+  let yMax = 0;
+  for (const block of blocks) {
+    for (const t of block.terms) yMax = Math.max(yMax, t);
+  }
+  if (yMax <= 0) yMax = 1;
+  const y = scaleLinear().domain([0, yMax * 1.08]).range([height, 0]);
 
-    const x = scaleLinear().domain([0.5, 128.5]).range([0, width]);
-    let yMax = 0;
-    for (const block of blocks) {
-      for (const t of block.terms) yMax = Math.max(yMax, t);
-    }
-    if (yMax <= 0) yMax = 1;
-    const y = scaleLinear().domain([0, yMax * 1.08]).range([height, 0]);
-
-    g.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(
-        axisBottom(x)
-          .tickValues([...X_TICKS])
-          .tickFormat((d) => X_LABELS[X_TICKS.indexOf(Number(d))] ?? ''),
-      );
-    g.append('g').call(axisLeft(y).ticks(6));
-
-    const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
-    header1.text(
-      localize(
-        { ko: `응축으로 보는 블록 합 — ${seriesFormula(series)}, 블록 n = ${blockIndex}`, en: `Block sums through condensation — ${seriesFormula(series)}, block n = ${blockIndex}` },
-        lang,
-      ),
+  g.append('g')
+    .attr('transform', `translate(0,${height})`)
+    .call(
+      axisBottom(x)
+        .tickValues([...X_TICKS])
+        .tickFormat((d) => X_LABELS[X_TICKS.indexOf(Number(d))] ?? ''),
     );
-    header2.text(
-      localize(
-        {
-          ko: `부분합 S_${highlight.end} ≈ ${partialUpToBlock.toFixed(4)} vs 응축 부분합 T_${blockIndex} ≈ ${condensedPartial.toFixed(4)} — 두 수열이 같이 수렴하거나 같이 발산합니다`,
-          en: `Partial sum S_${highlight.end} ≈ ${partialUpToBlock.toFixed(4)} vs condensed partial sum T_${blockIndex} ≈ ${condensedPartial.toFixed(4)} — the two converge or diverge together`,
-        },
-        lang,
-      ),
-    );
+  g.append('g').call(axisLeft(y).ticks(6));
 
-    // Highlight backdrop over the selected dyadic block.
-    g.append('rect')
-      .attr('x', x(highlight.start))
-      .attr('width', Math.max(0, x(highlight.end + 1) - x(highlight.start)))
-      .attr('y', 0)
-      .attr('height', height)
-      .style('fill', 'var(--accent)')
-      .attr('opacity', 0.08);
+  const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
+  header1.text(
+    localize(
+      { ko: `응축으로 보는 블록 합 — ${seriesFormula(series)}, 블록 n = ${blockIndex}`, en: `Block sums through condensation — ${seriesFormula(series)}, block n = ${blockIndex}` },
+      lang,
+    ),
+  );
+  header2.text(
+    localize(
+      {
+        ko: `부분합 S_${highlight.end} ≈ ${partialUpToBlock.toFixed(4)} vs 응축 부분합 T_${blockIndex} ≈ ${condensedPartial.toFixed(4)} — 두 수열이 같이 수렴하거나 같이 발산합니다`,
+        en: `Partial sum S_${highlight.end} ≈ ${partialUpToBlock.toFixed(4)} vs condensed partial sum T_${blockIndex} ≈ ${condensedPartial.toFixed(4)} — the two converge or diverge together`,
+      },
+      lang,
+    ),
+  );
 
-    // Dyadic block boundaries at 2^n, n = 1..6.
-    for (let n = 1; n <= 6; n++) {
-      const bx = x(2 ** n);
-      g.append('line')
-        .attr('x1', bx)
-        .attr('x2', bx)
-        .attr('y1', 0)
-        .attr('y2', height)
-        .attr('stroke', 'currentColor')
-        .attr('stroke-dasharray', '3,3')
-        .attr('opacity', 0.35);
+  // Highlight backdrop over the selected dyadic block.
+  g.append('rect')
+    .attr('x', x(highlight.start))
+    .attr('width', Math.max(0, x(highlight.end + 1) - x(highlight.start)))
+    .attr('y', 0)
+    .attr('height', height)
+    .style('fill', 'var(--accent)')
+    .attr('opacity', 0.08);
+
+  // Dyadic block boundaries at 2^n, n = 1..6.
+  for (let n = 1; n <= 6; n++) {
+    const bx = x(2 ** n);
+    g.append('line')
+      .attr('x1', bx)
+      .attr('x2', bx)
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke', 'currentColor')
+      .attr('stroke-dasharray', '3,3')
+      .attr('opacity', 0.35);
+  }
+
+  // Term bars: one rect per term, accent for the highlighted block.
+  for (const block of blocks) {
+    const selected = block.index === blockIndex;
+    for (let i = 0; i < block.terms.length; i++) {
+      const k = block.start + i;
+      const t = block.terms[i] ?? 0;
+      g.append('rect')
+        .attr('x', x(k) + 0.5)
+        .attr('width', Math.max(0.5, x(k + 1) - x(k) - 1))
+        .attr('y', y(t))
+        .attr('height', Math.max(0, height - y(t)))
+        .style('fill', 'var(--accent)')
+        .attr('opacity', selected ? 0.9 : 0.22);
     }
+  }
 
-    // Term bars: one rect per term, accent for the highlighted block.
-    for (const block of blocks) {
-      const selected = block.index === blockIndex;
-      for (let i = 0; i < block.terms.length; i++) {
-        const k = block.start + i;
-        const t = block.terms[i] ?? 0;
-        g.append('rect')
-          .attr('x', x(k) + 0.5)
-          .attr('width', Math.max(0.5, x(k + 1) - x(k) - 1))
-          .attr('y', y(t))
-          .attr('height', Math.max(0, height - y(t)))
-          .style('fill', 'var(--accent)')
-          .attr('opacity', selected ? 0.9 : 0.22);
-      }
-    }
-
-    // Legend.
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: `■ 블록 n = ${blockIndex} [${highlight.start}, ${highlight.end + 1})`, en: `■ Block n = ${blockIndex} [${highlight.start}, ${highlight.end + 1})` }, lang));
-    g.append('text')
-      .attr('x', width / 2)
-      .attr('y', height + 34)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .attr('opacity', 0.6)
-      .text(localize({ ko: '점선 = 블록 경계 2^n', en: 'dashed = block boundaries 2^n' }, lang));
-
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Legend.
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: `■ 블록 n = ${blockIndex} [${highlight.start}, ${highlight.end + 1})`, en: `■ Block n = ${blockIndex} [${highlight.start}, ${highlight.end + 1})` }, lang));
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.6)
+    .text(localize({ ko: '점선 = 블록 경계 2^n', en: 'dashed = block boundaries 2^n' }, lang));
 }
 
-export default defineScene<CondensationData>({ model: condensationModel, createScene: createCondensationScene });
+export default defineSimpleScene<CondensationData>({
+  model: condensationModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: factsText, bold: true }, { text: (_data, lang) => verdictText(lang), bold: true }],
+});

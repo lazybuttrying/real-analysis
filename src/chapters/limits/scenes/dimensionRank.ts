@@ -1,6 +1,6 @@
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { dimensionRankModel, type DimensionRankData, type Vec2 } from '../models/dimension-rank';
 
 /**
@@ -80,19 +80,7 @@ function fmt(v: number): string {
   return String(Object.is(r, -0) ? 0 : r);
 }
 
-function createDimensionRankScene(): Scene<DimensionRankData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let kernelSlot: RichSlot | undefined;
-  let imageSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: DimensionRankData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !kernelSlot || !imageSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: DimensionRankData): void {
     const { g, width, height } = chart;
     g.selectAll('*').remove();
 
@@ -162,53 +150,15 @@ function createDimensionRankScene(): Scene<DimensionRankData> {
     }
     // Origin marker.
     g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 3).attr('fill', 'currentColor');
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(kernelSlot, kernelText(data, lang));
-    setRichText(imageSlot, imageText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const kernel = document.createElement('div');
-      kernel.style.cssText = 'margin-top: 4px; font-size: 12px; color: var(--muted);';
-      const image = document.createElement('div');
-      image.style.cssText = 'font-size: 12px; color: var(--muted);';
-      strips.append(readout, kernel, image);
-
-      readoutSlot = createRichSlot(readout);
-      kernelSlot = createRichSlot(kernel);
-      imageSlot = createRichSlot(image);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      kernelSlot = undefined;
-      imageSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
 }
 
-export default defineScene<DimensionRankData>({ model: dimensionRankModel, createScene: createDimensionRankScene });
+export default defineSimpleScene<DimensionRankData>({
+  model: dimensionRankModel,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: kernelText, cssText: 'margin-top: 4px; font-size: 12px; color: var(--muted);' },
+    { text: imageText, cssText: 'font-size: 12px; color: var(--muted);' }
+  ],
+});

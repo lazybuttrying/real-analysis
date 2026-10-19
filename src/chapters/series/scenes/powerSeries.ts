@@ -1,7 +1,7 @@
 import { axisBottom, scaleLinear } from 'd3';
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { powerSeriesModel, type PowerData, type PowerSeriesKind } from '../models/power-series';
 
 // A number line from -3 to 3 showing the interval of convergence (-R, R)
@@ -80,163 +80,115 @@ function verdictText(data: PowerData, lang: Lang): string {
   );
 }
 
-function createPowerSeriesScene(): Scene<PowerData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: PowerData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: PowerData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { radius, x } = data;
 
-  const draw = (): void => {
-    if (!chart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = chart;
-    const { radius, x } = data;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const cy = height / 2;
+  const xScale = scaleLinear().domain([X_MIN, X_MAX]).range([0, width]);
 
-    const cy = height / 2;
-    const xScale = scaleLinear().domain([X_MIN, X_MAX]).range([0, width]);
+  const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
 
-    const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
+  header1.text(
+    localize(
+      {
+        ko: `${seriesLabel(data.series, lang)} — 수렴반경 R = ${radiusText(radius)}`,
+        en: `${seriesLabel(data.series, lang)} — radius of convergence R = ${radiusText(radius)}`,
+      },
+      lang,
+    ),
+  );
+  header2.text(
+    localize(
+      {
+        ko: `x = ${fmt(data.x)}, 항의 개수 N = ${data.n}, S${subDigits(data.n)}(${fmt(data.x)}) = ${data.overflow ? '10¹⁵ 초과' : fmt(data.partialSum)}`,
+        en: `x = ${fmt(data.x)}, terms N = ${data.n}, S${subDigits(data.n)}(${fmt(data.x)}) = ${data.overflow ? 'beyond 10¹⁵' : fmt(data.partialSum)}`,
+      },
+      lang,
+    ),
+  );
 
-    header1.text(
-      localize(
-        {
-          ko: `${seriesLabel(data.series, lang)} — 수렴반경 R = ${radiusText(radius)}`,
-          en: `${seriesLabel(data.series, lang)} — radius of convergence R = ${radiusText(radius)}`,
-        },
-        lang,
-      ),
-    );
-    header2.text(
-      localize(
-        {
-          ko: `x = ${fmt(data.x)}, 항의 개수 N = ${data.n}, S${subDigits(data.n)}(${fmt(data.x)}) = ${data.overflow ? '10¹⁵ 초과' : fmt(data.partialSum)}`,
-          en: `x = ${fmt(data.x)}, terms N = ${data.n}, S${subDigits(data.n)}(${fmt(data.x)}) = ${data.overflow ? 'beyond 10¹⁵' : fmt(data.partialSum)}`,
-        },
-        lang,
-      ),
-    );
+  // Axis.
+  g.append('line')
+    .attr('x1', xScale(X_MIN))
+    .attr('x2', xScale(X_MAX))
+    .attr('y1', cy)
+    .attr('y2', cy)
+    .attr('stroke-width', 2)
+    .style('stroke', 'currentColor');
+  g.append('g')
+    .attr('transform', `translate(0,${cy})`)
+    .call(axisBottom(xScale).ticks(7));
 
-    // Axis.
-    g.append('line')
-      .attr('x1', xScale(X_MIN))
-      .attr('x2', xScale(X_MAX))
-      .attr('y1', cy)
-      .attr('y2', cy)
-      .attr('stroke-width', 2)
-      .style('stroke', 'currentColor');
-    g.append('g')
-      .attr('transform', `translate(0,${cy})`)
-      .call(axisBottom(xScale).ticks(7));
+  // Shaded interval of convergence (-R, R).
+  const lo = xScale(Math.max(X_MIN, -radius));
+  const hi = xScale(Math.min(X_MAX, radius));
+  if (radius === 0) {
+    // R = 0: the interval collapses to the single point x = 0.
+    g.append('circle')
+      .attr('cx', xScale(0))
+      .attr('cy', cy)
+      .attr('r', 6)
+      .style('fill', 'var(--accent)');
+  } else if (hi > lo) {
+    g.append('rect')
+      .attr('x', lo)
+      .attr('y', cy - 26)
+      .attr('width', Math.max(0, hi - lo))
+      .attr('height', 52)
+      .attr('fill', 'var(--accent)')
+      .attr('opacity', 0.18);
+    g.append('text')
+      .attr('x', (lo + hi) / 2)
+      .attr('y', cy - 32)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 12)
+      .style('fill', 'var(--accent)')
+      .text(localize({ ko: '수렴 구간 (−R, R)', en: 'interval of convergence (−R, R)' }, lang));
+  }
 
-    // Shaded interval of convergence (-R, R).
-    const lo = xScale(Math.max(X_MIN, -radius));
-    const hi = xScale(Math.min(X_MAX, radius));
-    if (radius === 0) {
-      // R = 0: the interval collapses to the single point x = 0.
+  // Open circles at finite endpoints ±R inside the visible range.
+  if (Number.isFinite(radius) && radius > 0) {
+    for (const end of [-radius, radius]) {
+      if (end < X_MIN || end > X_MAX) continue;
       g.append('circle')
-        .attr('cx', xScale(0))
+        .attr('cx', xScale(end))
         .attr('cy', cy)
         .attr('r', 6)
-        .style('fill', 'var(--accent)');
-    } else if (hi > lo) {
-      g.append('rect')
-        .attr('x', lo)
-        .attr('y', cy - 26)
-        .attr('width', Math.max(0, hi - lo))
-        .attr('height', 52)
-        .attr('fill', 'var(--accent)')
-        .attr('opacity', 0.18);
-      g.append('text')
-        .attr('x', (lo + hi) / 2)
-        .attr('y', cy - 32)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', 12)
-        .style('fill', 'var(--accent)')
-        .text(localize({ ko: '수렴 구간 (−R, R)', en: 'interval of convergence (−R, R)' }, lang));
+        .attr('fill', 'none')
+        .attr('stroke-width', 2.5)
+        .style('stroke', 'var(--accent)');
     }
+  }
 
-    // Open circles at finite endpoints ±R inside the visible range.
-    if (Number.isFinite(radius) && radius > 0) {
-      for (const end of [-radius, radius]) {
-        if (end < X_MIN || end > X_MAX) continue;
-        g.append('circle')
-          .attr('cx', xScale(end))
-          .attr('cy', cy)
-          .attr('r', 6)
-          .attr('fill', 'none')
-          .attr('stroke-width', 2.5)
-          .style('stroke', 'var(--accent)');
-      }
-    }
-
-    // Marker at x.
-    const mx = xScale(x);
-    g.append('line')
-      .attr('x1', mx)
-      .attr('x2', mx)
-      .attr('y1', cy - 30)
-      .attr('y2', cy + 30)
-      .attr('stroke-dasharray', '5 4')
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--bound)');
-    g.append('path')
-      .attr('d', `M ${mx - 7} ${cy - 44} L ${mx + 7} ${cy - 44} L ${mx} ${cy - 34} Z`)
-      .style('fill', 'var(--bound)');
-    g.append('text')
-      .attr('x', mx + 8)
-      .attr('y', cy - 38)
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .style('fill', 'var(--bound)')
-      .text(`x = ${fmt(x)}`);
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const readout = document.createElement('div');
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-      strips.append(readout, verdict);
-
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  // Marker at x.
+  const mx = xScale(x);
+  g.append('line')
+    .attr('x1', mx)
+    .attr('x2', mx)
+    .attr('y1', cy - 30)
+    .attr('y2', cy + 30)
+    .attr('stroke-dasharray', '5 4')
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--bound)');
+  g.append('path')
+    .attr('d', `M ${mx - 7} ${cy - 44} L ${mx + 7} ${cy - 44} L ${mx} ${cy - 34} Z`)
+    .style('fill', 'var(--bound)');
+  g.append('text')
+    .attr('x', mx + 8)
+    .attr('y', cy - 38)
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .style('fill', 'var(--bound)')
+    .text(`x = ${fmt(x)}`);
 }
 
-export default defineScene<PowerData>({ model: powerSeriesModel, createScene: createPowerSeriesScene });
+export default defineSimpleScene<PowerData>({
+  model: powerSeriesModel,
+  margin: MARGIN,
+  drawMain,
+  slots: [{ text: readoutText }, { text: verdictText, bold: true, spaced: true }],
+});

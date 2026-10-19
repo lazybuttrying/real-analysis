@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { muntzSzaszModel, type MuntzData, type MuntzSample } from '../models/muntzSzasz';
 
 /**
@@ -55,23 +49,12 @@ function stallNoteText(lang: Lang): string {
   );
 }
 
-function createMuntzSzaszScene(): Scene<MuntzData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let stallSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: MuntzData; state: ControlState } | undefined;
+const path = line<MuntzSample>()
+  .x((d) => d.x)
+  .y((d) => d.y);
 
-  const path = line<MuntzSample>()
-    .x((d) => d.x)
-    .y((d) => d.y);
-
-  const drawMain = (data: MuntzData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
+function drawMain(chart: Chart, data: MuntzData, lang: Lang): void {
+    const { g, width, height } = chart;
     g.selectAll('*').remove();
     const x = scaleLinear().domain([0, 1]).range([0, width]);
     const y = scaleLinear().domain([-0.15, 1.15]).range([height, 0]);
@@ -137,71 +120,31 @@ function createMuntzSzaszScene(): Scene<MuntzData> {
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
       .text(localize({ ko: `— 조밀 기저 (다가감)`, en: `— dense basis (closing in)` }, lang));
-  };
+}
 
-  const draw = (): void => {
-    if (!last || !readoutSlot || !verdictSlot || !stallSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-    setRichText(stallSlot, stallNoteText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      const stallNote = document.createElement('div');
-      stallNote.style.marginTop = '4px';
-
-      // Cross-link: the Weierstrass scene this one deepens (full
-      // polynomials are the lambda_n = n case of the theorem).
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const approxLink = document.createElement('a');
-      approxLink.href = '../weierstrass-approx/';
-      approxLink.textContent = localize(
+export default defineSimpleScene<MuntzData>({
+  model: muntzSzaszModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+    { text: (_data, lang) => stallNoteText(lang), spaced: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const seeAlso = document.createElement('div');
+    seeAlso.style.marginTop = '4px';
+    const approxLink = document.createElement('a');
+    approxLink.href = '../weierstrass-approx/';
+    approxLink.textContent = localize(
         {
           ko: '바이어슈트라스 근사정리 씬 — 다항식 전체는 조밀한 경우',
           en: 'Weierstrass approximation scene — the dense case (all polynomials)',
         },
         lang,
       );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), approxLink);
-
-      shell.strips.append(readout, verdict, stallNote, seeAlso);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      stallSlot = createRichSlot(stallNote);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      stallSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<MuntzData>({ model: muntzSzaszModel, createScene: createMuntzSzaszScene });
+    seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), approxLink);
+    strips.append(seeAlso);
+  },
+});

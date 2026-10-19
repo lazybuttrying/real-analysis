@@ -1,13 +1,7 @@
 import { axisBottom, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   vitaliModel,
   VITALI_DRAW_MIN,
@@ -59,142 +53,90 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createVitaliScene(): Scene<VitaliData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: VitaliData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: VitaliData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: VitaliData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -18)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        { ko: `비탈리 집합: 평행이동 구조 (유한 모형)`, en: `Vitali set: translate structure (finite mock)` },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -18)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          { ko: `비탈리 집합: 평행이동 구조 (유한 모형)`, en: `Vitali set: translate structure (finite mock)` },
-          lang,
-        ),
-      );
+  const x = scaleLinear().domain([VITALI_DRAW_MIN, VITALI_DRAW_MAX]).range([0, width]);
+  const midY = height / 2;
 
-    const x = scaleLinear().domain([VITALI_DRAW_MIN, VITALI_DRAW_MAX]).range([0, width]);
-    const midY = height / 2;
+  // The container [-1, 2] as a bracket.
+  g.append('rect')
+    .attr('x', x(VITALI_DRAW_MIN))
+    .attr('y', midY - 46)
+    .attr('width', x(VITALI_DRAW_MAX) - x(VITALI_DRAW_MIN))
+    .attr('height', 92)
+    .attr('fill', 'none')
+    .attr('stroke', 'currentColor')
+    .attr('stroke-width', 1.5)
+    .attr('opacity', 0.55);
 
-    // The container [-1, 2] as a bracket.
-    g.append('rect')
-      .attr('x', x(VITALI_DRAW_MIN))
-      .attr('y', midY - 46)
-      .attr('width', x(VITALI_DRAW_MAX) - x(VITALI_DRAW_MIN))
-      .attr('height', 92)
-      .attr('fill', 'none')
-      .attr('stroke', 'currentColor')
-      .attr('stroke-width', 1.5)
-      .attr('opacity', 0.55);
+  // The [0, 1] band that the union must cover.
+  g.append('rect')
+    .attr('x', x(0))
+    .attr('y', midY - 30)
+    .attr('width', x(1) - x(0))
+    .attr('height', 60)
+    .attr('fill', 'var(--accent)')
+    .attr('opacity', 0.18);
+  g.append('text')
+    .attr('x', x(0.5))
+    .attr('y', midY + 44)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(localize({ ko: '[0, 1] — 길이 1 (합집합이 덮어야 하는 구간)', en: '[0, 1] — length 1 (interval the union must cover)' }, lang));
 
-    // The [0, 1] band that the union must cover.
-    g.append('rect')
-      .attr('x', x(0))
-      .attr('y', midY - 30)
-      .attr('width', x(1) - x(0))
-      .attr('height', 60)
-      .attr('fill', 'var(--accent)')
-      .attr('opacity', 0.18);
-    g.append('text')
-      .attr('x', x(0.5))
-      .attr('y', midY + 44)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(localize({ ko: '[0, 1] — 길이 1 (합집합이 덮어야 하는 구간)', en: '[0, 1] — length 1 (interval the union must cover)' }, lang));
+  // Mock translate dots, one row per rational, stacked vertically.
+  const n = data.translates.length;
+  const rowStep = n > 1 ? Math.min(64 / (n - 1), 12) : 0;
+  data.translates.forEach((tr, i) => {
+    const yy = midY - ((n - 1) / 2) * rowStep + i * rowStep;
+    const isZero = Math.abs(tr.q) < 1e-12;
+    for (const pt of tr.points) {
+      g.append('circle')
+        .attr('cx', x(pt))
+        .attr('cy', yy)
+        .attr('r', isZero ? 3.4 : 2.2)
+        .attr('fill', isZero ? 'var(--accent)' : 'var(--bound)')
+        .attr('opacity', isZero ? 0.95 : 0.55);
+    }
+  });
 
-    // Mock translate dots, one row per rational, stacked vertically.
-    const n = data.translates.length;
-    const rowStep = n > 1 ? Math.min(64 / (n - 1), 12) : 0;
-    data.translates.forEach((tr, i) => {
-      const yy = midY - ((n - 1) / 2) * rowStep + i * rowStep;
-      const isZero = Math.abs(tr.q) < 1e-12;
-      for (const pt of tr.points) {
-        g.append('circle')
-          .attr('cx', x(pt))
-          .attr('cy', yy)
-          .attr('r', isZero ? 3.4 : 2.2)
-          .attr('fill', isZero ? 'var(--accent)' : 'var(--bound)')
-          .attr('opacity', isZero ? 0.95 : 0.55);
-      }
-    });
+  // Label the q = 0 row as the mock representative set (below the dots).
+  g.append('text')
+    .attr('x', width)
+    .attr('y', midY + 58)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('fill', 'var(--accent)')
+    .text(localize({ ko: '진한 점 = 모형 대표원 집합 (q = 0 행)', en: 'dark dots = mock representative set (q = 0 row)' }, lang));
 
-    // Label the q = 0 row as the mock representative set (below the dots).
-    g.append('text')
-      .attr('x', width)
-      .attr('y', midY + 58)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('fill', 'var(--accent)')
-      .text(localize({ ko: '진한 점 = 모형 대표원 집합 (q = 0 행)', en: 'dark dots = mock representative set (q = 0 row)' }, lang));
-
-    g.append('g').attr('transform', `translate(0,${height - 6})`).call(axisBottom(x).ticks(7));
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('g').attr('transform', `translate(0,${height - 6})`).call(axisBottom(x).ticks(7));
 }
 
-export default defineScene<VitaliData>({ model: vitaliModel, createScene: createVitaliScene });
+export default defineSimpleScene<VitaliData>({
+  model: vitaliModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => explainText(lang), spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+  ],
+});

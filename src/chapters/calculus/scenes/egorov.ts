@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { egorovModel, type EgorovData } from '../models/egorov';
 
 /**
@@ -51,182 +45,130 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createEgorovScene(): Scene<EgorovData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let explainSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: EgorovData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: EgorovData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: EgorovData): void => {
-    if (!mainChart) return;
-    const { g, width, height } = mainChart;
-    g.selectAll('*').remove();
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  const y = scaleLinear().domain([0, 1.4]).range([height, 0]);
 
-    const x = scaleLinear().domain([0, 1]).range([0, width]);
-    const y = scaleLinear().domain([0, 1.4]).range([height, 0]);
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -20)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `f_n(x) = 1_[1/(n+1), 1/n](x): 미끄러지는 혹과 줄어드는 나쁜 집합`,
+          en: `f_n(x) = 1_[1/(n+1), 1/n](x): the sliding bump and the shrinking bad set`,
+        },
+        lang,
+      ),
+    );
 
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -20)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `f_n(x) = 1_[1/(n+1), 1/n](x): 미끄러지는 혹과 줄어드는 나쁜 집합`,
-            en: `f_n(x) = 1_[1/(n+1), 1/n](x): the sliding bump and the shrinking bad set`,
-          },
-          lang,
-        ),
-      );
+  // Bad-set band (0, 1/n] in red.
+  g.append('rect')
+    .attr('x', x(0))
+    .attr('width', Math.max(0, x(data.badRight) - x(0)))
+    .attr('y', 0)
+    .attr('height', height)
+    .attr('fill', 'var(--bound)')
+    .attr('opacity', 0.14);
 
-    // Bad-set band (0, 1/n] in red.
-    g.append('rect')
-      .attr('x', x(0))
-      .attr('width', Math.max(0, x(data.badRight) - x(0)))
-      .attr('y', 0)
-      .attr('height', height)
-      .attr('fill', 'var(--bound)')
-      .attr('opacity', 0.14);
+  // Boundary of the bad set at x = 1/n.
+  const bx = x(data.badRight);
+  g.append('line')
+    .attr('x1', bx)
+    .attr('x2', bx)
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('stroke', 'var(--bound)')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', '5,4');
 
-    // Boundary of the bad set at x = 1/n.
-    const bx = x(data.badRight);
-    g.append('line')
-      .attr('x1', bx)
-      .attr('x2', bx)
-      .attr('y1', 0)
-      .attr('y2', height)
-      .attr('stroke', 'var(--bound)')
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', '5,4');
+  // Good-set underline on [1/n, 1].
+  g.append('line')
+    .attr('x1', x(data.goodLeft))
+    .attr('x2', x(1))
+    .attr('y1', y(0) + 7)
+    .attr('y2', y(0) + 7)
+    .attr('stroke', 'var(--accent)')
+    .attr('stroke-width', 4)
+    .attr('opacity', 0.65);
 
-    // Good-set underline on [1/n, 1].
-    g.append('line')
-      .attr('x1', x(data.goodLeft))
-      .attr('x2', x(1))
-      .attr('y1', y(0) + 7)
-      .attr('y2', y(0) + 7)
-      .attr('stroke', 'var(--accent)')
-      .attr('stroke-width', 4)
-      .attr('opacity', 0.65);
+  // Zero line.
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(0))
+    .attr('y2', y(0))
+    .attr('stroke', 'currentColor')
+    .attr('opacity', 0.5);
 
-    // Zero line.
-    g.append('line')
-      .attr('x1', 0)
-      .attr('x2', width)
-      .attr('y1', y(0))
-      .attr('y2', y(0))
-      .attr('stroke', 'currentColor')
-      .attr('opacity', 0.5);
+  // The bump f_n (minimum pixel width so it stays visible for large n).
+  const bumpX0 = x(data.bumpA);
+  const bumpX1 = x(data.bumpB);
+  const bumpW = Math.max(3, bumpX1 - bumpX0);
+  const bumpC = (bumpX0 + bumpX1) / 2;
+  g.append('rect')
+    .attr('x', bumpC - bumpW / 2)
+    .attr('width', bumpW)
+    .attr('y', y(1))
+    .attr('height', Math.max(0, y(0) - y(1)))
+    .attr('fill', 'var(--accent)')
+    .attr('opacity', 0.75);
+  g.append('text')
+    .attr('x', bumpC)
+    .attr('y', y(1) - 8)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text('f_n');
 
-    // The bump f_n (minimum pixel width so it stays visible for large n).
-    const bumpX0 = x(data.bumpA);
-    const bumpX1 = x(data.bumpB);
-    const bumpW = Math.max(3, bumpX1 - bumpX0);
-    const bumpC = (bumpX0 + bumpX1) / 2;
-    g.append('rect')
-      .attr('x', bumpC - bumpW / 2)
-      .attr('width', bumpW)
-      .attr('y', y(1))
-      .attr('height', Math.max(0, y(0) - y(1)))
-      .attr('fill', 'var(--accent)')
-      .attr('opacity', 0.75);
-    g.append('text')
-      .attr('x', bumpC)
-      .attr('y', y(1) - 8)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text('f_n');
+  // '1/n' marker at the top of the boundary line.
+  const nearRight = bx > width - 48;
+  g.append('text')
+    .attr('x', bx + (nearRight ? -5 : 5))
+    .attr('y', 32)
+    .attr('text-anchor', nearRight ? 'end' : 'start')
+    .attr('font-size', 11)
+    .attr('fill', 'var(--bound)')
+    .text('1/n');
 
-    // '1/n' marker at the top of the boundary line.
-    const nearRight = bx > width - 48;
-    g.append('text')
-      .attr('x', bx + (nearRight ? -5 : 5))
-      .attr('y', 32)
-      .attr('text-anchor', nearRight ? 'end' : 'start')
-      .attr('font-size', 11)
-      .attr('fill', 'var(--bound)')
-      .text('1/n');
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+  g.append('g').call(axisLeft(y).ticks(3));
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-    g.append('g').call(axisLeft(y).ticks(3));
-
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', 16)
-      .attr('font-size', 12)
-      .attr('fill', 'var(--bound)')
-      .text(localize({ ko: '나쁜 집합 (0, 1/n] — 빨강', en: 'bad set (0, 1/n] — red' }, lang));
-    g.append('text')
-      .attr('x', width - 8)
-      .attr('y', 16)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('fill', 'var(--accent)')
-      .text(
-        localize(
-          { ko: '좋은 집합 [1/n, 1]: 여기서 균등수렴', en: 'good set [1/n, 1]: uniform here' },
-          lang,
-        ),
-      );
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !explainSlot || !verdictSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(explainSlot, explainText(lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const explain = document.createElement('div');
-      explain.style.marginTop = '4px';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, explain, verdict);
-      readoutSlot = createRichSlot(readout);
-      explainSlot = createRichSlot(explain);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap) mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 300);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      explainSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', 16)
+    .attr('font-size', 12)
+    .attr('fill', 'var(--bound)')
+    .text(localize({ ko: '나쁜 집합 (0, 1/n] — 빨강', en: 'bad set (0, 1/n] — red' }, lang));
+  g.append('text')
+    .attr('x', width - 8)
+    .attr('y', 16)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('fill', 'var(--accent)')
+    .text(
+      localize(
+        { ko: '좋은 집합 [1/n, 1]: 여기서 균등수렴', en: 'good set [1/n, 1]: uniform here' },
+        lang,
+      ),
+    );
 }
 
-export default defineScene<EgorovData>({ model: egorovModel, createScene: createEgorovScene });
+export default defineSimpleScene<EgorovData>({
+  model: egorovModel,
+  margin: MARGIN,
+  fallbackHeight: 300,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => explainText(lang), spaced: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+  ],
+});

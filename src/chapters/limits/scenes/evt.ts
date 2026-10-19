@@ -1,13 +1,8 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { createRichSlot, setRichText } from '../../../view/richslot';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { evtModel, type EvtData, type EvtSample } from '../models/evt';
 
 /**
@@ -46,17 +41,7 @@ function verdictText(data: EvtData, lang: Lang): string {
   );
 }
 
-function createEvtScene(): Scene<EvtData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let wrap: HTMLElement | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: EvtData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chart || !last || !verdictSlot) return;
-    const { data } = last;
+function drawMain(chart: Chart, data: EvtData, lang: Lang): void {
     const { g, width, height } = chart;
     const { mode, samples, xLo, xHi, max, min } = data;
 
@@ -143,23 +128,20 @@ function createEvtScene(): Scene<EvtData> {
 
     g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(5));
     g.append('g').call(axisLeft(y).ticks(5));
+}
 
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      const chartWrap = shell.chartWrap;
-      const strips = shell.strips;
-      const legend = document.createElement('div');
-      legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(legend, verdict);
-
-      setRichText(
+export default defineSimpleScene<EvtData>({
+  model: evtModel,
+  fallbackHeight: 360,
+  drawMain,
+  slots: [
+    { text: verdictText, bold: true }
+  ],
+  mountExtra: (strips, lang) => {
+    const legend = document.createElement('div');
+    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
+    strips.prepend(legend);
+    setRichText(
         createRichSlot(legend),
         localize(
           {
@@ -169,29 +151,5 @@ function createEvtScene(): Scene<EvtData> {
           lang,
         ),
       );
-      verdictSlot = createRichSlot(verdict);
-      wrap = chartWrap;
-      chart = createChart(chartWrap);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !wrap) return;
-      chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || 360);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      chart = undefined;
-      verdictSlot = undefined;
-      wrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
-}
-
-export default defineScene<EvtData>({ model: evtModel, createScene: createEvtScene });
+  },
+});
