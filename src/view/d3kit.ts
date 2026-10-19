@@ -13,7 +13,7 @@ export function fmtSci(x: number, digits = 3): string {
   return x.toExponential(digits);
 }
 
-interface Margin {
+export interface Margin {
   top: number;
   right: number;
   bottom: number;
