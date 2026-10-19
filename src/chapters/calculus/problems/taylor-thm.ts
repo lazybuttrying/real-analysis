@@ -63,8 +63,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`고정된 \(x\)에 대해 분자는 거듭제곱, 분모는 팩토리얼이므로 \(n \to \infty\)일 때 \(\frac{|x|^{n+1}}{(n+1)!} \to 0\)입니다 — 팩토리얼이 거듭제곱을 이깁니다.`,
-                en: String.raw`For fixed \(x\) the numerator is a power and the denominator a factorial, so \(\frac{|x|^{n+1}}{(n+1)!} \to 0\) as \(n \to \infty\) — the factorial beats the power.`,
+                ko: String.raw`\(a_n = \frac{|x|^{n+1}}{(n+1)!}\)이라 두면 \(\frac{a_{n+1}}{a_n} = \frac{|x|}{n+2}\)입니다. \(n + 2 > 2|x|\)인 \(n\)부터는 \(a_{n+1} \le \frac{1}{2}a_n\)이므로, \(N = \lceil 2|x| \rceil\)에 대해 \(n \ge N\)일 때 \(a_n \le a_N\left(\frac{1}{2}\right)^{n-N} \to 0\)입니다 — 팩토리얼이 거듭제곱을 기하급수적으로 이깁니다.`,
+                en: String.raw`Put \(a_n = \frac{|x|^{n+1}}{(n+1)!}\); then \(\frac{a_{n+1}}{a_n} = \frac{|x|}{n+2}\). Once \(n + 2 > 2|x|\) we get \(a_{n+1} \le \frac{1}{2}a_n\), so for \(n \ge N := \lceil 2|x| \rceil\), \(a_n \le a_N\left(\frac{1}{2}\right)^{n-N} \to 0\) — the factorial beats the power geometrically.`,
               },
             },
             {

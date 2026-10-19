@@ -105,8 +105,8 @@ export const borelCantelliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이제 아래에서의 측도 연속성(continuity from below)을 씁니다: 집합열 \(\bigcap_{k=N}^{M} E_k^c\)는 \(M\)에 대해 감소하므로 \(P\left(\bigcap_{k \ge N} E_k^c\right) = \lim_{M \to \infty} P\left(\bigcap_{k=N}^{M} E_k^c\right) = \lim_{M \to \infty} (\frac56)^{M-N+1} = 0\)입니다 — 모든 \(N\)에 대해 "\(N\)번째 이후로 6이 영원히 안 나온다"는 확률 0 사건입니다.`,
-          en: String.raw`Now continuity of measure from below: the sets \(\bigcap_{k=N}^{M} E_k^c\) decrease in \(M\), so \(P\left(\bigcap_{k \ge N} E_k^c\right) = \lim_{M \to \infty} P\left(\bigcap_{k=N}^{M} E_k^c\right) = \lim_{M \to \infty} (\frac56)^{M-N+1} = 0\) — for every \(N\), "no 6 ever again from toss \(N\) on" is a probability-0 event.`,
+          ko: String.raw`이제 위에서의 측도 연속성(continuity from above)을 씁니다: 집합열 \(\bigcap_{k=N}^{M} E_k^c\)는 \(M\)에 대해 감소하므로 \(P\left(\bigcap_{k \ge N} E_k^c\right) = \lim_{M \to \infty} P\left(\bigcap_{k=N}^{M} E_k^c\right) = \lim_{M \to \infty} (\frac56)^{M-N+1} = 0\)입니다 — 모든 \(N\)에 대해 "\(N\)번째 이후로 6이 영원히 안 나온다"는 확률 0 사건입니다.`,
+          en: String.raw`Now continuity of measure from above: the sets \(\bigcap_{k=N}^{M} E_k^c\) decrease in \(M\), so \(P\left(\bigcap_{k \ge N} E_k^c\right) = \lim_{M \to \infty} P\left(\bigcap_{k=N}^{M} E_k^c\right) = \lim_{M \to \infty} (\frac56)^{M-N+1} = 0\) — for every \(N\), "no 6 ever again from toss \(N\) on" is a probability-0 event.`,
         },
       },
       {

@@ -79,8 +79,8 @@ export const monotoneDiscontinuitiesProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`유한 개의 점 \(x_1 < \cdots < x_m\)에 대해 각 점프 구간 \([f(x_i-), f(x_i+)]\)은 서로 겹치지 않고 (단조성에 의해 순서대로 배치됨), 모두 \([f(a), f(b)]\) 안에 들어갑니다. 따라서 \(\sum_{i=1}^{m} j(x_i) \le f(b) - f(a)\)이고, \(m\)이 임의이므로 전체 점프의 합도 \(\sum_x j(x) \le f(b) - f(a)\)를 만족합니다.`,
-          en: String.raw`For finitely many points \(x_1 < \cdots < x_m\), the jump intervals \([f(x_i-), f(x_i+)]\) are disjoint (monotonicity orders them) and all lie inside \([f(a), f(b)]\). Hence \(\sum_{i=1}^{m} j(x_i) \le f(b) - f(a)\), and since \(m\) is arbitrary, the total of all jumps satisfies \(\sum_x j(x) \le f(b) - f(a)\).`,
+          ko: String.raw`유한 개의 점 \(x_1 < \cdots < x_m\)을 봅니다. \(x_i < x_{i+1}\)이면 그 사이의 임의의 \(t\) (\(x_i < t < x_{i+1}\))에 대해 단조성으로 \(f(x_i+) = \inf_{s > x_i} f(s) \le f(t) \le \sup_{s < x_{i+1}} f(s) = f(x_{i+1}-)\)입니다. 따라서 \(f(x_i+) \le f(x_{i+1}-)\) — 점프 구간 \([f(x_i-), f(x_i+)]\)와 \([f(x_{i+1}-), f(x_{i+1}+)]\)의 내부는 서로 겹치지 않습니다 (끝점을 공유할 수는 있음). 모든 점프 구간은 \([f(a+), f(b-)] \subseteq [f(a), f(b)]\) 안에 들어 있으므로, \(\sum_{i=1}^{m} j(x_i) = \sum_{i=1}^{m} \big(f(x_i+) - f(x_i-)\big) \le f(b-) - f(a+) \le f(b) - f(a)\)입니다. \(m\)이 임의이므로 전체 점프의 합도 \(\sum_x j(x) \le f(b) - f(a)\)를 만족합니다.`,
+          en: String.raw`Take finitely many points \(x_1 < \cdots < x_m\). If \(x_i < x_{i+1}\) then for any \(t\) with \(x_i < t < x_{i+1}\), monotonicity gives \(f(x_i+) = \inf_{s > x_i} f(s) \le f(t) \le \sup_{s < x_{i+1}} f(s) = f(x_{i+1}-)\). Hence \(f(x_i+) \le f(x_{i+1}-)\) — the interiors of the jump intervals \([f(x_i-), f(x_i+)]\) and \([f(x_{i+1}-), f(x_{i+1}+)]\) are pairwise disjoint (they may share an endpoint). Every jump interval lies in \([f(a+), f(b-)] \subseteq [f(a), f(b)]\), so \(\sum_{i=1}^{m} j(x_i) = \sum_{i=1}^{m} \big(f(x_i+) - f(x_i-)\big) \le f(b-) - f(a+) \le f(b) - f(a)\). Since \(m\) is arbitrary, the sum over all jumps satisfies \(\sum_x j(x) \le f(b) - f(a)\).`,
         },
       },
       {

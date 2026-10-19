@@ -32,8 +32,14 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`따라서 꼬리들의 상한은 \(1\)로, 하한은 \(-1\)로 수렴합니다. 즉 \(\limsup a_n = 1\)이고 \(\liminf a_n = -1\)입니다.`,
-          en: String.raw`Hence the suprema of the tails tend to \(1\) and the infima to \(-1\): \(\limsup a_n = 1\) and \(\liminf a_n = -1\).`,
+          ko: String.raw`꼬리 상한을 직접 계산합니다. \(\sup_{n \ge N} a_n = \max\left(\sup_{\substack{n \ge N \\ n \text{ 짝수}}} a_n,\; \sup_{\substack{n \ge N \\ n \text{ 홀수}}} a_n\right)\)입니다. 짝수 꼬리에서는 \(a_{2k} = 1 + \frac{1}{2k} \downarrow 1\)이므로 \(\sup_{\text{짝수 } \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\)입니다. 홀수 꼬리에서는 모든 항이 \(-1\) 이하이므로 \(\sup_{\text{홀수 } \ge N} a_n \le -1 < 1\)입니다. 따라서 \(\max\)는 짝수 쪽이 결정하고 \(\sup_{n \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\)입니다. \(\varepsilon > 0\)에 대해 \(N > \frac{1}{\varepsilon}\)이면 \(0 \le \sup_{n \ge N} a_n - 1 = \frac{1}{2\lceil N/2 \rceil} \le \frac{1}{N} < \varepsilon\) — 즉 \(\sup_{n \ge N} a_n \to 1\)이므로 \(\limsup a_n = 1\)입니다.`,
+          en: String.raw`Compute the tail suprema directly. \(\sup_{n \ge N} a_n = \max\left(\sup_{\substack{n \ge N \\ n \text{ even}}} a_n,\; \sup_{\substack{n \ge N \\ n \text{ odd}}} a_n\right)\). On the even tail, \(a_{2k} = 1 + \frac{1}{2k} \downarrow 1\), so \(\sup_{\text{even } \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\). On the odd tail every term is at most \(-1\), so \(\sup_{\text{odd } \ge N} a_n \le -1 < 1\). Hence the \(\max\) is decided by the even side: \(\sup_{n \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\). Given \(\varepsilon > 0\), \(N > \frac{1}{\varepsilon}\) gives \(0 \le \sup_{n \ge N} a_n - 1 = \frac{1}{2\lceil N/2 \rceil} \le \frac{1}{N} < \varepsilon\) — so \(\sup_{n \ge N} a_n \to 1\) and \(\limsup a_n = 1\).`,
+        },
+      },
+      {
+        text: {
+          ko: String.raw`하한도 대칭적입니다. \(\inf_{n \ge N} a_n = \min\left(\inf_{\text{짝수 } \ge N} a_n,\; \inf_{\text{홀수 } \ge N} a_n\right)\)에서 짝수 쪽은 \(\inf \ge 1 > -1\)이고, 홀수 쪽은 \(a_{2k+1} = -\left(1 + \frac{1}{2k+1}\right) \uparrow -1\)이므로 \(\inf_{\text{홀수 } \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right)\)입니다. 따라서 \(\inf_{n \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right) \to -1\)이고 \(\liminf a_n = -1\)입니다.`,
+          en: String.raw`The infimum is symmetric. In \(\inf_{n \ge N} a_n = \min\left(\inf_{\text{even } \ge N} a_n,\; \inf_{\text{odd } \ge N} a_n\right)\) the even side has \(\inf \ge 1 > -1\), while on the odd side \(a_{2k+1} = -\left(1 + \frac{1}{2k+1}\right) \uparrow -1\), so \(\inf_{\text{odd } \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right)\). Hence \(\inf_{n \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right) \to -1\) and \(\liminf a_n = -1\).`,
         },
       },
     ],

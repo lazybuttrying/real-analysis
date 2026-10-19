@@ -111,6 +111,7 @@ export const hadamardGapProblems: readonly ProblemMeta[] = [
       ko: String.raw`\(N = 12\): 봉우리 106개가 경계에 빽빽합니다 — 아래는 이 그림이 암시하는 것의 증명 아이디어입니다 (스케치이지 완전한 증명이 아닙니다).`,
       en: String.raw`\(N = 12\): 106 spikes crowd the boundary — below is the proof idea behind what this picture suggests (a sketch, not the complete proof).`,
     },
+    isHint: true,
     proof: [
       {
         text: {

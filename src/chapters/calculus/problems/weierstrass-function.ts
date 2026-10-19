@@ -70,6 +70,7 @@ export const problems: readonly ProblemMeta[] = [
       ko: String.raw`\(n = 8\): 꼬리 상한 \((1/2)^8 = 0.00390625\) — 매끄러운 항을 8개나 더했는데도 곡선은 모든 스케일에서 들쭉날쭉하다 (\(W_8(0) = 1.99609375\), \(W_8(1) = -1.99609375\)).`,
       en: String.raw`\(n = 8\): tail bound \((1/2)^8 = 0.00390625\) — eight smooth terms added, yet the curve is jagged at every scale (\(W_8(0) = 1.99609375\), \(W_8(1) = -1.99609375\)).`,
     },
+    isHint: true,
     proof: [
       {
         text: {

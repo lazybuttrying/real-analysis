@@ -85,7 +85,7 @@ export const holderProblems: readonly ProblemMeta[] = [
       en: String.raw`Prove that equality in Hölder's inequality holds exactly when \(|a_k|^p\) is proportional to \(|b_k|^q\): \(|a_k|^p = C\,|b_k|^q\) for all \(k\) and some constant \(C \ge 0\).`,
     },
     display: [
-      String.raw`\text{equality in Hölder} \iff A_k^p = B_k^q \;\forall k \iff |a_k|^p = C\,|b_k|^q`,
+      String.raw`\text{equality} \iff \left[\|a\|_p = 0 \text{ or } \|b\|_q = 0\right] \text{ or } \left[A_k^p = B_k^q \;\forall k \iff |a_k|^p = C\,|b_k|^q\right]`,
     ],
     preset: { p: 2, n: 8 },
     presetCaption: {
@@ -95,20 +95,20 @@ export const holderProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`문제 2의 증명에서 부등식은 딱 한 곳에서만 일어났습니다: 각 항에 적용한 영의 부등식 \(A_k B_k \le \frac{A_k^p}{p} + \frac{B_k^q}{q}\)입니다 (그 합 \(\frac{1}{p}\sum A_k^p + \frac{1}{q}\sum B_k^q = 1\)은 항등식). 따라서 전체에서 등호가 성립할 필요충분조건은 모든 \(k\)에서 영의 부등식이 등호가 되는 것입니다.`,
-          en: String.raw`In problem 2's proof the inequality happened in exactly one place: Young's inequality \(A_k B_k \le \frac{A_k^p}{p} + \frac{B_k^q}{q}\) applied to each term (its sum \(\frac{1}{p}\sum A_k^p + \frac{1}{q}\sum B_k^q = 1\) is an identity). So equality overall holds if and only if Young's inequality is an equality for every \(k\).`,
+          ko: String.raw`먼저 퇴화 경우를 분리합니다. \(\|a\|_p = 0\)이면 모든 \(a_k = 0\)이므로 \(\sum |a_k b_k| = 0 = 0 \cdot \|b\|_q\) — 등호가 자동으로 성립합니다 (\(\|b\|_q = 0\)인 경우도 마찬가지). 주의: \(b = 0\)이고 \(a \ne 0\)인 경우 등호 \(\sum |a_k b_k| = 0 = \|a\|_p \cdot 0\)은 성립하지만, \(|a_k|^p = C|b_k|^q\)를 만족하는 \(C \ge 0\)은 존재하지 않습니다 (우변은 항상 0인데 어떤 \(k\)에서는 \(|a_k|^p > 0\)). 따라서 비례 관계는 \(\|a\|_p, \|b\|_q > 0\)인 경우의 등호 조건이며, 전체 정확한 서술은 "한 수열이 0이거나, 두 노름이 모두 양수이고 거듭제곱이 비례"입니다.`,
+          en: String.raw`Separate the degenerate case first. If \(\|a\|_p = 0\) then every \(a_k = 0\), so \(\sum |a_k b_k| = 0 = 0 \cdot \|b\|_q\) — equality holds automatically (likewise if \(\|b\|_q = 0\)). Note: with \(b = 0\) but \(a \ne 0\), the equality \(\sum |a_k b_k| = 0 = \|a\|_p \cdot 0\) holds, yet no \(C \ge 0\) satisfies \(|a_k|^p = C|b_k|^q\) (the right side is identically 0 while some \(|a_k|^p > 0\)). So proportionality is the equality condition only when \(\|a\|_p, \|b\|_q > 0\); the full precise statement is "either one sequence is zero, or both norms are positive and the powers are proportional".`,
         },
       },
       {
         text: {
-          ko: String.raw`문제 1의 등호 조건에 의해 이는 \(A_k^p = B_k^q\) (모든 \(k\))와 동치입니다. \(A_k = |a_k|/\|a\|_p\), \(B_k = |b_k|/\|b\|_q\)를 되돌리면 \(\frac{|a_k|^p}{\|a\|_p^p} = \frac{|b_k|^q}{\|b\|_q^q}\) — 즉 \(|a_k|^p = C\,|b_k|^q\) (단 \(C = \|a\|_p^p/\|b\|_q^q \ge 0\)는 \(k\)와 무관한 상수)입니다.`,
-          en: String.raw`By problem 1's equality condition, this is equivalent to \(A_k^p = B_k^q\) for every \(k\). Unwinding \(A_k = |a_k|/\|a\|_p\), \(B_k = |b_k|/\|b\|_q\) gives \(\frac{|a_k|^p}{\|a\|_p^p} = \frac{|b_k|^q}{\|b\|_q^q}\) — i.e. \(|a_k|^p = C\,|b_k|^q\) with \(C = \|a\|_p^p/\|b\|_q^q \ge 0\) independent of \(k\).`,
+          ko: String.raw`이제 \(\|a\|_p, \|b\|_q > 0\)이라 둡니다. 문제 2의 증명에서 부등식은 딱 한 곳에서만 일어났습니다: 각 항에 적용한 영의 부등식 \(A_k B_k \le \frac{A_k^p}{p} + \frac{B_k^q}{q}\)입니다 (그 합 \(\frac{1}{p}\sum A_k^p + \frac{1}{q}\sum B_k^q = 1\)은 항등식). 따라서 전체에서 등호가 성립할 필요충분조건은 모든 \(k\)에서 영의 부등식이 등호가 되는 것입니다. 문제 1의 등호 조건에 의해 이는 \(A_k^p = B_k^q\) (모든 \(k\))와 동치이고, 정규화를 풀면 \(\frac{|a_k|^p}{\|a\|_p^p} = \frac{|b_k|^q}{\|b\|_q^q}\) — 즉 \(|a_k|^p = C|b_k|^q\) (단 \(C = \|a\|_p^p/\|b\|_q^q \ge 0\)는 \(k\)와 무관)입니다. 역도 성립합니다: 이 비례식이 있으면 정규화 후 \(A_k^p = B_k^q\)가 되어 모든 영의 부등식이 등호가 됩니다.`,
+          en: String.raw`Now assume \(\|a\|_p, \|b\|_q > 0\). In problem 2's proof the inequality happened in exactly one place: Young's inequality \(A_k B_k \le \frac{A_k^p}{p} + \frac{B_k^q}{q}\) applied to each term (its sum \(\frac{1}{p}\sum A_k^p + \frac{1}{q}\sum B_k^q = 1\) is an identity). So equality overall holds if and only if Young's inequality is an equality for every \(k\). By problem 1's equality condition this is equivalent to \(A_k^p = B_k^q\) for every \(k\); unwinding the normalization gives \(\frac{|a_k|^p}{\|a\|_p^p} = \frac{|b_k|^q}{\|b\|_q^q}\) — i.e. \(|a_k|^p = C|b_k|^q\) with \(C = \|a\|_p^p/\|b\|_q^q \ge 0\) independent of \(k\). The converse holds too: this proportionality gives \(A_k^p = B_k^q\) after normalization, making every Young's inequality an equality.`,
         },
       },
       {
         text: {
-          ko: String.raw`역도 성립합니다: \(|a_k|^p = C|b_k|^q\)이면 정규화 후 \(A_k^p = B_k^q\)가 되어 모든 영의 부등식이 등호가 됩니다. 씬의 \(a_k = 1/k\), \(b_k = 1\)에서는 \(|a_k|^p\)가 상수가 아니라 틈새가 0이 될 수 없습니다 — \(p \to 1^+\)에서 틈새가 0으로 가는 것은 비례 때문이 아니라 우변 자체가 무너지는 극한 현상입니다.`,
-          en: String.raw`The converse holds too: \(|a_k|^p = C|b_k|^q\) gives \(A_k^p = B_k^q\) after normalization, making every Young's inequality an equality. In the scene, \(a_k = 1/k\) is not constant, so with \(b_k = 1\) the gap can never be 0 — the gap closing as \(p \to 1^+\) is a collapse of the right side itself, not proportionality.`,
+          ko: String.raw`씬의 \(a_k = 1/k\), \(b_k = 1\)에서는 두 노름이 모두 양수이고 \(|a_k|^p\)가 상수가 아니므로 틈새가 0이 될 수 없습니다 — \(p \to 1^+\)에서 틈새가 0으로 가는 것은 비례 때문이 아니라 우변 자체가 무너지는 극한 현상입니다.`,
+          en: String.raw`In the scene, \(a_k = 1/k\) and \(b_k = 1\) have both norms positive but \(|a_k|^p\) is not constant, so the gap can never be 0 — the gap closing as \(p \to 1^+\) is a collapse of the right side itself, not proportionality.`,
         },
       },
     ],

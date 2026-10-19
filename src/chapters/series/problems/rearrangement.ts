@@ -17,7 +17,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`\(n=150\): 재배열 부분합이 \(1.0397\) 근처에 안착합니다.`,
             en: String.raw`\(n=150\): the rearranged partial sums settle near \(1.0397\).`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`\(n = 150\)에서 재배열 부분합 \(T_{150}\)을 직접 계산하면 목표값 \(\frac{3}{2}\ln 2 \approx 1.03972\)와 \(0.01\) 이내로 일치합니다 — \(|T_{150} - \frac{3}{2}\ln 2| \approx 0.0050\). (수치 확인)`,
@@ -49,7 +50,8 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`꼬리를 얼마든 작게 만들 수 있으면 순서는 중요하지 않습니다.`,
             en: String.raw`If tails can be made arbitrarily small, order stops mattering.`,
           },
-          proof: [
+    isHint: true,
+    proof: [
             {
               text: {
                 ko: String.raw`\(\sum a_n\)이 절대수렴하면, \(\varepsilon > 0\)마다 꼬리 \(\sum_{n>N}|a_n| < \varepsilon\)을 만족하는 \(N\)이 존재합니다. (스케치 — 엄밀한 증명은 생략)`,
