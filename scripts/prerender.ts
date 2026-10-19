@@ -85,7 +85,7 @@ const renderProblemsHtml = (scene: SceneMeta, lang: Lang): string => {
 <p class="problem-statement">${renderSummaryHtml(localize(problem.statement, lang))}</p>
 ${(problem.display ?? []).map(renderDisplayHtml).join('\n')}
 <figure class="problem-viz"><figcaption>${renderSummaryHtml(localize(problem.presetCaption, lang))}</figcaption></figure>
-<details class="problem-proof"><summary>${escapeHtml(localize(STRINGS.showProof, lang))}</summary>
+<details class="problem-proof"><summary>${escapeHtml(localize(problem.isHint ? STRINGS.showHint : STRINGS.showProof, lang))}</summary>
 <ol>${steps}</ol>
 </details>
 </article>`;
@@ -704,8 +704,8 @@ function selfCheck(): string[] {
       legacyUrls.add(legacyUrl);
     }
   }
-  if (legacyPages.length !== 77) {
-    problems.push(`legacy pages = ${legacyPages.length} (expected 77: limits 39 + calculus 22 + moved series 16)`);
+  if (legacyPages.length !== 79) {
+    problems.push(`legacy pages = ${legacyPages.length} (expected 79: limits 39 + calculus 24 + moved series 16)`);
   }
   return problems;
 }

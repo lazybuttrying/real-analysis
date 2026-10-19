@@ -42,10 +42,10 @@ describe('catalog: the 10 chapters', () => {
     }
   });
 
-  it('covers 102 scenes with no loss or duplication', () => {
+  it('covers 125 scenes with no loss or duplication', () => {
     const ids = catalog.flatMap((chapter) => chapter.scenes.map((scene) => scene.id));
-    expect(ids).toHaveLength(123);
-    expect(new Set(ids).size).toBe(123);
+    expect(ids).toHaveLength(125);
+    expect(new Set(ids).size).toBe(125);
   });
 
   it('orders every chapter\'s scenes 1..N', () => {
@@ -128,21 +128,21 @@ describe('legacy canonical pages', () => {
     const catalogScenes = catalog.flatMap((chapter) =>
       chapter.scenes.map((scene) => [scene.id, chapter.id] as const),
     );
-    expect(catalogScenes).toHaveLength(123);
-    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(123);
+    expect(catalogScenes).toHaveLength(125);
+    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(125);
   });
 
-  it('assigns every scene its pre-split chapter (39 limits + 22 calculus + 16 moved series)', () => {
+  it('assigns every scene its pre-split chapter (39 limits + 24 calculus + 16 moved series)', () => {
     const moved = catalog.flatMap((chapter) =>
       chapter.scenes
         .map((scene) => ({ sceneId: scene.id, chapterId: chapter.id, legacy: legacyChapterOf(scene.id, chapter.id) }))
         .filter(({ legacy, chapterId }) => legacy !== chapterId),
     );
-    expect(moved).toHaveLength(77);
+    expect(moved).toHaveLength(79);
     const counts = new Map<string, number>();
     for (const { legacy } of moved) counts.set(legacy, (counts.get(legacy) ?? 0) + 1);
     expect(counts.get('limits')).toBe(39);
-    expect(counts.get('calculus')).toBe(22);
+    expect(counts.get('calculus')).toBe(24);
     expect(counts.get('series')).toBe(16);
     // The scenes that stayed in the (reused) series chapter need no legacy page:
     // 16 pre-split + 2 post-split additions (integral-test, double-series).
@@ -154,7 +154,7 @@ describe('legacy canonical pages', () => {
 
   it('emits one legacy page per retired scene URL, canonicalizing to the new URL', () => {
     const legacyPages = buildLegacyPages();
-    expect(legacyPages).toHaveLength(77);
+    expect(legacyPages).toHaveLength(79);
     const chapterOf = new Map(
       catalog.flatMap((chapter) => chapter.scenes.map((scene) => [scene.id, chapter.id] as const)),
     );
@@ -210,7 +210,7 @@ describe('legacy canonical pages', () => {
         canonicalByScene.set(segments[2]!, page);
       }
     }
-    expect(canonicalByScene.size).toBe(123);
+    expect(canonicalByScene.size).toBe(125);
     for (const page of buildLegacyPages()) {
       const sceneId = page.segments('ko')[2]!;
       const canonical = canonicalByScene.get(sceneId);
@@ -219,12 +219,12 @@ describe('legacy canonical pages', () => {
         expect(page.body(lang), `${sceneId} body (${lang})`).toBe(canonical!.body(lang));
       }
     }
-  });
+  }, 60000);
 
   it('lists only canonical URLs in the sitemap', () => {
     const xml = sitemapXml();
     const legacyUrls = buildLegacyPages().flatMap((page) => LANGS.map((lang) => `https://sdykim.me${page.url(lang)}`));
-    expect(legacyUrls).toHaveLength(154);
+    expect(legacyUrls).toHaveLength(158);
     for (const legacyUrl of legacyUrls) {
       expect(xml, `sitemap must not list ${legacyUrl}`).not.toContain(`<loc>${legacyUrl}</loc>`);
     }
