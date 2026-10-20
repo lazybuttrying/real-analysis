@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { epsdeltaModel, type EpsDeltaData, type EpsDeltaSample } from '../models/epsdelta';
@@ -83,18 +83,15 @@ export default defineSimpleScene<EpsDeltaData>({
     { text: readoutText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const definition = document.createElement('div');
-    definition.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(definition);
-    setRichText(
-        createRichSlot(definition),
-        localize(
-          {
-            ko: String.raw`정의: \(\forall\varepsilon > 0\ \exists\delta > 0\) s.t. \(0 < \lvert x - a\rvert < \delta \Rightarrow \lvert f(x) - L\rvert < \varepsilon\) (\(a = 1\), \(L = 2\))`,
-            en: String.raw`Definition: \(\forall\varepsilon > 0\ \exists\delta > 0\) s.t. \(0 < \lvert x - a\rvert < \delta \Rightarrow \lvert f(x) - L\rvert < \varepsilon\) (\(a = 1\), \(L = 2\))`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`정의: \(\forall\varepsilon > 0\ \exists\delta > 0\) s.t. \(0 < \lvert x - a\rvert < \delta \Rightarrow \lvert f(x) - L\rvert < \varepsilon\) (\(a = 1\), \(L = 2\))`,
+          en: String.raw`Definition: \(\forall\varepsilon > 0\ \exists\delta > 0\) s.t. \(0 < \lvert x - a\rvert < \delta \Rightarrow \lvert f(x) - L\rvert < \varepsilon\) (\(a = 1\), \(L = 2\))`,
+        },
+        lang,
+      ),
+    );
   },
 });

@@ -1,4 +1,5 @@
 import type { SceneModel } from '../../../contracts';
+import { clampNumber } from '../../../math/clamp';
 
 /**
  * Minkowski's inequality (integral version) on [0,1]:
@@ -45,11 +46,6 @@ export interface MinkowskiData {
   rhs: number;
   /** rhs - lhs (>= 0 for p >= 1). */
   gap: number;
-}
-
-function clampFinite(value: number, lo: number, hi: number, fallback: number): number {
-  if (!Number.isFinite(value)) return fallback;
-  return Math.max(lo, Math.min(hi, value));
 }
 
 function simpson(f: (x: number) => number, n: number): number {
@@ -99,9 +95,9 @@ export function minkowskiValues(p: number, a: number, b: number): MinkowskiData 
 
 export const minkowskiModel: SceneModel<MinkowskiData> = {
   compute(state) {
-    const p = clampFinite(Number(state['p']), MINKOWSKI_P_MIN, MINKOWSKI_P_MAX, MINKOWSKI_P_INIT);
-    const a = clampFinite(Number(state['a']), MINKOWSKI_A_MIN, MINKOWSKI_A_MAX, MINKOWSKI_A_INIT);
-    const b = clampFinite(Number(state['b']), MINKOWSKI_B_MIN, MINKOWSKI_B_MAX, MINKOWSKI_B_INIT);
+    const p = clampNumber(Number(state['p']), MINKOWSKI_P_MIN, MINKOWSKI_P_MAX, MINKOWSKI_P_INIT);
+    const a = clampNumber(Number(state['a']), MINKOWSKI_A_MIN, MINKOWSKI_A_MAX, MINKOWSKI_A_INIT);
+    const b = clampNumber(Number(state['b']), MINKOWSKI_B_MIN, MINKOWSKI_B_MAX, MINKOWSKI_B_INIT);
     return minkowskiValues(p, a, b);
   },
 };

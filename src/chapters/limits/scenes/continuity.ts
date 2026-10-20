@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { continuityModel, type ContinuityData, type ContinuitySample } from '../models/continuity';
@@ -95,18 +95,15 @@ export default defineSimpleScene<ContinuityData>({
     { text: verdictText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`밴드 = 극한 \(\pm 0.5\), 채운 점 = \(f(a)\) (broken 모드에서는 빈 동그라미가 극한 지점)`,
-            en: String.raw`band = limit \(\pm 0.5\); the filled dot is \(f(a)\) (in broken mode the open circle marks the limit point)`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`밴드 = 극한 \(\pm 0.5\), 채운 점 = \(f(a)\) (broken 모드에서는 빈 동그라미가 극한 지점)`,
+          en: String.raw`band = limit \(\pm 0.5\); the filled dot is \(f(a)\) (in broken mode the open circle marks the limit point)`,
+        },
+        lang,
+      ),
+    );
   },
 });

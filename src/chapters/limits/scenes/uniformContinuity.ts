@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import {
@@ -129,18 +129,15 @@ export default defineSimpleScene<UniformContinuityData>({
     { text: verdictText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`파란 곡선 = 함수 \(f\), 빨간 점 = \((x, f(x))\), 음영 = \(\delta\)-구간 \(\times\) \(\varepsilon\)-띠`,
-            en: String.raw`blue curve = the function \(f\), red dot = \((x, f(x))\), shaded = the \(\delta\)-window: \((x-\delta, x+\delta) \times (f(x)-\varepsilon, f(x)+\varepsilon)\)`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`파란 곡선 = 함수 \(f\), 빨간 점 = \((x, f(x))\), 음영 = \(\delta\)-구간 \(\times\) \(\varepsilon\)-띠`,
+          en: String.raw`blue curve = the function \(f\), red dot = \((x, f(x))\), shaded = the \(\delta\)-window: \((x-\delta, x+\delta) \times (f(x)-\varepsilon, f(x)+\varepsilon)\)`,
+        },
+        lang,
+      ),
+    );
   },
 });

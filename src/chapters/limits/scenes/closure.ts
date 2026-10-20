@@ -1,6 +1,6 @@
 import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { closureModel, type ClosureData, type ClosureKind } from '../models/closure';
@@ -149,18 +149,15 @@ export default defineSimpleScene<ClosureData>({
     { text: verdictText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`파란색 = 집합 \(A\), 빨간 점 = 폐포가 추가한 극한점, 회색 띠 = \([-M, M]\)`,
-            en: String.raw`blue = the set \(A\), red dots = limit points added by the closure, gray band = \([-M, M]\)`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`파란색 = 집합 \(A\), 빨간 점 = 폐포가 추가한 극한점, 회색 띠 = \([-M, M]\)`,
+          en: String.raw`blue = the set \(A\), red dots = limit points added by the closure, gray band = \([-M, M]\)`,
+        },
+        lang,
+      ),
+    );
   },
 });

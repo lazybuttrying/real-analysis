@@ -1,6 +1,6 @@
 import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { opensetsModel, type OpenSetData, type OpenSetKind } from '../models/opensets';
@@ -144,18 +144,15 @@ export default defineSimpleScene<OpenSetData>({
     { text: verdictText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`파란색 = 집합 \(S\), 음영 = 점 \(x\)의 \(\varepsilon\)-공, 마름모 = 점 \(x\)`,
-            en: String.raw`blue = the set \(S\), shaded = the \(\varepsilon\)-ball around \(x\), diamond = the point \(x\)`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`파란색 = 집합 \(S\), 음영 = 점 \(x\)의 \(\varepsilon\)-공, 마름모 = 점 \(x\)`,
+          en: String.raw`blue = the set \(S\), shaded = the \(\varepsilon\)-ball around \(x\), diamond = the point \(x\)`,
+        },
+        lang,
+      ),
+    );
   },
 });

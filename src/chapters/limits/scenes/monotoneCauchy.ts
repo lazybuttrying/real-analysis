@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { monotoneCauchyModel, type MonotoneCauchyData } from '../models/monotoneCauchy';
@@ -80,18 +80,15 @@ export default defineSimpleScene<MonotoneCauchyData>({
     { text: readoutText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`\(a_n = 1 - 2^{-n}\) — 단조증가, 위로 유계, 극한 \(\sup = 1\); 꼬리 지름이 \(0\)으로 갑니다`,
-            en: String.raw`\(a_n = 1 - 2^{-n}\) — increasing, bounded above, limit \(\sup = 1\); the tail diameter goes to \(0\)`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`\(a_n = 1 - 2^{-n}\) — 단조증가, 위로 유계, 극한 \(\sup = 1\); 꼬리 지름이 \(0\)으로 갑니다`,
+          en: String.raw`\(a_n = 1 - 2^{-n}\) — increasing, bounded above, limit \(\sup = 1\); the tail diameter goes to \(0\)`,
+        },
+        lang,
+      ),
+    );
   },
 });

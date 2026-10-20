@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { evtModel, type EvtData, type EvtSample } from '../models/evt';
@@ -138,18 +138,15 @@ export default defineSimpleScene<EvtData>({
     { text: verdictText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`최댓값 정리: 닫힌 구간 위의 연속함수는 최댓값·최솟값을 모두 취합니다 — 두 가설 중 하나라도 빠지면 거짓이 됩니다`,
-            en: String.raw`Extreme Value Theorem: a continuous function on a closed interval attains its max and min — drop either hypothesis and it fails`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`최댓값 정리: 닫힌 구간 위의 연속함수는 최댓값·최솟값을 모두 취합니다 — 두 가설 중 하나라도 빠지면 거짓이 됩니다`,
+          en: String.raw`Extreme Value Theorem: a continuous function on a closed interval attains its max and min — drop either hypothesis and it fails`,
+        },
+        lang,
+      ),
+    );
   },
 });
