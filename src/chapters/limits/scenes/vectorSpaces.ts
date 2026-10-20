@@ -1,6 +1,6 @@
-import { defineScene, localize, type ControlState, type Lang, type Scene } from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { vectorSpacesModel, type VectorSpacesData } from '../models/vector-spaces';
 
 /**
@@ -124,106 +124,32 @@ function panelLabel(kind: 'left' | 'right', lang: Lang): string {
   return localize({ ko: '오른쪽: 계수평면의 점', en: 'right: the point in coefficient space' }, lang);
 }
 
-function createVectorSpacesScene(): Scene<VectorSpacesData> {
-  let hostEl: HTMLElement | undefined;
-  let chartLeft: Chart | undefined;
-  let chartRight: Chart | undefined;
-  let wrapLeft: HTMLElement | undefined;
-  let wrapRight: HTMLElement | undefined;
-  let captionSlot: RichSlot | undefined;
-  let equationSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: VectorSpacesData; state: ControlState } | undefined;
-
-  const draw = (): void => {
-    if (!chartLeft || !chartRight || !last || !captionSlot || !equationSlot) return;
-    const { data } = last;
-
-    const gl = chartLeft.g;
-    gl.selectAll('*').remove();
-    drawLinePanel(gl, chartLeft.width, chartLeft.height, data);
-
-    const gr = chartRight.g;
-    gr.selectAll('*').remove();
-    drawPointPanel(gr, chartRight.width, chartRight.height, data);
-
-    setRichText(captionSlot, captionText(lang));
-    setRichText(equationSlot, equationText(data, lang));
-  };
-
-  const doResize = (): void => {
-    if (!chartLeft || !chartRight || !wrapLeft || !wrapRight) return;
-    chartLeft.setSize(wrapLeft.clientWidth || 320, wrapLeft.clientHeight || 300);
-    chartRight.setSize(wrapRight.clientWidth || 320, wrapRight.clientHeight || 300);
-    draw();
-  };
-
-  const makePanel = (parent: HTMLElement, kind: 'left' | 'right'): HTMLElement => {
-    const panel = document.createElement('div');
-    panel.style.cssText = 'flex: 1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column;';
-    const label = document.createElement('div');
-    label.style.cssText = 'flex: none; font-size: 12px; color: var(--muted); padding: 4px 8px 0;';
-    label.textContent = panelLabel(kind, lang);
-    const chartDiv = document.createElement('div');
-    chartDiv.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-    panel.append(label, chartDiv);
-    parent.append(panel);
-    return chartDiv;
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const panels = document.createElement('div');
-      panels.style.cssText = 'flex: 1 1 auto; min-height: 0; display: flex; gap: 8px;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
-      const caption = document.createElement('div');
-      caption.style.fontWeight = '600';
-      const equation = document.createElement('div');
-      equation.style.cssText = 'margin-top: 4px; font-size: 12px; color: var(--muted);';
-      strips.append(caption, equation);
-      host.append(panels, strips);
-
-      const leftChartDiv = makePanel(panels, 'left');
-      const rightChartDiv = makePanel(panels, 'right');
-      wrapLeft = leftChartDiv;
-      wrapRight = rightChartDiv;
-      chartLeft = createChart(leftChartDiv);
-      chartRight = createChart(rightChartDiv);
-      captionSlot = createRichSlot(caption);
-      equationSlot = createRichSlot(equation);
-      doResize();
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      doResize();
-    },
-    dispose() {
-      chartLeft?.destroy();
-      chartRight?.destroy();
-      chartLeft = undefined;
-      chartRight = undefined;
-      captionSlot = undefined;
-      equationSlot = undefined;
-      wrapLeft = undefined;
-      wrapRight = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
-      last = undefined;
-    },
-  };
+function drawMain(chart: Chart, data: VectorSpacesData): void {
+  chart.g.selectAll('*').remove();
+  drawLinePanel(chart.g, chart.width, chart.height, data);
 }
 
-export default defineScene<VectorSpacesData>({ model: vectorSpacesModel, createScene: createVectorSpacesScene });
+function drawSecond(chart: Chart, data: VectorSpacesData): void {
+  chart.g.selectAll('*').remove();
+  drawPointPanel(chart.g, chart.width, chart.height, data);
+}
+
+export default defineSimpleScene<VectorSpacesData>({
+  model: vectorSpacesModel,
+  secondLayout: 'row',
+  mainLabel: (lang) => panelLabel('left', lang),
+  secondLabel: (lang) => panelLabel('right', lang),
+  mainWrapCss: 'flex: 1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column;',
+  secondWrapCss: 'flex: 1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column;',
+  fallbackWidth: 320,
+  fallbackHeight: 300,
+  drawMain,
+  drawSecond,
+  slots: [
+    { text: (_data, lang) => captionText(lang), bold: true },
+    {
+      text: (data, lang) => equationText(data, lang),
+      cssText: 'margin-top: 4px; font-size: 12px; color: var(--muted);',
+    },
+  ],
+});

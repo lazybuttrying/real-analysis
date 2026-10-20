@@ -22,6 +22,8 @@ export interface HarmonicData {
   points: HarmonicPoint[];
   /** Value at k = n */
   final: HarmonicPoint;
+  /** Whether the x-axis uses a log scale (mirrors the scene's logX control) */
+  logX: boolean;
 }
 
 export function harmonicPartialSums(n: number, maxPoints: number = MAX_POINTS): HarmonicData {
@@ -37,13 +39,13 @@ export function harmonicPartialSums(n: number, maxPoints: number = MAX_POINTS): 
       points.push(final);
     }
   }
-  return { n, points, final };
+  return { n, points, final, logX: false };
 }
 
 export const harmonicModel: SceneModel<HarmonicData> = {
   compute(state) {
     const raw = Number(state['n']);
     const n = Number.isFinite(raw) ? Math.min(MAX_N, Math.max(1, Math.floor(raw))) : 1;
-    return harmonicPartialSums(n);
+    return { ...harmonicPartialSums(n), logX: state['logX'] === true };
   },
 };
