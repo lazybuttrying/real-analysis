@@ -1,14 +1,7 @@
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
-import {
-  DEFAULT_N,
   SERIES_ALTERNATING,
   doubleSeriesModel,
   type DoubleSeriesData,
@@ -53,212 +46,160 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createDoubleSeriesScene(): Scene<DoubleSeriesData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: DoubleSeriesData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: DoubleSeriesData, lang: Lang): void {
+  const { g } = chart;
+  g.selectAll('*').remove();
 
-  const drawGrid = (data: DoubleSeriesData): void => {
-    if (!mainChart) return;
-    const { g } = mainChart;
-    g.selectAll('*').remove();
+  const n = data.N;
+  const left = MARGIN.left;
+  const top = 8;
+  const step = CELL + GAP;
+  const cx = (j: number) => left + j * step + CELL / 2;
+  const cy = (i: number) => top + i * step + CELL / 2;
 
-    const n = data.N;
-    const left = MARGIN.left;
-    const top = 8;
-    const step = CELL + GAP;
-    const cx = (j: number) => left + j * step + CELL / 2;
-    const cy = (i: number) => top + i * step + CELL / 2;
+  let maxAbs = 0;
+  for (const row of data.grid) for (const v of row) maxAbs = Math.max(maxAbs, Math.abs(v));
+  if (maxAbs === 0) maxAbs = 1;
 
-    let maxAbs = 0;
-    for (const row of data.grid) for (const v of row) maxAbs = Math.max(maxAbs, Math.abs(v));
-    if (maxAbs === 0) maxAbs = 1;
+  const seriesLabel =
+    data.series === SERIES_ALTERNATING
+      ? localize({ ko: '(-1)^(m+n)/(m²n²)', en: '(-1)^(m+n)/(m²n²)' }, lang)
+      : localize({ ko: '1/(m²n²)', en: '1/(m²n²)' }, lang);
 
-    const seriesLabel =
-      data.series === SERIES_ALTERNATING
-        ? localize({ ko: '(-1)^(m+n)/(m²n²)', en: '(-1)^(m+n)/(m²n²)' }, lang)
-        : localize({ ko: '1/(m²n²)', en: '1/(m²n²)' }, lang);
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -40)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `a(m,n) = ${seriesLabel} — 진할수록 절댓값이 큼${data.series === SERIES_ALTERNATING ? ' (bound 색은 음수)' : ''}`,
+          en: `a(m,n) = ${seriesLabel} — darker means larger |a|${data.series === SERIES_ALTERNATING ? ' (bound hue is negative)' : ''}`,
+        },
+        lang,
+      ),
+    );
 
+  // Column headers.
+  for (let j = 0; j < n; j++) {
     g.append('text')
-      .attr('x', 0)
-      .attr('y', -40)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `a(m,n) = ${seriesLabel} — 진할수록 절댓값이 큼${data.series === SERIES_ALTERNATING ? ' (bound 색은 음수)' : ''}`,
-            en: `a(m,n) = ${seriesLabel} — darker means larger |a|${data.series === SERIES_ALTERNATING ? ' (bound hue is negative)' : ''}`,
-          },
-          lang,
-        ),
-      );
-
-    // Column headers.
-    for (let j = 0; j < n; j++) {
-      g.append('text')
-        .attr('x', cx(j))
-        .attr('y', top - 8)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', 11)
-        .attr('fill', 'currentColor')
-        .attr('opacity', 0.65)
-        .text(fmt(j + 1, 0));
-    }
-    g.append('text')
-      .attr('x', left - 12)
+      .attr('x', cx(j))
       .attr('y', top - 8)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 11)
-      .attr('font-weight', 700)
-      .attr('fill', 'currentColor')
-      .text('m\\n');
-
-    for (let i = 0; i < n; i++) {
-      // Row header.
-      g.append('text')
-        .attr('x', left - 10)
-        .attr('y', cy(i) + 4)
-        .attr('text-anchor', 'end')
-        .attr('font-size', 12)
-        .attr('fill', 'currentColor')
-        .text(fmt(i + 1, 0));
-      for (let j = 0; j < n; j++) {
-        const v = (data.grid[i] as number[])[j] as number;
-        const intensity = Math.abs(v) / maxAbs;
-        const color = v < 0 ? 'var(--bound)' : 'var(--accent)';
-        g.append('rect')
-          .attr('x', left + j * step)
-          .attr('y', top + i * step)
-          .attr('width', CELL)
-          .attr('height', CELL)
-          .attr('rx', 6)
-          .attr('fill', color)
-          .attr('fill-opacity', 0.12 + 0.78 * intensity)
-          .attr('stroke', 'currentColor')
-          .attr('stroke-opacity', 0.25)
-          .attr('stroke-width', 1);
-        if (v < 0) {
-          g.append('text')
-            .attr('x', cx(j))
-            .attr('y', cy(i) + 5)
-            .attr('text-anchor', 'middle')
-            .attr('font-size', 16)
-            .attr('font-weight', 700)
-            .attr('fill', '#fff')
-            .text('−');
-        } else if (data.series === SERIES_ALTERNATING) {
-          g.append('text')
-            .attr('x', cx(j))
-            .attr('y', cy(i) + 5)
-            .attr('text-anchor', 'middle')
-            .attr('font-size', 14)
-            .attr('font-weight', 700)
-            .attr('fill', '#fff')
-            .text('+');
-        }
-      }
-      // Row sum at the right.
-      g.append('text')
-        .attr('x', left + n * step + 6)
-        .attr('y', cy(i) + 4)
-        .attr('font-size', 12)
-        .attr('fill', 'currentColor')
-        .text(fmt(data.rowSums[i] as number, 4));
-    }
-
-    // Column sums below.
-    const sumY = top + n * step + 22;
-    for (let j = 0; j < n; j++) {
-      g.append('text')
-        .attr('x', cx(j))
-        .attr('y', sumY)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', 12)
-        .attr('fill', 'currentColor')
-        .text(fmt(data.colSums[j] as number, 4));
-    }
-    g.append('text')
-      .attr('x', left - 10)
-      .attr('y', sumY)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .attr('font-weight', 700)
-      .attr('fill', 'currentColor')
-      .text(localize({ ko: '열합', en: 'col sums' }, lang));
-    g.append('text')
-      .attr('x', left + n * step + 6)
-      .attr('y', sumY)
-      .attr('font-size', 12)
-      .attr('font-weight', 700)
-      .attr('fill', 'currentColor')
-      .text(fmt(data.total, 4));
-    g.append('text')
-      .attr('x', left + n * step + 6)
-      .attr('y', cy(0) - CELL / 2 - 8)
+      .attr('text-anchor', 'middle')
       .attr('font-size', 11)
       .attr('fill', 'currentColor')
       .attr('opacity', 0.65)
-      .text(localize({ ko: '행합', en: 'row sums' }, lang));
-  };
+      .text(fmt(j + 1, 0));
+  }
+  g.append('text')
+    .attr('x', left - 12)
+    .attr('y', top - 8)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 11)
+    .attr('font-weight', 700)
+    .attr('fill', 'currentColor')
+    .text('m\n');
 
-  const draw = (): void => {
-    if (!last || !readoutSlot || !verdictSlot) return;
-    drawGrid(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      verdict.style.marginTop = '4px';
-
-      shell.strips.append(readout, verdict);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      const n = last?.data.N ?? DEFAULT_N;
-      if (mainChart && mainWrap) {
-        const w = Math.max(mainWrap.clientWidth || 640, MARGIN.left + n * (CELL + GAP) + MARGIN.right);
-        const h = 8 + n * (CELL + GAP) + 44;
-        mainChart.setSize(w, h);
+  for (let i = 0; i < n; i++) {
+    // Row header.
+    g.append('text')
+      .attr('x', left - 10)
+      .attr('y', cy(i) + 4)
+      .attr('text-anchor', 'end')
+      .attr('font-size', 12)
+      .attr('fill', 'currentColor')
+      .text(fmt(i + 1, 0));
+    for (let j = 0; j < n; j++) {
+      const v = (data.grid[i] as number[])[j] as number;
+      const intensity = Math.abs(v) / maxAbs;
+      const color = v < 0 ? 'var(--bound)' : 'var(--accent)';
+      g.append('rect')
+        .attr('x', left + j * step)
+        .attr('y', top + i * step)
+        .attr('width', CELL)
+        .attr('height', CELL)
+        .attr('rx', 6)
+        .attr('fill', color)
+        .attr('fill-opacity', 0.12 + 0.78 * intensity)
+        .attr('stroke', 'currentColor')
+        .attr('stroke-opacity', 0.25)
+        .attr('stroke-width', 1);
+      if (v < 0) {
+        g.append('text')
+          .attr('x', cx(j))
+          .attr('y', cy(i) + 5)
+          .attr('text-anchor', 'middle')
+          .attr('font-size', 16)
+          .attr('font-weight', 700)
+          .attr('fill', '#fff')
+          .text('−');
+      } else if (data.series === SERIES_ALTERNATING) {
+        g.append('text')
+          .attr('x', cx(j))
+          .attr('y', cy(i) + 5)
+          .attr('text-anchor', 'middle')
+          .attr('font-size', 14)
+          .attr('font-weight', 700)
+          .attr('fill', '#fff')
+          .text('+');
       }
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+    }
+    // Row sum at the right.
+    g.append('text')
+      .attr('x', left + n * step + 6)
+      .attr('y', cy(i) + 4)
+      .attr('font-size', 12)
+      .attr('fill', 'currentColor')
+      .text(fmt(data.rowSums[i] as number, 4));
+  }
+
+  // Column sums below.
+  const sumY = top + n * step + 22;
+  for (let j = 0; j < n; j++) {
+    g.append('text')
+      .attr('x', cx(j))
+      .attr('y', sumY)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 12)
+      .attr('fill', 'currentColor')
+      .text(fmt(data.colSums[j] as number, 4));
+  }
+  g.append('text')
+    .attr('x', left - 10)
+    .attr('y', sumY)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('font-weight', 700)
+    .attr('fill', 'currentColor')
+    .text(localize({ ko: '열합', en: 'col sums' }, lang));
+  g.append('text')
+    .attr('x', left + n * step + 6)
+    .attr('y', sumY)
+    .attr('font-size', 12)
+    .attr('font-weight', 700)
+    .attr('fill', 'currentColor')
+    .text(fmt(data.total, 4));
+  g.append('text')
+    .attr('x', left + n * step + 6)
+    .attr('y', cy(0) - CELL / 2 - 8)
+    .attr('font-size', 11)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.65)
+    .text(localize({ ko: '행합', en: 'row sums' }, lang));
 }
 
-export default defineScene<DoubleSeriesData>({
+export default defineSimpleScene<DoubleSeriesData>({
   model: doubleSeriesModel,
-  createScene: createDoubleSeriesScene,
+  margin: MARGIN,
+  drawMain,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
+  ],
+  sizeFromData: (data, container) => ({
+    width: Math.max(container.width || 640, MARGIN.left + data.N * (CELL + GAP) + MARGIN.right),
+    height: 8 + data.N * (CELL + GAP) + 44,
+  }),
 });
