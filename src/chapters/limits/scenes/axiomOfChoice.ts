@@ -1,12 +1,6 @@
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { axiomOfChoiceModel, type AxiomOfChoiceData } from '../models/axiomOfChoice';
 
 /**
@@ -47,129 +41,75 @@ function captionText(lang: Lang): string {
   );
 }
 
-function createAxiomOfChoiceScene(): Scene<AxiomOfChoiceData> {
-  let shell: SceneShell | undefined;
-  let mainChart: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let captionSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: AxiomOfChoiceData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: AxiomOfChoiceData, lang: Lang): void {
+  const { g, height } = chart;
+  g.selectAll('*').remove();
 
-  const drawMain = (data: AxiomOfChoiceData): void => {
-    if (!mainChart) return;
-    const { g, height } = mainChart;
-    g.selectAll('*').remove();
+  const rowH = (height - 40) / data.m;
+  const rowY = (i: number): number => 20 + rowH * (i + 0.5);
 
-    const rowH = (height - 40) / data.m;
-    const rowY = (i: number): number => 20 + rowH * (i + 0.5);
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -8)
+    .attr('font-size', 13)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        {
+          ko: `집합족: ${data.m}개의 상자, 선택함수 c가 각 상자에서 공 하나를 고릅니다`,
+          en: `The family: ${data.m} bins, the choice function c picks one ball per bin`,
+        },
+        lang,
+      ),
+    );
 
+  for (let i = 0; i < data.m; i++) {
+    const y = rowY(i);
+    const k = data.bins[i] ?? 0;
+    const chosen = data.choices[i] ?? -1;
+
+    // Row label X_i (1-based for display).
     g.append('text')
-      .attr('x', 0)
-      .attr('y', -8)
-      .attr('font-size', 13)
-      .attr('font-weight', 600)
+      .attr('x', BALL_X0 - BALL_DX * 0.7)
+      .attr('y', y)
+      .attr('text-anchor', 'end')
+      .attr('dominant-baseline', 'central')
+      .attr('font-size', 14)
+      .attr('font-style', 'italic')
       .attr('fill', 'currentColor')
-      .text(
-        localize(
-          {
-            ko: `집합족: ${data.m}개의 상자, 선택함수 c가 각 상자에서 공 하나를 고릅니다`,
-            en: `The family: ${data.m} bins, the choice function c picks one ball per bin`,
-          },
-          lang,
-        ),
-      );
+      .text(`X${i + 1}`);
 
-    for (let i = 0; i < data.m; i++) {
-      const y = rowY(i);
-      const k = data.bins[i] ?? 0;
-      const chosen = data.choices[i] ?? -1;
-
-      // Row label X_i (1-based for display).
-      g.append('text')
-        .attr('x', BALL_X0 - BALL_DX * 0.7)
-        .attr('y', y)
-        .attr('text-anchor', 'end')
-        .attr('dominant-baseline', 'central')
-        .attr('font-size', 14)
-        .attr('font-style', 'italic')
-        .attr('fill', 'currentColor')
-        .text(`X${i + 1}`);
-
-      for (let j = 0; j < k; j++) {
-        const cx = BALL_X0 + j * BALL_DX;
-        const isChosen = j === chosen;
-        g.append('circle')
-          .attr('cx', cx)
-          .attr('cy', y)
-          .attr('r', BALL_R)
-          .attr('fill', isChosen ? 'var(--accent)' : 'none')
-          .attr('stroke', isChosen ? 'var(--accent)' : 'currentColor')
-          .attr('stroke-width', isChosen ? 0 : 1.5)
-          .attr('opacity', isChosen ? 1 : 0.55);
-        if (isChosen) {
-          g.append('text')
-            .attr('x', cx)
-            .attr('y', y + 1)
-            .attr('text-anchor', 'middle')
-            .attr('dominant-baseline', 'central')
-            .attr('font-size', 14)
-            .attr('font-weight', 700)
-            .attr('fill', '#fff')
-            .text('✓');
-        }
+    for (let j = 0; j < k; j++) {
+      const cx = BALL_X0 + j * BALL_DX;
+      const isChosen = j === chosen;
+      g.append('circle')
+        .attr('cx', cx)
+        .attr('cy', y)
+        .attr('r', BALL_R)
+        .attr('fill', isChosen ? 'var(--accent)' : 'none')
+        .attr('stroke', isChosen ? 'var(--accent)' : 'currentColor')
+        .attr('stroke-width', isChosen ? 0 : 1.5)
+        .attr('opacity', isChosen ? 1 : 0.55);
+      if (isChosen) {
+        g.append('text')
+          .attr('x', cx)
+          .attr('y', y + 1)
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'central')
+          .attr('font-size', 14)
+          .attr('font-weight', 700)
+          .attr('fill', '#fff')
+          .text('✓');
       }
     }
-  };
-
-  const draw = (): void => {
-    if (!last || !readoutSlot || !captionSlot) return;
-    drawMain(last.data);
-    setRichText(readoutSlot, readoutText(last.data, lang));
-    setRichText(captionSlot, captionText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-
-      mainWrap = shell.chartWrap;
-      mainWrap.style.height = `${CHART_HEIGHT}px`;
-      mainChart = createChart(mainWrap, MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const caption = document.createElement('div');
-      caption.style.marginTop = '4px';
-
-      shell.strips.append(readout, caption);
-      readoutSlot = createRichSlot(readout);
-      captionSlot = createRichSlot(caption);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (mainChart && mainWrap)
-        mainChart.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || CHART_HEIGHT);
-      draw();
-    },
-    dispose() {
-      mainChart?.destroy();
-      mainChart = undefined;
-      readoutSlot = undefined;
-      captionSlot = undefined;
-      mainWrap = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  }
 }
 
-export default defineScene<AxiomOfChoiceData>({
+export default defineSimpleScene<AxiomOfChoiceData>({
   model: axiomOfChoiceModel,
-  createScene: createAxiomOfChoiceScene,
+  margin: MARGIN,
+  fallbackHeight: CHART_HEIGHT,
+  drawMain,
+  slots: [{ text: readoutText, bold: true }, { text: (_data, lang) => captionText(lang), spaced: true }],
 });

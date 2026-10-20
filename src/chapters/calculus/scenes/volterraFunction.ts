@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { volterraModel, type VolterraData, type VolterraSample } from '../models/volterraFunction';
 
 /**
@@ -74,190 +68,140 @@ function drawPath(
     .attr('d', ln);
 }
 
-function createVolterraScene(): Scene<VolterraData> {
-  let shell: SceneShell | undefined;
-  let chart: Chart | undefined;
-  let overChart: Chart | undefined;
-  let mainDiv: HTMLElement | undefined;
-  let overDiv: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: VolterraData; state: ControlState } | undefined;
+// Main chart: zoomed onto the selected complementary interval.
+function drawMain(chart: Chart, data: VolterraData, lang: Lang): void {
+  const iv = data.intervals[data.interval];
+  if (!iv) return;
 
-  const draw = (): void => {
-    if (!chart || !overChart || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
-    const iv = data.intervals[data.interval];
-    if (!iv) return;
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
+  const padX = (iv.b - iv.a) * 0.03;
+  const x = scaleLinear()
+    .domain([iv.a - padX, iv.b + padX])
+    .range([0, width]);
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (const s of data.zoomSamples) {
+    if (s.f < lo) lo = s.f;
+    if (s.f > hi) hi = s.f;
+    if (s.fp < lo) lo = s.fp;
+    if (s.fp > hi) hi = s.fp;
+  }
+  if (!Number.isFinite(lo)) {
+    lo = -1;
+    hi = 1;
+  }
+  lo = Math.min(lo, 0);
+  hi = Math.max(hi, 0);
+  const padY = Math.max(1e-9, (hi - lo) * 0.12);
+  const y = scaleLinear().domain([lo - padY, hi + padY]).range([height, 0]);
 
-    // ---- Main chart: zoomed onto the selected complementary interval. ----
-    {
-      const { g, width, height } = chart;
-      g.selectAll('*').remove();
-      const padX = (iv.b - iv.a) * 0.03;
-      const x = scaleLinear()
-        .domain([iv.a - padX, iv.b + padX])
-        .range([0, width]);
-      let lo = Infinity;
-      let hi = -Infinity;
-      for (const s of data.zoomSamples) {
-        if (s.f < lo) lo = s.f;
-        if (s.f > hi) hi = s.f;
-        if (s.fp < lo) lo = s.fp;
-        if (s.fp > hi) hi = s.fp;
-      }
-      if (!Number.isFinite(lo)) {
-        lo = -1;
-        hi = 1;
-      }
-      lo = Math.min(lo, 0);
-      hi = Math.max(hi, 0);
-      const padY = Math.max(1e-9, (hi - lo) * 0.12);
-      const y = scaleLinear().domain([lo - padY, hi + padY]).range([height, 0]);
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
+  g.append('g').call(axisLeft(y).ticks(6));
 
-      g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(6));
-      g.append('g').call(axisLeft(y).ticks(6));
+  const header = g.append('text').attr('x', 0).attr('y', -28).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  header.text(
+    localize(
+      {
+        ko: `여집합 구간 (${fmt(iv.a, 4)}, ${fmt(iv.b, 4)}) 확대 — f와 그 도함수 f'`,
+        en: `Zoom on complementary interval (${fmt(iv.a, 4)}, ${fmt(iv.b, 4)}): f and its derivative f'`,
+      },
+      lang,
+    ),
+  );
 
-      const header = g.append('text').attr('x', 0).attr('y', -28).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-      header.text(
-        localize(
-          {
-            ko: `여집합 구간 (${fmt(iv.a, 4)}, ${fmt(iv.b, 4)}) 확대 — f와 그 도함수 f'`,
-            en: `Zoom on complementary interval (${fmt(iv.a, 4)}, ${fmt(iv.b, 4)}): f and its derivative f'`,
-          },
-          lang,
-        ),
-      );
+  // Zero line for reference: f' oscillates around it without dying.
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(0))
+    .attr('y2', y(0))
+    .attr('stroke', 'currentColor')
+    .attr('stroke-width', 1)
+    .attr('opacity', 0.35);
 
-      // Zero line for reference: f' oscillates around it without dying.
-      g.append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
-        .attr('y1', y(0))
-        .attr('y2', y(0))
-        .attr('stroke', 'currentColor')
-        .attr('stroke-width', 1)
-        .attr('opacity', 0.35);
+  drawPath(g, data.zoomSamples, x, y, (s) => s.f, F_COLOR, 2.5);
+  drawPath(g, data.zoomSamples, x, y, (s) => s.fp, FP_COLOR, 1.25);
 
-      drawPath(g, data.zoomSamples, x, y, (s) => s.f, F_COLOR, 2.5);
-      drawPath(g, data.zoomSamples, x, y, (s) => s.fp, FP_COLOR, 1.25);
-
-      g.append('text')
-        .attr('x', 8)
-        .attr('y', height + 34)
-        .attr('font-size', 12)
-        .attr('fill', F_COLOR)
-        .text(localize({ ko: '— f (범프)', en: '— f (the bump)' }, lang));
-      g.append('text')
-        .attr('x', width / 2)
-        .attr('y', height + 34)
-        .attr('font-size', 12)
-        .attr('fill', FP_COLOR)
-        .text(localize({ ko: "— f' (죽지 않는 진동)", en: "— f' (the undying oscillation)" }, lang));
-    }
-
-    // ---- Overview strip: f over [0, 1], zoomed interval highlighted. ----
-    {
-      const { g, width, height } = overChart;
-      g.selectAll('*').remove();
-      const x = scaleLinear().domain([0, 1]).range([0, width]);
-      let lo = Infinity;
-      let hi = -Infinity;
-      for (const s of data.samples) {
-        if (s.f < lo) lo = s.f;
-        if (s.f > hi) hi = s.f;
-      }
-      if (!Number.isFinite(lo)) {
-        lo = -1;
-        hi = 1;
-      }
-      const padY = Math.max(1e-9, (hi - lo) * 0.15);
-      const y = scaleLinear().domain([lo - padY, hi + padY]).range([height, 0]);
-
-      g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
-      g.append('g').call(axisLeft(y).ticks(3));
-
-      const label = g.append('text').attr('x', 0).attr('y', -12).attr('font-size', 12).attr('font-weight', 600).attr('fill', 'currentColor');
-      label.text(
-        localize(
-          { ko: '전체 보기 — f (칸토어 집합의 여집합 위의 작은 범프들)', en: 'Full view — f (tiny bumps on the complement of the Cantor set)' },
-          lang,
-        ),
-      );
-
-      g.append('rect')
-        .attr('x', x(iv.a))
-        .attr('width', Math.max(2, x(iv.b) - x(iv.a)))
-        .attr('y', 0)
-        .attr('height', height)
-        .attr('fill', F_COLOR)
-        .attr('opacity', 0.22);
-      drawPath(g, data.samples, x, y, (s) => s.f, F_COLOR, 1.5);
-    }
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      shell = createSceneShell(host);
-      shell.chartWrap.style.display = 'flex';
-      shell.chartWrap.style.flexDirection = 'column';
-      mainDiv = document.createElement('div');
-      mainDiv.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      overDiv = document.createElement('div');
-      overDiv.style.cssText = 'flex: none; height: 128px; position: relative;';
-      shell.chartWrap.append(mainDiv, overDiv);
-      chart = createChart(mainDiv, MARGIN);
-      overChart = createChart(overDiv, OVER_MARGIN);
-
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-
-      // Cross-link: the Riemann integral scene this one pushes against.
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      const riemannLink = document.createElement('a');
-      riemannLink.href = '../riemann/';
-      riemannLink.textContent = localize(
-        { ko: '리만 적분 씬 — 적분가능성의 경계', en: 'Riemann integral scene — the boundary of integrability' },
-        lang,
-      );
-      seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), riemannLink);
-
-      shell.strips.append(readout, verdict, seeAlso);
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chart || !overChart || !mainDiv || !overDiv) return;
-      chart.setSize(mainDiv.clientWidth || 640, mainDiv.clientHeight || 360);
-      overChart.setSize(overDiv.clientWidth || 640, overDiv.clientHeight || 128);
-      draw();
-    },
-    dispose() {
-      chart?.destroy();
-      overChart?.destroy();
-      chart = undefined;
-      overChart = undefined;
-      mainDiv = undefined;
-      overDiv = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      shell?.dispose();
-      shell = undefined;
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', F_COLOR)
+    .text(localize({ ko: '— f (범프)', en: '— f (the bump)' }, lang));
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 34)
+    .attr('font-size', 12)
+    .attr('fill', FP_COLOR)
+    .text(localize({ ko: "— f' (죽지 않는 진동)", en: "— f' (the undying oscillation)" }, lang));
 }
 
-export default defineScene<VolterraData>({ model: volterraModel, createScene: createVolterraScene });
+// Overview strip: f over [0, 1], zoomed interval highlighted.
+function drawSecond(chart: Chart, data: VolterraData, lang: Lang): void {
+  const iv = data.intervals[data.interval];
+  if (!iv) return;
+
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
+  const x = scaleLinear().domain([0, 1]).range([0, width]);
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (const s of data.samples) {
+    if (s.f < lo) lo = s.f;
+    if (s.f > hi) hi = s.f;
+  }
+  if (!Number.isFinite(lo)) {
+    lo = -1;
+    hi = 1;
+  }
+  const padY = Math.max(1e-9, (hi - lo) * 0.15);
+  const y = scaleLinear().domain([lo - padY, hi + padY]).range([height, 0]);
+
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(8));
+  g.append('g').call(axisLeft(y).ticks(3));
+
+  const label = g.append('text').attr('x', 0).attr('y', -12).attr('font-size', 12).attr('font-weight', 600).attr('fill', 'currentColor');
+  label.text(
+    localize(
+      { ko: '전체 보기 — f (칸토어 집합의 여집합 위의 작은 범프들)', en: 'Full view — f (tiny bumps on the complement of the Cantor set)' },
+      lang,
+    ),
+  );
+
+  g.append('rect')
+    .attr('x', x(iv.a))
+    .attr('width', Math.max(2, x(iv.b) - x(iv.a)))
+    .attr('y', 0)
+    .attr('height', height)
+    .attr('fill', F_COLOR)
+    .attr('opacity', 0.22);
+  drawPath(g, data.samples, x, y, (s) => s.f, F_COLOR, 1.5);
+}
+
+export default defineSimpleScene<VolterraData>({
+  model: volterraModel,
+  margin: MARGIN,
+  marginSecond: OVER_MARGIN,
+  fallbackHeightSecond: 128,
+  secondWrapCss: 'flex: none; height: 128px; position: relative;',
+  drawMain,
+  drawSecond,
+  slots: [
+    { text: readoutText, bold: true },
+    { text: (_data, lang) => verdictText(lang), bold: true },
+  ],
+  mountExtra: (strips, lang) => {
+    // Cross-link: the Riemann integral scene this one pushes against.
+    const seeAlso = document.createElement('div');
+    seeAlso.style.marginTop = '4px';
+    const riemannLink = document.createElement('a');
+    riemannLink.href = '../riemann/';
+    riemannLink.textContent = localize(
+      { ko: '리만 적분 씬 — 적분가능성의 경계', en: 'Riemann integral scene — the boundary of integrability' },
+      lang,
+    );
+    seeAlso.append(document.createTextNode(localize({ ko: '더 보기: ', en: 'See also: ' }, lang)), riemannLink);
+    strips.append(seeAlso);
+  },
+});

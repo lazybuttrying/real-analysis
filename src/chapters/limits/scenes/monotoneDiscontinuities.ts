@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear, scaleLog } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   exampleValue,
   monotoneDiscontinuitiesModel,
@@ -49,208 +43,149 @@ function verdictText(lang: Lang): string {
   );
 }
 
-function createMonotoneDiscontinuitiesScene(): Scene<MonotoneDiscontinuitiesData> {
-  let hostEl: HTMLElement | undefined;
-  let chartTop: Chart | undefined;
-  let chartBottom: Chart | undefined;
-  let wrapTop: HTMLElement | undefined;
-  let wrapBottom: HTMLElement | undefined;
-  let readoutSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: MonotoneDiscontinuitiesData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: MonotoneDiscontinuitiesData, lang: Lang): void {
+  const { rationals, fSamples, bigJumps } = data;
+  const bigKeys = new Set(bigJumps.map((r) => r.k));
+  const qs = rationals.map((r) => r.x);
 
-  const draw = (): void => {
-    if (!chartTop || !chartBottom || !last || !readoutSlot || !verdictSlot) return;
-    const { data } = last;
-    const { n, terms, rationals, fSamples, bigJumps, bigCount } = data;
-    const bigKeys = new Set(bigJumps.map((r) => r.k));
-    const qs = rationals.map((r) => r.x);
+  // --- Top panel: the staircase of f with its jumps ---
+  {
+    const { g, width, height } = chart;
+    g.selectAll('*').remove();
+    const x = scaleLinear().domain([0, 1]).range([0, width]);
+    let fMax = 0;
+    for (const s of fSamples) fMax = Math.max(fMax, s.f);
+    const y = scaleLinear().domain([0, fMax * 1.05]).range([height, 0]);
 
-    // --- Top panel: the staircase of f with its jumps ---
-    {
-      const { g, width, height } = chartTop;
-      g.selectAll('*').remove();
-      const x = scaleLinear().domain([0, 1]).range([0, width]);
-      let fMax = 0;
-      for (const s of fSamples) fMax = Math.max(fMax, s.f);
-      const y = scaleLinear().domain([0, fMax * 1.05]).range([height, 0]);
+    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(10));
+    g.append('g').call(axisLeft(y).ticks(6));
 
-      g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(10));
-      g.append('g').call(axisLeft(y).ticks(6));
-
-      const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-      header.text(
-        localize(
-          { ko: `f(x) = x + Σ 2^{-k} 계단 — 유리수마다 2^{-k}만큼 뛰어오릅니다`, en: `f(x) = x + Σ 2^{-k} staircase — it jumps by 2^{-k} at every rational` },
-          lang,
-        ),
-      );
-
-      // The graph itself: a polyline through the fine samples.
-      const fLine = line<{ x: number; f: number }>()
-        .x((d) => x(d.x))
-        .y((d) => y(d.f));
-      g.append('path')
-        .datum(fSamples)
-        .attr('fill', 'none')
-        .attr('stroke', 'currentColor')
-        .attr('stroke-width', 1.5)
-        .attr('d', fLine);
-
-      // Mark each jump: a dot at the bottom (value = left limit) and a
-      // filled dot at the top (right limit) of the rise.
-      for (const r of rationals) {
-        const bottom = exampleValue(r.x, qs);
-        const top = bottom + r.size;
-        const cx = x(r.x);
-        g.append('line')
-          .attr('x1', cx)
-          .attr('x2', cx)
-          .attr('y1', y(bottom))
-          .attr('y2', y(top))
-          .attr('stroke', 'var(--accent)')
-          .attr('stroke-width', bigKeys.has(r.k) ? 3 : 1.5)
-          .attr('opacity', bigKeys.has(r.k) ? 1 : 0.55);
-        g.append('circle')
-          .attr('cx', cx)
-          .attr('cy', y(top))
-          .attr('r', bigKeys.has(r.k) ? 4 : 2.5)
-          .style('fill', 'var(--accent)')
-          .attr('opacity', bigKeys.has(r.k) ? 1 : 0.7);
-      }
-    }
-
-    // --- Bottom panel: jump sizes against the 1/n threshold (log scale) ---
-    {
-      const { g, width, height } = chartBottom;
-      g.selectAll('*').remove();
-      const x = scaleLinear().domain([0.5, Math.max(1.5, terms + 0.5)]).range([0, width]);
-      const yMax = 1;
-      const yMin = Math.min(1 / n / 2, 2 ** -(terms + 1));
-      const y = scaleLog().domain([yMin, yMax]).range([height, 0]);
-
-      g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(Math.min(terms, 12)));
-      g.append('g').call(axisLeft(y).ticks(6));
-
-      const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-      header.text(
-        localize(
-          { ko: `점프 크기 2^{-k} vs 임계값 1/${n} — 위의 ${bigCount}개가 큰 점프입니다`, en: `Jump sizes 2^{-k} vs threshold 1/${n} — the ${bigCount} above are the big jumps` },
-          lang,
-        ),
-      );
-
-      const barWidth = Math.max(1, (x(2) - x(1)) * 0.7);
-      for (const r of rationals) {
-        const isBig = bigKeys.has(r.k);
-        g.append('rect')
-          .attr('x', x(r.k) - barWidth / 2)
-          .attr('width', barWidth)
-          .attr('y', y(r.size))
-          .attr('height', Math.max(1, height - y(r.size)))
-          .style('fill', 'var(--accent)')
-          .attr('opacity', isBig ? 0.95 : 0.3);
-      }
-
-      // Dashed threshold line at 1/n.
-      g.append('line')
-        .attr('x1', 0)
-        .attr('x2', width)
-        .attr('y1', y(1 / n))
-        .attr('y2', y(1 / n))
-        .attr('stroke', 'currentColor')
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '6,4')
-        .attr('opacity', 0.8);
-      g.append('text')
-        .attr('x', width - 4)
-        .attr('y', y(1 / n) - 6)
-        .attr('font-size', 12)
-        .attr('text-anchor', 'end')
-        .attr('fill', 'currentColor')
-        .attr('opacity', 0.8)
-        .text(`1/${n}`);
-
-      g.append('text')
-        .attr('x', 8)
-        .attr('y', height + 32)
-        .attr('font-size', 12)
-        .style('fill', 'var(--accent)')
-        .text(localize({ ko: `■ ${bigCount}개의 큰 점프 (1/${n} 초과)`, en: `■ ${bigCount} big jumps (above 1/${n})` }, lang));
-    }
-
-    setRichText(readoutSlot, readoutText(data, lang));
-    setRichText(verdictSlot, verdictText(lang));
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const topWrap = document.createElement('div');
-      topWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const bottomWrap = document.createElement('div');
-      bottomWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
-      const readout = document.createElement('div');
-      readout.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-
-      // The continuity scene lives in this chapter; prose-only reference,
-      // no cross-chapter link needed (prerequisites are the coordinator's job).
-      const seeAlso = document.createElement('div');
-      seeAlso.style.marginTop = '4px';
-      seeAlso.textContent = localize(
-        { ko: '연속성 씬의 그림과 함께 보세요: 연속이면 점프가 하나도 없는 경우입니다.', en: 'Read alongside the continuity scene: continuity is the case with no jumps at all.' },
+    const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+    header.text(
+      localize(
+        { ko: `f(x) = x + Σ 2^{-k} 계단 — 유리수마다 2^{-k}만큼 뛰어오릅니다`, en: `f(x) = x + Σ 2^{-k} staircase — it jumps by 2^{-k} at every rational` },
         lang,
-      );
+      ),
+    );
 
-      strips.append(readout, verdict, seeAlso);
-      host.append(topWrap, bottomWrap, strips);
+    // The graph itself: a polyline through the fine samples.
+    const fLine = line<{ x: number; f: number }>()
+      .x((d) => x(d.x))
+      .y((d) => y(d.f));
+    g.append('path')
+      .datum(fSamples)
+      .attr('fill', 'none')
+      .attr('stroke', 'currentColor')
+      .attr('stroke-width', 1.5)
+      .attr('d', fLine);
 
-      readoutSlot = createRichSlot(readout);
-      verdictSlot = createRichSlot(verdict);
-      wrapTop = topWrap;
-      wrapBottom = bottomWrap;
-      chartTop = createChart(topWrap, MARGIN);
-      chartBottom = createChart(bottomWrap, MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (!chartTop || !wrapTop) return;
-      chartTop.setSize(wrapTop.clientWidth || 640, wrapTop.clientHeight || 280);
-      if (chartBottom && wrapBottom) {
-        chartBottom.setSize(wrapBottom.clientWidth || 640, wrapBottom.clientHeight || 280);
-      }
-      draw();
-    },
-    dispose() {
-      chartTop?.destroy();
-      chartBottom?.destroy();
-      chartTop = undefined;
-      chartBottom = undefined;
-      readoutSlot = undefined;
-      verdictSlot = undefined;
-      wrapTop = undefined;
-      wrapBottom = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
-      last = undefined;
-    },
-  };
+    // Mark each jump: a dot at the bottom (value = left limit) and a
+    // filled dot at the top (right limit) of the rise.
+    for (const r of rationals) {
+      const bottom = exampleValue(r.x, qs);
+      const top = bottom + r.size;
+      const cx = x(r.x);
+      g.append('line')
+        .attr('x1', cx)
+        .attr('x2', cx)
+        .attr('y1', y(bottom))
+        .attr('y2', y(top))
+        .attr('stroke', 'var(--accent)')
+        .attr('stroke-width', bigKeys.has(r.k) ? 3 : 1.5)
+        .attr('opacity', bigKeys.has(r.k) ? 1 : 0.55);
+      g.append('circle')
+        .attr('cx', cx)
+        .attr('cy', y(top))
+        .attr('r', bigKeys.has(r.k) ? 4 : 2.5)
+        .style('fill', 'var(--accent)')
+        .attr('opacity', bigKeys.has(r.k) ? 1 : 0.7);
+    }
+  }
 }
 
-export default defineScene<MonotoneDiscontinuitiesData>({ model: monotoneDiscontinuitiesModel, createScene: createMonotoneDiscontinuitiesScene });
+function drawSecond(chart: Chart, data: MonotoneDiscontinuitiesData, lang: Lang): void {
+  const { n, terms, rationals, bigJumps, bigCount } = data;
+  const bigKeys = new Set(bigJumps.map((r) => r.k));
+
+  // --- Bottom panel: jump sizes against the 1/n threshold (log scale) ---
+  {
+    const { g, width, height } = chart;
+    g.selectAll('*').remove();
+    const x = scaleLinear().domain([0.5, Math.max(1.5, terms + 0.5)]).range([0, width]);
+    const yMax = 1;
+    const yMin = Math.min(1 / n / 2, 2 ** -(terms + 1));
+    const y = scaleLog().domain([yMin, yMax]).range([height, 0]);
+
+    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(Math.min(terms, 12)));
+    g.append('g').call(axisLeft(y).ticks(6));
+
+    const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+    header.text(
+      localize(
+        { ko: `점프 크기 2^{-k} vs 임계값 1/${n} — 위의 ${bigCount}개가 큰 점프입니다`, en: `Jump sizes 2^{-k} vs threshold 1/${n} — the ${bigCount} above are the big jumps` },
+        lang,
+      ),
+    );
+
+    const barWidth = Math.max(1, (x(2) - x(1)) * 0.7);
+    for (const r of rationals) {
+      const isBig = bigKeys.has(r.k);
+      g.append('rect')
+        .attr('x', x(r.k) - barWidth / 2)
+        .attr('width', barWidth)
+        .attr('y', y(r.size))
+        .attr('height', Math.max(1, height - y(r.size)))
+        .style('fill', 'var(--accent)')
+        .attr('opacity', isBig ? 0.95 : 0.3);
+    }
+
+    // Dashed threshold line at 1/n.
+    g.append('line')
+      .attr('x1', 0)
+      .attr('x2', width)
+      .attr('y1', y(1 / n))
+      .attr('y2', y(1 / n))
+      .attr('stroke', 'currentColor')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '6,4')
+      .attr('opacity', 0.8);
+    g.append('text')
+      .attr('x', width - 4)
+      .attr('y', y(1 / n) - 6)
+      .attr('font-size', 12)
+      .attr('text-anchor', 'end')
+      .attr('fill', 'currentColor')
+      .attr('opacity', 0.8)
+      .text(`1/${n}`);
+
+    g.append('text')
+      .attr('x', 8)
+      .attr('y', height + 32)
+      .attr('font-size', 12)
+      .style('fill', 'var(--accent)')
+      .text(localize({ ko: `■ ${bigCount}개의 큰 점프 (1/${n} 초과)`, en: `■ ${bigCount} big jumps (above 1/${n})` }, lang));
+  }
+}
+
+function mountExtra(strips: HTMLElement, lang: Lang): void {
+  // The continuity scene lives in this chapter; prose-only reference,
+  // no cross-chapter link needed (prerequisites are the coordinator's job).
+  const seeAlso = document.createElement('div');
+  seeAlso.style.marginTop = '4px';
+  seeAlso.textContent = localize(
+    { ko: '연속성 씬의 그림과 함께 보세요: 연속이면 점프가 하나도 없는 경우입니다.', en: 'Read alongside the continuity scene: continuity is the case with no jumps at all.' },
+    lang,
+  );
+  strips.append(seeAlso);
+}
+
+export default defineSimpleScene<MonotoneDiscontinuitiesData>({
+  model: monotoneDiscontinuitiesModel,
+  margin: MARGIN,
+  fallbackHeight: 280,
+  fallbackHeightSecond: 280,
+  drawMain,
+  drawSecond,
+  slots: [{ text: readoutText, bold: true }, { text: (_data, lang) => verdictText(lang), bold: true }],
+  mountExtra,
+});

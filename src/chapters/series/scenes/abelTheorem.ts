@@ -1,13 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import {
-  defineScene,
-  localize,
-  type ControlState,
-  type Lang,
-  type Scene,
-} from '../../../contracts';
-import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
-import { createChart, fmt, type Chart } from '../../../view/d3kit';
+import { localize, type Lang } from '../../../contracts';
+import { fmt, type Chart } from '../../../view/d3kit';
+import { defineSimpleScene } from '../../../view/simple-scene';
 import { abelTheoremModel, type AbelData } from '../models/abelTheorem';
 
 /**
@@ -64,273 +58,203 @@ function verdictText(data: AbelData, lang: Lang): string {
   );
 }
 
-function createAbelTheoremScene(): Scene<AbelData> {
-  let hostEl: HTMLElement | undefined;
-  let main: Chart | undefined;
-  let side: Chart | undefined;
-  let mainWrap: HTMLElement | undefined;
-  let sideWrap: HTMLElement | undefined;
-  let factsSlot: RichSlot | undefined;
-  let verdictSlot: RichSlot | undefined;
-  let lang: Lang = 'ko';
-  let last: { data: AbelData; state: ControlState } | undefined;
+function drawMain(chart: Chart, data: AbelData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { x, n, xs, partial, limit, abelLimit } = data;
 
-  const drawMain = (): void => {
-    if (!main || !last || !factsSlot || !verdictSlot) return;
-    const { data } = last;
-    const { g, width, height } = main;
-    const { x, n, xs, partial, limit, abelLimit } = data;
+  g.selectAll('*').remove();
 
-    g.selectAll('*').remove();
+  const xScale = scaleLinear().domain([0, 1]).range([0, width]);
 
-    const xScale = scaleLinear().domain([0, 1]).range([0, width]);
+  let yMin = Math.min(abelLimit, ...partial, ...limit);
+  let yMax = Math.max(abelLimit, ...partial, ...limit);
+  const span = yMax - yMin || 0.1;
+  yMin -= span * 0.12;
+  yMax += span * 0.12;
+  const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
 
-    let yMin = Math.min(abelLimit, ...partial, ...limit);
-    let yMax = Math.max(abelLimit, ...partial, ...limit);
-    const span = yMax - yMin || 0.1;
-    yMin -= span * 0.12;
-    yMax += span * 0.12;
-    const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(xScale).ticks(6));
+  g.append('g').call(axisLeft(y).ticks(6));
 
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(xScale).ticks(6));
-    g.append('g').call(axisLeft(y).ticks(6));
+  const header1 = g.append('text').attr('x', 0).attr('y', -64).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
+  const header2 = g.append('text').attr('x', 0).attr('y', -42).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
+  header1.text(seriesTitle(data.series, lang));
+  header2.text(
+    localize(
+      {
+        ko: `x 슬라이더를 1 쪽으로 — 닫힌식 곡선이 Abel 합 ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'}에 다가갑니다 (열린 원: x = 1에서의 한계점)`,
+        en: `drag x toward 1 — the closed-form curve homes in on the Abel sum ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'} (open circle: the limiting point at x = 1)`,
+      },
+      lang,
+    ),
+  );
 
-    const header1 = g.append('text').attr('x', 0).attr('y', -64).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    const header2 = g.append('text').attr('x', 0).attr('y', -42).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
-    header1.text(seriesTitle(data.series, lang));
-    header2.text(
+  const curve = (values: number[]) =>
+    line<number>()
+      .x((_, i) => xScale(xs[i] ?? 0))
+      .y((v) => y(v))(values);
+
+  // Closed-form infinite sum, dashed and muted: the target.
+  g.append('path')
+    .attr('d', curve(limit) ?? '')
+    .attr('fill', 'none')
+    .attr('stroke-dasharray', '7 5')
+    .attr('stroke-width', 2)
+    .attr('stroke', 'currentColor')
+    .attr('opacity', 0.55);
+
+  // The Abel-sum level: horizontal dashed line + open circle at x = 1.
+  g.append('line')
+    .attr('x1', xScale(0))
+    .attr('x2', xScale(1))
+    .attr('y1', y(abelLimit))
+    .attr('y2', y(abelLimit))
+    .attr('stroke-dasharray', '5 4')
+    .attr('stroke-width', 1.5)
+    .style('stroke', 'var(--muted)');
+  g.append('circle')
+    .attr('cx', xScale(1))
+    .attr('cy', y(abelLimit))
+    .attr('r', 6)
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .style('stroke', 'var(--muted)');
+  g.append('text')
+    .attr('x', xScale(1) - 12)
+    .attr('y', y(abelLimit) - 10)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .style('fill', 'var(--muted)')
+    .text(
       localize(
         {
-          ko: `x 슬라이더를 1 쪽으로 — 닫힌식 곡선이 Abel 합 ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'}에 다가갑니다 (열린 원: x = 1에서의 한계점)`,
-          en: `drag x toward 1 — the closed-form curve homes in on the Abel sum ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'} (open circle: the limiting point at x = 1)`,
+          ko: `Abel 합 = ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'}`,
+          en: `Abel sum = ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'}`,
         },
         lang,
       ),
     );
 
-    const curve = (values: number[]) =>
-      line<number>()
-        .x((_, i) => xScale(xs[i] ?? 0))
-        .y((v) => y(v))(values);
+  // Partial sum S_N, bold accent: the curve the slider's N tightens.
+  g.append('path')
+    .attr('d', curve(partial) ?? '')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2.5)
+    .style('stroke', 'var(--accent)');
 
-    // Closed-form infinite sum, dashed and muted: the target.
-    g.append('path')
-      .attr('d', curve(limit) ?? '')
-      .attr('fill', 'none')
-      .attr('stroke-dasharray', '7 5')
-      .attr('stroke-width', 2)
-      .attr('stroke', 'currentColor')
-      .attr('opacity', 0.55);
+  // Vertical marker at the slider x, with dots on both curves.
+  g.append('line')
+    .attr('x1', xScale(x))
+    .attr('x2', xScale(x))
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('stroke-dasharray', '3 3')
+    .attr('stroke-width', 1.5)
+    .style('stroke', 'var(--accent)')
+    .attr('opacity', 0.6);
+  g.append('circle')
+    .attr('cx', xScale(x))
+    .attr('cy', y(data.partialAtX))
+    .attr('r', 5)
+    .style('fill', 'var(--accent)');
+  g.append('circle')
+    .attr('cx', xScale(x))
+    .attr('cy', y(data.atX))
+    .attr('r', 4)
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke', 'currentColor');
 
-    // The Abel-sum level: horizontal dashed line + open circle at x = 1.
-    g.append('line')
-      .attr('x1', xScale(0))
-      .attr('x2', xScale(1))
-      .attr('y1', y(abelLimit))
-      .attr('y2', y(abelLimit))
-      .attr('stroke-dasharray', '5 4')
-      .attr('stroke-width', 1.5)
-      .style('stroke', 'var(--muted)');
-    g.append('circle')
-      .attr('cx', xScale(1))
-      .attr('cy', y(abelLimit))
-      .attr('r', 6)
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .style('stroke', 'var(--muted)');
-    g.append('text')
-      .attr('x', xScale(1) - 12)
-      .attr('y', y(abelLimit) - 10)
-      .attr('text-anchor', 'end')
-      .attr('font-size', 12)
-      .style('fill', 'var(--muted)')
-      .text(
-        localize(
-          {
-            ko: `Abel 합 = ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'}`,
-            en: `Abel sum = ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'}`,
-          },
-          lang,
-        ),
-      );
-
-    // Partial sum S_N, bold accent: the curve the slider's N tightens.
-    g.append('path')
-      .attr('d', curve(partial) ?? '')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2.5)
-      .style('stroke', 'var(--accent)');
-
-    // Vertical marker at the slider x, with dots on both curves.
-    g.append('line')
-      .attr('x1', xScale(x))
-      .attr('x2', xScale(x))
-      .attr('y1', 0)
-      .attr('y2', height)
-      .attr('stroke-dasharray', '3 3')
-      .attr('stroke-width', 1.5)
-      .style('stroke', 'var(--accent)')
-      .attr('opacity', 0.6);
-    g.append('circle')
-      .attr('cx', xScale(x))
-      .attr('cy', y(data.partialAtX))
-      .attr('r', 5)
-      .style('fill', 'var(--accent)');
-    g.append('circle')
-      .attr('cx', xScale(x))
-      .attr('cy', y(data.atX))
-      .attr('r', 4)
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke', 'currentColor');
-
-    g.append('text')
-      .attr('x', 8)
-      .attr('y', height + 32)
-      .attr('font-size', 12)
-      .style('fill', 'var(--accent)')
-      .text(localize({ ko: `■ S_${n}(x) 부분합`, en: `■ S_${n}(x) partial sum` }, lang));
-    g.append('text')
-      .attr('x', width / 2)
-      .attr('y', height + 32)
-      .attr('font-size', 12)
-      .attr('fill', 'currentColor')
-      .attr('opacity', 0.6)
-      .text(
-        localize(
-          {
-            ko: `┄ 닫힌식 ${data.series === 'grandi' ? '1/(1+x)' : 'ln(1+x)'} · 점선 = Abel 합`,
-            en: `┄ closed form ${data.series === 'grandi' ? '1/(1+x)' : 'ln(1+x)'} · dotted = Abel sum`,
-          },
-          lang,
-        ),
-      );
-
-    setRichText(factsSlot, factsText(data, lang));
-    setRichText(verdictSlot, verdictText(data, lang));
-  };
-
-  const drawSide = (): void => {
-    if (!side || !last) return;
-    const { data } = last;
-    const { g, width, height } = side;
-    const { sideK, sideSums, abelLimit, series } = data;
-
-    g.selectAll('*').remove();
-
-    const xScale = scaleLinear().domain([0, sideK.length - 1]).range([0, width]);
-    let yMin = Math.min(abelLimit, ...sideSums);
-    let yMax = Math.max(abelLimit, ...sideSums);
-    const span = yMax - yMin || 0.1;
-    yMin -= span * 0.15;
-    yMax += span * 0.15;
-    const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
-
-    g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(xScale).ticks(6));
-    g.append('g').call(axisLeft(y).ticks(4));
-
-    g.append('text')
-      .attr('x', 0)
-      .attr('y', -22)
-      .attr('font-size', 12)
-      .attr('font-weight', 600)
-      .attr('fill', 'currentColor')
-      .text(
-        localize(
-          series === 'grandi'
-            ? { ko: '대비: x = 1에서의 부분합 — 영원히 진동, 발산', en: 'contrast: partial sums at x = 1 — oscillating forever, divergent' }
-            : { ko: '대비: x = 1에서의 부분합 — ln 2로 수렴 (Abel 합과 일치)', en: 'contrast: partial sums at x = 1 — converging to ln 2 (matches the Abel sum)' },
-          lang,
-        ),
-      );
-
-    // Abel-sum / ordinary-sum level for reference.
-    g.append('line')
-      .attr('x1', xScale(0))
-      .attr('x2', xScale(sideK.length - 1))
-      .attr('y1', y(abelLimit))
-      .attr('y2', y(abelLimit))
-      .attr('stroke-dasharray', '5 4')
-      .attr('stroke-width', 1.5)
-      .style('stroke', 'var(--muted)');
-
-    const zig = line<{ k: number; v: number }>()
-      .x((p) => xScale(p.k))
-      .y((p) => y(p.v));
-    g.append('path')
-      .attr('d', zig(sideSums.map((v, k) => ({ k, v }))) ?? '')
-      .attr('fill', 'none')
-      .attr('stroke-width', 2)
-      .attr('stroke', GOLD);
-
-    sideSums.forEach((v, k) => {
-      g.append('circle').attr('cx', xScale(k)).attr('cy', y(v)).attr('r', 3.5).attr('fill', GOLD);
-    });
-  };
-
-  const draw = (): void => {
-    drawMain();
-    drawSide();
-  };
-
-  return {
-    mount(host, pageLang) {
-      lang = pageLang;
-      hostEl = host;
-      host.style.display = 'flex';
-      host.style.flexDirection = 'column';
-
-      const chartWrap = document.createElement('div');
-      chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
-      const sideWrapEl = document.createElement('div');
-      sideWrapEl.style.cssText = 'flex: none; height: 210px; position: relative;';
-      const strips = document.createElement('div');
-      strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
-      const facts = document.createElement('div');
-      facts.style.fontWeight = '600';
-      const verdict = document.createElement('div');
-      verdict.style.fontWeight = '600';
-      strips.append(facts, verdict);
-      host.append(chartWrap, sideWrapEl, strips);
-
-      factsSlot = createRichSlot(facts);
-      verdictSlot = createRichSlot(verdict);
-      mainWrap = chartWrap;
-      sideWrap = sideWrapEl;
-      main = createChart(chartWrap, MAIN_MARGIN);
-      side = createChart(sideWrapEl, SIDE_MARGIN);
-    },
-    render(data, state) {
-      last = { data, state };
-      draw();
-    },
-    resize() {
-      if (main && mainWrap) {
-        main.setSize(mainWrap.clientWidth || 640, mainWrap.clientHeight || 360);
-      }
-      if (side && sideWrap) {
-        side.setSize(sideWrap.clientWidth || 640, 210);
-      }
-      draw();
-    },
-    dispose() {
-      main?.destroy();
-      side?.destroy();
-      main = undefined;
-      side = undefined;
-      factsSlot = undefined;
-      verdictSlot = undefined;
-      mainWrap = undefined;
-      sideWrap = undefined;
-      if (hostEl) {
-        hostEl.replaceChildren();
-        hostEl.style.display = '';
-        hostEl.style.flexDirection = '';
-        hostEl = undefined;
-      }
-      last = undefined;
-    },
-  };
+  g.append('text')
+    .attr('x', 8)
+    .attr('y', height + 32)
+    .attr('font-size', 12)
+    .style('fill', 'var(--accent)')
+    .text(localize({ ko: `■ S_${n}(x) 부분합`, en: `■ S_${n}(x) partial sum` }, lang));
+  g.append('text')
+    .attr('x', width / 2)
+    .attr('y', height + 32)
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.6)
+    .text(
+      localize(
+        {
+          ko: `┄ 닫힌식 ${data.series === 'grandi' ? '1/(1+x)' : 'ln(1+x)'} · 점선 = Abel 합`,
+          en: `┄ closed form ${data.series === 'grandi' ? '1/(1+x)' : 'ln(1+x)'} · dotted = Abel sum`,
+        },
+        lang,
+      ),
+    );
 }
 
-export default defineScene<AbelData>({ model: abelTheoremModel, createScene: createAbelTheoremScene });
+function drawSecond(chart: Chart, data: AbelData, lang: Lang): void {
+  const { g, width, height } = chart;
+  const { sideK, sideSums, abelLimit, series } = data;
+
+  g.selectAll('*').remove();
+
+  const xScale = scaleLinear().domain([0, sideK.length - 1]).range([0, width]);
+  let yMin = Math.min(abelLimit, ...sideSums);
+  let yMax = Math.max(abelLimit, ...sideSums);
+  const span = yMax - yMin || 0.1;
+  yMin -= span * 0.15;
+  yMax += span * 0.15;
+  const y = scaleLinear().domain([yMin, yMax]).range([height, 0]);
+
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(xScale).ticks(6));
+  g.append('g').call(axisLeft(y).ticks(4));
+
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -22)
+    .attr('font-size', 12)
+    .attr('font-weight', 600)
+    .attr('fill', 'currentColor')
+    .text(
+      localize(
+        series === 'grandi'
+          ? { ko: '대비: x = 1에서의 부분합 — 영원히 진동, 발산', en: 'contrast: partial sums at x = 1 — oscillating forever, divergent' }
+          : { ko: '대비: x = 1에서의 부분합 — ln 2로 수렴 (Abel 합과 일치)', en: 'contrast: partial sums at x = 1 — converging to ln 2 (matches the Abel sum)' },
+        lang,
+      ),
+    );
+
+  // Abel-sum / ordinary-sum level for reference.
+  g.append('line')
+    .attr('x1', xScale(0))
+    .attr('x2', xScale(sideK.length - 1))
+    .attr('y1', y(abelLimit))
+    .attr('y2', y(abelLimit))
+    .attr('stroke-dasharray', '5 4')
+    .attr('stroke-width', 1.5)
+    .style('stroke', 'var(--muted)');
+
+  const zig = line<{ k: number; v: number }>()
+    .x((p) => xScale(p.k))
+    .y((p) => y(p.v));
+  g.append('path')
+    .attr('d', zig(sideSums.map((v, k) => ({ k, v }))) ?? '')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke', GOLD);
+
+  sideSums.forEach((v, k) => {
+    g.append('circle').attr('cx', xScale(k)).attr('cy', y(v)).attr('r', 3.5).attr('fill', GOLD);
+  });
+}
+
+export default defineSimpleScene<AbelData>({
+  model: abelTheoremModel,
+  margin: MAIN_MARGIN,
+  marginSecond: SIDE_MARGIN,
+  fallbackHeightSecond: 210,
+  mainWrapCss: 'flex: 1 1 auto; min-height: 0; position: relative;',
+  secondWrapCss: 'flex: none; height: 210px; position: relative;',
+  drawMain,
+  drawSecond,
+  slots: [
+    { text: factsText, bold: true },
+    { text: verdictText, bold: true },
+  ],
+});
