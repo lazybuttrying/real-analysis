@@ -45,31 +45,56 @@
       "path": [
         "dist/assets/preload-helper-*.js"
       ],
-      "limit": "220 kB"
+      "limit": "350 kB"
     },
     {
-      "name": "chapter: numbers (entry + 9 scenes)",
+      "name": "chapter: proofs (entry + 10 scenes)",
+      "path": [
+        "dist/assets/proofs-*.js",
+        "dist/assets/LogicPropositions-*.js",
+        "dist/assets/Quantifiers-*.js",
+        "dist/assets/DirectProof-*.js",
+        "dist/assets/Contrapositive-*.js",
+        "dist/assets/Contradiction-*.js",
+        "dist/assets/CasesExistence-*.js",
+        "dist/assets/DisproofIff-*.js",
+        "dist/assets/StrongInduction-*.js",
+        "dist/assets/RelationsEquivalence-*.js",
+        "dist/assets/FunctionProofs-*.js"
+      ],
+      "limit": "35 kB"
+    },
+    {
+      "name": "chapter: numbers (entry + 15 scenes)",
       "path": [
         "dist/assets/numbers-*.js",
         "dist/assets/naturalNumbers-*.js",
         "dist/assets/binomial-*.js",
         "dist/assets/integersRationals-*.js",
+        "dist/assets/sqrt2Irrational-*.js",
+        "dist/assets/densityOfRationals-*.js",
         "dist/assets/sets-*.js",
         "dist/assets/supremum-*.js",
         "dist/assets/countable-*.js",
+        "dist/assets/cantorTheorem-*.js",
+        "dist/assets/axiomOfChoice-*.js",
+        "dist/assets/zornLemma-*.js",
+        "dist/assets/nthRoot-*.js",
         "dist/assets/groupsFields-*.js",
         "dist/assets/vectorSpaces-*.js",
         "dist/assets/dimensionRank-*.js"
       ],
-      "limit": "20 kB"
+      "limit": "30 kB"
     },
     {
-      "name": "chapter: sequences (entry + 9 scenes)",
+      "name": "chapter: sequences (entry + 11 scenes)",
       "path": [
         "dist/assets/sequences-*.js",
         "dist/assets/epsilonN-*.js",
+        "dist/assets/standardLimits-*.js",
         "dist/assets/sequenceSpaces-*.js",
         "dist/assets/cauchySchwarz-*.js",
+        "dist/assets/holder-*.js",
         "dist/assets/holes-*.js",
         "dist/assets/construction-*.js",
         "dist/assets/bolzanoWeierstrass-*.js",
@@ -77,29 +102,34 @@
         "dist/assets/limsupLiminf-*.js",
         "dist/assets/stolzCesaro-*.js"
       ],
-      "limit": "18 kB"
+      "limit": "25 kB"
     },
     {
-      "name": "chapter: continuity (entry + 7 scenes)",
+      "name": "chapter: continuity (entry + 9 scenes)",
       "path": [
         "dist/assets/continuity-*.js",
         "dist/assets/epsdelta-*.js",
         "dist/assets/continuity-*.js",
+        "dist/assets/thomae-*.js",
+        "dist/assets/continuityEquivalences-*.js",
         "dist/assets/monotoneDiscontinuities-*.js",
         "dist/assets/uniformContinuity-*.js",
         "dist/assets/ivt-*.js",
         "dist/assets/evt-*.js",
         "dist/assets/uniform-*.js"
       ],
-      "limit": "17 kB"
+      "limit": "25 kB"
     },
     {
-      "name": "chapter: topology (entry + 10 scenes)",
+      "name": "chapter: topology (entry + 13 scenes)",
       "path": [
         "dist/assets/topology-*.js",
         "dist/assets/opensets-*.js",
+        "dist/assets/clopen-*.js",
         "dist/assets/closure-*.js",
         "dist/assets/compact-*.js",
+        "dist/assets/topologistSine-*.js",
+        "dist/assets/peanoCurve-*.js",
         "dist/assets/metricSpaces-*.js",
         "dist/assets/contraction-*.js",
         "dist/assets/baireCategory-*.js",
@@ -108,7 +138,7 @@
         "dist/assets/fatCantor-*.js",
         "dist/assets/cantorFunction-*.js"
       ],
-      "limit": "30 kB"
+      "limit": "35 kB"
     },
     {
       "name": "chapter: approximation (entry + 4 scenes)",
@@ -122,7 +152,7 @@
       "limit": "12 kB"
     },
     {
-      "name": "chapter: series (entry + 16 scenes)",
+      "name": "chapter: series (entry + 18 scenes)",
       "path": [
         "dist/assets/series-*.js",
         "dist/assets/harmonic-*.js",
@@ -140,7 +170,9 @@
         "dist/assets/stirling-*.js",
         "dist/assets/grandi-*.js",
         "dist/assets/dirichletTest-*.js",
-        "dist/assets/abelTest-*.js"
+        "dist/assets/abelTest-*.js",
+        "dist/assets/integralTest-*.js",
+        "dist/assets/doubleSeries-*.js"
       ],
       "limit": "40 kB"
     },
@@ -162,23 +194,28 @@
       "limit": "30 kB"
     },
     {
-      "name": "chapter: function-series (entry + 5 scenes)",
+      "name": "chapter: function-series (entry + 7 scenes)",
       "path": [
         "dist/assets/function-series-*.js",
         "dist/assets/mTest-*.js",
         "dist/assets/dini-*.js",
         "dist/assets/fourier-*.js",
+        "dist/assets/riemannLebesgue-*.js",
         "dist/assets/fejerTheorem-*.js",
+        "dist/assets/parseval-*.js",
         "dist/assets/gibbsPhenomenon-*.js"
       ],
-      "limit": "14 kB"
+      "limit": "19 kB"
     },
     {
-      "name": "chapter: differentiation (entry + 11 scenes)",
+      "name": "chapter: differentiation (entry + 14 scenes)",
       "path": [
         "dist/assets/differentiation-*.js",
         "dist/assets/diffCont-*.js",
+        "dist/assets/discontinuousDerivative-*.js",
         "dist/assets/mvt-*.js",
+        "dist/assets/derivativeMonotonicity-*.js",
+        "dist/assets/inverseFunctionTheorem-*.js",
         "dist/assets/cauchyMvt-*.js",
         "dist/assets/lhopital-*.js",
         "dist/assets/darboux-*.js",
@@ -189,31 +226,43 @@
         "dist/assets/newton-*.js",
         "dist/assets/banach-*.js"
       ],
-      "limit": "25 kB"
+      "limit": "30 kB"
     },
     {
-      "name": "chapter: integration (entry + 12 scenes)",
+      "name": "chapter: integration (entry + 24 scenes)",
       "path": [
         "dist/assets/integration-*.js",
         "dist/assets/gamma-*.js",
         "dist/assets/betaFunction-*.js",
         "dist/assets/bohrMollerup-*.js",
         "dist/assets/improper-*.js",
+        "dist/assets/gabrielHorn-*.js",
         "dist/assets/riemann-*.js",
+        "dist/assets/dirichletFunction-*.js",
         "dist/assets/volterraFunction-*.js",
         "dist/assets/ftc-*.js",
+        "dist/assets/integrationByParts-*.js",
+        "dist/assets/changeOfVariables-*.js",
         "dist/assets/boundedVariation-*.js",
+        "dist/assets/riemannStieltjes-*.js",
         "dist/assets/jordanDecomposition-*.js",
         "dist/assets/measure-*.js",
+        "dist/assets/vitali-*.js",
+        "dist/assets/borelCantelli-*.js",
         "dist/assets/lebesgue-*.js",
-        "dist/assets/absoluteContinuity-*.js"
+        "dist/assets/lebesgueConvergence-*.js",
+        "dist/assets/fubiniTonelli-*.js",
+        "dist/assets/egorov-*.js",
+        "dist/assets/absoluteContinuity-*.js",
+        "dist/assets/differentiationUnderIntegral-*.js",
+        "dist/assets/minkowski-*.js"
       ],
-      "limit": "30 kB"
+      "limit": "60 kB"
     },
     {
-      "name": "exercises (all chapters, 10 chunks)",
+      "name": "exercises (all chapters, 11 chunks)",
       "path": "dist/assets/exercises-*.js",
-      "limit": "40 kB"
+      "limit": "45 kB"
     },
     {
       "name": "home lazy chunks (glossary, paths, map)",
@@ -223,7 +272,7 @@
         "dist/assets/map-page-*.js",
         "dist/assets/paths-page-*.js"
       ],
-      "limit": "30 kB"
+      "limit": "35 kB"
     },
     {
       "name": "vendor: d3",

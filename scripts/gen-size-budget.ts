@@ -39,10 +39,10 @@ const HEADROOM = 1.35;
 function sceneChunkNames(chapterId: string): string[] {
   const source = readFileSync(join(ROOT, 'src', 'chapters', chapterId, 'loaders.ts'), 'utf8');
   const names: string[] = [];
-  const pattern = /'([^']+)'\s*:\s*\(\)\s*=>\s*import\('([^']+)'\)/g;
+  const pattern = /(?:'([^']+)'|([A-Za-z_$][\w$-]*))\s*:\s*\(\)\s*=>\s*import\('([^']+)'\)/g;
   let match: RegExpExecArray | null;
   while ((match = pattern.exec(source)) !== null) {
-    const importPath = match[2] ?? '';
+    const importPath = match[3] ?? '';
     names.push(importPath.slice(importPath.lastIndexOf('/') + 1));
   }
   if (names.length === 0) {
@@ -79,6 +79,21 @@ function resolve(prefix: string): string[] {
       `gen-size-budget: no chunk for prefix '${prefix}' in dist/assets ` +
         `(catalog and build output disagree — did a scene id change?)`,
     );
+  }
+  return files;
+}
+
+/**
+ * Like resolve(), but for shared-chunk groups: a site's import graph may not
+ * emit every shared module as its own chunk (Rollup folds small shared
+ * modules into their importers). Missing prefixes are skipped with a
+ * warning; chapter and scene chunks stay strict (resolve()).
+ */
+function resolveShared(prefix: string): string[] {
+  const files = chunkFiles.get(prefix);
+  if (files === undefined || files.length === 0) {
+    console.warn(`gen-size-budget: warning: no chunk for shared prefix '${prefix}' — this build does not emit it separately; skipped`);
+    return [];
   }
   return files;
 }
@@ -136,7 +151,8 @@ const sharedGroups: Array<[string, string[]]> = [
   ['shared problems data (all chapters)', ['preload-helper']],
 ];
 for (const [name, prefixes] of sharedGroups) {
-  const files = prefixes.flatMap(resolve);
+  const files = prefixes.flatMap(resolveShared);
+  if (files.length === 0) throw new Error(`gen-size-budget: shared group '${name}' matched no chunks at all`);
   const kb = brotliBytes(files) / 1024;
   budgets.push({
     name,
@@ -176,7 +192,7 @@ for (const chapter of catalog) {
 // 5. Home page lazy chunks (glossary, learning paths, concept map, path detail).
 {
   const prefixes = ['glossary-page', 'learning-paths', 'map-page', 'paths-page'];
-  const files = prefixes.flatMap(resolve);
+  const files = prefixes.flatMap(resolveShared);
   const kb = brotliBytes(files) / 1024;
   budgets.push({
     name: 'home lazy chunks (glossary, paths, map)',
