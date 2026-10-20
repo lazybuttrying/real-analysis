@@ -1,9 +1,10 @@
 import type { AnySceneModule, ControlState, Lang, SceneLoader } from '../contracts';
 import { shallowEqual } from '../state';
+import { site } from '../site.config';
 import { h } from './dom';
 import { tr } from './i18n';
 
-const RELOAD_FLAG = 'real-analysis:chunk-reload';
+const RELOAD_FLAG = site.reloadFlag;
 
 function readReloadFlag(): boolean {
   try {

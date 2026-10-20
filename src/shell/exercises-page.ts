@@ -10,6 +10,7 @@ import {
   type Lang,
 } from '../contracts.ts';
 import { chapterUrl, homeUrl, parsePath, sceneUrl, withLang } from '../paths.ts';
+import { site } from '../site.config.ts';
 import { h } from './dom.ts';
 import { langSwitcher, tr } from './i18n.ts';
 import { mountSearch } from './search.ts';
@@ -40,7 +41,7 @@ export function disposeExercisesPage(container: HTMLElement): void {
 export function exercisesPageTitle(lang: Lang, chapter: ChapterMeta): string {
   // Chapter numbers are automatic: the catalog order is the numbering, never stored in meta files.
   const chapterNumber = catalog.indexOf(chapter) + 1;
-  return `${tr(lang, 'exercises')} · ${chapterNumber}. ${localize(chapter.title, lang)} | Real Analysis`;
+  return `${tr(lang, 'exercises')} · ${chapterNumber}. ${localize(chapter.title, lang)} | ${site.name.en}`;
 }
 
 function pageHeader(lang: Lang): HTMLElement {
@@ -48,7 +49,7 @@ function pageHeader(lang: Lang): HTMLElement {
   const header = h(
     'header',
     { class: 'home-header' },
-    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
+    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
     headerSearch,
     // withLang routes { chapterId, sceneId: 'exercises' } through sceneUrl,
     // which produces exactly exercisesUrl(base, lang, chapterId).

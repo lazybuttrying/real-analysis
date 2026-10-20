@@ -1,5 +1,6 @@
 import '../style.css';
 import { catalog } from '../catalog';
+import { site } from '../site.config';
 import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type ExerciseMeta, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { learningPaths } from '../learning-paths';
 import { chapterUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
@@ -237,7 +238,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
     h(
       'header',
       {},
-      h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
+      h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
       h('a', { href: chapterUrl(BASE, lang, chapter.id), 'data-spa': '' }, chapterTitle),
       h('a', { href: pathsUrl(BASE, lang), class: 'paths-link' }, tr(lang, 'paths')),
       h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
@@ -292,7 +293,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
     exercisesView.hidden = true;
     pagerEl.hidden = true;
     hub.hidden = false;
-    document.title = `${chapterTitle} | Real Analysis`;
+    document.title = `${chapterTitle} | ${site.name.en}`;
     hub.replaceChildren(
       h('h1', {}, chapterTitle),
       ...(notice ? [h('p', { role: 'alert' }, notice)] : []),
@@ -316,7 +317,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
     disposeExercisesPage(exercisesView);
     sceneView.hidden = false;
     disposeProblems();
-    document.title = `${localize(scene.title, lang)} | Real Analysis`;
+    document.title = `${localize(scene.title, lang)} | ${site.name.en}`;
     markActive(scene.id);
     renderText(textEl, scene, lang);
 

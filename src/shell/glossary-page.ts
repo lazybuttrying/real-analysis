@@ -2,6 +2,7 @@ import { catalog } from '../catalog.ts';
 import { glossary } from '../glossary.ts';
 import { localize, stripInlineMath, type Lang } from '../contracts.ts';
 import { chapterUrl, homeUrl, parsePath, sceneUrl, withLang } from '../paths.ts';
+import { site } from '../site.config.ts';
 import { h } from './dom.ts';
 import { langSwitcher, tr } from './i18n.ts';
 import { mountSearch } from './search.ts';
@@ -28,13 +29,13 @@ function definitionSpan(text: string): HTMLSpanElement {
  * readable with zero JS; the SPA replaces it on boot and adds the live filter.
  */
 export function renderGlossaryPage(root: HTMLElement, lang: Lang): void {
-  document.title = `${tr(lang, 'glossary')} | Real Analysis`;
+  document.title = `${tr(lang, 'glossary')} | ${site.name.en}`;
 
   const headerSearch = h('span', { class: 'header-search' });
   const header = h(
     'header',
     { class: 'home-header' },
-    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
+    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
     headerSearch,
     langSwitcher(lang, (target) => withLang(BASE, parsePath(BASE, location.pathname), target)),
   );

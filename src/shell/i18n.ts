@@ -1,4 +1,5 @@
 import { localize, type Lang, type LocalizedText } from '../contracts';
+import { site } from '../site.config';
 import { h } from './dom';
 
 /**
@@ -27,10 +28,7 @@ export const STRINGS = {
     en: 'The scene failed to load. A new version may have been deployed.',
   },
   reload: { ko: '새로고침', en: 'Reload' },
-  homeIntro: {
-    ko: '해석학의 개념을 직접 움직여 보며 익히는 인터랙티브 시각화 모음입니다.',
-    en: 'Interactive visualizations for learning the ideas of real analysis by moving them yourself.',
-  },
+  homeIntro: site.homeIntro,
   problemsHeading: { ko: '예제', en: 'Examples & Exercises' },
   showProof: { ko: '증명 보기', en: 'Show proof' },
   showHint: { ko: '힌트 보기', en: 'Show hint' },
@@ -71,10 +69,7 @@ export const STRINGS = {
   partOfPaths: { ko: '이 씬이 포함된 학습 경로', en: 'Part of these learning paths' },
   pathNotFound: { ko: '학습 경로를 찾을 수 없습니다', en: 'Learning path not found' },
   map: { ko: '개념 지도', en: 'Concept Map' },
-  mapIntro: {
-    ko: '102개 씬을 선수 관계로 엮은 지도. 노드를 드래그하고 확대해 보세요. 노드를 클릭하면 해당 씬으로 이동합니다.',
-    en: 'All 102 scenes linked by prerequisite relations. Drag nodes, zoom in, and click a node to open its scene.',
-  },
+  mapIntro: site.mapIntro,
   mapPrereq: { ko: '선수 관계', en: 'Prerequisite' },
   mapPathOrder: { ko: '학습 경로 순서', en: 'Learning-path order' },
   mapResetView: { ko: '보기 초기화', en: 'Reset view' },

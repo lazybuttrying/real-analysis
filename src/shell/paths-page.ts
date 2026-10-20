@@ -2,6 +2,7 @@ import { catalog } from '../catalog.ts';
 import { localize, stripInlineMath, type Lang } from '../contracts.ts';
 import { learningPaths, type LearningPath } from '../learning-paths.ts';
 import { homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths.ts';
+import { site } from '../site.config.ts';
 import { h } from './dom.ts';
 import { langSwitcher, tr } from './i18n.ts';
 import { mountSearch } from './search.ts';
@@ -39,7 +40,7 @@ function pageHeader(lang: Lang): HTMLElement {  const headerSearch = h('span', {
   const header = h(
     'header',
     { class: 'home-header' },
-    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
+    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
     headerSearch,
     langSwitcher(lang, (target) => withLang(BASE, parsePath(BASE, location.pathname), target)),
   );
@@ -57,7 +58,7 @@ function sceneCountLabel(path: LearningPath, lang: Lang): string {
  * JS; the SPA replaces it on boot.
  */
 export function renderPathsIndexPage(root: HTMLElement, lang: Lang): void {
-  document.title = `${tr(lang, 'paths')} | Real Analysis`;
+  document.title = `${tr(lang, 'paths')} | ${site.name.en}`;
 
   const main = h('main', { class: 'home paths' });
   main.append(h('h1', {}, tr(lang, 'paths')), h('p', {}, tr(lang, 'pathsIntro')));
@@ -86,7 +87,7 @@ export function renderPathDetailPage(root: HTMLElement, lang: Lang, pathId: stri
 
   const main = h('main', { class: 'home paths' });
   if (!path) {
-    document.title = `${tr(lang, 'pathNotFound')} | Real Analysis`;
+    document.title = `${tr(lang, 'pathNotFound')} | ${site.name.en}`;
     main.append(
       h('h1', {}, tr(lang, 'pathNotFound')),
       h('p', {}, h('a', { href: pathsUrl(BASE, lang) }, tr(lang, 'paths'))),
@@ -95,7 +96,7 @@ export function renderPathDetailPage(root: HTMLElement, lang: Lang, pathId: stri
     return;
   }
 
-  document.title = `${localize(path.title, lang)} | Real Analysis`;
+  document.title = `${localize(path.title, lang)} | ${site.name.en}`;
   main.append(
     h('p', { class: 'path-back' }, h('a', { href: pathsUrl(BASE, lang) }, `← ${tr(lang, 'paths')}`)),
     h('h1', {}, localize(path.title, lang)),
