@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { catalog } from '../src/catalog.ts';
 import { LANGS, localize } from '../src/contracts.ts';
+import { exercises as proofsExercises } from '../src/chapters/proofs/exercises.ts';
 import { exercises as numbersExercises } from '../src/chapters/numbers/exercises.ts';
 import { exercises as sequencesExercises } from '../src/chapters/sequences/exercises.ts';
 import { exercises as continuityExercises } from '../src/chapters/continuity/exercises.ts';
@@ -19,10 +20,12 @@ import { exercises as integrationExercises } from '../src/chapters/integration/e
  * \(...\) delimiters only (never $...$), topics pointing at real scenes of the
  * same chapter, and viz presets whose keys all exist in the target scene's
  * controls. Exercise counts per chapter are uneven by design (the 10-chapter
- * split redistributed the 36 exercises by topic fit).
+ * split redistributed the original 36 exercises by topic fit; the proofs
+ * chapter added 6 of its own in 2026-10).
  */
 
 const chapters = [
+  { id: 'proofs', exercises: proofsExercises },
   { id: 'numbers', exercises: numbersExercises },
   { id: 'sequences', exercises: sequencesExercises },
   { id: 'continuity', exercises: continuityExercises },
@@ -44,9 +47,9 @@ const balancedInlineMath = (text: string): boolean => {
 };
 
 describe('chapter exercises', () => {
-  it('has 36 exercises in total with globally unique ids', () => {
+  it('has 42 exercises in total with globally unique ids', () => {
     const ids = chapters.flatMap(({ exercises }) => exercises.map((exercise) => exercise.id));
-    expect(ids).toHaveLength(36);
+    expect(ids).toHaveLength(42);
     expect(new Set(ids).size).toBe(ids.length);
   });
 

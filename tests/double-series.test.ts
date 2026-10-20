@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { expectCloseTo, syncCompute } from './helpers';
+import { checkProblemsShape, expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   DEFAULT_N,
@@ -128,18 +128,8 @@ describe('double-series: model compute', () => {
 
 describe('double-series: problems export', () => {
   it('has exactly 3 entries with non-empty bilingual statements and proofs', () => {
-    expect(doubleSeriesProblems).toHaveLength(3);
+    checkProblemsShape(doubleSeriesProblems);
     for (const p of doubleSeriesProblems) {
-      expect(p.id).toBeTruthy();
-      expect(p.statement.ko).toBeTruthy();
-      expect(p.statement.en).toBeTruthy();
-      expect(p.presetCaption.ko).toBeTruthy();
-      expect(p.presetCaption.en).toBeTruthy();
-      expect(p.proof.length).toBeGreaterThan(0);
-      for (const step of p.proof) {
-        expect(step.text.ko).toBeTruthy();
-        expect(step.text.en).toBeTruthy();
-      }
       expect(p.preset['N']).toBe(5);
     }
     expect(doubleSeriesProblems[0]?.preset['series']).toBe(SERIES_PRODUCT);
