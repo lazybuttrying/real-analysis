@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, scaleLinear, type Selection } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { metricSpacesModel, type MetricSpacesData } from '../models/metric-spaces';
@@ -181,18 +181,15 @@ export default defineSimpleScene<MetricSpacesData>({
     { text: verdictText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`음영·강조된 점 = 열린 공 \(B(c, r)\), 마름모 = 중심 \(c\)`,
-            en: String.raw`shaded area and highlighted dots = the open ball \(B(c,r)\), diamond = the center \(c\)`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`음영·강조된 점 = 열린 공 \(B(c, r)\), 마름모 = 중심 \(c\)`,
+          en: String.raw`shaded area and highlighted dots = the open ball \(B(c,r)\), diamond = the center \(c\)`,
+        },
+        lang,
+      ),
+    );
   },
 });

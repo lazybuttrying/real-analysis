@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, scaleLinear, type Selection } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { createRichSlot, setRichText } from '../../../view/richslot';
+import { mountNote } from '../../../view/richslot';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { sequenceSpacesModel, term, type SequenceSpacesData } from '../models/sequence-spaces';
@@ -166,18 +166,15 @@ export default defineSimpleScene<SequenceSpacesData>({
     { text: verdictText, bold: true }
   ],
   mountExtra: (strips, lang) => {
-    const legend = document.createElement('div');
-    legend.style.cssText = 'font-size: 12px; color: var(--muted);';
-    strips.prepend(legend);
-    setRichText(
-        createRichSlot(legend),
-        localize(
-          {
-            ko: String.raw`음영 = 단위 공 / 수열의 막대, 마름모 = 원점 — \(\ell^1 \subset \ell^2 \subset \ell^\infty\)`,
-            en: String.raw`shading = the unit ball / sequence bars, diamond = the origin — \(\ell^1 \subset \ell^2 \subset \ell^\infty\)`,
-          },
-          lang,
-        ),
-      );
+    mountNote(
+      strips,
+      localize(
+        {
+          ko: String.raw`음영 = 단위 공 / 수열의 막대, 마름모 = 원점 — \(\ell^1 \subset \ell^2 \subset \ell^\infty\)`,
+          en: String.raw`shading = the unit ball / sequence bars, diamond = the origin — \(\ell^1 \subset \ell^2 \subset \ell^\infty\)`,
+        },
+        lang,
+      ),
+    );
   },
 });
