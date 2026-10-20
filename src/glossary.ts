@@ -20,6 +20,107 @@ interface GlossaryEntry {
 }
 
 export const glossary: readonly GlossaryEntry[] = [
+  // ---------------------------------------------------------------- proofs
+  {
+    id: 'proposition',
+    term: { ko: '명제', en: 'proposition' },
+    definition: {
+      ko: String.raw`참 또는 거짓 중 하나로 정해지는 문장 — 증명은 명제들을 연결사로 조합하고 그 진리값이 어떻게 정해지는지를 따지는 일이다.`,
+      en: String.raw`A statement that is either true or false — proof is the art of combining propositions with connectives and tracking how the truth values are forced.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'logic-propositions',
+  },
+  {
+    id: 'direct-proof',
+    term: { ko: '직접증명', en: 'direct proof' },
+    definition: {
+      ko: String.raw`가정을 참으로 놓고 정당화되는 단계들을 차례로 이어 결론에 곧바로 도달하는 증명 — 우회로를 쓰지 않는다.`,
+      en: String.raw`A proof that takes the hypothesis as given and reaches the conclusion by a straight chain of justified steps — no detours.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'direct-proof',
+  },
+  {
+    id: 'proof-by-cases',
+    term: { ko: '경우 나누기', en: 'proof by cases' },
+    definition: {
+      ko: String.raw`대상을 빠짐없이 덮는 몇 개의 경우로 나누어, 각 경우마다 주장을 증명하는 방법 — 모든 경우를 합치면 전체가 증명된다.`,
+      en: String.raw`Splitting the domain into cases that cover everything, and proving the claim in each case — together the cases cover the whole proof.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'cases-existence',
+  },
+  {
+    id: 'function-composition',
+    term: { ko: '함수 합성', en: 'function composition' },
+    definition: {
+      ko: String.raw`\(g \circ f\) — \(f\)를 먼저 적용하고 그 결과에 \(g\)를 적용하는 함수. 단사성·전사성은 합성을 통과하며 증명 가능한 형태로 이어진다.`,
+      en: String.raw`\(g \circ f\) — apply \(f\) first, then \(g\) to the result. Injectivity and surjectivity propagate through composition in provable ways.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'function-proofs',
+  },
+  {
+    id: 'quantifier',
+    term: { ko: '양화사', en: 'quantifier' },
+    definition: {
+      ko: String.raw`\(\forall\) (모든)와 \(\exists\) (존재한다) — 명제가 어떤 범위를 어떻게 덮는지를 정밀하게 고정하는 기호. 부정을 씌우면 둘은 서로 맞바뀐다.`,
+      en: String.raw`\(\forall\) (for all) and \(\exists\) (there exists) — the symbols that pin down precisely how a statement ranges over its domain. Negation swaps the two.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'quantifiers',
+  },
+  {
+    id: 'contrapositive',
+    term: { ko: '대우', en: 'contrapositive' },
+    definition: {
+      ko: String.raw`명제 \(P \Rightarrow Q\)의 대우는 \(\lnot Q \Rightarrow \lnot P\) — 원래 명제와 항상 동치이므로, 직접증명이 막힐 때 대우를 대신 증명한다.`,
+      en: String.raw`The contrapositive of \(P \Rightarrow Q\) is \(\lnot Q \Rightarrow \lnot P\) — always equivalent to the original, so it can be proved in its place when the direct route stalls.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'contrapositive',
+  },
+  {
+    id: 'proof-by-contradiction',
+    term: { ko: '귀류법', en: 'proof by contradiction' },
+    definition: {
+      ko: String.raw`결론의 부정을 가정하고 모순을 이끌어 내는 증명법 — \(\lnot P\)를 가정했을 때 모순(\(\bot\))이 나오면 \(P\)가 성립한다.`,
+      en: String.raw`The method that assumes the negation of the conclusion and derives a contradiction — if assuming \(\lnot P\) yields a contradiction (\(\bot\)), then \(P\) holds.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'contradiction',
+  },
+  {
+    id: 'biconditional',
+    term: { ko: '필요충분조건', en: 'biconditional' },
+    definition: {
+      ko: String.raw`\(P \iff Q\) — \(P \Rightarrow Q\)와 \(Q \Rightarrow P\), 두 방향을 각각 증명해야 완성되는 "필요충분" 명제.`,
+      en: String.raw`\(P \iff Q\) — an "if and only if" claim that is completed only by proving the two directions \(P \Rightarrow Q\) and \(Q \Rightarrow P\) separately.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'disproof-iff',
+  },
+  {
+    id: 'strong-induction',
+    term: { ko: '강한 귀납법', en: 'strong induction' },
+    definition: {
+      ko: String.raw`\(P(n)\)을 보일 때 \(P(2), \dots, P(n-1)\) 전부가 성립함을 가정하는 귀납법 — \(n\)의 인자처럼 훨씬 작은 값들이 필요할 때 쓴다.`,
+      en: String.raw`Induction that assumes all of \(P(2), \dots, P(n-1)\) when proving \(P(n)\) — used when the step needs much smaller values, like the factors of \(n\).`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'strong-induction',
+  },
+  {
+    id: 'equivalence-relation',
+    term: { ko: '동치관계', en: 'equivalence relation' },
+    definition: {
+      ko: String.raw`반사·대칭·추이를 모두 만족하는 관계 — 동치류들이 전체 집합을 겹침 없이 나누는 분할(partition)을 만든다.`,
+      en: String.raw`A relation that is reflexive, symmetric, and transitive — its equivalence classes partition the whole set without overlap.`,
+    },
+    chapterId: 'proofs',
+    sceneId: 'relations-equivalence',
+  },
   // ---------------------------------------------------------------- numbers
   {
     id: 'natural-number',

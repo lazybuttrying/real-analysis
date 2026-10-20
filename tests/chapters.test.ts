@@ -9,13 +9,14 @@ import {
 } from '../src/paths.ts';
 
 /**
- * Integrity of the 10-chapter split:
- * - the catalog lists exactly the 10 logical chapters in order,
- * - no scene is lost or duplicated (116 unique),
+ * Integrity of the 11-chapter layout:
+ * - the catalog lists exactly the 11 logical chapters in order,
+ * - no scene is lost or duplicated (135 unique),
  * - every chapter's scenes are ordered 1..N with 3 proven problems each.
  */
 
 const EXPECTED_CHAPTERS = [
+  'proofs',
   'numbers',
   'sequences',
   'continuity',
@@ -28,8 +29,8 @@ const EXPECTED_CHAPTERS = [
   'integration',
 ] as const;
 
-describe('catalog: the 10 chapters', () => {
-  it('lists the 10 logical chapters in order', () => {
+describe('catalog: the 11 chapters', () => {
+  it('lists the 11 logical chapters in order', () => {
     expect(catalog.map((chapter) => chapter.id)).toEqual([...EXPECTED_CHAPTERS]);
   });
 
@@ -42,10 +43,10 @@ describe('catalog: the 10 chapters', () => {
     }
   });
 
-  it('covers 125 scenes with no loss or duplication', () => {
+  it('covers 135 scenes with no loss or duplication', () => {
     const ids = catalog.flatMap((chapter) => chapter.scenes.map((scene) => scene.id));
-    expect(ids).toHaveLength(125);
-    expect(new Set(ids).size).toBe(125);
+    expect(ids).toHaveLength(135);
+    expect(new Set(ids).size).toBe(135);
   });
 
   it('orders every chapter\'s scenes 1..N', () => {
@@ -128,8 +129,8 @@ describe('legacy canonical pages', () => {
     const catalogScenes = catalog.flatMap((chapter) =>
       chapter.scenes.map((scene) => [scene.id, chapter.id] as const),
     );
-    expect(catalogScenes).toHaveLength(125);
-    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(125);
+    expect(catalogScenes).toHaveLength(135);
+    expect(new Set(catalogScenes.map(([sceneId]) => sceneId)).size).toBe(135);
   });
 
   it('assigns every scene its pre-split chapter (39 limits + 24 calculus + 16 moved series)', () => {
@@ -210,7 +211,7 @@ describe('legacy canonical pages', () => {
         canonicalByScene.set(segments[2]!, page);
       }
     }
-    expect(canonicalByScene.size).toBe(125);
+    expect(canonicalByScene.size).toBe(135);
     for (const page of buildLegacyPages()) {
       const sceneId = page.segments('ko')[2]!;
       const canonical = canonicalByScene.get(sceneId);

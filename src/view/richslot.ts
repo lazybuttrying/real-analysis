@@ -36,3 +36,14 @@ export function setRichText(slot: RichSlot, text: string): void {
       });
   }
 }
+
+/**
+ * Mount a small muted note above a scene's strips and render rich text into it.
+ * Factored out of the scene files that repeated this mountExtra block verbatim.
+ */
+export function mountNote(strips: HTMLElement, text: string): void {
+  const note = document.createElement('div');
+  note.style.cssText = 'font-size: 12px; color: var(--muted);';
+  strips.prepend(note);
+  setRichText(createRichSlot(note), text);
+}
