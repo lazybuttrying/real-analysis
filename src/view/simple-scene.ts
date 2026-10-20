@@ -30,10 +30,13 @@ import {
  * outside the chart wrap, interactive controls inside the scene body)
  * keep their own mount code and do not use this helper. Dual-chart scenes
  * whose second chart stacks (or sits beside) the main one inside the
- * shell's chart wrap use the drawSecond options below.
+ * shell's chart wrap use the drawSecond options below. Title-bar scenes
+ * put their above-chart strip in slotsAbove; grid scenes whose chart
+ * size derives from the data use sizeFromData; panel-switching scenes
+ * toggle individual slots with SimpleSlot.visible.
  */
 
-/** One text strip below the chart. */
+/** One text strip below (or above) the chart. */
 export interface SimpleSlot<D> {
   /** Dynamic text (TeX via \(...\)) re-rendered into a RichSlot on every render. */
   text: (data: D, lang: Lang) => string;
@@ -43,6 +46,14 @@ export interface SimpleSlot<D> {
   spaced?: boolean;
   /** Full cssText override; when set, bold/spaced are ignored. */
   cssText?: string;
+  /**
+   * Per-render visibility: when set, the slot's div gets display 'none'
+   * on renders where this returns false for the current data, and ''
+   * otherwise. Omitted = always visible (the div's display is never
+   * touched). Extracted from the panel-switching scenes, which show
+   * exactly one of two strips per render.
+   */
+  visible?: (data: D) => boolean;
 }
 
 export interface SimpleSceneConfig<D> {
@@ -67,6 +78,16 @@ export interface SimpleSceneConfig<D> {
    * mode (no shell, no slots).
    */
   slots?: ReadonlyArray<SimpleSlot<D>>;
+  /**
+   * Text strips above the chart wrap, in order (shell mode only; their
+   * presence also selects shell mode when slots are empty). Same
+   * SimpleSlot shape as `slots`; each div is inserted into the host
+   * directly before the chart wrap, as a flex sibling of it — matching
+   * the title-bar scenes' hand-built layouts, whose above-chart divs
+   * carry their own padding/font-size in the slot's cssText (they do not
+   * inherit the strips container's).
+   */
+  slotsAbove?: ReadonlyArray<SimpleSlot<D>>;
   /**
    * Optional extra static content appended to shell.strips at mount time
    * (e.g. cross-links). Receives the strips element and the page language.
@@ -114,6 +135,23 @@ export interface SimpleSceneConfig<D> {
    * default) or 'row' (side by side, with the side-by-side scenes' 8px gap).
    */
   secondLayout?: 'column' | 'row';
+  /**
+   * Optional data-driven sizing for the main chart, applied in resize()
+   * in place of (per dimension) the container-based size. Receives the
+   * last rendered data and the chart wrap's RAW clientWidth/clientHeight
+   * (either may be 0 before layout), and returns the dimensions it wants
+   * to override; an omitted dimension keeps the standard container-based
+   * value (clientWidth || fallback, clientHeight || fallbackHeight).
+   * Extracted from the grid scenes, whose resize() derives the chart size
+   * from the data (e.g. height = rows * cell + constants, width =
+   * max(clientWidth, grid width)). Only called once data exists — before
+   * the first render, resize() uses the standard sizing, exactly like the
+   * original scenes' createChart initial size.
+   */
+  sizeFromData?: (
+    data: D,
+    container: { width: number; height: number },
+  ) => { width?: number; height?: number };
 }
 
 /** Default cssText for a dual-mode chart sub-wrap: an equal share of the chart wrap. */
@@ -122,8 +160,9 @@ const DUAL_WRAP_CSS = 'flex: 1 1 auto; min-height: 0; position: relative;';
 export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
   const { model, margin, fallbackHeight = 360 } = config;
   const slotConfigs: ReadonlyArray<SimpleSlot<D>> = config.slots ?? [];
+  const aboveConfigs: ReadonlyArray<SimpleSlot<D>> = config.slotsAbove ?? [];
   const dual = config.drawSecond !== undefined;
-  const useShell = slotConfigs.length > 0 || dual;
+  const useShell = slotConfigs.length > 0 || aboveConfigs.length > 0 || dual;
   const fallbackHeightSecond = config.fallbackHeightSecond ?? fallbackHeight;
   const fallbackWidth = config.fallbackWidth ?? 640;
   const fallbackWidthSecond = config.fallbackWidthSecond ?? fallbackWidth;
@@ -136,16 +175,49 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
     let wrapMain: HTMLElement | undefined;
     let wrapSecond: HTMLElement | undefined;
     let richSlots: RichSlot[] = [];
+    let richSlotsAbove: RichSlot[] = [];
     let lang: Lang = 'ko';
     let last: { data: D; state: ControlState } | undefined;
+
+    const applySlot = (
+      slotConfig: SimpleSlot<D>,
+      richSlot: RichSlot,
+      data: D,
+    ): void => {
+      if (slotConfig.visible) {
+        richSlot.el.style.display = slotConfig.visible(data) ? '' : 'none';
+      }
+      setRichText(richSlot, slotConfig.text(data, lang));
+    };
 
     const draw = (): void => {
       if (!last || !chart) return;
       config.drawMain(chart, last.data, lang);
       if (dual && chartSecond) config.drawSecond?.(chartSecond, last.data, lang);
-      for (let i = 0; i < slotConfigs.length && i < richSlots.length; i++) {
-        setRichText(richSlots[i] as RichSlot, (slotConfigs[i] as SimpleSlot<D>).text(last.data, lang));
+      for (let i = 0; i < aboveConfigs.length && i < richSlotsAbove.length; i++) {
+        applySlot(aboveConfigs[i] as SimpleSlot<D>, richSlotsAbove[i] as RichSlot, last.data);
       }
+      for (let i = 0; i < slotConfigs.length && i < richSlots.length; i++) {
+        applySlot(slotConfigs[i] as SimpleSlot<D>, richSlots[i] as RichSlot, last.data);
+      }
+    };
+
+    /** Main-chart size for one resize: container-based, with sizeFromData overrides. */
+    const mainSize = (
+      wrapEl: HTMLElement,
+      fallbackW: number,
+    ): { w: number; h: number } => {
+      let w = wrapEl.clientWidth || fallbackW;
+      let h = wrapEl.clientHeight || fallbackHeight;
+      if (config.sizeFromData && last) {
+        const override = config.sizeFromData(last.data, {
+          width: wrapEl.clientWidth,
+          height: wrapEl.clientHeight,
+        });
+        if (override.width !== undefined) w = override.width;
+        if (override.height !== undefined) h = override.height;
+      }
+      return { w, h };
     };
 
     return {
@@ -174,19 +246,30 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
         } else {
           chart = createChart(wrap, margin);
         }
-        const divs: HTMLElement[] = [];
-        for (const slot of slotConfigs) {
-          const div = document.createElement('div');
-          if (slot.cssText !== undefined) {
-            div.style.cssText = slot.cssText;
-          } else {
-            if (slot.bold === true) div.style.fontWeight = '600';
-            if (slot.spaced === true) div.style.marginTop = '4px';
+        const buildDivs = (
+          configs: ReadonlyArray<SimpleSlot<D>>,
+          target: RichSlot[],
+        ): HTMLElement[] => {
+          const divs: HTMLElement[] = [];
+          for (const slot of configs) {
+            const div = document.createElement('div');
+            if (slot.cssText !== undefined) {
+              div.style.cssText = slot.cssText;
+            } else {
+              if (slot.bold === true) div.style.fontWeight = '600';
+              if (slot.spaced === true) div.style.marginTop = '4px';
+            }
+            divs.push(div);
+            target.push(createRichSlot(div));
           }
-          divs.push(div);
-          richSlots.push(createRichSlot(div));
+          return divs;
+        };
+        if (aboveConfigs.length > 0) {
+          for (const div of buildDivs(aboveConfigs, richSlotsAbove)) {
+            host.insertBefore(div, shell.chartWrap);
+          }
         }
-        shell.strips.append(...divs);
+        shell.strips.append(...buildDivs(slotConfigs, richSlots));
         config.mountExtra?.(shell.strips, lang);
       },
       render(data, state) {
@@ -196,7 +279,8 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
       resize() {
         if (dual) {
           if (chart && wrapMain) {
-            chart.setSize(wrapMain.clientWidth || fallbackWidth, wrapMain.clientHeight || fallbackHeight);
+            const { w, h } = mainSize(wrapMain, fallbackWidth);
+            chart.setSize(w, h);
           }
           if (chartSecond && wrapSecond) {
             chartSecond.setSize(
@@ -205,7 +289,8 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
             );
           }
         } else if (chart && wrap) {
-          chart.setSize(wrap.clientWidth || 640, wrap.clientHeight || fallbackHeight);
+          const { w, h } = mainSize(wrap, 640);
+          chart.setSize(w, h);
         }
         draw();
       },
@@ -217,6 +302,7 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
         wrapMain = undefined;
         wrapSecond = undefined;
         richSlots = [];
+        richSlotsAbove = [];
         wrap = undefined;
         shell?.dispose();
         shell = undefined;
