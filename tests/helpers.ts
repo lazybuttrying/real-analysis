@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import type { ControlState } from '../src/contracts';
+import type { ControlState, ProblemMeta } from '../src/contracts';
 
 /**
  * Shared test helpers, factored out of the per-scene test files.
@@ -29,4 +29,24 @@ export function syncCompute<D>(
  */
 export function expectCloseTo(received: number, expected: number, tol: number): void {
   expect(Math.abs(received - expected)).toBeLessThan(tol);
+}
+
+/**
+ * Shared integrity check for a scene's problems export, factored out of the
+ * per-scene test files that repeated this block verbatim (31 copies).
+ */
+export function checkProblemsShape(problems: readonly ProblemMeta[]): void {
+  expect(problems).toHaveLength(3);
+  for (const p of problems) {
+    expect(p.id).toBeTruthy();
+    expect(p.statement.ko).toBeTruthy();
+    expect(p.statement.en).toBeTruthy();
+    expect(p.presetCaption.ko).toBeTruthy();
+    expect(p.presetCaption.en).toBeTruthy();
+    expect(p.proof.length).toBeGreaterThan(0);
+    for (const step of p.proof) {
+      expect(step.text.ko).toBeTruthy();
+      expect(step.text.en).toBeTruthy();
+    }
+  }
 }

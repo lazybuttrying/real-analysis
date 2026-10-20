@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { syncCompute } from './helpers';
+import { checkProblemsShape, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   CHAINS,
@@ -101,18 +101,8 @@ describe('zorn-lemma: model compute', () => {
 
 describe('zorn-lemma: problems export', () => {
   it('has exactly 3 entries with non-empty bilingual statements and proofs', () => {
-    expect(zornLemmaProblems).toHaveLength(3);
+    checkProblemsShape(zornLemmaProblems);
     for (const p of zornLemmaProblems) {
-      expect(p.id).toBeTruthy();
-      expect(p.statement.ko).toBeTruthy();
-      expect(p.statement.en).toBeTruthy();
-      expect(p.presetCaption.ko).toBeTruthy();
-      expect(p.presetCaption.en).toBeTruthy();
-      expect(p.proof.length).toBeGreaterThan(0);
-      for (const step of p.proof) {
-        expect(step.text.ko).toBeTruthy();
-        expect(step.text.en).toBeTruthy();
-      }
       const chain = Number(p.preset['chain']);
       expect(chain).toBeGreaterThanOrEqual(CHAIN_MIN);
       expect(chain).toBeLessThanOrEqual(CHAIN_MAX);

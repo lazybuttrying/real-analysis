@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { syncCompute } from './helpers';
+import { checkProblemsShape, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   DEFAULT_N,
@@ -110,18 +110,8 @@ describe('cantor-theorem: model compute', () => {
 
 describe('cantor-theorem: problems export', () => {
   it('has exactly 3 entries with non-empty bilingual statements and proofs', () => {
-    expect(cantorTheoremProblems).toHaveLength(3);
+    checkProblemsShape(cantorTheoremProblems);
     for (const p of cantorTheoremProblems) {
-      expect(p.id).toBeTruthy();
-      expect(p.statement.ko).toBeTruthy();
-      expect(p.statement.en).toBeTruthy();
-      expect(p.presetCaption.ko).toBeTruthy();
-      expect(p.presetCaption.en).toBeTruthy();
-      expect(p.proof.length).toBeGreaterThan(0);
-      for (const step of p.proof) {
-        expect(step.text.ko).toBeTruthy();
-        expect(step.text.en).toBeTruthy();
-      }
       expect(p.preset['n']).toBe(5);
     }
   });

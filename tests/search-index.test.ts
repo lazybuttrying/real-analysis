@@ -12,7 +12,7 @@ describe('search index: buildSearchIndex', () => {
     for (const lang of ['ko', 'en'] as const) {
       const index = buildSearchIndex(lang);
       expect(index.scenes).toHaveLength(totalScenes);
-      expect(totalScenes).toBe(125);
+      expect(totalScenes).toBe(135);
       for (const scene of index.scenes) {
         expect(scene.title.trim().length).toBeGreaterThan(0);
         expect(scene.summary.trim().length).toBeGreaterThan(0);
@@ -32,7 +32,7 @@ describe('search index: buildSearchIndex', () => {
   it('covers every chapter exercise in both languages', () => {
     for (const lang of ['ko', 'en'] as const) {
       const index = buildSearchIndex(lang);
-      expect(index.exercises).toHaveLength(36);
+      expect(index.exercises).toHaveLength(42);
       for (const exercise of index.exercises) {
         expect(exercise.statement.trim().length).toBeGreaterThan(0);
         expect(exercise.number).toBeGreaterThan(0);

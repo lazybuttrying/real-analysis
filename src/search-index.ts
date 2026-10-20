@@ -1,4 +1,5 @@
 import { catalog } from './catalog.ts';
+import { exercises as proofsExercises } from './chapters/proofs/exercises.ts';
 import { exercises as numbersExercises } from './chapters/numbers/exercises.ts';
 import { exercises as sequencesExercises } from './chapters/sequences/exercises.ts';
 import { exercises as continuityExercises } from './chapters/continuity/exercises.ts';
@@ -64,6 +65,7 @@ export interface SearchIndexData {
 
 /** Chapter id -> that chapter's exercise data, in catalog order. */
 const exercisesByChapter = new Map<string, readonly ExerciseMeta[]>([
+  ['proofs', proofsExercises],
   ['numbers', numbersExercises],
   ['sequences', sequencesExercises],
   ['continuity', continuityExercises],

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { syncCompute } from './helpers';
+import { checkProblemsShape, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   axiomOfChoiceData,
@@ -85,18 +85,8 @@ describe('axiom-of-choice: model compute', () => {
 
 describe('axiom-of-choice: problems export', () => {
   it('has exactly 3 entries with non-empty bilingual statements and proofs', () => {
-    expect(axiomOfChoiceProblems).toHaveLength(3);
+    checkProblemsShape(axiomOfChoiceProblems);
     for (const p of axiomOfChoiceProblems) {
-      expect(p.id).toBeTruthy();
-      expect(p.statement.ko).toBeTruthy();
-      expect(p.statement.en).toBeTruthy();
-      expect(p.presetCaption.ko).toBeTruthy();
-      expect(p.presetCaption.en).toBeTruthy();
-      expect(p.proof.length).toBeGreaterThan(0);
-      for (const step of p.proof) {
-        expect(step.text.ko).toBeTruthy();
-        expect(step.text.en).toBeTruthy();
-      }
       const m = Number(p.preset['m']);
       const seed = Number(p.preset['seed']);
       expect(m).toBeGreaterThanOrEqual(M_MIN);
