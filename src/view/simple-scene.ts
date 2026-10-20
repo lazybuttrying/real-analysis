@@ -33,7 +33,8 @@ import {
  * shell's chart wrap use the drawSecond options below. Title-bar scenes
  * put their above-chart strip in slotsAbove; grid scenes whose chart
  * size derives from the data use sizeFromData; panel-switching scenes
- * toggle individual slots with SimpleSlot.visible.
+ * toggle individual slots with SimpleSlot.visible; labelled dual panels
+ * put a static caption above each chart with mainLabel/secondLabel.
  */
 
 /** One text strip below (or above) the chart. */
@@ -152,10 +153,35 @@ export interface SimpleSceneConfig<D> {
     data: D,
     container: { width: number; height: number },
   ) => { width?: number; height?: number };
+  /**
+   * Optional static label above the main chart in dual mode, rendered
+   * inside its sub-wrap: the sub-wrap gains a label div followed by an
+   * inner chart div (styled like a default sub-wrap) that hosts the
+   * chart, and resize() measures the inner div, so the label never eats
+   * into the chart's size. The text is plain (no TeX), set once at mount
+   * from the page language — labels do not re-render. Scenes pass a
+   * sub-wrap cssText that makes the wrap a flex column (see mainWrapCss).
+   * Extracted from the labelled-panel scenes. Omitted = the chart hosts
+   * directly in the sub-wrap, exactly as before.
+   */
+  mainLabel?: (lang: Lang) => string;
+  /** Optional static label above the second chart in dual mode. See mainLabel. */
+  secondLabel?: (lang: Lang) => string;
+  /**
+   * cssText of the main chart's label div in dual mode. Defaults to the
+   * labelled-panel scenes' label style
+   * ('flex: none; font-size: 12px; color: var(--muted); padding: 4px 8px 0;').
+   */
+  mainLabelCss?: string;
+  /** cssText of the second chart's label div in dual mode. Defaults to the mainLabelCss default. */
+  secondLabelCss?: string;
 }
 
 /** Default cssText for a dual-mode chart sub-wrap: an equal share of the chart wrap. */
 const DUAL_WRAP_CSS = 'flex: 1 1 auto; min-height: 0; position: relative;';
+
+/** Default cssText for a dual-mode panel label div (the labelled-panel scenes' style). */
+const DUAL_LABEL_CSS = 'flex: none; font-size: 12px; color: var(--muted); padding: 4px 8px 0;';
 
 export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
   const { model, margin, fallbackHeight = 360 } = config;
@@ -174,6 +200,8 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
     let wrap: HTMLElement | undefined;
     let wrapMain: HTMLElement | undefined;
     let wrapSecond: HTMLElement | undefined;
+    let sizeWrapMain: HTMLElement | undefined;
+    let sizeWrapSecond: HTMLElement | undefined;
     let richSlots: RichSlot[] = [];
     let richSlotsAbove: RichSlot[] = [];
     let lang: Lang = 'ko';
@@ -200,6 +228,26 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
       for (let i = 0; i < slotConfigs.length && i < richSlots.length; i++) {
         applySlot(slotConfigs[i] as SimpleSlot<D>, richSlots[i] as RichSlot, last.data);
       }
+    };
+
+    /**
+     * The element a dual-mode chart is created in and measured from:
+     * the sub-wrap itself, or — when a panel label is set — an inner
+     * chart div below a label div inside the sub-wrap.
+     */
+    const buildChartHost = (
+      panel: HTMLElement,
+      label: ((lang: Lang) => string) | undefined,
+      labelCss: string | undefined,
+    ): HTMLElement => {
+      if (!label) return panel;
+      const labelDiv = document.createElement('div');
+      labelDiv.style.cssText = labelCss ?? DUAL_LABEL_CSS;
+      labelDiv.textContent = label(lang);
+      const chartDiv = document.createElement('div');
+      chartDiv.style.cssText = DUAL_WRAP_CSS;
+      panel.append(labelDiv, chartDiv);
+      return chartDiv;
     };
 
     /** Main-chart size for one resize: container-based, with sizeFromData overrides. */
@@ -241,8 +289,10 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
           wrapSecond = document.createElement('div');
           wrapSecond.style.cssText = config.secondWrapCss ?? DUAL_WRAP_CSS;
           chartWrap.append(wrapMain, wrapSecond);
-          chart = createChart(wrapMain, margin);
-          chartSecond = createChart(wrapSecond, config.marginSecond ?? margin);
+          sizeWrapMain = buildChartHost(wrapMain, config.mainLabel, config.mainLabelCss);
+          sizeWrapSecond = buildChartHost(wrapSecond, config.secondLabel, config.secondLabelCss);
+          chart = createChart(sizeWrapMain, margin);
+          chartSecond = createChart(sizeWrapSecond, config.marginSecond ?? margin);
         } else {
           chart = createChart(wrap, margin);
         }
@@ -278,14 +328,14 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
       },
       resize() {
         if (dual) {
-          if (chart && wrapMain) {
-            const { w, h } = mainSize(wrapMain, fallbackWidth);
+          if (chart && sizeWrapMain) {
+            const { w, h } = mainSize(sizeWrapMain, fallbackWidth);
             chart.setSize(w, h);
           }
-          if (chartSecond && wrapSecond) {
+          if (chartSecond && sizeWrapSecond) {
             chartSecond.setSize(
-              wrapSecond.clientWidth || fallbackWidthSecond,
-              wrapSecond.clientHeight || fallbackHeightSecond,
+              sizeWrapSecond.clientWidth || fallbackWidthSecond,
+              sizeWrapSecond.clientHeight || fallbackHeightSecond,
             );
           }
         } else if (chart && wrap) {
@@ -301,6 +351,8 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
         chartSecond = undefined;
         wrapMain = undefined;
         wrapSecond = undefined;
+        sizeWrapMain = undefined;
+        sizeWrapSecond = undefined;
         richSlots = [];
         richSlotsAbove = [];
         wrap = undefined;
