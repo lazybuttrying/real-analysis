@@ -426,7 +426,7 @@ function makeScenePage(
  * unavailable. Not in the sitemap.
  *
  * Covered: every scene whose pre-split chapter differs from its current one
- * (limits 39 + calculus 22 + moved series scenes 16 = 77 per language).
+ * (limits 39 + calculus 24 + moved series scenes 16 = 79 per language).
  * Retired hubs and exercises pages get nothing (they 404).
  */
 export function buildLegacyPages(): Page[] {
@@ -685,7 +685,7 @@ function selfCheck(): string[] {
     if (seenEdges.has(dedup)) problems.push(`concept map has a duplicate edge '${dedup}'`);
     seenEdges.add(dedup);
   }
-  // Legacy canonical pages: one per retired scene URL (77 per language),
+  // Legacy canonical pages: one per retired scene URL (79 per language),
   // every canonical target is a real canonical page URL, and no legacy page
   // shadows a canonical URL.
   const legacyPages = buildLegacyPages();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { expectCloseTo, syncCompute } from './helpers';
+import { checkProblemsShape, expectCloseTo, syncCompute } from './helpers';
 import type { ControlState } from '../src/contracts';
 import {
   ballRemainder,
@@ -207,19 +207,7 @@ describe('clopen: model compute', () => {
 
 describe('clopen: problems export', () => {
   it('has exactly 3 entries with non-empty bilingual statements and proofs', () => {
-    expect(clopenProblems).toHaveLength(3);
-    for (const p of clopenProblems) {
-      expect(p.id).toBeTruthy();
-      expect(p.statement.ko).toBeTruthy();
-      expect(p.statement.en).toBeTruthy();
-      expect(p.presetCaption.ko).toBeTruthy();
-      expect(p.presetCaption.en).toBeTruthy();
-      expect(p.proof.length).toBeGreaterThan(0);
-      for (const step of p.proof) {
-        expect(step.text.ko).toBeTruthy();
-        expect(step.text.en).toBeTruthy();
-      }
-    }
+    checkProblemsShape(clopenProblems);
   });
 
   it('the three ids are clopen-r-trivial, clopen-subspace-pieces, clopen-separation', () => {

@@ -1,4 +1,5 @@
 import type { ChapterMeta } from './contracts.ts';
+import { proofs } from './chapters/proofs/meta.ts';
 import { numbers } from './chapters/numbers/meta.ts';
 import { sequences } from './chapters/sequences/meta.ts';
 import { continuity } from './chapters/continuity/meta.ts';
@@ -26,6 +27,7 @@ import { integration } from './chapters/integration/meta.ts';
  * See docs/ARCHITECTURE.md ("Physical vs logical chapters").
  */
 export const catalog: readonly ChapterMeta[] = [
+  proofs,
   numbers,
   sequences,
   continuity,

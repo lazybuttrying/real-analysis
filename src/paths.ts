@@ -98,6 +98,18 @@ const POST_SPLIT_SCENES = new Set([
   'discontinuous-derivative',
   'gabriel-horn',
   'vitali',
+  // 2026-10-20: the proofs chapter's 10 scenes — post-split additions, no
+  // legacy canonical pages (they never had pre-split URLs).
+  'logic-propositions',
+  'quantifiers',
+  'direct-proof',
+  'contrapositive',
+  'contradiction',
+  'cases-existence',
+  'disproof-iff',
+  'strong-induction',
+  'relations-equivalence',
+  'function-proofs',
 ]);
 
 /**
