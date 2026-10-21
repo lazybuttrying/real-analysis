@@ -30,8 +30,16 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`부분합 \(A_N, B_N, C_N\)을 쓰자. \(C_N = \sum_{n=0}^{N}\sum_{k=0}^{n} a_k b_{n-k}\)에서 \(m = n-k\)로 치환하면 각 항이 \(a_k b_m\) (\(k + m \leq N\))인 유한합이 되므로, 합산 순서를 바꿔 \(C_N = \sum_{k=0}^{N} a_k \left(\sum_{m=0}^{N-k} b_m\right) = \sum_{k=0}^{N} a_k B_{N-k}\)를 얻는다. 유한합이므로 이 재배열은 합법적이다.`,
-          en: String.raw`Write \(A_N, B_N, C_N\) for the partial sums. In \(C_N = \sum_{n=0}^{N}\sum_{k=0}^{n} a_k b_{n-k}\), substituting \(m = n-k\) turns each term into \(a_k b_m\) with \(k + m \leq N\), so reordering the finite sum gives \(C_N = \sum_{k=0}^{N} a_k \left(\sum_{m=0}^{N-k} b_m\right) = \sum_{k=0}^{N} a_k B_{N-k}\). This rearrangement is legal because the sum is finite.`,
+          ko: String.raw`부분합 \(A_N, B_N, C_N\)을 쓰자.
+
+\(C_N = \sum_{n=0}^{N}\sum_{k=0}^{n} a_k b_{n-k}\)에서 \(m = n-k\)로 치환하면 각 항이 \(a_k b_m\) (\(k + m \leq N\))인 유한합이 되므로, 합산 순서를 바꿔 \(C_N = \sum_{k=0}^{N} a_k \left(\sum_{m=0}^{N-k} b_m\right) = \sum_{k=0}^{N} a_k B_{N-k}\)를 얻는다.
+
+유한합이므로 이 재배열은 합법적이다.`,
+          en: String.raw`Write \(A_N, B_N, C_N\) for the partial sums.
+
+In \(C_N = \sum_{n=0}^{N}\sum_{k=0}^{n} a_k b_{n-k}\), substituting \(m = n-k\) turns each term into \(a_k b_m\) with \(k + m \leq N\), so reordering the finite sum gives \(C_N = \sum_{k=0}^{N} a_k \left(\sum_{m=0}^{N-k} b_m\right) = \sum_{k=0}^{N} a_k B_{N-k}\).
+
+This rearrangement is legal because the sum is finite.`,
         },
       },
       {
@@ -42,14 +50,40 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`둘째 항을 제어한다. 절대수렴이므로 \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\)이다. \(\varepsilon > 0\)가 주어지면 \(m > M\)일 때 \(|R_m| < \varepsilon\)인 \(M\)을 잡는다. \(N > M\)인 경우(충분히 큰 \(N\))에만 합을 \(k \leq N-M-1\)과 \(k \geq N-M\)으로 나눈다. 앞부분은 \(|R_{N-k}| < \varepsilon\)이므로 \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이다.`,
-          en: String.raw`Control the second term. Absolute convergence gives \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\). Given \(\varepsilon > 0\), pick \(M\) with \(|R_m| < \varepsilon\) for \(m > M\). Only for \(N > M\) (all sufficiently large \(N\)) split the sum at \(k = N-M\): on the head, \(|R_{N-k}| < \varepsilon\), so \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\).`,
+          ko: String.raw`둘째 항을 제어한다.
+
+절대수렴이므로 \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\)이다.
+
+\(\varepsilon > 0\)가 주어지면 \(m > M\)일 때 \(|R_m| < \varepsilon\)인 \(M\)을 잡는다.
+
+\(N > M\)인 경우(충분히 큰 \(N\))에만 합을 \(k \leq N-M-1\)과 \(k \geq N-M\)으로 나눈다.
+
+앞부분은 \(|R_{N-k}| < \varepsilon\)이므로 \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이다.`,
+          en: String.raw`Control the second term.
+
+Absolute convergence gives \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\).
+
+Given \(\varepsilon > 0\), pick \(M\) with \(|R_m| < \varepsilon\) for \(m > M\).
+
+Only for \(N > M\) (all sufficiently large \(N\)) split the sum at \(k = N-M\): on the head, \(|R_{N-k}| < \varepsilon\), so \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\).`,
         },
       },
       {
         text: {
-          ko: String.raw`뒷부분은 항이 \(M+1\)개뿐이다(\(N > M\)). 올바른 bound는 \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \sum_{k=N-M}^{N} |a_k|\)입니다 — 곱의 합의 절대값은 \(|a_k|\)들의 합이 필요하며, \(\max |a_k|\) 하나만으로는 부족합니다. 고정된 \(M\)에 대해 \(\sum_{k=N-M}^{N} |a_k| \le \sum_{k > N-M} |a_k| \to 0\) (\(N \to \infty\), 절대수렴 급수의 꼬리)이므로 뒷부분은 \(0\)으로 갑니다. 따라서 \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이고, \(\varepsilon\)이 임의이므로 이 합은 \(0\)으로 간다.`,
-          en: String.raw`The tail has only \(M+1\) terms (for \(N > M\)). The correct bound is \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \sum_{k=N-M}^{N} |a_k|\) — a sum of products needs the sum of \(|a_k|\), not a single \(\max |a_k|\). For fixed \(M\), \(\sum_{k=N-M}^{N} |a_k| \le \sum_{k > N-M} |a_k| \to 0\) as \(N \to \infty\) (the tail of the absolutely convergent \(\sum |a_k|\)), so the tail tends to \(0\). Hence \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\), and \(\varepsilon\) was arbitrary, so the sum tends to \(0\).`,
+          ko: String.raw`뒷부분은 항이 \(M+1\)개뿐이다(\(N > M\)).
+
+올바른 bound는 \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \sum_{k=N-M}^{N} |a_k|\)입니다 — 곱의 합의 절대값은 \(|a_k|\)들의 합이 필요하며, \(\max |a_k|\) 하나만으로는 부족합니다.
+
+고정된 \(M\)에 대해 \(\sum_{k=N-M}^{N} |a_k| \le \sum_{k > N-M} |a_k| \to 0\) (\(N \to \infty\), 절대수렴 급수의 꼬리)이므로 뒷부분은 \(0\)으로 갑니다.
+
+따라서 \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이고, \(\varepsilon\)이 임의이므로 이 합은 \(0\)으로 간다.`,
+          en: String.raw`The tail has only \(M+1\) terms (for \(N > M\)).
+
+The correct bound is \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \sum_{k=N-M}^{N} |a_k|\) — a sum of products needs the sum of \(|a_k|\), not a single \(\max |a_k|\).
+
+For fixed \(M\), \(\sum_{k=N-M}^{N} |a_k| \le \sum_{k > N-M} |a_k| \to 0\) as \(N \to \infty\) (the tail of the absolutely convergent \(\sum |a_k|\)), so the tail tends to \(0\).
+
+Hence \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\), and \(\varepsilon\) was arbitrary, so the sum tends to \(0\).`,
         },
       },
       {
@@ -99,8 +133,16 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'cauchy-product-diverges',
     statement: {
-      ko: String.raw`\(a_k = b_k = \frac{(-1)^k}{\sqrt{k+1}}\)로 두세요. 두 급수 \(\sum a_k\), \(\sum b_k\)는 모두 수렴하지만, \(|c_n| \geq \frac{2(n+1)}{n+2} \geq 1\)임을 보여 코시 곱 \(\sum c_n\)이 발산함을 증명하세요. (힌트: 산술-기하 평균 부등식.)`,
-      en: String.raw`Put \(a_k = b_k = \frac{(-1)^k}{\sqrt{k+1}}\). Both series \(\sum a_k\), \(\sum b_k\) converge, but show \(|c_n| \geq \frac{2(n+1)}{n+2} \geq 1\) to prove the Cauchy product \(\sum c_n\) diverges. (Hint: AM-GM.)`,
+      ko: String.raw`\(a_k = b_k = \frac{(-1)^k}{\sqrt{k+1}}\)로 두세요.
+
+두 급수 \(\sum a_k\), \(\sum b_k\)는 모두 수렴하지만, \(|c_n| \geq \frac{2(n+1)}{n+2} \geq 1\)임을 보여 코시 곱 \(\sum c_n\)이 발산함을 증명하세요.
+
+(힌트: 산술-기하 평균 부등식.)`,
+      en: String.raw`Put \(a_k = b_k = \frac{(-1)^k}{\sqrt{k+1}}\).
+
+Both series \(\sum a_k\), \(\sum b_k\) converge, but show \(|c_n| \geq \frac{2(n+1)}{n+2} \geq 1\) to prove the Cauchy product \(\sum c_n\) diverges.
+
+(Hint: AM-GM.)`,
     },
     display: [
       String.raw`|c_n| = \sum_{k=0}^{n} \frac{1}{\sqrt{(k+1)(n-k+1)}} \geq (n+1)\cdot\frac{2}{n+2} \geq 1`,
@@ -127,8 +169,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`산술-기하 평균 부등식으로 \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\)이다. 따라서 각 피가수 \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\)이고, 항이 \(n+1\)개이므로 \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\)이다. \(n \geq 0\)에서 \(\frac{2(n+1)}{n+2} \geq 1\)이므로 \(|c_n| \geq 1\)이다 (실제로 \(|c_n| \to \pi\)입니다: 이 합은 \(\int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \pi\)의 Riemann 합입니다; 수치로 \(|c_{100}| \approx 2.85\), \(|c_{400}| \approx 3.00\)으로 \(\pi\)에 다가갑니다).`,
-          en: String.raw`By AM-GM, \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\). Hence each summand \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\), and with \(n+1\) summands, \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\). Since \(\frac{2(n+1)}{n+2} \geq 1\) for \(n \geq 0\), \(|c_n| \geq 1\) (in fact \(|c_n| \to \pi\): the sum is a Riemann sum for \(\int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \pi\); numerically \(|c_{100}| \approx 2.85\), \(|c_{400}| \approx 3.00\), approaching \(\pi\)).`,
+          ko: String.raw`산술-기하 평균 부등식으로 \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\)이다.
+
+따라서 각 피가수 \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\)이고, 항이 \(n+1\)개이므로 \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\)이다.
+
+\(n \geq 0\)에서 \(\frac{2(n+1)}{n+2} \geq 1\)이므로 \(|c_n| \geq 1\)이다 (실제로 \(|c_n| \to \pi\)입니다: 이 합은 \(\int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \pi\)의 Riemann 합입니다; 수치로 \(|c_{100}| \approx 2.85\), \(|c_{400}| \approx 3.00\)으로 \(\pi\)에 다가갑니다).`,
+          en: String.raw`By AM-GM, \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\).
+
+Hence each summand \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\), and with \(n+1\) summands, \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\).
+
+Since \(\frac{2(n+1)}{n+2} \geq 1\) for \(n \geq 0\), \(|c_n| \geq 1\) (in fact \(|c_n| \to \pi\): the sum is a Riemann sum for \(\int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \pi\); numerically \(|c_{100}| \approx 2.85\), \(|c_{400}| \approx 3.00\), approaching \(\pi\)).`,
         },
       },
       {

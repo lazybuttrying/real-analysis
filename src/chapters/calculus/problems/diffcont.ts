@@ -78,8 +78,12 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'weierstrass-exists',
           statement: {
-            ko: String.raw`모든 점에서 연속이지만 어떤 점에서도 미분가능하지 않은 함수가 존재함을 (정리로) 서술하세요. 증명은 생략하고 아이디어 수준으로 둡니다.`,
-            en: String.raw`State (as a theorem) that a function exists which is continuous everywhere but differentiable nowhere. Idea level; proof omitted.`,
+            ko: String.raw`모든 점에서 연속이지만 어떤 점에서도 미분가능하지 않은 함수가 존재함을 (정리로) 서술하세요.
+
+증명은 생략하고 아이디어 수준으로 둡니다.`,
+            en: String.raw`State (as a theorem) that a function exists which is continuous everywhere but differentiable nowhere.
+
+Idea level; proof omitted.`,
           },
           preset: { zoom: 8 },
           presetCaption: {

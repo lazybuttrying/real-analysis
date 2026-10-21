@@ -36,14 +36,22 @@ export const relationsEquivalenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`대칭(symmetric): \(a \sim b\)라 하세요. 그러면 \(n \mid (a - b)\)라서 \(a - b = nk\)인 정수 \(k\)가 존재하고, 이로부터 \(b - a = -nk = n(-k)\)이므로 \(n \mid (b - a)\), 즉 \(b \sim a\). 씬에서는 \(U\)의 모든 \(12^2 = 144\)개 순서쌍에 대해 확인됩니다.`,
-          en: String.raw`Symmetric: suppose \(a \sim b\). Then \(n \mid (a - b)\), so \(a - b = nk\) for some integer \(k\), and therefore \(b - a = -nk = n(-k)\), giving \(n \mid (b - a)\), i.e. \(b \sim a\). In the scene this is checked for all \(12^2 = 144\) ordered pairs of \(U\).`,
+          ko: String.raw`대칭(symmetric): \(a \sim b\)라 하세요. 그러면 \(n \mid (a - b)\)라서 \(a - b = nk\)인 정수 \(k\)가 존재하고, 이로부터 \(b - a = -nk = n(-k)\)이므로 \(n \mid (b - a)\), 즉 \(b \sim a\).
+
+씬에서는 \(U\)의 모든 \(12^2 = 144\)개 순서쌍에 대해 확인됩니다.`,
+          en: String.raw`Symmetric: suppose \(a \sim b\). Then \(n \mid (a - b)\), so \(a - b = nk\) for some integer \(k\), and therefore \(b - a = -nk = n(-k)\), giving \(n \mid (b - a)\), i.e. \(b \sim a\).
+
+In the scene this is checked for all \(12^2 = 144\) ordered pairs of \(U\).`,
         },
       },
       {
         text: {
-          ko: String.raw`추이(transitive): \(a \sim b\)이고 \(b \sim c\)라 하세요. \(a - b = nk\), \(b - c = nm\)인 정수 \(k, m\)이 존재하고, 두 식을 더하면 \(a - c = (a - b) + (b - c) = nk + nm = n(k + m)\)이므로 \(n \mid (a - c)\), 즉 \(a \sim c\). 씬에서는 \(12^3 = 1728\)개 삼중항이 모두 확인됩니다. 세 조건이 성립하므로 합동식은 동치관계입니다.`,
-          en: String.raw`Transitive: suppose \(a \sim b\) and \(b \sim c\). There are integers \(k, m\) with \(a - b = nk\) and \(b - c = nm\); adding gives \(a - c = (a - b) + (b - c) = nk + nm = n(k + m)\), so \(n \mid (a - c)\), i.e. \(a \sim c\). In the scene all \(12^3 = 1728\) triples check out. The three conditions hold, so congruence is an equivalence relation.`,
+          ko: String.raw`추이(transitive): \(a \sim b\)이고 \(b \sim c\)라 하세요. \(a - b = nk\), \(b - c = nm\)인 정수 \(k, m\)이 존재하고, 두 식을 더하면 \(a - c = (a - b) + (b - c) = nk + nm = n(k + m)\)이므로 \(n \mid (a - c)\), 즉 \(a \sim c\).
+
+씬에서는 \(12^3 = 1728\)개 삼중항이 모두 확인됩니다. 세 조건이 성립하므로 합동식은 동치관계입니다.`,
+          en: String.raw`Transitive: suppose \(a \sim b\) and \(b \sim c\). There are integers \(k, m\) with \(a - b = nk\) and \(b - c = nm\); adding gives \(a - c = (a - b) + (b - c) = nk + nm = n(k + m)\), so \(n \mid (a - c)\), i.e. \(a \sim c\).
+
+In the scene all \(12^3 = 1728\) triples check out. The three conditions hold, so congruence is an equivalence relation.`,
         },
       },
     ],
@@ -51,8 +59,12 @@ export const relationsEquivalenceProblems: readonly ProblemMeta[] = [
   {
     id: 'relations-equivalence-partition-theorem',
     statement: {
-      ko: String.raw`분할 정리(partition theorem)를 완전히 증명하세요: 집합 \(S\) 위의 동치관계 \(\sim\)에 대해 (i) 모든 \(x\)는 그 동치류 \([x]\)에 속하고, (ii) \([x]\)와 \([y]\)가 원소를 하나라도 공유하면 \([x] = [y]\)입니다. 이로부터 서로 다른 동치류는 겹치지 않고 동치류 전체가 \(S\)를 덮음을 도출하세요.`,
-      en: String.raw`Prove the partition theorem completely: for an equivalence relation \(\sim\) on a set \(S\), (i) every \(x\) belongs to its own equivalence class \([x]\), and (ii) if \([x]\) and \([y]\) share even one element then \([x] = [y]\). Deduce that distinct classes are disjoint and that the classes together cover \(S\).`,
+      ko: String.raw`분할 정리(partition theorem)를 완전히 증명하세요: 집합 \(S\) 위의 동치관계 \(\sim\)에 대해 (i) 모든 \(x\)는 그 동치류 \([x]\)에 속하고, (ii) \([x]\)와 \([y]\)가 원소를 하나라도 공유하면 \([x] = [y]\)입니다.
+
+이로부터 서로 다른 동치류는 겹치지 않고 동치류 전체가 \(S\)를 덮음을 도출하세요.`,
+      en: String.raw`Prove the partition theorem completely: for an equivalence relation \(\sim\) on a set \(S\), (i) every \(x\) belongs to its own equivalence class \([x]\), and (ii) if \([x]\) and \([y]\) share even one element then \([x] = [y]\).
+
+Deduce that distinct classes are disjoint and that the classes together cover \(S\).`,
     },
     display: [
       String.raw`[x] = \{y \in S : y \sim x\}`,
@@ -72,20 +84,32 @@ export const relationsEquivalenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`(ii)의 준비: 원소 \(z \in [x] \cap [y]\)가 존재한다고 하세요. 정의에 의해 \(z \sim x\)이고 \(z \sim y\)입니다. 대칭성에 의해 \(z \sim x\)에서 \(x \sim z\)를 얻고, 여기에 \(z \sim y\)와 추이성을 적용하면 \(x \sim y\)를 얻습니다.`,
-          en: String.raw`Setup for (ii): suppose some \(z \in [x] \cap [y]\) exists. By definition \(z \sim x\) and \(z \sim y\). Symmetry turns \(z \sim x\) into \(x \sim z\), and transitivity with \(z \sim y\) then gives \(x \sim y\).`,
+          ko: String.raw`(ii)의 준비: 원소 \(z \in [x] \cap [y]\)가 존재한다고 하세요. 정의에 의해 \(z \sim x\)이고 \(z \sim y\)입니다.
+
+대칭성에 의해 \(z \sim x\)에서 \(x \sim z\)를 얻고, 여기에 \(z \sim y\)와 추이성을 적용하면 \(x \sim y\)를 얻습니다.`,
+          en: String.raw`Setup for (ii): suppose some \(z \in [x] \cap [y]\) exists. By definition \(z \sim x\) and \(z \sim y\).
+
+Symmetry turns \(z \sim x\) into \(x \sim z\), and transitivity with \(z \sim y\) then gives \(x \sim y\).`,
         },
       },
       {
         text: {
-          ko: String.raw`이제 \([x] \subseteq [y]\)를 보입니다. \(w \in [x]\)라 하면 \(w \sim x\)이고, 위의 준비에서 얻은 \(x \sim y\)와 \(w \sim x\)를 추이성으로 바로 이으면 \(w \sim y\), 즉 \(w \in [y]\)입니다. 역할을 바꾸면 \([y] \subseteq [x]\)도 얻어지므로 \([x] = [y]\)입니다.`,
-          en: String.raw`Now show \([x] \subseteq [y]\). If \(w \in [x]\) then \(w \sim x\); chaining \(w \sim x\) with \(x \sim y\) from the setup by transitivity gives \(w \sim y\) directly, i.e. \(w \in [y]\). Swapping the roles gives \([y] \subseteq [x]\), hence \([x] = [y]\).`,
+          ko: String.raw`이제 \([x] \subseteq [y]\)를 보입니다. \(w \in [x]\)라 하면 \(w \sim x\)이고, 위의 준비에서 얻은 \(x \sim y\)와 \(w \sim x\)를 추이성으로 바로 이으면 \(w \sim y\), 즉 \(w \in [y]\)입니다.
+
+역할을 바꾸면 \([y] \subseteq [x]\)도 얻어지므로 \([x] = [y]\)입니다.`,
+          en: String.raw`Now show \([x] \subseteq [y]\). If \(w \in [x]\) then \(w \sim x\); chaining \(w \sim x\) with \(x \sim y\) from the setup by transitivity gives \(w \sim y\) directly, i.e. \(w \in [y]\).
+
+Swapping the roles gives \([y] \subseteq [x]\), hence \([x] = [y]\).`,
         },
       },
       {
         text: {
-          ko: String.raw`결론: 두 동치류가 조금이라도 겹치면 둘은 같습니다. 따라서 서로 다른 동치류는 서로소이고, (i)에 의해 그 합집합은 \(S\)입니다 — 동치관계는 집합을 동치류들로 분할(partition)합니다. \(n = 4\)인 씬에서는 네 동치류가 \(U\)의 \(12\)개 원소를 \(3\)개씩 정확히 나눠 가집니다.`,
-          en: String.raw`Conclusion: if two classes overlap at all, they are equal. Hence distinct classes are disjoint, and by (i) their union is \(S\) — an equivalence relation partitions its set into equivalence classes. In the scene at \(n = 4\), the four classes split the \(12\) elements of \(U\) into exactly \(3\) each.`,
+          ko: String.raw`결론: 두 동치류가 조금이라도 겹치면 둘은 같습니다. 따라서 서로 다른 동치류는 서로소이고, (i)에 의해 그 합집합은 \(S\)입니다 — 동치관계는 집합을 동치류들로 분할(partition)합니다.
+
+\(n = 4\)인 씬에서는 네 동치류가 \(U\)의 \(12\)개 원소를 \(3\)개씩 정확히 나눠 가집니다.`,
+          en: String.raw`Conclusion: if two classes overlap at all, they are equal. Hence distinct classes are disjoint, and by (i) their union is \(S\) — an equivalence relation partitions its set into equivalence classes.
+
+In the scene at \(n = 4\), the four classes split the \(12\) elements of \(U\) into exactly \(3\) each.`,
         },
       },
     ],
@@ -108,8 +132,12 @@ export const relationsEquivalenceProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`(a) 반사: \(x - x = 0 \in \mathbb{Q}\)이므로 \(x \sim x\). 대칭: \(x - y \in \mathbb{Q}\)이면 \(y - x = -(x - y) \in \mathbb{Q}\)이므로 \(y \sim x\) (유리수는 부호를 바꿔도 유리수). 추이: \(x - y \in \mathbb{Q}\)이고 \(y - z \in \mathbb{Q}\)이면 \(x - z = (x - y) + (y - z) \in \mathbb{Q}\)이므로 \(x \sim z\) (유리수의 합은 유리수). 앞선 문제 1의 합동식 증명과 정확히 같은 골격이며, “나눗셈”이 “\(\mathbb{Q}\)의 원소”로 대체됐을 뿐입니다.`,
-          en: String.raw`(a) Reflexive: \(x - x = 0 \in \mathbb{Q}\), so \(x \sim x\). Symmetric: if \(x - y \in \mathbb{Q}\) then \(y - x = -(x - y) \in \mathbb{Q}\), so \(y \sim x\) (rationals stay rational under negation). Transitive: if \(x - y \in \mathbb{Q}\) and \(y - z \in \mathbb{Q}\) then \(x - z = (x - y) + (y - z) \in \mathbb{Q}\), so \(x \sim z\) (sums of rationals are rational). This is the same skeleton as the congruence proof in problem 1, with "divisibility" replaced by "membership in \(\mathbb{Q}\)".`,
+          ko: String.raw`(a) 반사: \(x - x = 0 \in \mathbb{Q}\)이므로 \(x \sim x\). 대칭: \(x - y \in \mathbb{Q}\)이면 \(y - x = -(x - y) \in \mathbb{Q}\)이므로 \(y \sim x\) (유리수는 부호를 바꿔도 유리수).
+
+추이: \(x - y \in \mathbb{Q}\)이고 \(y - z \in \mathbb{Q}\)이면 \(x - z = (x - y) + (y - z) \in \mathbb{Q}\)이므로 \(x \sim z\) (유리수의 합은 유리수). 앞선 문제 1의 합동식 증명과 정확히 같은 골격이며, “나눗셈”이 “\(\mathbb{Q}\)의 원소”로 대체됐을 뿐입니다.`,
+          en: String.raw`(a) Reflexive: \(x - x = 0 \in \mathbb{Q}\), so \(x \sim x\). Symmetric: if \(x - y \in \mathbb{Q}\) then \(y - x = -(x - y) \in \mathbb{Q}\), so \(y \sim x\) (rationals stay rational under negation).
+
+Transitive: if \(x - y \in \mathbb{Q}\) and \(y - z \in \mathbb{Q}\) then \(x - z = (x - y) + (y - z) \in \mathbb{Q}\), so \(x \sim z\) (sums of rationals are rational). This is the same skeleton as the congruence proof in problem 1, with "divisibility" replaced by "membership in \(\mathbb{Q}\)".`,
         },
       },
       {
@@ -120,8 +148,16 @@ export const relationsEquivalenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`(c) 각 동치류 \(x + \mathbb{Q}\)에서 대표원소 딱 하나를 골라 모은 집합이 비탈리 집합입니다. 그런데 동치류가 비가산히 많고 어느 하나도 “자연스러운” 대표원소가 없기 때문에, 이 선택은 선택 공리(the axiom of choice)를 필요로 합니다 — 규칙으로는 고를 수 없고, 공리가 존재만을 보장합니다. 적분 단원의 비탈리(vitali) 씬에서는 바로 이 집합이 르베그 가측(measure)이 아님을 보입니다. 대표원소는 \([0,1]\) 안에서 고릅니다 (모든 동치류 \(x + \mathbb{Q}\)는 \([0,1]\)와 만남) — 따라서 \(V \subseteq [0,1]\)입니다. \(q \in \mathbb{Q} \cap [-1,1]\)인 이동 \(V + q\)들은 서로소입니다: \((V + q_1) \cap (V + q_2) \ne \emptyset\)이면 두 대표원소의 차가 \(q_2 - q_1 \in \mathbb{Q}\)라 같은 동치류에 속해 둘이 같아야 하고, 따라서 \(q_1 = q_2\)입니다. 모든 이동은 평행이동 불변성에 의해 \(V\)와 측도가 같고, 합집합은 \([0,1]\)를 덮으며 (각 \(x \in [0,1]\)는 그 대표원소와 \(|q| \le 1\)인 유리수 \(q\)만큼 차이 남), \([-1, 2]\) 안에 들어갑니다. \(V\)가 가측이고 \(m(V) = 0\)이면 가산합집합의 측도가 \(0\)이라 \([0,1]\)를 덮는다는 데 모순이고, \(m(V) > 0\)이면 \([-1, 2]\) 안의 합집합 측도가 무한대가 되어 모순입니다. 따라서 \(V\)는 가측이 아닙니다.`,
-          en: String.raw`(c) Choosing exactly one representative from each class \(x + \mathbb{Q}\) and collecting them produces a Vitali set. But there are uncountably many classes and none has a "natural" representative, so this choice requires the axiom of choice — no rule can make the picks; the axiom only guarantees existence. In the integration chapter's vitali scene, this very set is shown not to be Lebesgue measurable. Take the representatives in \([0,1]\) (every class \(x + \mathbb{Q}\) meets \([0,1]\)), so \(V \subseteq [0,1]\). The translates \(V + q\) for \(q \in \mathbb{Q} \cap [-1,1]\) are pairwise disjoint: if \((V + q_1) \cap (V + q_2) \ne \emptyset\) then two representatives differ by \(q_2 - q_1 \in \mathbb{Q}\), hence lie in the same class, hence are equal, so \(q_1 = q_2\). They all have the same measure as \(V\) (translation invariance), they cover \([0,1]\) (each \(x \in [0,1]\) differs from its representative by a rational \(q\) with \(|q| \le 1\)), and their union lies in \([-1, 2]\). If \(V\) were measurable with \(m(V) = 0\), the countable union would have measure \(0\), contradicting that it covers \([0,1]\); if \(m(V) > 0\), the union inside \([-1, 2]\) would have infinite measure, again a contradiction. Hence \(V\) is not measurable.`,
+          ko: String.raw`(c) 각 동치류 \(x + \mathbb{Q}\)에서 대표원소 딱 하나를 골라 모은 집합이 비탈리 집합입니다. 그런데 동치류가 비가산히 많고 어느 하나도 “자연스러운” 대표원소가 없기 때문에, 이 선택은 선택 공리(the axiom of choice)를 필요로 합니다 — 규칙으로는 고를 수 없고, 공리가 존재만을 보장합니다. 적분 단원의 비탈리(vitali) 씬에서는 바로 이 집합이 르베그 가측(measure)이 아님을 보입니다.
+
+대표원소는 \([0,1]\) 안에서 고릅니다 (모든 동치류 \(x + \mathbb{Q}\)는 \([0,1]\)와 만남) — 따라서 \(V \subseteq [0,1]\)입니다. \(q \in \mathbb{Q} \cap [-1,1]\)인 이동 \(V + q\)들은 서로소입니다: \((V + q_1) \cap (V + q_2) \ne \emptyset\)이면 두 대표원소의 차가 \(q_2 - q_1 \in \mathbb{Q}\)라 같은 동치류에 속해 둘이 같아야 하고, 따라서 \(q_1 = q_2\)입니다. 모든 이동은 평행이동 불변성에 의해 \(V\)와 측도가 같고, 합집합은 \([0,1]\)를 덮으며 (각 \(x \in [0,1]\)는 그 대표원소와 \(|q| \le 1\)인 유리수 \(q\)만큼 차이 남), \([-1, 2]\) 안에 들어갑니다.
+
+\(V\)가 가측이고 \(m(V) = 0\)이면 가산합집합의 측도가 \(0\)이라 \([0,1]\)를 덮는다는 데 모순이고, \(m(V) > 0\)이면 \([-1, 2]\) 안의 합집합 측도가 무한대가 되어 모순입니다. 따라서 \(V\)는 가측이 아닙니다.`,
+          en: String.raw`(c) Choosing exactly one representative from each class \(x + \mathbb{Q}\) and collecting them produces a Vitali set. But there are uncountably many classes and none has a "natural" representative, so this choice requires the axiom of choice — no rule can make the picks; the axiom only guarantees existence. In the integration chapter's vitali scene, this very set is shown not to be Lebesgue measurable.
+
+Take the representatives in \([0,1]\) (every class \(x + \mathbb{Q}\) meets \([0,1]\)), so \(V \subseteq [0,1]\). The translates \(V + q\) for \(q \in \mathbb{Q} \cap [-1,1]\) are pairwise disjoint: if \((V + q_1) \cap (V + q_2) \ne \emptyset\) then two representatives differ by \(q_2 - q_1 \in \mathbb{Q}\), hence lie in the same class, hence are equal, so \(q_1 = q_2\). They all have the same measure as \(V\) (translation invariance), they cover \([0,1]\) (each \(x \in [0,1]\) differs from its representative by a rational \(q\) with \(|q| \le 1\)), and their union lies in \([-1, 2]\).
+
+If \(V\) were measurable with \(m(V) = 0\), the countable union would have measure \(0\), contradicting that it covers \([0,1]\); if \(m(V) > 0\), the union inside \([-1, 2]\) would have infinite measure, again a contradiction. Hence \(V\) is not measurable.`,
         },
       },
     ],

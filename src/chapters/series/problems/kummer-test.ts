@@ -15,8 +15,16 @@ export const kummerTestProblems: readonly ProblemMeta[] = [
   {
     id: 'kummer-proof',
     statement: {
-      ko: String.raw`Kummer 판정법을 증명하세요: \(a_n > 0\), \(p_n > 0\)이고 \(K_n := p_n \frac{a_n}{a_{n+1}} - p_{n+1}\)이라 하자. (i) \(K_n \ge c > 0\)이 결국 성립하면 \(\sum a_n\)은 수렴한다. (ii) \(K_n \le 0\)이 결국 성립하고 \(\sum \frac{1}{p_n}\)이 발산하면 \(\sum a_n\)은 발산한다.`,
-      en: String.raw`Prove Kummer's test: let \(a_n > 0\), \(p_n > 0\), and \(K_n := p_n \frac{a_n}{a_{n+1}} - p_{n+1}\). (i) If \(K_n \ge c > 0\) eventually, then \(\sum a_n\) converges. (ii) If \(K_n \le 0\) eventually and \(\sum \frac{1}{p_n}\) diverges, then \(\sum a_n\) diverges.`,
+      ko: String.raw`Kummer 판정법을 증명하세요: \(a_n > 0\), \(p_n > 0\)이고 \(K_n := p_n \frac{a_n}{a_{n+1}} - p_{n+1}\)이라 하자.
+
+(i) \(K_n \ge c > 0\)이 결국 성립하면 \(\sum a_n\)은 수렴한다.
+
+(ii) \(K_n \le 0\)이 결국 성립하고 \(\sum \frac{1}{p_n}\)이 발산하면 \(\sum a_n\)은 발산한다.`,
+      en: String.raw`Prove Kummer's test: let \(a_n > 0\), \(p_n > 0\), and \(K_n := p_n \frac{a_n}{a_{n+1}} - p_{n+1}\).
+
+(i) If \(K_n \ge c > 0\) eventually, then \(\sum a_n\) converges.
+
+(ii) If \(K_n \le 0\) eventually and \(\sum \frac{1}{p_n}\) diverges, then \(\sum a_n\) diverges.`,
     },
     display: [
       String.raw`K_n \ge c > 0 \quad \Longrightarrow \quad c\, a_{n+1} \le p_n a_n - p_{n+1} a_{n+1}`,
@@ -104,8 +112,12 @@ export const kummerTestProblems: readonly ProblemMeta[] = [
   {
     id: 'kummer-gauss-example',
     statement: {
-      ko: String.raw`Gauss 판정법의 따름정리로서: \(a > 0\)인 경우 \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\)에 대해 \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (즉 Gauss \(h = a\))임을 보이고, \(a = 2\)이면 \(\sum a_n\)이 수렴하고 \(a = \frac12\)이면 발산함을 Kummer 판정법으로 증명하세요. (\(a > 0\) 제한이 필요합니다: \(a = -1\)이면 \(n = 1\)에서 분모가 \(0\)이 되고, \(a \le -1\)이면 인자가 \(0\)이 되거나 음수가 되어 Kummer 판정법의 \(a_n > 0\) 가정이 깨집니다.)`,
-      en: String.raw`As a corollary of Gauss's test: for \(a > 0\) and \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\), show \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (i.e. Gauss \(h = a\)), then prove via Kummer's test that \(\sum a_n\) converges for \(a = 2\) and diverges for \(a = \frac12\). (The restriction \(a > 0\) is needed: \(a = -1\) makes a denominator \(0\) at \(n = 1\), and \(a \le -1\) can make factors \(0\) or negative, violating Kummer's hypothesis \(a_n > 0\).)`,
+      ko: String.raw`Gauss 판정법의 따름정리로서: \(a > 0\)인 경우 \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\)에 대해 \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (즉 Gauss \(h = a\))임을 보이고, \(a = 2\)이면 \(\sum a_n\)이 수렴하고 \(a = \frac12\)이면 발산함을 Kummer 판정법으로 증명하세요.
+
+(\(a > 0\) 제한이 필요합니다: \(a = -1\)이면 \(n = 1\)에서 분모가 \(0\)이 되고, \(a \le -1\)이면 인자가 \(0\)이 되거나 음수가 되어 Kummer 판정법의 \(a_n > 0\) 가정이 깨집니다.)`,
+      en: String.raw`As a corollary of Gauss's test: for \(a > 0\) and \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\), show \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (i.e. Gauss \(h = a\)), then prove via Kummer's test that \(\sum a_n\) converges for \(a = 2\) and diverges for \(a = \frac12\).
+
+(The restriction \(a > 0\) is needed: \(a = -1\) makes a denominator \(0\) at \(n = 1\), and \(a \le -1\) can make factors \(0\) or negative, violating Kummer's hypothesis \(a_n > 0\).)`,
     },
     display: [
       String.raw`\frac{a_n}{a_{n+1}} = \frac{n+a+1}{n+1} = 1 + \frac{a}{n+1} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right), \qquad h = a`,
@@ -119,14 +131,28 @@ export const kummerTestProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`비율을 직접 계산하면 \(\frac{a_n}{a_{n+1}} = \frac{n!}{(a+1)\cdots(a+n)} \cdot \frac{(a+1)\cdots(a+n+1)}{(n+1)!} = \frac{n+a+1}{n+1} = 1 + \frac{a}{n+1}\)입니다. 여기서 \(\frac{a}{n+1} = \frac{a}{n} \cdot \frac{n}{n+1} = \frac{a}{n} - \frac{a}{n(n+1)}\)이므로, 이는 Gauss 형태 \(1 + \frac{h}{n} + O\left(\frac{1}{n^2}\right)\)이며 \(h = a\)입니다. 또한 \(\frac{a}{n+1} \to 0\)이므로 비율이 \(1\)로 가서 비율판정법은 무력합니다.`,
-          en: String.raw`Computing the ratio directly: \(\frac{a_n}{a_{n+1}} = \frac{n!}{(a+1)\cdots(a+n)} \cdot \frac{(a+1)\cdots(a+n+1)}{(n+1)!} = \frac{n+a+1}{n+1} = 1 + \frac{a}{n+1}\). Since \(\frac{a}{n+1} = \frac{a}{n} \cdot \frac{n}{n+1} = \frac{a}{n} - \frac{a}{n(n+1)}\), this is the Gauss form \(1 + \frac{h}{n} + O\left(\frac{1}{n^2}\right)\) with \(h = a\). And \(\frac{a}{n+1} \to 0\), so the ratio tends to \(1\): the ratio test is powerless.`,
+          ko: String.raw`비율을 직접 계산하면 \(\frac{a_n}{a_{n+1}} = \frac{n!}{(a+1)\cdots(a+n)} \cdot \frac{(a+1)\cdots(a+n+1)}{(n+1)!} = \frac{n+a+1}{n+1} = 1 + \frac{a}{n+1}\)입니다.
+
+여기서 \(\frac{a}{n+1} = \frac{a}{n} \cdot \frac{n}{n+1} = \frac{a}{n} - \frac{a}{n(n+1)}\)이므로, 이는 Gauss 형태 \(1 + \frac{h}{n} + O\left(\frac{1}{n^2}\right)\)이며 \(h = a\)입니다.
+
+또한 \(\frac{a}{n+1} \to 0\)이므로 비율이 \(1\)로 가서 비율판정법은 무력합니다.`,
+          en: String.raw`Computing the ratio directly: \(\frac{a_n}{a_{n+1}} = \frac{n!}{(a+1)\cdots(a+n)} \cdot \frac{(a+1)\cdots(a+n+1)}{(n+1)!} = \frac{n+a+1}{n+1} = 1 + \frac{a}{n+1}\).
+
+Since \(\frac{a}{n+1} = \frac{a}{n} \cdot \frac{n}{n+1} = \frac{a}{n} - \frac{a}{n(n+1)}\), this is the Gauss form \(1 + \frac{h}{n} + O\left(\frac{1}{n^2}\right)\) with \(h = a\).
+
+And \(\frac{a}{n+1} \to 0\), so the ratio tends to \(1\): the ratio test is powerless.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(a = 2\)일 때 닫힌 형태를 확인합니다: \(a_n = \frac{n!}{3 \cdot 4 \cdots (n+2)} = \frac{n! \cdot 2}{(n+2)!} = \frac{2}{(n+1)(n+2)}\)입니다 (분모에 \(1 \cdot 2 = 2\)를 곱해 \((n+2)!\)를 만들었습니다). 실제로 \(a_1 = \frac{1}{3} = \frac{2}{2\cdot 3}\)입니다. 따라서 \(a_n = 2\left(\frac{1}{n+1} - \frac{1}{n+2}\right)\)로 망원경 합이 되어 \(\sum_{n=1}^{M} a_n = 2\left(\frac12 - \frac{1}{M+2}\right) \to 1\) — 급수는 \(1\)로 수렴합니다.`,
-          en: String.raw`For \(a = 2\) we verify the closed form: \(a_n = \frac{n!}{3 \cdot 4 \cdots (n+2)} = \frac{n! \cdot 2}{(n+2)!} = \frac{2}{(n+1)(n+2)}\) (multiplying top and bottom by \(1 \cdot 2 = 2\) completes \((n+2)!\)). Indeed \(a_1 = \frac{1}{3} = \frac{2}{2\cdot 3}\). So \(a_n = 2\left(\frac{1}{n+1} - \frac{1}{n+2}\right)\) telescopes: \(\sum_{n=1}^{M} a_n = 2\left(\frac12 - \frac{1}{M+2}\right) \to 1\) — the series sums to \(1\).`,
+          ko: String.raw`\(a = 2\)일 때 닫힌 형태를 확인합니다: \(a_n = \frac{n!}{3 \cdot 4 \cdots (n+2)} = \frac{n! \cdot 2}{(n+2)!} = \frac{2}{(n+1)(n+2)}\)입니다 (분모에 \(1 \cdot 2 = 2\)를 곱해 \((n+2)!\)를 만들었습니다).
+
+실제로 \(a_1 = \frac{1}{3} = \frac{2}{2\cdot 3}\)입니다.
+
+따라서 \(a_n = 2\left(\frac{1}{n+1} - \frac{1}{n+2}\right)\)로 망원경 합이 되어 \(\sum_{n=1}^{M} a_n = 2\left(\frac12 - \frac{1}{M+2}\right) \to 1\) — 급수는 \(1\)로 수렴합니다.`,
+          en: String.raw`For \(a = 2\) we verify the closed form: \(a_n = \frac{n!}{3 \cdot 4 \cdots (n+2)} = \frac{n! \cdot 2}{(n+2)!} = \frac{2}{(n+1)(n+2)}\) (multiplying top and bottom by \(1 \cdot 2 = 2\) completes \((n+2)!\)). Indeed \(a_1 = \frac{1}{3} = \frac{2}{2\cdot 3}\).
+
+So \(a_n = 2\left(\frac{1}{n+1} - \frac{1}{n+2}\right)\) telescopes: \(\sum_{n=1}^{M} a_n = 2\left(\frac12 - \frac{1}{M+2}\right) \to 1\) — the series sums to \(1\).`,
         },
       },
       {
