@@ -31,14 +31,14 @@ export const integralTestProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(f\)가 감소하므로 \(x \in [n, n+1]\)에서 \(f(n+1) \le f(x) \le f(n)\)입니다. 구간 길이가 \(1\)인 \([n,n+1]\)에서 적분하면 \(f(n+1) \le \int_n^{n+1} f \le f(n)\)을 얻습니다 (단조성에 의한 적분의 단조성).`,
-          en: String.raw`Since \(f\) is decreasing, \(f(n+1) \le f(x) \le f(n)\) for \(x \in [n, n+1]\). Integrating over \([n,n+1]\) (length \(1\)) gives \(f(n+1) \le \int_n^{n+1} f \le f(n)\) by monotonicity of the integral.`,
+          ko: String.raw`먼저 적분이 존재함을 확인합니다: \([a, b]\) 위의 monotone function은 Riemann integrable하므로 (표준 정리), 감소함수 \(f\)는 모든 \([n, n+1]\)에서 integrable하고 모든 \(\int_n^{n+1} f\)가 존재합니다. \(f\)가 감소하므로 \(x \in [n, n+1]\)에서 \(f(n+1) \le f(x) \le f(n)\)입니다. 구간 길이가 \(1\)인 \([n,n+1]\)에서 적분하면 \(f(n+1) \le \int_n^{n+1} f \le f(n)\)을 얻습니다 (적분의 단조성).`,
+          en: String.raw`First, the integrals exist: a monotone function on \([a, b]\) is Riemann integrable (standard theorem), so the decreasing \(f\) is integrable on every \([n, n+1]\) and every \(\int_n^{n+1} f\) exists. Since \(f\) is decreasing, \(f(n+1) \le f(x) \le f(n)\) for \(x \in [n, n+1]\). Integrating over \([n,n+1]\) (length \(1\)) gives \(f(n+1) \le \int_n^{n+1} f \le f(n)\) by monotonicity of the integral.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(n = 1, \ldots, N\)에 대해 합합니다. 왼쪽 부등식들의 합: \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\). 오른쪽 부등식들의 합: \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\). 둘을 이으면 \(\sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\)이고, \(\sum_{k=2}^{N+1} f(k) = \sum_{n=1}^{N} f(n) - f(1)\)이므로 \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\)입니다.`,
-          en: String.raw`Sum over \(n = 1, \ldots, N\). The left inequalities sum to \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\); the right ones to \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\). Chaining gives \(\sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\), and since \(\sum_{k=2}^{N+1} f(k) = \sum_{n=1}^{N} f(n) - f(1)\), we get \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\).`,
+          ko: String.raw`\(n = 1, \ldots, N\)에 대해 합합니다. 왼쪽 부등식들의 합: \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\). 오른쪽 부등식들의 합: \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\). 여기서 \(S_N = \sum_{n=1}^{N} f(n)\)이라 두면 올바른 항등식은 \(\sum_{k=2}^{N+1} f(k) = S_{N+1} - f(1) = S_N - f(1) + f(N+1)\)입니다. 따라서 왼쪽에서 \(S_{N+1} - f(1) \le \int_1^{N+1} f\), 즉 \(S_{N+1} \le f(1) + \int_1^{N+1} f\)를 얻고, \(f > 0\)이므로 \(S_N \le S_{N+1}\)이어서 \(S_N \le f(1) + \int_1^{N+1} f\)도 성립합니다. 오른쪽과 이으면 \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\)입니다.`,
+          en: String.raw`Sum over \(n = 1, \ldots, N\). The left inequalities sum to \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\); the right ones to \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\). With \(S_N = \sum_{n=1}^{N} f(n)\), the correct identity is \(\sum_{k=2}^{N+1} f(k) = S_{N+1} - f(1) = S_N - f(1) + f(N+1)\). Hence the left side gives \(S_{N+1} - f(1) \le \int_1^{N+1} f\), i.e. \(S_{N+1} \le f(1) + \int_1^{N+1} f\), and since \(f > 0\), \(S_N \le S_{N+1}\), so \(S_N \le f(1) + \int_1^{N+1} f\) as well. Chaining with the right side gives \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\).`,
         },
       },
       {
@@ -73,8 +73,8 @@ export const integralTestProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(f(x) = x^{-p}\)는 \([1,\infty)\)에서 양수이며 감소하므로 적분 판정법의 가설을 만족합니다. 부정적분을 계산합니다: \(p = 1\)이면 \(\int_1^{R} x^{-1}\,dx = \ln R\); \(p \ne 1\)이면 \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\)입니다.`,
-          en: String.raw`\(f(x) = x^{-p}\) is positive and decreasing on \([1,\infty)\), so the integral test applies. Compute: for \(p = 1\), \(\int_1^{R} x^{-1}\,dx = \ln R\); for \(p \ne 1\), \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\).`,
+          ko: String.raw`먼저 \(p \le 0\)인 경우: \(n^{-p} \ge 1\)이라 일반항이 \(0\)으로 가지 않으므로 term test로 발산합니다 (이 범위에서는 \(f(x) = x^{-p}\)가 increasing이라 적분 판정법을 적용할 수 없습니다). 이제 \(p > 0\)인 경우만 다루면 \(f(x) = x^{-p}\)는 \([1,\infty)\)에서 양수이며 감소하므로 적분 판정법의 가설을 만족합니다. 부정적분을 계산합니다: \(p = 1\)이면 \(\int_1^{R} x^{-1}\,dx = \ln R\); \(p \ne 1\)이면 \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\)입니다.`,
+          en: String.raw`First, \(p \le 0\): \(n^{-p} \ge 1\), so the general term does not tend to \(0\) and the series diverges by the term test (on this range \(f(x) = x^{-p}\) is increasing, so the integral test does not apply). Now assume \(p > 0\); then \(f(x) = x^{-p}\) is positive and decreasing on \([1,\infty)\), so the integral test applies. Compute: for \(p = 1\), \(\int_1^{R} x^{-1}\,dx = \ln R\); for \(p \ne 1\), \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\).`,
         },
       },
       {
@@ -85,8 +85,8 @@ export const integralTestProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(p = 1\): \(\ln R \to \infty\)이므로 적분이 발산하고, 따라서 조화급수 \(\sum 1/n\)도 발산합니다. \(p < 1\): \(1 - p > 0\)이므로 \(\frac{R^{1-p}-1}{1-p} \to \infty\) — 적분이 발산하고 급수도 발산합니다.`,
-          en: String.raw`\(p = 1\): \(\ln R \to \infty\), so the integral diverges, and hence the harmonic series \(\sum 1/n\) diverges. \(p < 1\): \(1 - p > 0\), so \(\frac{R^{1-p}-1}{1-p} \to \infty\) — the integral diverges and so does the series.`,
+          ko: String.raw`\(p = 1\): \(\ln R \to \infty\)이므로 적분이 발산하고, 따라서 조화급수 \(\sum 1/n\)도 발산합니다. \(0 < p < 1\): \(1 - p > 0\)이므로 \(\frac{R^{1-p}-1}{1-p} \to \infty\) — 적분이 발산하고 적분 판정법으로 급수도 발산합니다 (\(p \le 0\)은 1단계 term test로 이미 처리했습니다).`,
+          en: String.raw`\(p = 1\): \(\ln R \to \infty\), so the integral diverges, and hence the harmonic series \(\sum 1/n\) diverges. \(0 < p < 1\): \(1 - p > 0\), so \(\frac{R^{1-p}-1}{1-p} \to \infty\) — the integral diverges and, by the integral test, so does the series (the case \(p \le 0\) was handled by the term test in step 1).`,
         },
       },
       {

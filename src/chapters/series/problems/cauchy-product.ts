@@ -42,14 +42,14 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`둘째 항을 제어한다. 절대수렴이므로 \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\)이다. \(\varepsilon > 0\)가 주어지면 \(m > M\)일 때 \(|R_m| < \varepsilon\)인 \(M\)을 잡는다. 합을 \(k \leq N-M-1\)과 \(k \geq N-M\)으로 나누면, 앞부분은 \(|R_{N-k}| < \varepsilon\)이므로 \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이다.`,
-          en: String.raw`Control the second term. Absolute convergence gives \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\). Given \(\varepsilon > 0\), pick \(M\) with \(|R_m| < \varepsilon\) for \(m > M\). Split the sum at \(k = N-M\): on the head, \(|R_{N-k}| < \varepsilon\), so \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\).`,
+          ko: String.raw`둘째 항을 제어한다. 절대수렴이므로 \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\)이다. \(\varepsilon > 0\)가 주어지면 \(m > M\)일 때 \(|R_m| < \varepsilon\)인 \(M\)을 잡는다. \(N > M\)인 경우(충분히 큰 \(N\))에만 합을 \(k \leq N-M-1\)과 \(k \geq N-M\)으로 나눈다. 앞부분은 \(|R_{N-k}| < \varepsilon\)이므로 \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이다.`,
+          en: String.raw`Control the second term. Absolute convergence gives \(\alpha = \sum_{k=0}^{\infty} |a_k| < \infty\). Given \(\varepsilon > 0\), pick \(M\) with \(|R_m| < \varepsilon\) for \(m > M\). Only for \(N > M\) (all sufficiently large \(N\)) split the sum at \(k = N-M\): on the head, \(|R_{N-k}| < \varepsilon\), so \(\left|\sum_{k=0}^{N-M-1} a_k R_{N-k}\right| \leq \varepsilon \alpha\).`,
         },
       },
       {
         text: {
-          ko: String.raw`뒷부분은 항이 \(M+1\)개뿐이다: \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \max_{N-M \leq k \leq N} |a_k|\)인데, 절대수렴하는 급수의 항은 \(0\)으로 가므로 \(a_k \to 0\)이고, 이 최댓값은 \(N \to \infty\)일 때 \(0\)으로 간다. 따라서 \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이고, \(\varepsilon\)이 임의이므로 이 합은 \(0\)으로 간다.`,
-          en: String.raw`The tail has only \(M+1\) terms: \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \max_{N-M \leq k \leq N} |a_k|\), and since an absolutely convergent series has \(a_k \to 0\), this maximum tends to \(0\) as \(N \to \infty\). Hence \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\), and \(\varepsilon\) was arbitrary, so the sum tends to \(0\).`,
+          ko: String.raw`뒷부분은 항이 \(M+1\)개뿐이다(\(N > M\)). 올바른 bound는 \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \sum_{k=N-M}^{N} |a_k|\)입니다 — 곱의 합의 절대값은 \(|a_k|\)들의 합이 필요하며, \(\max |a_k|\) 하나만으로는 부족합니다. 고정된 \(M\)에 대해 \(\sum_{k=N-M}^{N} |a_k| \le \sum_{k > N-M} |a_k| \to 0\) (\(N \to \infty\), 절대수렴 급수의 꼬리)이므로 뒷부분은 \(0\)으로 갑니다. 따라서 \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\)이고, \(\varepsilon\)이 임의이므로 이 합은 \(0\)으로 간다.`,
+          en: String.raw`The tail has only \(M+1\) terms (for \(N > M\)). The correct bound is \(\left|\sum_{k=N-M}^{N} a_k R_{N-k}\right| \leq \left(\max_{0 \leq m \leq M} |R_m|\right) \cdot \sum_{k=N-M}^{N} |a_k|\) — a sum of products needs the sum of \(|a_k|\), not a single \(\max |a_k|\). For fixed \(M\), \(\sum_{k=N-M}^{N} |a_k| \le \sum_{k > N-M} |a_k| \to 0\) as \(N \to \infty\) (the tail of the absolutely convergent \(\sum |a_k|\)), so the tail tends to \(0\). Hence \(\limsup_{N \to \infty} \left|\sum_{k=0}^{N} a_k R_{N-k}\right| \leq \varepsilon \alpha\), and \(\varepsilon\) was arbitrary, so the sum tends to \(0\).`,
         },
       },
       {
@@ -127,8 +127,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`산술-기하 평균 부등식으로 \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\)이다. 따라서 각 피가수 \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\)이고, 항이 \(n+1\)개이므로 \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\)이다. \(n \geq 0\)에서 \(\frac{2(n+1)}{n+2} \geq 1\)이므로 \(|c_n| \geq 1\)이다 (실제로 \(|c_n| \to 2\)).`,
-          en: String.raw`By AM-GM, \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\). Hence each summand \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\), and with \(n+1\) summands, \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\). Since \(\frac{2(n+1)}{n+2} \geq 1\) for \(n \geq 0\), \(|c_n| \geq 1\) (in fact \(|c_n| \to 2\)).`,
+          ko: String.raw`산술-기하 평균 부등식으로 \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\)이다. 따라서 각 피가수 \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\)이고, 항이 \(n+1\)개이므로 \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\)이다. \(n \geq 0\)에서 \(\frac{2(n+1)}{n+2} \geq 1\)이므로 \(|c_n| \geq 1\)이다 (실제로 \(|c_n| \to \pi\)입니다: 이 합은 \(\int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \pi\)의 Riemann 합입니다; 수치로 \(|c_{100}| \approx 2.85\), \(|c_{400}| \approx 3.00\)으로 \(\pi\)에 다가갑니다).`,
+          en: String.raw`By AM-GM, \((k+1)(n-k+1) \leq \left(\frac{(k+1)+(n-k+1)}{2}\right)^2 = \left(\frac{n+2}{2}\right)^2\). Hence each summand \(\frac{1}{\sqrt{(k+1)(n-k+1)}} \geq \frac{2}{n+2}\), and with \(n+1\) summands, \(|c_n| \geq (n+1)\cdot\frac{2}{n+2} = \frac{2(n+1)}{n+2}\). Since \(\frac{2(n+1)}{n+2} \geq 1\) for \(n \geq 0\), \(|c_n| \geq 1\) (in fact \(|c_n| \to \pi\): the sum is a Riemann sum for \(\int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \pi\); numerically \(|c_{100}| \approx 2.85\), \(|c_{400}| \approx 3.00\), approaching \(\pi\)).`,
         },
       },
       {

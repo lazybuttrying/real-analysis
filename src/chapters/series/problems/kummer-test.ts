@@ -104,8 +104,8 @@ export const kummerTestProblems: readonly ProblemMeta[] = [
   {
     id: 'kummer-gauss-example',
     statement: {
-      ko: String.raw`Gauss 판정법의 따름정리로서: \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\)에 대해 \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (즉 Gauss \(h = a\))임을 보이고, \(a = 2\)이면 \(\sum a_n\)이 수렴하고 \(a = \frac12\)이면 발산함을 Kummer 판정법으로 증명하세요.`,
-      en: String.raw`As a corollary of Gauss's test: for \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\), show \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (i.e. Gauss \(h = a\)), then prove via Kummer's test that \(\sum a_n\) converges for \(a = 2\) and diverges for \(a = \frac12\).`,
+      ko: String.raw`Gauss 판정법의 따름정리로서: \(a > 0\)인 경우 \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\)에 대해 \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (즉 Gauss \(h = a\))임을 보이고, \(a = 2\)이면 \(\sum a_n\)이 수렴하고 \(a = \frac12\)이면 발산함을 Kummer 판정법으로 증명하세요. (\(a > 0\) 제한이 필요합니다: \(a = -1\)이면 \(n = 1\)에서 분모가 \(0\)이 되고, \(a \le -1\)이면 인자가 \(0\)이 되거나 음수가 되어 Kummer 판정법의 \(a_n > 0\) 가정이 깨집니다.)`,
+      en: String.raw`As a corollary of Gauss's test: for \(a > 0\) and \(a_n = \frac{n!}{(a+1)(a+2)\cdots(a+n)}\), show \(\frac{a_n}{a_{n+1}} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right)\) (i.e. Gauss \(h = a\)), then prove via Kummer's test that \(\sum a_n\) converges for \(a = 2\) and diverges for \(a = \frac12\). (The restriction \(a > 0\) is needed: \(a = -1\) makes a denominator \(0\) at \(n = 1\), and \(a \le -1\) can make factors \(0\) or negative, violating Kummer's hypothesis \(a_n > 0\).)`,
     },
     display: [
       String.raw`\frac{a_n}{a_{n+1}} = \frac{n+a+1}{n+1} = 1 + \frac{a}{n+1} = 1 + \frac{a}{n} + O\left(\frac{1}{n^2}\right), \qquad h = a`,

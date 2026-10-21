@@ -40,8 +40,8 @@ export const tauberProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`부분합 \(s_n = a_0 + \cdots + a_n\) (\(s_{-1} = 0\))에 대한 Abel 부분합 공식: \(0 \le r < 1\)에서 \(A(r) = (1-r)\sum_{n \ge 0} s_n r^n\)입니다. (\(a_n = s_n - s_{n-1}\)을 대입하면 \(\sum (s_n - s_{n-1}) r^n = (1-r)\sum s_n r^n\) — \(|r| < 1\)에서 재배열이 정당합니다.)`,
-          en: String.raw`Abel summation by parts for the partial sums \(s_n = a_0 + \cdots + a_n\) (\(s_{-1} = 0\)): for \(0 \le r < 1\), \(A(r) = (1-r)\sum_{n \ge 0} s_n r^n\). (Substitute \(a_n = s_n - s_{n-1}\) and \(\sum (s_n - s_{n-1}) r^n = (1-r)\sum s_n r^n\) — the rearrangement is legitimate for \(|r| < 1\).)`,
+          ko: String.raw`부분합 \(s_n = a_0 + \cdots + a_n\) (\(s_{-1} = 0\))에 대한 Abel 부분합 공식: \(0 \le r < 1\)에서 \(A(r) = (1-r)\sum_{n \ge 0} s_n r^n\)입니다. 정당화: \(n\,a_n \to 0\)이므로 \((a_n)\)은 유계이고 \(s_N = O(N)\)이며, 따라서 \(\sum s_n r^n\)은 \(|r| < 1\)에서 절대수렴하고 (\(\sum N|r|^N < \infty\)), 경계항 \(s_N r^N \to 0\)입니다(지수 감소가 다항 증가를 이깁니다). 이 조건 아래에서 \(a_n = s_n - s_{n-1}\)을 대입한 부분합 재배열 \(\sum (s_n - s_{n-1}) r^n = (1-r)\sum s_n r^n\)이 정당합니다.`,
+          en: String.raw`Abel summation by parts for the partial sums \(s_n = a_0 + \cdots + a_n\) (\(s_{-1} = 0\)): for \(0 \le r < 1\), \(A(r) = (1-r)\sum_{n \ge 0} s_n r^n\). Justification: since \(n\,a_n \to 0\), \((a_n)\) is bounded and \(s_N = O(N)\); hence \(\sum s_n r^n\) converges absolutely for \(|r| < 1\) (\(\sum N|r|^N < \infty\)) and the boundary term satisfies \(s_N r^N \to 0\) (exponential decay beats polynomial growth). Under these facts, substituting \(a_n = s_n - s_{n-1}\) and rearranging \(\sum (s_n - s_{n-1}) r^n = (1-r)\sum s_n r^n\) is legitimate.`,
         },
       },
       {
@@ -58,10 +58,10 @@ export const tauberProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(n \ge M\) 부분은 \(\varepsilon\left(1-\frac{1}{N}\right)\sum_{n \ge M}|\ln(n/N)|\left(1-\frac{1}{N}\right)^n\) 이하입니다. \(u = n/N\)으로 치환하면 이는 \(\int_0^{\infty} |\ln u|\,e^{-u}\,du\)의 리만합이므로 (피적분함수는 적분가능), \(N \to \infty\)에서 \(\varepsilon\,C_0\) (유한 상수)로 수렴합니다.`,
-          en: String.raw`For \(n \ge M\) the contribution is at most \(\varepsilon\left(1-\frac{1}{N}\right)\sum_{n \ge M}|\ln(n/N)|\left(1-\frac{1}{N}\right)^n\). Substituting \(u = n/N\) turns this into a Riemann sum for \(\int_0^{\infty} |\ln u|\,e^{-u}\,du\) (the integrand is integrable), so it converges to \(\varepsilon\,C_0\) (a finite constant) as \(N \to \infty\).`,
+          ko: String.raw`\(n \ge M\) 부분은 \((1 - r_N) = \frac{1}{N}\)이므로 \(\varepsilon\cdot\frac{1}{N}\sum_{n \ge M}|\ln(n/N)|\left(1-\frac{1}{N}\right)^n\) 이하입니다. 지배 논증: \(u = n/N\)으로 두면, \(n \le N\)에서는 \(|\ln u|\)의 \(u = 0\) 특이점이 적분가능하고(\(\int_0^1 |\ln u|\,du = 1\)), \(n > N\)에서는 \(\left(1-\frac{1}{N}\right)^n \le e^{-n/(2N)}\) (\(N \ge 2\))이라 꼬리가 \(|\ln u|\,e^{-u/2}\)라는 적분가능한 envelope로 지배됩니다. \(n < M\) 구간은 유한히 처리됩니다. 따라서 리만합에 대한 지배수렴으로, \(N \to \infty\)에서 이 식은 \(\int_0^{\infty} |\ln u|\,e^{-u}\,du\)로 수렴하므로, 기여도는 \(\varepsilon\,C_0\) (유한 상수 \(C_0 = \int_0^{\infty} |\ln u|\,e^{-u}\,du\))로 수렴합니다.`,
+          en: String.raw`For \(n \ge M\) the contribution is at most \(\varepsilon\cdot\frac{1}{N}\sum_{n \ge M}|\ln(n/N)|\left(1-\frac{1}{N}\right)^n\), since \((1 - r_N) = \frac{1}{N}\). Dominated argument: with \(u = n/N\), the singularity of \(|\ln u|\) at \(u = 0\) is integrable (\(\int_0^1 |\ln u|\,du = 1\)) on the range \(n \le N\), while for \(n > N\), \(\left(1-\frac{1}{N}\right)^n \le e^{-n/(2N)}\) (\(N \ge 2\)), so the tail is dominated by the integrable envelope \(|\ln u|\,e^{-u/2}\); the finitely many indices \(n < M\) are handled separately. Hence, by dominated convergence for Riemann sums, this expression converges to \(\int_0^{\infty} |\ln u|\,e^{-u}\,du\) as \(N \to \infty\), so the contribution converges to \(\varepsilon\,C_0\) with the finite constant \(C_0 = \int_0^{\infty} |\ln u|\,e^{-u}\,du\).`,
         },
-        display: [String.raw`\left(1-\frac{1}{N}\right)\sum_{n \ge M} \left\lvert\ln\frac{n}{N}\right\rvert \left(1-\frac{1}{N}\right)^n \longrightarrow \int_0^{\infty} \lvert\ln u\rvert\,e^{-u}\,du < \infty`],
+        display: [String.raw`\frac{1}{N}\sum_{n \ge M} \left\lvert\ln\frac{n}{N}\right\rvert \left(1-\frac{1}{N}\right)^n \longrightarrow \int_0^{\infty} \lvert\ln u\rvert\,e^{-u}\,du < \infty`],
       },
       {
         text: {
@@ -110,8 +110,8 @@ export const tauberProblems: readonly ProblemMeta[] = [
   {
     id: 'series-d',
     statement: {
-      ko: String.raw`\(d_n = \frac{(-1)^n}{(n+1)\ln(n+2)}\)에 대해 \(n\,d_n \to 0\)을 증명하고 (한 줄), \(\sum d_n\)이 수렴함을 증명하세요 (교대급수 판정법). 그런 뒤 타우버 정리를 적용해 그 Abel 합이 보통 합과 같음을 결론지으세요.`,
-      en: String.raw`For \(d_n = \frac{(-1)^n}{(n+1)\ln(n+2)}\), prove \(n\,d_n \to 0\) (one line) and prove \(\sum d_n\) converges (alternating series test). Then apply Tauber's theorem to conclude its Abel sum equals its ordinary sum.`,
+      ko: String.raw`\(d_n = \frac{(-1)^n}{(n+1)\ln(n+2)}\)에 대해 \(n\,d_n \to 0\)을 증명하고 (한 줄), \(\sum d_n\)이 수렴함을 증명하세요 (교대급수 판정법). 그런 뒤 Abel 연속성 정리를 적용해 그 Abel 합이 보통 합과 같음을 결론지으세요.`,
+      en: String.raw`For \(d_n = \frac{(-1)^n}{(n+1)\ln(n+2)}\), prove \(n\,d_n \to 0\) (one line) and prove \(\sum d_n\) converges (alternating series test). Then apply Abel's continuity theorem to conclude its Abel sum equals its ordinary sum.`,
     },
     display: [
       String.raw`\lvert n\,d_n\rvert = \frac{n}{(n+1)\ln(n+2)} \to 0`,
@@ -138,8 +138,8 @@ export const tauberProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(\sum d_n\)이 Abel 총합가능함은 등비급수 majorant로 자명하고 (\(|d_n|\,r^n\)의 합), 타우버 정리(첫 번째 문제)에 의해 그 Abel 합은 보통 합 \(S_D\)와 같습니다. 수치 확인: \(A_D(0.999) \approx 1.13666\)으로 \(S_{4000} \approx 1.13643\)과 \(\approx 2.3\times 10^{-4}\) 차이 — 정리가 약속한 일치가 그림에 그대로 나타납니다.`,
-          en: String.raw`Abel summability of \(\sum d_n\) is immediate (\(\sum |d_n|\,r^n\) converges by comparison), and by Tauber's theorem (first problem) its Abel sum equals the ordinary sum \(S_D\). Numerical check: \(A_D(0.999) \approx 1.13666\) differs from \(S_{4000} \approx 1.13643\) by only \(\approx 2.3\times 10^{-4}\) — exactly the agreement the theorem promises, visible in the chart.`,
+          ko: String.raw`각 고정된 \(r < 1\)에 대해 \(\sum |d_n|\,r^n\)이 수렴하므로(등비급수 majorant) \(A_D(r)\)이 정의될 뿐, 그것만으로는 \(A_D(r) \to L\)이 나오지 않습니다. 이미 \(\sum d_n\)이 \(S_D\)로 수렴함을 보였으므로, Abel 연속성 정리에 의해 \(A_D(r) \to S_D\) (\(r \to 1^{-}\))입니다 — 즉 Abel 합은 보통 합 \(S_D\)와 같습니다. (이는 타우버 정리가 아니라, 이미 수렴하는 급수에 대한 Abel 연속성입니다.) 수치 확인: \(A_D(0.999) \approx 1.13666\)으로 \(S_{4000} \approx 1.13643\)과 \(\approx 2.3\times 10^{-4}\) 차이 — 정리가 약속한 일치가 그림에 그대로 나타납니다.`,
+          en: String.raw`For each fixed \(r < 1\), \(\sum |d_n|\,r^n\) converges (geometric majorant), so \(A_D(r)\) is defined — but that alone does not give \(A_D(r) \to L\). Since \(\sum d_n\) was already shown to converge to \(S_D\), Abel's continuity theorem gives \(A_D(r) \to S_D\) as \(r \to 1^{-}\) — i.e. the Abel sum equals the ordinary sum \(S_D\). (This is Abel continuity for an already-convergent series, not Tauber's theorem.) Numerical check: \(A_D(0.999) \approx 1.13666\) differs from \(S_{4000} \approx 1.13643\) by only \(\approx 2.3\times 10^{-4}\) — exactly the agreement the theorem promises, visible in the chart.`,
         },
       },
     ],

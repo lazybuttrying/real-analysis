@@ -78,8 +78,8 @@ export const relationsEquivalenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이제 \([x] \subseteq [y]\)를 보입니다. \(w \in [x]\)라 하면 \(w \sim x\)이고, 위의 준비에서 \(x \sim y\)이므로 대칭성으로 \(y \sim x\)를 얻고, \(w \sim x\)에 추이성을 적용하면 \(w \sim y\), 즉 \(w \in [y]\)입니다. 역할을 바꾸면 \([y] \subseteq [x]\)도 얻어지므로 \([x] = [y]\)입니다.`,
-          en: String.raw`Now show \([x] \subseteq [y]\). If \(w \in [x]\) then \(w \sim x\); from the setup, \(x \sim y\), so symmetry gives \(y \sim x\) and transitivity from \(w \sim x\) yields \(w \sim y\), i.e. \(w \in [y]\). Swapping the roles gives \([y] \subseteq [x]\), hence \([x] = [y]\).`,
+          ko: String.raw`이제 \([x] \subseteq [y]\)를 보입니다. \(w \in [x]\)라 하면 \(w \sim x\)이고, 위의 준비에서 얻은 \(x \sim y\)와 \(w \sim x\)를 추이성으로 바로 이으면 \(w \sim y\), 즉 \(w \in [y]\)입니다. 역할을 바꾸면 \([y] \subseteq [x]\)도 얻어지므로 \([x] = [y]\)입니다.`,
+          en: String.raw`Now show \([x] \subseteq [y]\). If \(w \in [x]\) then \(w \sim x\); chaining \(w \sim x\) with \(x \sim y\) from the setup by transitivity gives \(w \sim y\) directly, i.e. \(w \in [y]\). Swapping the roles gives \([y] \subseteq [x]\), hence \([x] = [y]\).`,
         },
       },
       {
@@ -120,8 +120,8 @@ export const relationsEquivalenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`(c) 각 동치류 \(x + \mathbb{Q}\)에서 대표원소 딱 하나를 골라 모은 집합이 비탈리 집합입니다. 그런데 동치류가 비가산히 많고 어느 하나도 “자연스러운” 대표원소가 없기 때문에, 이 선택은 선택 공리(the axiom of choice)를 필요로 합니다 — 규칙으로는 고를 수 없고, 공리가 존재만을 보장합니다. 적분 단원의 비탈리(vitali) 씬에서는 바로 이 집합이 르베그 가측(measure)이 아님을 보입니다: 측정 가능한 유리수 이동들의 합집합이 유계 구간 전체를 덮을 수 없기 때문입니다.`,
-          en: String.raw`(c) Choosing exactly one representative from each class \(x + \mathbb{Q}\) and collecting them produces a Vitali set. But there are uncountably many classes and none has a "natural" representative, so this choice requires the axiom of choice — no rule can make the picks; the axiom only guarantees existence. In the integration chapter's vitali scene, this very set is shown not to be Lebesgue measurable: countably many measurable rational translates cannot reassemble into a bounded interval.`,
+          ko: String.raw`(c) 각 동치류 \(x + \mathbb{Q}\)에서 대표원소 딱 하나를 골라 모은 집합이 비탈리 집합입니다. 그런데 동치류가 비가산히 많고 어느 하나도 “자연스러운” 대표원소가 없기 때문에, 이 선택은 선택 공리(the axiom of choice)를 필요로 합니다 — 규칙으로는 고를 수 없고, 공리가 존재만을 보장합니다. 적분 단원의 비탈리(vitali) 씬에서는 바로 이 집합이 르베그 가측(measure)이 아님을 보입니다. 대표원소는 \([0,1]\) 안에서 고릅니다 (모든 동치류 \(x + \mathbb{Q}\)는 \([0,1]\)와 만남) — 따라서 \(V \subseteq [0,1]\)입니다. \(q \in \mathbb{Q} \cap [-1,1]\)인 이동 \(V + q\)들은 서로소입니다: \((V + q_1) \cap (V + q_2) \ne \emptyset\)이면 두 대표원소의 차가 \(q_2 - q_1 \in \mathbb{Q}\)라 같은 동치류에 속해 둘이 같아야 하고, 따라서 \(q_1 = q_2\)입니다. 모든 이동은 평행이동 불변성에 의해 \(V\)와 측도가 같고, 합집합은 \([0,1]\)를 덮으며 (각 \(x \in [0,1]\)는 그 대표원소와 \(|q| \le 1\)인 유리수 \(q\)만큼 차이 남), \([-1, 2]\) 안에 들어갑니다. \(V\)가 가측이고 \(m(V) = 0\)이면 가산합집합의 측도가 \(0\)이라 \([0,1]\)를 덮는다는 데 모순이고, \(m(V) > 0\)이면 \([-1, 2]\) 안의 합집합 측도가 무한대가 되어 모순입니다. 따라서 \(V\)는 가측이 아닙니다.`,
+          en: String.raw`(c) Choosing exactly one representative from each class \(x + \mathbb{Q}\) and collecting them produces a Vitali set. But there are uncountably many classes and none has a "natural" representative, so this choice requires the axiom of choice — no rule can make the picks; the axiom only guarantees existence. In the integration chapter's vitali scene, this very set is shown not to be Lebesgue measurable. Take the representatives in \([0,1]\) (every class \(x + \mathbb{Q}\) meets \([0,1]\)), so \(V \subseteq [0,1]\). The translates \(V + q\) for \(q \in \mathbb{Q} \cap [-1,1]\) are pairwise disjoint: if \((V + q_1) \cap (V + q_2) \ne \emptyset\) then two representatives differ by \(q_2 - q_1 \in \mathbb{Q}\), hence lie in the same class, hence are equal, so \(q_1 = q_2\). They all have the same measure as \(V\) (translation invariance), they cover \([0,1]\) (each \(x \in [0,1]\) differs from its representative by a rational \(q\) with \(|q| \le 1\)), and their union lies in \([-1, 2]\). If \(V\) were measurable with \(m(V) = 0\), the countable union would have measure \(0\), contradicting that it covers \([0,1]\); if \(m(V) > 0\), the union inside \([-1, 2]\) would have infinite measure, again a contradiction. Hence \(V\) is not measurable.`,
         },
       },
     ],
