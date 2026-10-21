@@ -28,8 +28,12 @@ export const sqrt2IrrationalProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 부호를 줄입니다: 유리수 \(r\)가 \(r^2 = 2\)를 만족하면 \(|r|\)도 유리수이고 \(|r|^2 = r^2 = 2\)이며, \(r \ne 0\)이므로 \(|r|\)는 양의 유리수 해입니다. 따라서 양의 해를 배제하면 충분합니다. \(\left(\frac{p}{q}\right)^2 = 2\)인 양의 유리수 \(p/q\)가 존재한다고 가정합니다. 아래 문제 2에 의해 \(p/q\)는 기약분수, 즉 \(\gcd(p, q) = 1\)로 둘 수 있습니다.`,
-          en: String.raw`First reduce the sign: if a rational \(r\) satisfies \(r^2 = 2\), then \(|r|\) is rational, \(|r|^2 = r^2 = 2\), and \(r \ne 0\), so \(|r|\) is a positive rational solution. Hence it suffices to rule out a positive solution. Suppose a positive rational \(p/q\) with \(\left(\frac{p}{q}\right)^2 = 2\) exists. By problem 2 below, we may take \(p/q\) in lowest terms, i.e. \(\gcd(p, q) = 1\).`,
+          ko: String.raw`먼저 부호를 줄입니다: 유리수 \(r\)가 \(r^2 = 2\)를 만족하면 \(|r|\)도 유리수이고 \(|r|^2 = r^2 = 2\)이며, \(r \ne 0\)이므로 \(|r|\)는 양의 유리수 해입니다. 따라서 양의 해를 배제하면 충분합니다.
+
+\(\left(\frac{p}{q}\right)^2 = 2\)인 양의 유리수 \(p/q\)가 존재한다고 가정합니다. 아래 문제 2에 의해 \(p/q\)는 기약분수, 즉 \(\gcd(p, q) = 1\)로 둘 수 있습니다.`,
+          en: String.raw`First reduce the sign: if a rational \(r\) satisfies \(r^2 = 2\), then \(|r|\) is rational, \(|r|^2 = r^2 = 2\), and \(r \ne 0\), so \(|r|\) is a positive rational solution. Hence it suffices to rule out a positive solution.
+
+Suppose a positive rational \(p/q\) with \(\left(\frac{p}{q}\right)^2 = 2\) exists. By problem 2 below, we may take \(p/q\) in lowest terms, i.e. \(\gcd(p, q) = 1\).`,
         },
       },
       {
@@ -69,14 +73,22 @@ export const sqrt2IrrationalProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`양의 유리수 \(r\)를 고정합니다. \(S = \{n \in \mathbb{N} : \text{어떤 } m \in \mathbb{N}\text{에 대해 } r = m/n\}\)이라 두면, \(r = a/b\) (\(a, b\) 양의 정수)라 쓸 수 있으므로 \(b \in S\) — \(S\)는 자연수의 비어 있지 않은 부분집합입니다. (여기서 \(\mathbb{N} = \{1, 2, 3, \dots\}\)입니다.)`,
-          en: String.raw`Fix a positive rational \(r\). Let \(S = \{n \in \mathbb{N} : r = m/n \text{ for some } m \in \mathbb{N}\}\); since \(r = a/b\) for positive integers \(a, b\), we have \(b \in S\) — so \(S\) is a nonempty subset of \(\mathbb{N}\). (Here \(\mathbb{N} = \{1, 2, 3, \dots\}\).)`,
+          ko: String.raw`양의 유리수 \(r\)를 고정합니다. \(S = \{n \in \mathbb{N} : \text{어떤 } m \in \mathbb{N}\text{에 대해 } r = m/n\}\)이라 두면, \(r = a/b\) (\(a, b\) 양의 정수)라 쓸 수 있으므로 \(b \in S\) — \(S\)는 자연수의 비어 있지 않은 부분집합입니다.
+
+(여기서 \(\mathbb{N} = \{1, 2, 3, \dots\}\)입니다.)`,
+          en: String.raw`Fix a positive rational \(r\). Let \(S = \{n \in \mathbb{N} : r = m/n \text{ for some } m \in \mathbb{N}\}\); since \(r = a/b\) for positive integers \(a, b\), we have \(b \in S\) — so \(S\) is a nonempty subset of \(\mathbb{N}\).
+
+(Here \(\mathbb{N} = \{1, 2, 3, \dots\}\).)`,
         },
       },
       {
         text: {
-          ko: String.raw`정렬성 원리에 의해 \(S\)는 최소 원소 \(q_0\)를 갖습니다. \(r = p_0/q_0\)인 \(p_0 \in \mathbb{N}\)를 택합니다. 이제 \(\gcd(p_0, q_0) = 1\)임을 보입니다.`,
-          en: String.raw`By the well-ordering principle, \(S\) has a least element \(q_0\). Pick \(p_0 \in \mathbb{N}\) with \(r = p_0/q_0\). We now show \(\gcd(p_0, q_0) = 1\).`,
+          ko: String.raw`정렬성 원리에 의해 \(S\)는 최소 원소 \(q_0\)를 갖습니다. \(r = p_0/q_0\)인 \(p_0 \in \mathbb{N}\)를 택합니다.
+
+이제 \(\gcd(p_0, q_0) = 1\)임을 보입니다.`,
+          en: String.raw`By the well-ordering principle, \(S\) has a least element \(q_0\). Pick \(p_0 \in \mathbb{N}\) with \(r = p_0/q_0\).
+
+We now show \(\gcd(p_0, q_0) = 1\).`,
         },
       },
       {
@@ -129,8 +141,12 @@ export const sqrt2IrrationalProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`문제 1에 의해 이 구간 안에 제곱이 정확히 \(2\)인 유리수는 없습니다. 그럼에도 \(\frac{7}{5}, \frac{17}{12}\)처럼 \(2\)를 양쪽에서 조이는 유리수는 얼마든지 찾을 수 있고(모델에서 \(N\)을 키울수록 최단 거리가 \(0.0142 \to 0.00245 \to \cdots\)로 줄어듭니다), 위의 일반 추정과 함께 이는 유리수가 \(\sqrt{2}\) 자리에 원하는 만큼 가까워질 수 있음 — 그러나 결코 닿지 않음 — 을 보여줍니다. 이 구멍을 메우는 수가 바로 상한 공리로 존재가 보장되는 \(\sqrt{2}\)입니다 (n제곱근 장면).`,
-          en: String.raw`By problem 1, no rational in this interval squares to exactly \(2\). Yet rationals squeezing \(2\) from both sides, like \(\frac{7}{5}\) and \(\frac{17}{12}\), are easy to find (in the model the shortest distance shrinks \(0.0142 \to 0.00245 \to \cdots\) as \(N\) grows), and together with the general estimate above this shows the rationals get as close as one likes to the \(\sqrt{2}\) slot, but never touch it. The number filling this hole is the \(\sqrt{2}\) whose existence the least-upper-bound axiom guarantees (the n-th root scene).`,
+          ko: String.raw`문제 1에 의해 이 구간 안에 제곱이 정확히 \(2\)인 유리수는 없습니다. 그럼에도 \(\frac{7}{5}, \frac{17}{12}\)처럼 \(2\)를 양쪽에서 조이는 유리수는 얼마든지 찾을 수 있고(모델에서 \(N\)을 키울수록 최단 거리가 \(0.0142 \to 0.00245 \to \cdots\)로 줄어듭니다), 위의 일반 추정과 함께 이는 유리수가 \(\sqrt{2}\) 자리에 원하는 만큼 가까워질 수 있음 — 그러나 결코 닿지 않음 — 을 보여줍니다.
+
+이 구멍을 메우는 수가 바로 상한 공리로 존재가 보장되는 \(\sqrt{2}\)입니다 (n제곱근 장면).`,
+          en: String.raw`By problem 1, no rational in this interval squares to exactly \(2\). Yet rationals squeezing \(2\) from both sides, like \(\frac{7}{5}\) and \(\frac{17}{12}\), are easy to find (in the model the shortest distance shrinks \(0.0142 \to 0.00245 \to \cdots\) as \(N\) grows), and together with the general estimate above this shows the rationals get as close as one likes to the \(\sqrt{2}\) slot, but never touch it.
+
+The number filling this hole is the \(\sqrt{2}\) whose existence the least-upper-bound axiom guarantees (the n-th root scene).`,
         },
       },
     ],

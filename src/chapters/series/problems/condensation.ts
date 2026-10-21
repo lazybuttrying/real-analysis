@@ -27,15 +27,35 @@ export const condensationProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`블록 \(n\)은 \([2^n, 2^{n+1})\) 구간에 \(2^n\)개의 항을 갖습니다. 감소수열이므로 각 항은 \(a_{2^n}\) 이하, \(a_{2^{n+1}}\) 이상입니다. 따라서 블록 합 \(B_n = \sum_{k=2^n}^{2^{n+1}-1} a_k\)는
+          ko: String.raw`블록 \(n\)은 \([2^n, 2^{n+1})\) 구간에 \(2^n\)개의 항을 갖습니다.
+
+감소수열이므로 각 항은 \(a_{2^n}\) 이하, \(a_{2^{n+1}}\) 이상입니다.
+
+따라서 블록 합 \(B_n = \sum_{k=2^n}^{2^{n+1}-1} a_k\)는
 \(\frac{1}{2}C_{n+1} = 2^n a_{2^{n+1}} \le B_n \le 2^n a_{2^n} = C_n\)을 만족합니다 (\(C_n := 2^n a_{2^n}\)).`,
-          en: String.raw`Block \(n\) holds \(2^n\) terms in \([2^n, 2^{n+1})\). Since the sequence decreases, each term is at most \(a_{2^n}\) and at least \(a_{2^{n+1}}\). Hence the block sum \(B_n = \sum_{k=2^n}^{2^{n+1}-1} a_k\) satisfies \(\frac{1}{2}C_{n+1} = 2^n a_{2^{n+1}} \le B_n \le 2^n a_{2^n} = C_n\) (with \(C_n := 2^n a_{2^n}\)).`,
+          en: String.raw`Block \(n\) holds \(2^n\) terms in \([2^n, 2^{n+1})\).
+
+Since the sequence decreases, each term is at most \(a_{2^n}\) and at least \(a_{2^{n+1}}\).
+
+Hence the block sum \(B_n = \sum_{k=2^n}^{2^{n+1}-1} a_k\) satisfies \(\frac{1}{2}C_{n+1} = 2^n a_{2^{n+1}} \le B_n \le 2^n a_{2^n} = C_n\) (with \(C_n := 2^n a_{2^n}\)).`,
         },
       },
       {
         text: {
-          ko: String.raw`\((\Leftarrow)\) \(B_j \le C_j\)를 \(j = 0\)부터 \(N\)까지 더하면 \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\)입니다. \(\sum C_j\)가 수렴하면 \(T_N \le T := \sum_{j=0}^{\infty} C_j < \infty\)입니다. 이진 부분합만이 아니라 모든 부분합으로 확장합니다: 임의의 \(m\)에 대해 \(m \le 2^{N+1} - 1\)인 \(N\)을 잡으면, \(a_k \ge 0\)이므로 \(S_m\)은 증가하고 \(S_m \le S_{2^{N+1}-1} \le T_N \le T\)입니다. 따라서 \(\sum a_n\)의 모든 부분합이 유계가 되어 수렴합니다.`,
-          en: String.raw`\((\Leftarrow)\) Summing \(B_j \le C_j\) for \(j = 0\) to \(N\) gives \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\). If \(\sum C_j\) converges, then \(T_N \le T := \sum_{j=0}^{\infty} C_j < \infty\). Extend from binary partial sums to all partial sums: for arbitrary \(m\), choose \(N\) with \(m \le 2^{N+1} - 1\); since \(a_k \ge 0\), \(S_m\) is increasing, so \(S_m \le S_{2^{N+1}-1} \le T_N \le T\). Hence all partial sums of \(\sum a_n\) are bounded and converge.`,
+          ko: String.raw`\((\Leftarrow)\) \(B_j \le C_j\)를 \(j = 0\)부터 \(N\)까지 더하면 \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\)입니다.
+
+\(\sum C_j\)가 수렴하면 \(T_N \le T := \sum_{j=0}^{\infty} C_j < \infty\)입니다.
+
+이진 부분합만이 아니라 모든 부분합으로 확장합니다: 임의의 \(m\)에 대해 \(m \le 2^{N+1} - 1\)인 \(N\)을 잡으면, \(a_k \ge 0\)이므로 \(S_m\)은 증가하고 \(S_m \le S_{2^{N+1}-1} \le T_N \le T\)입니다.
+
+따라서 \(\sum a_n\)의 모든 부분합이 유계가 되어 수렴합니다.`,
+          en: String.raw`\((\Leftarrow)\) Summing \(B_j \le C_j\) for \(j = 0\) to \(N\) gives \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\).
+
+If \(\sum C_j\) converges, then \(T_N \le T := \sum_{j=0}^{\infty} C_j < \infty\).
+
+Extend from binary partial sums to all partial sums: for arbitrary \(m\), choose \(N\) with \(m \le 2^{N+1} - 1\); since \(a_k \ge 0\), \(S_m\) is increasing, so \(S_m \le S_{2^{N+1}-1} \le T_N \le T\).
+
+Hence all partial sums of \(\sum a_n\) are bounded and converge.`,
         },
       },
       {
@@ -111,14 +131,42 @@ export const condensationProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 감소성을 검증합니다: \(x \ge 2\)에서 \(x \ln x\)의 도함수는 \(\ln x + 1 > 0\)이므로 \(x \ln x\)는 증가하고, 그 역수 \(a_n = \frac{1}{n \ln n}\)는 \(n \ge 2\)에서 감소하는 양수열입니다. 재인덱싱도 필요합니다: 문제 1의 응축은 \(n = 1\)부터 시작해 \(C_0\) 항을 포함하지만, 이 급수는 \(n = 2\)부터 시작하고 \(C_0 = \frac{1}{0 \cdot \ln 2}\)는 특이합니다. 따라서 응축된 합을 \(n \ge 1\)부터 시작합니다(\(C_n = 2^n a_{2^n}\), \(2^n \ge 2\)라 잘 정의됨; 유한 개의 항은 수렴성에 영향을 주지 않습니다). 응축하면 \(\ln 2^n = n \ln 2\)를 이용해 \(C_n = 2^n \cdot \frac{1}{2^n \cdot n \ln 2} = \frac{1}{\ln 2}\cdot\frac{1}{n}\) (\(n \ge 1\))이 되므로, 응축된 급수 \(\sum_{n \ge 1} C_n\)은 조화급수의 \(\frac{1}{\ln 2}\)배 — 발산합니다. 따라서 \(\sum_{n=2}^{\infty} \frac{1}{n \ln n}\)도 발산합니다.`,
-          en: String.raw`First verify the decreasing hypothesis: for \(x \ge 2\), \(x \ln x\) has derivative \(\ln x + 1 > 0\), so \(x \ln x\) is increasing and its reciprocal \(a_n = \frac{1}{n \ln n}\) is decreasing and positive for \(n \ge 2\). Reindexing is also needed: the condensation in problem 1 starts at \(n = 1\) and includes a \(C_0\) term, but this series starts at \(n = 2\) and \(C_0 = \frac{1}{0 \cdot \ln 2}\) is singular. So start the condensed sum at \(n \ge 1\) (\(C_n = 2^n a_{2^n}\) with \(2^n \ge 2\) is well defined; finitely many terms do not affect convergence). Condensing with \(\ln 2^n = n \ln 2\) gives \(C_n = 2^n \cdot \frac{1}{2^n \cdot n \ln 2} = \frac{1}{\ln 2}\cdot\frac{1}{n}\) for \(n \ge 1\), so the condensed series \(\sum_{n \ge 1} C_n\) is \(\frac{1}{\ln 2}\) times the harmonic series — divergent. Hence \(\sum_{n=2}^{\infty} \frac{1}{n \ln n}\) diverges too.`,
+          ko: String.raw`먼저 감소성을 검증합니다: \(x \ge 2\)에서 \(x \ln x\)의 도함수는 \(\ln x + 1 > 0\)이므로 \(x \ln x\)는 증가하고, 그 역수 \(a_n = \frac{1}{n \ln n}\)는 \(n \ge 2\)에서 감소하는 양수열입니다.
+
+재인덱싱도 필요합니다: 문제 1의 응축은 \(n = 1\)부터 시작해 \(C_0\) 항을 포함하지만, 이 급수는 \(n = 2\)부터 시작하고 \(C_0 = \frac{1}{0 \cdot \ln 2}\)는 특이합니다.
+
+따라서 응축된 합을 \(n \ge 1\)부터 시작합니다(\(C_n = 2^n a_{2^n}\), \(2^n \ge 2\)라 잘 정의됨; 유한 개의 항은 수렴성에 영향을 주지 않습니다).
+
+응축하면 \(\ln 2^n = n \ln 2\)를 이용해 \(C_n = 2^n \cdot \frac{1}{2^n \cdot n \ln 2} = \frac{1}{\ln 2}\cdot\frac{1}{n}\) (\(n \ge 1\))이 되므로, 응축된 급수 \(\sum_{n \ge 1} C_n\)은 조화급수의 \(\frac{1}{\ln 2}\)배 — 발산합니다.
+
+따라서 \(\sum_{n=2}^{\infty} \frac{1}{n \ln n}\)도 발산합니다.`,
+          en: String.raw`First verify the decreasing hypothesis: for \(x \ge 2\), \(x \ln x\) has derivative \(\ln x + 1 > 0\), so \(x \ln x\) is increasing and its reciprocal \(a_n = \frac{1}{n \ln n}\) is decreasing and positive for \(n \ge 2\).
+
+Reindexing is also needed: the condensation in problem 1 starts at \(n = 1\) and includes a \(C_0\) term, but this series starts at \(n = 2\) and \(C_0 = \frac{1}{0 \cdot \ln 2}\) is singular.
+
+So start the condensed sum at \(n \ge 1\) (\(C_n = 2^n a_{2^n}\) with \(2^n \ge 2\) is well defined; finitely many terms do not affect convergence).
+
+Condensing with \(\ln 2^n = n \ln 2\) gives \(C_n = 2^n \cdot \frac{1}{2^n \cdot n \ln 2} = \frac{1}{\ln 2}\cdot\frac{1}{n}\) for \(n \ge 1\), so the condensed series \(\sum_{n \ge 1} C_n\) is \(\frac{1}{\ln 2}\) times the harmonic series — divergent.
+
+Hence \(\sum_{n=2}^{\infty} \frac{1}{n \ln n}\) diverges too.`,
         },
       },
       {
         text: {
-          ko: String.raw`반면 \(b_n = \frac{1}{n (\ln n)^2}\)도 감소성을 검증해야 합니다: \(x \ge 2\)에서 \(x (\ln x)^2\)의 도함수는 \((\ln x)^2 + 2\ln x = \ln x (\ln x + 2) > 0\)이므로 \(n (\ln n)^2\)는 증가하고 그 역수 \(b_n\)은 감소합니다. 같은 재인덱싱(\(n \ge 1\)부터 응축)으로 \(b_n\)은 \(C_n = 2^n \cdot \frac{1}{2^n (n \ln 2)^2} = \frac{1}{(\ln 2)^2}\cdot\frac{1}{n^2}\) (\(n \ge 1\))로 응축됩니다. \(\frac{1}{(\ln 2)^2} \approx 2.0814\)는 상수이므로, 응축된 급수는 수렴하는 \(\sum_{n \ge 1} \frac{1}{n^2}\)의 상수배 — 실제로 \(\frac{1}{(\ln 2)^2}\cdot\frac{\pi^2}{6} \approx 2.0814 \cdot 1.6449 \approx 3.4237\)로 수렴합니다. 따라서 \(\sum_{n=2}^{\infty} \frac{1}{n (\ln n)^2}\)는 수렴합니다.`,
-          en: String.raw`But \(b_n = \frac{1}{n (\ln n)^2}\) also needs the decreasing verification: for \(x \ge 2\), \(x (\ln x)^2\) has derivative \((\ln x)^2 + 2\ln x = \ln x (\ln x + 2) > 0\), so \(n (\ln n)^2\) is increasing and its reciprocal \(b_n\) is decreasing. With the same reindexing (condense from \(n \ge 1\)), \(b_n\) condenses to \(C_n = 2^n \cdot \frac{1}{2^n (n \ln 2)^2} = \frac{1}{(\ln 2)^2}\cdot\frac{1}{n^2}\) for \(n \ge 1\). Since \(\frac{1}{(\ln 2)^2} \approx 2.0814\) is a constant, the condensed series is a constant multiple of the convergent \(\sum_{n \ge 1} \frac{1}{n^2}\) — indeed summing to \(\frac{1}{(\ln 2)^2}\cdot\frac{\pi^2}{6} \approx 2.0814 \cdot 1.6449 \approx 3.4237\). Hence \(\sum_{n=2}^{\infty} \frac{1}{n (\ln n)^2}\) converges.`,
+          ko: String.raw`반면 \(b_n = \frac{1}{n (\ln n)^2}\)도 감소성을 검증해야 합니다: \(x \ge 2\)에서 \(x (\ln x)^2\)의 도함수는 \((\ln x)^2 + 2\ln x = \ln x (\ln x + 2) > 0\)이므로 \(n (\ln n)^2\)는 증가하고 그 역수 \(b_n\)은 감소합니다.
+
+같은 재인덱싱(\(n \ge 1\)부터 응축)으로 \(b_n\)은 \(C_n = 2^n \cdot \frac{1}{2^n (n \ln 2)^2} = \frac{1}{(\ln 2)^2}\cdot\frac{1}{n^2}\) (\(n \ge 1\))로 응축됩니다.
+
+\(\frac{1}{(\ln 2)^2} \approx 2.0814\)는 상수이므로, 응축된 급수는 수렴하는 \(\sum_{n \ge 1} \frac{1}{n^2}\)의 상수배 — 실제로 \(\frac{1}{(\ln 2)^2}\cdot\frac{\pi^2}{6} \approx 2.0814 \cdot 1.6449 \approx 3.4237\)로 수렴합니다.
+
+따라서 \(\sum_{n=2}^{\infty} \frac{1}{n (\ln n)^2}\)는 수렴합니다.`,
+          en: String.raw`But \(b_n = \frac{1}{n (\ln n)^2}\) also needs the decreasing verification: for \(x \ge 2\), \(x (\ln x)^2\) has derivative \((\ln x)^2 + 2\ln x = \ln x (\ln x + 2) > 0\), so \(n (\ln n)^2\) is increasing and its reciprocal \(b_n\) is decreasing.
+
+With the same reindexing (condense from \(n \ge 1\)), \(b_n\) condenses to \(C_n = 2^n \cdot \frac{1}{2^n (n \ln 2)^2} = \frac{1}{(\ln 2)^2}\cdot\frac{1}{n^2}\) for \(n \ge 1\).
+
+Since \(\frac{1}{(\ln 2)^2} \approx 2.0814\) is a constant, the condensed series is a constant multiple of the convergent \(\sum_{n \ge 1} \frac{1}{n^2}\) — indeed summing to \(\frac{1}{(\ln 2)^2}\cdot\frac{\pi^2}{6} \approx 2.0814 \cdot 1.6449 \approx 3.4237\).
+
+Hence \(\sum_{n=2}^{\infty} \frac{1}{n (\ln n)^2}\) converges.`,
         },
       },
       {

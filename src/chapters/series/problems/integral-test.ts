@@ -31,14 +31,40 @@ export const integralTestProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 적분이 존재함을 확인합니다: \([a, b]\) 위의 monotone function은 Riemann integrable하므로 (표준 정리), 감소함수 \(f\)는 모든 \([n, n+1]\)에서 integrable하고 모든 \(\int_n^{n+1} f\)가 존재합니다. \(f\)가 감소하므로 \(x \in [n, n+1]\)에서 \(f(n+1) \le f(x) \le f(n)\)입니다. 구간 길이가 \(1\)인 \([n,n+1]\)에서 적분하면 \(f(n+1) \le \int_n^{n+1} f \le f(n)\)을 얻습니다 (적분의 단조성).`,
-          en: String.raw`First, the integrals exist: a monotone function on \([a, b]\) is Riemann integrable (standard theorem), so the decreasing \(f\) is integrable on every \([n, n+1]\) and every \(\int_n^{n+1} f\) exists. Since \(f\) is decreasing, \(f(n+1) \le f(x) \le f(n)\) for \(x \in [n, n+1]\). Integrating over \([n,n+1]\) (length \(1\)) gives \(f(n+1) \le \int_n^{n+1} f \le f(n)\) by monotonicity of the integral.`,
+          ko: String.raw`먼저 적분이 존재함을 확인합니다: \([a, b]\) 위의 monotone function은 Riemann integrable하므로 (표준 정리), 감소함수 \(f\)는 모든 \([n, n+1]\)에서 integrable하고 모든 \(\int_n^{n+1} f\)가 존재합니다.
+
+\(f\)가 감소하므로 \(x \in [n, n+1]\)에서 \(f(n+1) \le f(x) \le f(n)\)입니다.
+
+구간 길이가 \(1\)인 \([n,n+1]\)에서 적분하면 \(f(n+1) \le \int_n^{n+1} f \le f(n)\)을 얻습니다 (적분의 단조성).`,
+          en: String.raw`First, the integrals exist: a monotone function on \([a, b]\) is Riemann integrable (standard theorem), so the decreasing \(f\) is integrable on every \([n, n+1]\) and every \(\int_n^{n+1} f\) exists.
+
+Since \(f\) is decreasing, \(f(n+1) \le f(x) \le f(n)\) for \(x \in [n, n+1]\).
+
+Integrating over \([n,n+1]\) (length \(1\)) gives \(f(n+1) \le \int_n^{n+1} f \le f(n)\) by monotonicity of the integral.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(n = 1, \ldots, N\)에 대해 합합니다. 왼쪽 부등식들의 합: \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\). 오른쪽 부등식들의 합: \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\). 여기서 \(S_N = \sum_{n=1}^{N} f(n)\)이라 두면 올바른 항등식은 \(\sum_{k=2}^{N+1} f(k) = S_{N+1} - f(1) = S_N - f(1) + f(N+1)\)입니다. 따라서 왼쪽에서 \(S_{N+1} - f(1) \le \int_1^{N+1} f\), 즉 \(S_{N+1} \le f(1) + \int_1^{N+1} f\)를 얻고, \(f > 0\)이므로 \(S_N \le S_{N+1}\)이어서 \(S_N \le f(1) + \int_1^{N+1} f\)도 성립합니다. 오른쪽과 이으면 \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\)입니다.`,
-          en: String.raw`Sum over \(n = 1, \ldots, N\). The left inequalities sum to \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\); the right ones to \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\). With \(S_N = \sum_{n=1}^{N} f(n)\), the correct identity is \(\sum_{k=2}^{N+1} f(k) = S_{N+1} - f(1) = S_N - f(1) + f(N+1)\). Hence the left side gives \(S_{N+1} - f(1) \le \int_1^{N+1} f\), i.e. \(S_{N+1} \le f(1) + \int_1^{N+1} f\), and since \(f > 0\), \(S_N \le S_{N+1}\), so \(S_N \le f(1) + \int_1^{N+1} f\) as well. Chaining with the right side gives \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\).`,
+          ko: String.raw`\(n = 1, \ldots, N\)에 대해 합합니다.
+
+왼쪽 부등식들의 합: \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\).
+
+오른쪽 부등식들의 합: \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\).
+
+여기서 \(S_N = \sum_{n=1}^{N} f(n)\)이라 두면 올바른 항등식은 \(\sum_{k=2}^{N+1} f(k) = S_{N+1} - f(1) = S_N - f(1) + f(N+1)\)입니다.
+
+따라서 왼쪽에서 \(S_{N+1} - f(1) \le \int_1^{N+1} f\), 즉 \(S_{N+1} \le f(1) + \int_1^{N+1} f\)를 얻고, \(f > 0\)이므로 \(S_N \le S_{N+1}\)이어서 \(S_N \le f(1) + \int_1^{N+1} f\)도 성립합니다.
+
+오른쪽과 이으면 \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\)입니다.`,
+          en: String.raw`Sum over \(n = 1, \ldots, N\).
+
+The left inequalities sum to \(\sum_{n=1}^{N} f(n+1) = \sum_{k=2}^{N+1} f(k) \le \int_1^{N+1} f\); the right ones to \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n)\).
+
+With \(S_N = \sum_{n=1}^{N} f(n)\), the correct identity is \(\sum_{k=2}^{N+1} f(k) = S_{N+1} - f(1) = S_N - f(1) + f(N+1)\).
+
+Hence the left side gives \(S_{N+1} - f(1) \le \int_1^{N+1} f\), i.e. \(S_{N+1} \le f(1) + \int_1^{N+1} f\), and since \(f > 0\), \(S_N \le S_{N+1}\), so \(S_N \le f(1) + \int_1^{N+1} f\) as well.
+
+Chaining with the right side gives \(\int_1^{N+1} f \le \sum_{n=1}^{N} f(n) \le f(1) + \int_1^{N+1} f\).`,
         },
       },
       {
@@ -49,8 +75,16 @@ export const integralTestProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\((\Rightarrow)\) 대우로 보입니다: \(\int_1^{\infty} f\)가 발산하면 (양수 피적분함수이므로 \(+\infty\)로), \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\)이므로 급수도 발산합니다. 따라서 \(\sum f(n)\) 수렴 \(\iff\) \(\int_1^{\infty} f\) 수렴입니다. 증명 끝.`,
-          en: String.raw`\((\Rightarrow)\) By contraposition: if \(\int_1^{\infty} f\) diverges (to \(+\infty\), the integrand being positive), then \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\), so the series diverges too. Hence \(\sum f(n)\) converges \(\iff\) \(\int_1^{\infty} f\) converges. QED.`,
+          ko: String.raw`\((\Rightarrow)\) 대우로 보입니다: \(\int_1^{\infty} f\)가 발산하면 (양수 피적분함수이므로 \(+\infty\)로), \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\)이므로 급수도 발산합니다.
+
+따라서 \(\sum f(n)\) 수렴 \(\iff\) \(\int_1^{\infty} f\) 수렴입니다.
+
+증명 끝.`,
+          en: String.raw`\((\Rightarrow)\) By contraposition: if \(\int_1^{\infty} f\) diverges (to \(+\infty\), the integrand being positive), then \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\), so the series diverges too.
+
+Hence \(\sum f(n)\) converges \(\iff\) \(\int_1^{\infty} f\) converges.
+
+QED.`,
         },
       },
     ],
@@ -73,8 +107,16 @@ export const integralTestProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 \(p \le 0\)인 경우: \(n^{-p} \ge 1\)이라 일반항이 \(0\)으로 가지 않으므로 term test로 발산합니다 (이 범위에서는 \(f(x) = x^{-p}\)가 increasing이라 적분 판정법을 적용할 수 없습니다). 이제 \(p > 0\)인 경우만 다루면 \(f(x) = x^{-p}\)는 \([1,\infty)\)에서 양수이며 감소하므로 적분 판정법의 가설을 만족합니다. 부정적분을 계산합니다: \(p = 1\)이면 \(\int_1^{R} x^{-1}\,dx = \ln R\); \(p \ne 1\)이면 \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\)입니다.`,
-          en: String.raw`First, \(p \le 0\): \(n^{-p} \ge 1\), so the general term does not tend to \(0\) and the series diverges by the term test (on this range \(f(x) = x^{-p}\) is increasing, so the integral test does not apply). Now assume \(p > 0\); then \(f(x) = x^{-p}\) is positive and decreasing on \([1,\infty)\), so the integral test applies. Compute: for \(p = 1\), \(\int_1^{R} x^{-1}\,dx = \ln R\); for \(p \ne 1\), \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\).`,
+          ko: String.raw`먼저 \(p \le 0\)인 경우: \(n^{-p} \ge 1\)이라 일반항이 \(0\)으로 가지 않으므로 term test로 발산합니다 (이 범위에서는 \(f(x) = x^{-p}\)가 increasing이라 적분 판정법을 적용할 수 없습니다).
+
+이제 \(p > 0\)인 경우만 다루면 \(f(x) = x^{-p}\)는 \([1,\infty)\)에서 양수이며 감소하므로 적분 판정법의 가설을 만족합니다.
+
+부정적분을 계산합니다: \(p = 1\)이면 \(\int_1^{R} x^{-1}\,dx = \ln R\); \(p \ne 1\)이면 \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\)입니다.`,
+          en: String.raw`First, \(p \le 0\): \(n^{-p} \ge 1\), so the general term does not tend to \(0\) and the series diverges by the term test (on this range \(f(x) = x^{-p}\) is increasing, so the integral test does not apply).
+
+Now assume \(p > 0\); then \(f(x) = x^{-p}\) is positive and decreasing on \([1,\infty)\), so the integral test applies.
+
+Compute: for \(p = 1\), \(\int_1^{R} x^{-1}\,dx = \ln R\); for \(p \ne 1\), \(\int_1^{R} x^{-p}\,dx = \left[\frac{x^{1-p}}{1-p}\right]_1^{R} = \frac{R^{1-p} - 1}{1-p}\).`,
         },
       },
       {
@@ -100,8 +142,12 @@ export const integralTestProblems: readonly ProblemMeta[] = [
   {
     id: 'integral-test-estimate',
     statement: {
-      ko: String.raw`나머지 추정을 완전히 증명하세요: \(f\)가 양수이며 감소하고 \(\sum f(n)\)이 수렴하면 꼬리 \(R_N = \sum_{n>N} f(n)\)는 \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\)를 만족합니다. 수치 적용: \(\sum 1/n^2\)의 \(N = 10\) 꼬리를 \(1/11 \approx 0.0909\)와 \(1/10 = 0.1\) 사이에 가두세요.`,
-      en: String.raw`Prove the remainder estimate completely: if \(f\) is positive, decreasing, and \(\sum f(n)\) converges, the tail \(R_N = \sum_{n>N} f(n)\) satisfies \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\). Numerically: trap the \(N = 10\) tail of \(\sum 1/n^2\) between \(1/11 \approx 0.0909\) and \(1/10 = 0.1\).`,
+      ko: String.raw`나머지 추정을 완전히 증명하세요: \(f\)가 양수이며 감소하고 \(\sum f(n)\)이 수렴하면 꼬리 \(R_N = \sum_{n>N} f(n)\)는 \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\)를 만족합니다.
+
+수치 적용: \(\sum 1/n^2\)의 \(N = 10\) 꼬리를 \(1/11 \approx 0.0909\)와 \(1/10 = 0.1\) 사이에 가두세요.`,
+      en: String.raw`Prove the remainder estimate completely: if \(f\) is positive, decreasing, and \(\sum f(n)\) converges, the tail \(R_N = \sum_{n>N} f(n)\) satisfies \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\).
+
+Numerically: trap the \(N = 10\) tail of \(\sum 1/n^2\) between \(1/11 \approx 0.0909\) and \(1/10 = 0.1\).`,
     },
     display: [
       String.raw`\int_{N+1}^{\infty} f \le R_N = \sum_{n>N} f(n) \le \int_{N}^{\infty} f`,
@@ -115,8 +161,16 @@ export const integralTestProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`기본 부등식 \(f(n+1) \le \int_n^{n+1} f \le f(n)\) (첫 번째 문제)을 \(n = N+1, \ldots, M\)에 대해 합합니다. 왼쪽: \(\sum_{n=N+1}^{M} f(n+1) = \sum_{k=N+2}^{M+1} f(k) \le \int_{N+1}^{M+1} f\). 오른쪽: \(\int_{N+1}^{M+1} f \le \sum_{n=N+1}^{M} f(n)\).`,
-          en: String.raw`Sum the basic inequality \(f(n+1) \le \int_n^{n+1} f \le f(n)\) (first problem) over \(n = N+1, \ldots, M\). Left: \(\sum_{n=N+1}^{M} f(n+1) = \sum_{k=N+2}^{M+1} f(k) \le \int_{N+1}^{M+1} f\). Right: \(\int_{N+1}^{M+1} f \le \sum_{n=N+1}^{M} f(n)\).`,
+          ko: String.raw`기본 부등식 \(f(n+1) \le \int_n^{n+1} f \le f(n)\) (첫 번째 문제)을 \(n = N+1, \ldots, M\)에 대해 합합니다.
+
+왼쪽: \(\sum_{n=N+1}^{M} f(n+1) = \sum_{k=N+2}^{M+1} f(k) \le \int_{N+1}^{M+1} f\).
+
+오른쪽: \(\int_{N+1}^{M+1} f \le \sum_{n=N+1}^{M} f(n)\).`,
+          en: String.raw`Sum the basic inequality \(f(n+1) \le \int_n^{n+1} f \le f(n)\) (first problem) over \(n = N+1, \ldots, M\).
+
+Left: \(\sum_{n=N+1}^{M} f(n+1) = \sum_{k=N+2}^{M+1} f(k) \le \int_{N+1}^{M+1} f\).
+
+Right: \(\int_{N+1}^{M+1} f \le \sum_{n=N+1}^{M} f(n)\).`,
         },
       },
       {
@@ -127,14 +181,34 @@ export const integralTestProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(M \to \infty\)로 보냅니다. 급수가 수렴하므로 \(\sum_{n=N+1}^{M} f(n) \to R_N\) (유한)이고, 적분 판정법에 의해 이상적분도 수렴하므로 \(\int_{N+1}^{M+1} f \to \int_{N+1}^{\infty} f\), \(\int_{N}^{M} f \to \int_{N}^{\infty} f\)입니다. 부등식을 유지한 채 극한을 취하면 \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\)를 얻습니다. 증명 끝.`,
-          en: String.raw`Let \(M \to \infty\). Since the series converges, \(\sum_{n=N+1}^{M} f(n) \to R_N\) (finite), and by the integral test the improper integrals converge too, so \(\int_{N+1}^{M+1} f \to \int_{N+1}^{\infty} f\) and \(\int_{N}^{M} f \to \int_{N}^{\infty} f\). Passing to the limit preserves the inequalities: \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\). QED.`,
+          ko: String.raw`\(M \to \infty\)로 보냅니다.
+
+급수가 수렴하므로 \(\sum_{n=N+1}^{M} f(n) \to R_N\) (유한)이고, 적분 판정법에 의해 이상적분도 수렴하므로 \(\int_{N+1}^{M+1} f \to \int_{N+1}^{\infty} f\), \(\int_{N}^{M} f \to \int_{N}^{\infty} f\)입니다.
+
+부등식을 유지한 채 극한을 취하면 \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\)를 얻습니다.
+
+증명 끝.`,
+          en: String.raw`Let \(M \to \infty\).
+
+Since the series converges, \(\sum_{n=N+1}^{M} f(n) \to R_N\) (finite), and by the integral test the improper integrals converge too, so \(\int_{N+1}^{M+1} f \to \int_{N+1}^{\infty} f\) and \(\int_{N}^{M} f \to \int_{N}^{\infty} f\).
+
+Passing to the limit preserves the inequalities: \(\int_{N+1}^{\infty} f \le R_N \le \int_{N}^{\infty} f\).
+
+QED.`,
         },
       },
       {
         text: {
-          ko: String.raw`수치 적용: \(f(x) = x^{-2}\), \(N = 10\). \(\int_{11}^{\infty} x^{-2}\,dx = \left[-x^{-1}\right]_{11}^{\infty} = \frac{1}{11} \approx 0.0909\), \(\int_{10}^{\infty} x^{-2}\,dx = \frac{1}{10} = 0.1\)이므로 \(\frac{1}{11} \le R_{10} \le \frac{1}{10}\)입니다. 실제로 \(R_{10} = \frac{\pi^2}{6} - \sum_{k=1}^{10}\frac{1}{k^2} \approx 0.09517\)로 구간 안에 들어갑니다.`,
-          en: String.raw`Numerical application: \(f(x) = x^{-2}\), \(N = 10\). \(\int_{11}^{\infty} x^{-2}\,dx = \left[-x^{-1}\right]_{11}^{\infty} = \frac{1}{11} \approx 0.0909\) and \(\int_{10}^{\infty} x^{-2}\,dx = \frac{1}{10} = 0.1\), so \(\frac{1}{11} \le R_{10} \le \frac{1}{10}\). Indeed \(R_{10} = \frac{\pi^2}{6} - \sum_{k=1}^{10}\frac{1}{k^2} \approx 0.09517\) lands inside the interval.`,
+          ko: String.raw`수치 적용: \(f(x) = x^{-2}\), \(N = 10\).
+
+\(\int_{11}^{\infty} x^{-2}\,dx = \left[-x^{-1}\right]_{11}^{\infty} = \frac{1}{11} \approx 0.0909\), \(\int_{10}^{\infty} x^{-2}\,dx = \frac{1}{10} = 0.1\)이므로 \(\frac{1}{11} \le R_{10} \le \frac{1}{10}\)입니다.
+
+실제로 \(R_{10} = \frac{\pi^2}{6} - \sum_{k=1}^{10}\frac{1}{k^2} \approx 0.09517\)로 구간 안에 들어갑니다.`,
+          en: String.raw`Numerical application: \(f(x) = x^{-2}\), \(N = 10\).
+
+\(\int_{11}^{\infty} x^{-2}\,dx = \left[-x^{-1}\right]_{11}^{\infty} = \frac{1}{11} \approx 0.0909\) and \(\int_{10}^{\infty} x^{-2}\,dx = \frac{1}{10} = 0.1\), so \(\frac{1}{11} \le R_{10} \le \frac{1}{10}\).
+
+Indeed \(R_{10} = \frac{\pi^2}{6} - \sum_{k=1}^{10}\frac{1}{k^2} \approx 0.09517\) lands inside the interval.`,
         },
       },
     ],

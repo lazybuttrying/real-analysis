@@ -36,14 +36,26 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`각 항 \(u_n(x) = a^n \cos(b^n \pi x)\)는 연속함수이다. 모든 \(x\)에 대해 \(|\cos| \le 1\)이므로 \(|u_n(x)| \le a^n = \left(\frac12\right)^n =: M_n\)이고, \(\sum_{n=0}^{\infty} M_n = \sum_{n=0}^{\infty} \left(\frac12\right)^n = 2 < \infty\)이다. 바이어슈트라스 M-판정법(급수 장의 m-test 장면)에 의해 \(\sum u_n\)은 \(\mathbb{R}\)에서 균등 수렴한다.`,
-          en: String.raw`Each term \(u_n(x) = a^n \cos(b^n \pi x)\) is continuous. Since \(|\cos| \le 1\), \(|u_n(x)| \le a^n = \left(\frac12\right)^n =: M_n\) for every \(x\), and \(\sum_{n=0}^{\infty} M_n = \sum_{n=0}^{\infty} \left(\frac12\right)^n = 2 < \infty\). By the Weierstrass M-test (the m-test scene in the series chapter), \(\sum u_n\) converges uniformly on \(\mathbb{R}\).`,
+          ko: String.raw`각 항 \(u_n(x) = a^n \cos(b^n \pi x)\)는 연속함수이다.
+
+모든 \(x\)에 대해 \(|\cos| \le 1\)이므로 \(|u_n(x)| \le a^n = \left(\frac12\right)^n =: M_n\)이고, \(\sum_{n=0}^{\infty} M_n = \sum_{n=0}^{\infty} \left(\frac12\right)^n = 2 < \infty\)이다.
+
+바이어슈트라스 M-판정법(급수 장의 m-test 장면)에 의해 \(\sum u_n\)은 \(\mathbb{R}\)에서 균등 수렴한다.`,
+          en: String.raw`Each term \(u_n(x) = a^n \cos(b^n \pi x)\) is continuous.
+
+Since \(|\cos| \le 1\), \(|u_n(x)| \le a^n = \left(\frac12\right)^n =: M_n\) for every \(x\), and \(\sum_{n=0}^{\infty} M_n = \sum_{n=0}^{\infty} \left(\frac12\right)^n = 2 < \infty\).
+
+By the Weierstrass M-test (the m-test scene in the series chapter), \(\sum u_n\) converges uniformly on \(\mathbb{R}\).`,
         },
       },
       {
         text: {
           ko: String.raw`연속함수들의 균등 극한은 연속이다: \(x_0\)을 고정하면 \(|W(x) - W(x_0)| \le |W(x) - W_N(x)| + |W_N(x) - W_N(x_0)| + |W_N(x_0) - W(x_0)|\)이고, 처음과 마지막 항은 꼬리 상한 \((1/2)^N\)으로, 가운데 항은 연속인 유한합 \(W_N\)으로 작게 만들 수 있다. 따라서 \(W\)는 \(x_0\)에서 연속이고, \(x_0\)은 임의였으므로 \(W\)는 \(\mathbb{R}\) 전체에서 연속이다.`,
-          en: String.raw`A uniform limit of continuous functions is continuous: fix \(x_0\); then \(|W(x) - W(x_0)| \le |W(x) - W_N(x)| + |W_N(x) - W_N(x_0)| + |W_N(x_0) - W(x_0)|\). The first and last terms are small by the tail bound \((1/2)^N\), the middle one by the continuity of the finite sum \(W_N\). Hence \(W\) is continuous at \(x_0\), and \(x_0\) was arbitrary, so \(W\) is continuous on all of \(\mathbb{R}\).`,
+          en: String.raw`A uniform limit of continuous functions is continuous: fix \(x_0\); then \(|W(x) - W(x_0)| \le |W(x) - W_N(x)| + |W_N(x) - W_N(x_0)| + |W_N(x_0) - W(x_0)|\).
+
+The first and last terms are small by the tail bound \((1/2)^N\), the middle one by the continuity of the finite sum \(W_N\).
+
+Hence \(W\) is continuous at \(x_0\), and \(x_0\) was arbitrary, so \(W\) is continuous on all of \(\mathbb{R}\).`,
         },
       },
       {
@@ -57,8 +69,12 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'weierstrass-nowhere-differentiable',
     statement: {
-      ko: String.raw`정리를 서술하세요: \(b\)가 홀수이고 \(ab > 1 + \frac{3\pi}{2}\)이면 바이어슈트라스 함수 \(W\)는 어떤 점에서도 미분가능하지 않습니다 (우리의 \(a = \frac12\), \(b = 13\)은 \(ab = 6.5 > 5.712\)을 만족합니다). 아래 증명은 아이디어 수준의 개요(sketch)입니다 — 메커니즘은 정확히 전달하되, 고전적 증명의 상수 추적을 한 줄 한 줄 재현하지는 않습니다.`,
-      en: String.raw`State the theorem: if \(b\) is odd and \(ab > 1 + \frac{3\pi}{2}\), then the Weierstrass function \(W\) is differentiable at no point (our \(a = \frac12\), \(b = 13\) satisfy \(ab = 6.5 > 5.712\)). The argument below is an idea-level sketch — it conveys the mechanism faithfully but does not reproduce the classical proof's constant-tracking line by line.`,
+      ko: String.raw`정리를 서술하세요: \(b\)가 홀수이고 \(ab > 1 + \frac{3\pi}{2}\)이면 바이어슈트라스 함수 \(W\)는 어떤 점에서도 미분가능하지 않습니다 (우리의 \(a = \frac12\), \(b = 13\)은 \(ab = 6.5 > 5.712\)을 만족합니다).
+
+아래 증명은 아이디어 수준의 개요(sketch)입니다 — 메커니즘은 정확히 전달하되, 고전적 증명의 상수 추적을 한 줄 한 줄 재현하지는 않습니다.`,
+      en: String.raw`State the theorem: if \(b\) is odd and \(ab > 1 + \frac{3\pi}{2}\), then the Weierstrass function \(W\) is differentiable at no point (our \(a = \frac12\), \(b = 13\) satisfy \(ab = 6.5 > 5.712\)).
+
+The argument below is an idea-level sketch — it conveys the mechanism faithfully but does not reproduce the classical proof's constant-tracking line by line.`,
     },
     display: [
       String.raw`ab = 6.5 > 1 + \frac{3\pi}{2} \approx 5.712, \qquad b = 13 \text{ odd}`,
@@ -92,8 +108,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`정직한 표시: 이것은 아이디어 수준의 개요이다. 완전한 증명은 스파이크 점을 구성하고 세 부분의 상수를 끝까지 추적하는 고전적 Weierstrass–Hardy 구성으로, 여기서는 한 줄 한 줄 재현하지 않는다. 전달하려는 핵심은 이것이다 — 차분몫이 스파이크 수열 \(x_n \to x_0\)을 따라 무한대로 발산하므로, 어떤 유한한 수도 \(W'(x_0)\)이 될 수 없고, \(x_0\)은 임의였으므로 \(W\)는 어디에서도 미분가능하지 않다.`,
-          en: String.raw`Honest label: this is an idea-level sketch. The full proof is the classical Weierstrass–Hardy construction — building the spike points and tracking all three constants to the end — which we do not reproduce line by line here. The takeaway it conveys is this: the difference quotient blows up to infinity along the spike sequence \(x_n \to x_0\), so no finite number can serve as \(W'(x_0)\); \(x_0\) was arbitrary, so \(W\) is differentiable nowhere.`,
+          ko: String.raw`정직한 표시: 이것은 아이디어 수준의 개요이다.
+
+완전한 증명은 스파이크 점을 구성하고 세 부분의 상수를 끝까지 추적하는 고전적 Weierstrass–Hardy 구성으로, 여기서는 한 줄 한 줄 재현하지 않는다.
+
+전달하려는 핵심은 이것이다 — 차분몫이 스파이크 수열 \(x_n \to x_0\)을 따라 무한대로 발산하므로, 어떤 유한한 수도 \(W'(x_0)\)이 될 수 없고, \(x_0\)은 임의였으므로 \(W\)는 어디에서도 미분가능하지 않다.`,
+          en: String.raw`Honest label: this is an idea-level sketch.
+
+The full proof is the classical Weierstrass–Hardy construction — building the spike points and tracking all three constants to the end — which we do not reproduce line by line here.
+
+The takeaway it conveys is this: the difference quotient blows up to infinity along the spike sequence \(x_n \to x_0\), so no finite number can serve as \(W'(x_0)\); \(x_0\) was arbitrary, so \(W\) is differentiable nowhere.`,
         },
       },
     ],
@@ -101,8 +125,16 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'weierstrass-uniform-limit',
     statement: {
-      ko: String.raw`각 부분합 \(W_N\)은 유한개의 코사인 합이므로 \(\mathbb{R}\)에서 매끄럽게(무한히) 미분가능합니다. 그런데 \(W_N \to W\)는 균등 수렴이고(문제 1), \(W\)는 어디에서도 미분가능하지 않습니다(문제 2). 따라서 미분가능한 함수들의 균등 극한은 미분가능하지 않을 수 있음을 결론지으세요.`,
-      en: String.raw`Each partial sum \(W_N\) is a finite sum of cosines, hence smoothly (infinitely) differentiable on \(\mathbb{R}\). Yet \(W_N \to W\) uniformly (problem 1) while \(W\) is differentiable nowhere (problem 2). Conclude that a uniform limit of differentiable functions need not be differentiable.`,
+      ko: String.raw`각 부분합 \(W_N\)은 유한개의 코사인 합이므로 \(\mathbb{R}\)에서 매끄럽게(무한히) 미분가능합니다.
+
+그런데 \(W_N \to W\)는 균등 수렴이고(문제 1), \(W\)는 어디에서도 미분가능하지 않습니다(문제 2).
+
+따라서 미분가능한 함수들의 균등 극한은 미분가능하지 않을 수 있음을 결론지으세요.`,
+      en: String.raw`Each partial sum \(W_N\) is a finite sum of cosines, hence smoothly (infinitely) differentiable on \(\mathbb{R}\).
+
+Yet \(W_N \to W\) uniformly (problem 1) while \(W\) is differentiable nowhere (problem 2).
+
+Conclude that a uniform limit of differentiable functions need not be differentiable.`,
     },
     display: [
       String.raw`W_N(x) = \sum_{n=0}^{N} a^n \cos(b^n \pi x) \quad \text{smooth on } \mathbb{R}`,
@@ -117,8 +149,16 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`각 \(W_N\)은 유한합이므로 항별 미분이 정당하다: \(W_N'(x) = -\sum_{n=0}^{N} a^n b^n \pi \sin(b^n \pi x)\)가 모든 \(x\)에서 존재한다. 예를 들어 \(W_2'(x) = -\pi\sin(\pi x) - \frac{13\pi}{2}\sin(13\pi x) - \frac{169\pi}{4}\sin(169\pi x)\)이다 (\(a^1 b^1 \pi = \frac{13\pi}{2}\), \(a^2 b^2 \pi = \frac{169\pi}{4}\)). 화면의 모든 곡선은 매끄러운 함수이다.`,
-          en: String.raw`Each \(W_N\) is a finite sum, so termwise differentiation is legitimate: \(W_N'(x) = -\sum_{n=0}^{N} a^n b^n \pi \sin(b^n \pi x)\) exists at every \(x\). For instance \(W_2'(x) = -\pi\sin(\pi x) - \frac{13\pi}{2}\sin(13\pi x) - \frac{169\pi}{4}\sin(169\pi x)\) (since \(a^1 b^1 \pi = \frac{13\pi}{2}\) and \(a^2 b^2 \pi = \frac{169\pi}{4}\)). Every curve on screen is a smooth function.`,
+          ko: String.raw`각 \(W_N\)은 유한합이므로 항별 미분이 정당하다: \(W_N'(x) = -\sum_{n=0}^{N} a^n b^n \pi \sin(b^n \pi x)\)가 모든 \(x\)에서 존재한다.
+
+예를 들어 \(W_2'(x) = -\pi\sin(\pi x) - \frac{13\pi}{2}\sin(13\pi x) - \frac{169\pi}{4}\sin(169\pi x)\)이다 (\(a^1 b^1 \pi = \frac{13\pi}{2}\), \(a^2 b^2 \pi = \frac{169\pi}{4}\)).
+
+화면의 모든 곡선은 매끄러운 함수이다.`,
+          en: String.raw`Each \(W_N\) is a finite sum, so termwise differentiation is legitimate: \(W_N'(x) = -\sum_{n=0}^{N} a^n b^n \pi \sin(b^n \pi x)\) exists at every \(x\).
+
+For instance \(W_2'(x) = -\pi\sin(\pi x) - \frac{13\pi}{2}\sin(13\pi x) - \frac{169\pi}{4}\sin(169\pi x)\) (since \(a^1 b^1 \pi = \frac{13\pi}{2}\) and \(a^2 b^2 \pi = \frac{169\pi}{4}\)).
+
+Every curve on screen is a smooth function.`,
         },
       },
       {

@@ -48,8 +48,12 @@ export const riemannStieltjesProblems: readonly ProblemMeta[] = [
   {
     id: 'rs-step',
     statement: {
-      ko: String.raw`\(\alpha\)가 \(c\)에서 크기 \(J\)의 점프 하나만 있고 그 외에는 상수이며, \(f\)가 \(c\)에서 연속이라고 하세요. 점프를 품은 구간을 조이는(squeeze) 논증으로 \(\int_a^b f\,d\alpha = f(c)\,J\)임을 완전히 증명하세요.`,
-      en: String.raw`Let \(\alpha\) have a single jump of size \(J\) at \(c\) and be constant elsewhere, and let \(f\) be continuous at \(c\). Prove completely, by a squeezing argument on the interval straddling the jump, that \(\int_a^b f\,d\alpha = f(c)\,J\).`,
+      ko: String.raw`\(\alpha\)가 \(c\)에서 크기 \(J\)의 점프 하나만 있고 그 외에는 상수이며, \(f\)가 \(c\)에서 연속이라고 하세요.
+
+점프를 품은 구간을 조이는(squeeze) 논증으로 \(\int_a^b f\,d\alpha = f(c)\,J\)임을 완전히 증명하세요.`,
+      en: String.raw`Let \(\alpha\) have a single jump of size \(J\) at \(c\) and be constant elsewhere, and let \(f\) be continuous at \(c\).
+
+Prove completely, by a squeezing argument on the interval straddling the jump, that \(\int_a^b f\,d\alpha = f(c)\,J\).`,
     },
     display: [
       String.raw`U(f, P, \alpha) = M_I J, \quad L(f, P, \alpha) = m_I J \;\Rightarrow\; \int_a^b f\,d\alpha = f(c)\,J`,
@@ -62,14 +66,30 @@ export const riemannStieltjesProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`임의의 분할 \(P\)에 대해, \(\Delta\alpha_i = 0\)인 구간은 RS 합에 기여하지 않습니다. \(c\)가 분할점 \(x_k\)와 일치하든 구간 내부에 있든, \(\Delta\alpha_i = J\)인 구간은 정확히 하나 — \(c\)를 품은 \(I = [x_{k-1}, x_k]\)뿐입니다 (한쪽 끝에서만 \(\alpha\) 값이 바뀌므로). 따라서 \(U(f, P, \alpha) = M_I\,J\), \(L(f, P, \alpha) = m_I\,J\)입니다. 여기서 \(M_I, m_I\)는 \(I\) 위에서 \(f\)의 상한·하한입니다.`,
-          en: String.raw`For any partition \(P\), intervals with \(\Delta\alpha_i = 0\) contribute nothing to the RS sums. Whether \(c\) is a partition point \(x_k\) or lies inside an interval, exactly one interval has \(\Delta\alpha_i = J\) — the interval \(I = [x_{k-1}, x_k]\) straddling \(c\) (the value of \(\alpha\) changes at only one endpoint). Hence \(U(f, P, \alpha) = M_I\,J\) and \(L(f, P, \alpha) = m_I\,J\), where \(M_I, m_I\) are the sup/inf of \(f\) on \(I\).`,
+          ko: String.raw`임의의 분할 \(P\)에 대해, \(\Delta\alpha_i = 0\)인 구간은 RS 합에 기여하지 않습니다.
+
+\(c\)가 분할점 \(x_k\)와 일치하든 구간 내부에 있든, \(\Delta\alpha_i = J\)인 구간은 정확히 하나 — \(c\)를 품은 \(I = [x_{k-1}, x_k]\)뿐입니다 (한쪽 끝에서만 \(\alpha\) 값이 바뀌므로). 따라서 \(U(f, P, \alpha) = M_I\,J\), \(L(f, P, \alpha) = m_I\,J\)입니다.
+
+여기서 \(M_I, m_I\)는 \(I\) 위에서 \(f\)의 상한·하한입니다.`,
+          en: String.raw`For any partition \(P\), intervals with \(\Delta\alpha_i = 0\) contribute nothing to the RS sums.
+
+Whether \(c\) is a partition point \(x_k\) or lies inside an interval, exactly one interval has \(\Delta\alpha_i = J\) — the interval \(I = [x_{k-1}, x_k]\) straddling \(c\) (the value of \(\alpha\) changes at only one endpoint).
+
+Hence \(U(f, P, \alpha) = M_I\,J\) and \(L(f, P, \alpha) = m_I\,J\), where \(M_I, m_I\) are the sup/inf of \(f\) on \(I\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(f\)가 \(c\)에서 연속이므로, \(\varepsilon > 0\)마다 \(\delta > 0\)가 있어 \(|x - c| < \delta\)이면 \(|f(x) - f(c)| < \varepsilon/J\)입니다. 분할의 그물(mesh)이 \(\delta\)보다 작으면 \(I \subset (c - \delta, c + \delta)\)이므로 \(|M_I - f(c)| \le \varepsilon/J\)이고 \(|m_I - f(c)| \le \varepsilon/J\)입니다. 따라서 \(|U(f, P, \alpha) - f(c)J| \le \varepsilon\)이고 \(U - L = (M_I - m_I)J \le 2\varepsilon\)입니다.`,
-          en: String.raw`Since \(f\) is continuous at \(c\), for every \(\varepsilon > 0\) there is \(\delta > 0\) with \(|x - c| < \delta \Rightarrow |f(x) - f(c)| < \varepsilon/J\). If the partition mesh is below \(\delta\), then \(I \subset (c - \delta, c + \delta)\), so \(|M_I - f(c)| \le \varepsilon/J\) and \(|m_I - f(c)| \le \varepsilon/J\). Hence \(|U(f, P, \alpha) - f(c)J| \le \varepsilon\) and \(U - L = (M_I - m_I)J \le 2\varepsilon\).`,
+          ko: String.raw`\(f\)가 \(c\)에서 연속이므로, \(\varepsilon > 0\)마다 \(\delta > 0\)가 있어 \(|x - c| < \delta\)이면 \(|f(x) - f(c)| < \varepsilon/J\)입니다.
+
+분할의 그물(mesh)이 \(\delta\)보다 작으면 \(I \subset (c - \delta, c + \delta)\)이므로 \(|M_I - f(c)| \le \varepsilon/J\)이고 \(|m_I - f(c)| \le \varepsilon/J\)입니다.
+
+따라서 \(|U(f, P, \alpha) - f(c)J| \le \varepsilon\)이고 \(U - L = (M_I - m_I)J \le 2\varepsilon\)입니다.`,
+          en: String.raw`Since \(f\) is continuous at \(c\), for every \(\varepsilon > 0\) there is \(\delta > 0\) with \(|x - c| < \delta \Rightarrow |f(x) - f(c)| < \varepsilon/J\).
+
+If the partition mesh is below \(\delta\), then \(I \subset (c - \delta, c + \delta)\), so \(|M_I - f(c)| \le \varepsilon/J\) and \(|m_I - f(c)| \le \varepsilon/J\).
+
+Hence \(|U(f, P, \alpha) - f(c)J| \le \varepsilon\) and \(U - L = (M_I - m_I)J \le 2\varepsilon\).`,
         },
       },
       {
@@ -83,8 +103,12 @@ export const riemannStieltjesProblems: readonly ProblemMeta[] = [
   {
     id: 'rs-c1',
     statement: {
-      ko: String.raw`\(\alpha\)가 \([a, b]\)에서 \(C^1\)급이고 증가하며, \(f\)가 연속이라고 하세요. 평균값 정리를 이용해 \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\)라 쓰고, 균등연속성으로 \(\xi_i\)를 표본점으로 바꾸는 표준 논증을 완성하여 \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\)임을 증명하세요.`,
-      en: String.raw`Let \(\alpha\) be \(C^1\) and increasing on \([a, b]\) and \(f\) continuous. Write \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\) by the mean value theorem, and complete the standard argument — using uniform continuity to trade the \(\xi_i\) for sample points — proving \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\).`,
+      ko: String.raw`\(\alpha\)가 \([a, b]\)에서 \(C^1\)급이고 증가하며, \(f\)가 연속이라고 하세요.
+
+평균값 정리를 이용해 \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\)라 쓰고, 균등연속성으로 \(\xi_i\)를 표본점으로 바꾸는 표준 논증을 완성하여 \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\)임을 증명하세요.`,
+      en: String.raw`Let \(\alpha\) be \(C^1\) and increasing on \([a, b]\) and \(f\) continuous.
+
+Write \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\) by the mean value theorem, and complete the standard argument — using uniform continuity to trade the \(\xi_i\) for sample points — proving \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\).`,
     },
     display: [
       String.raw`U(f, P, \alpha) = \sum M_i\,\alpha'(\xi_i)\,\Delta x_i \;\xrightarrow[\text{mesh} \to 0]{}\; \int_a^b f(x)\,\alpha'(x)\,dx`,
@@ -97,8 +121,16 @@ export const riemannStieltjesProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`평균값 정리에 의해 각 구간 \([x_{i-1}, x_i]\)마다 \(\xi_i \in (x_{i-1}, x_i)\)가 있어 \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\)입니다 (\(\alpha\)가 \(C^1\)이므로 \(\alpha'\)는 연속). 따라서 \(U(f, P, \alpha) = \sum M_i\,\alpha'(\xi_i)\,\Delta x_i\)이고, \(\alpha\)가 증가하므로 \(\alpha' \ge 0\)입니다. \(\alpha'\)가 컴팩트 구간 \([a,b]\)에서 연속이므로 극값 정리(EVT)에 의해 최댓값을 실제로 달성하며, \(A = \max_{[a,b]} \alpha' < \infty\)로 둘 수 있습니다.`,
-          en: String.raw`By the mean value theorem, each \([x_{i-1}, x_i]\) holds \(\xi_i \in (x_{i-1}, x_i)\) with \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\) (\(\alpha'\) is continuous since \(\alpha\) is \(C^1\)). Hence \(U(f, P, \alpha) = \sum M_i\,\alpha'(\xi_i)\,\Delta x_i\); \(\alpha\) increasing gives \(\alpha' \ge 0\). Since \(\alpha'\) is continuous on the compact interval \([a,b]\), the extreme value theorem (EVT) says it attains its maximum, so \(A = \max_{[a,b]} \alpha' < \infty\) is legitimate.`,
+          ko: String.raw`평균값 정리에 의해 각 구간 \([x_{i-1}, x_i]\)마다 \(\xi_i \in (x_{i-1}, x_i)\)가 있어 \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\)입니다 (\(\alpha\)가 \(C^1\)이므로 \(\alpha'\)는 연속).
+
+따라서 \(U(f, P, \alpha) = \sum M_i\,\alpha'(\xi_i)\,\Delta x_i\)이고, \(\alpha\)가 증가하므로 \(\alpha' \ge 0\)입니다.
+
+\(\alpha'\)가 컴팩트 구간 \([a,b]\)에서 연속이므로 극값 정리(EVT)에 의해 최댓값을 실제로 달성하며, \(A = \max_{[a,b]} \alpha' < \infty\)로 둘 수 있습니다.`,
+          en: String.raw`By the mean value theorem, each \([x_{i-1}, x_i]\) holds \(\xi_i \in (x_{i-1}, x_i)\) with \(\Delta\alpha_i = \alpha'(\xi_i)\,\Delta x_i\) (\(\alpha'\) is continuous since \(\alpha\) is \(C^1\)).
+
+Hence \(U(f, P, \alpha) = \sum M_i\,\alpha'(\xi_i)\,\Delta x_i\); \(\alpha\) increasing gives \(\alpha' \ge 0\).
+
+Since \(\alpha'\) is continuous on the compact interval \([a,b]\), the extreme value theorem (EVT) says it attains its maximum, so \(A = \max_{[a,b]} \alpha' < \infty\) is legitimate.`,
         },
       },
       {
@@ -109,14 +141,26 @@ export const riemannStieltjesProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이제 \(U(f, P, \alpha)\)를 리만합 \(S(P) = \sum f(t_i)\,\alpha'(t_i)\,\Delta x_i\) (표본점 \(t_i \in [x_{i-1}, x_i]\), 예컨대 \(t_i = x_{i-1}\))와 비교합니다. \(\lvert M_i\,\alpha'(\xi_i) - f(t_i)\,\alpha'(t_i)\rvert \le \lvert M_i - f(t_i)\rvert\,\alpha'(\xi_i) + \lvert f(t_i)\rvert\,\lvert\alpha'(\xi_i) - \alpha'(t_i)\rvert\)이므로, \(f\)가 컴팩트 구간 \([a,b]\)에서 연속이라 극값 정리(EVT)에 의해 \(F = \max_{[a,b]} |f|\)가 실제로 달성되는 최댓값으로 존재함을 이용해 \(F = \max_{[a,b]} |f|\)라 두면 \(\lvert U(f, P, \alpha) - S(P)\rvert \le A\,\omega_f(\delta)\,(b-a) + F\,\omega_{\alpha'}(\delta)\,(b-a)\)입니다. 여기서 \(\omega_f, \omega_{\alpha'}\)는 균등연속성에 의한 연속 모듈러스이고 \(\delta\)는 그물입니다.`,
+          ko: String.raw`이제 \(U(f, P, \alpha)\)를 리만합 \(S(P) = \sum f(t_i)\,\alpha'(t_i)\,\Delta x_i\) (표본점 \(t_i \in [x_{i-1}, x_i]\), 예컨대 \(t_i = x_{i-1}\))와 비교합니다.
+
+\(\lvert M_i\,\alpha'(\xi_i) - f(t_i)\,\alpha'(t_i)\rvert \le \lvert M_i - f(t_i)\rvert\,\alpha'(\xi_i) + \lvert f(t_i)\rvert\,\lvert\alpha'(\xi_i) - \alpha'(t_i)\rvert\)이므로, \(f\)가 컴팩트 구간 \([a,b]\)에서 연속이라 극값 정리(EVT)에 의해 \(F = \max_{[a,b]} |f|\)가 실제로 달성되는 최댓값으로 존재함을 이용해 \(F = \max_{[a,b]} |f|\)라 두면 \(\lvert U(f, P, \alpha) - S(P)\rvert \le A\,\omega_f(\delta)\,(b-a) + F\,\omega_{\alpha'}(\delta)\,(b-a)\)입니다.
+
+여기서 \(\omega_f, \omega_{\alpha'}\)는 균등연속성에 의한 연속 모듈러스이고 \(\delta\)는 그물입니다.`,
           en: String.raw`Now compare \(U(f, P, \alpha)\) with the Riemann sum \(S(P) = \sum f(t_i)\,\alpha'(t_i)\,\Delta x_i\) (sample points \(t_i \in [x_{i-1}, x_i]\), e.g. \(t_i = x_{i-1}\)). From \(\lvert M_i\,\alpha'(\xi_i) - f(t_i)\,\alpha'(t_i)\rvert \le \lvert M_i - f(t_i)\rvert\,\alpha'(\xi_i) + \lvert f(t_i)\rvert\,\lvert\alpha'(\xi_i) - \alpha'(t_i)\rvert\), with \(F = \max_{[a,b]} |f|\) — which exists as an attained maximum by the extreme value theorem (EVT), since \(f\) is continuous on the compact \([a,b]\) — we get \(\lvert U(f, P, \alpha) - S(P)\rvert \le A\,\omega_f(\delta)\,(b-a) + F\,\omega_{\alpha'}(\delta)\,(b-a)\), where \(\omega_f, \omega_{\alpha'}\) are the moduli of continuity from uniform continuity and \(\delta\) is the mesh.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\delta \to 0\)에서 \(\omega_f(\delta), \omega_{\alpha'}(\delta) \to 0\)이므로 \(|U(f, P, \alpha) - S(P)| \to 0\)입니다. \(f\,\alpha'\)가 연속이므로 \(S(P) \to \int_a^b f(x)\,\alpha'(x)\,dx\)이고, \(U(f, P, \alpha) \to \int_a^b f\,d\alpha\)이므로 (RS 적분 가능성은 위에서 확인), 두 극한이 같아야 합니다: \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\). 모든 단계가 완성되었습니다 — 아이디어 수준 표기는 없습니다.`,
-          en: String.raw`As \(\delta \to 0\), \(\omega_f(\delta), \omega_{\alpha'}(\delta) \to 0\), so \(|U(f, P, \alpha) - S(P)| \to 0\). Since \(f\,\alpha'\) is continuous, \(S(P) \to \int_a^b f(x)\,\alpha'(x)\,dx\), and \(U(f, P, \alpha) \to \int_a^b f\,d\alpha\) (RS integrability shown above); the two limits must agree: \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\). Every step is complete — nothing is left at idea level.`,
+          ko: String.raw`\(\delta \to 0\)에서 \(\omega_f(\delta), \omega_{\alpha'}(\delta) \to 0\)이므로 \(|U(f, P, \alpha) - S(P)| \to 0\)입니다.
+
+\(f\,\alpha'\)가 연속이므로 \(S(P) \to \int_a^b f(x)\,\alpha'(x)\,dx\)이고, \(U(f, P, \alpha) \to \int_a^b f\,d\alpha\)이므로 (RS 적분 가능성은 위에서 확인), 두 극한이 같아야 합니다: \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\).
+
+모든 단계가 완성되었습니다 — 아이디어 수준 표기는 없습니다.`,
+          en: String.raw`As \(\delta \to 0\), \(\omega_f(\delta), \omega_{\alpha'}(\delta) \to 0\), so \(|U(f, P, \alpha) - S(P)| \to 0\).
+
+Since \(f\,\alpha'\) is continuous, \(S(P) \to \int_a^b f(x)\,\alpha'(x)\,dx\), and \(U(f, P, \alpha) \to \int_a^b f\,d\alpha\) (RS integrability shown above); the two limits must agree: \(\int_a^b f\,d\alpha = \int_a^b f(x)\,\alpha'(x)\,dx\).
+
+Every step is complete — nothing is left at idea level.`,
         },
       },
     ],

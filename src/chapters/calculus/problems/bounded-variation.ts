@@ -28,7 +28,11 @@ export const boundedVariationProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(f\)가 \([a, b]\)에서 증가한다고 하고, 임의의 분할 \(P = \{x_0 < x_1 < \dots < x_m\}\) (\([x_0, x_m] = [a, b]\))를 잡습니다. 단조증가이므로 각 구간에서 \(f(x_i) - f(x_{i-1}) \ge 0\)이고, 절댓값이 풀려 \(\sum_{i=1}^{m}|f(x_i) - f(x_{i-1})| = \sum_{i=1}^{m}(f(x_i) - f(x_{i-1}))\)가 됩니다. 이는 망원경 합이므로 \(f(b) - f(a)\)와 같습니다.`,
+          ko: String.raw`\(f\)가 \([a, b]\)에서 증가한다고 하고, 임의의 분할 \(P = \{x_0 < x_1 < \dots < x_m\}\) (\([x_0, x_m] = [a, b]\))를 잡습니다.
+
+단조증가이므로 각 구간에서 \(f(x_i) - f(x_{i-1}) \ge 0\)이고, 절댓값이 풀려 \(\sum_{i=1}^{m}|f(x_i) - f(x_{i-1})| = \sum_{i=1}^{m}(f(x_i) - f(x_{i-1}))\)가 됩니다.
+
+이는 망원경 합이므로 \(f(b) - f(a)\)와 같습니다.`,
           en: String.raw`Let \(f\) be increasing on \([a, b]\) and take any partition \(P = \{x_0 < x_1 < \dots < x_m\}\) (\([x_0, x_m] = [a, b]\)). Monotonicity gives \(f(x_i) - f(x_{i-1}) \ge 0\) on each subinterval, so the absolute values unwrap: \(\sum_{i=1}^{m}|f(x_i) - f(x_{i-1})| = \sum_{i=1}^{m}(f(x_i) - f(x_{i-1}))\), which telescopes to \(f(b) - f(a)\).`,
         },
       },
@@ -49,8 +53,12 @@ export const boundedVariationProblems: readonly ProblemMeta[] = [
   {
     id: 'bv-jordan',
     statement: {
-      ko: String.raw`조던 분해 정리: \(f\)가 \([a, b]\)에서 유계변분이기 위한 필요충분조건은 \(f = g - h\) (단, \(g, h\)는 \([a, b]\)에서 증가하는 함수)로 쓸 수 있는 것입니다. 힌트: \(v(x) := V_a^x(f)\)라 두세요.`,
-      en: String.raw`Jordan decomposition: \(f\) is of bounded variation on \([a, b]\) if and only if \(f = g - h\) with \(g, h\) increasing on \([a, b]\). Hint: set \(v(x) := V_a^x(f)\).`,
+      ko: String.raw`조던 분해 정리: \(f\)가 \([a, b]\)에서 유계변분이기 위한 필요충분조건은 \(f = g - h\) (단, \(g, h\)는 \([a, b]\)에서 증가하는 함수)로 쓸 수 있는 것입니다.
+
+힌트: \(v(x) := V_a^x(f)\)라 두세요.`,
+      en: String.raw`Jordan decomposition: \(f\) is of bounded variation on \([a, b]\) if and only if \(f = g - h\) with \(g, h\) increasing on \([a, b]\).
+
+Hint: set \(v(x) := V_a^x(f)\).`,
     },
     display: [
       String.raw`v(x) := V_a^x(f), \qquad f = \frac{v + f}{2} - \frac{v - f}{2}`,
@@ -113,7 +121,11 @@ export const boundedVariationProblems: readonly ProblemMeta[] = [
       {
         text: {
           ko: String.raw`분할 \(P_N = \{0, v_N, u_N, \dots, v_1, u_1, 1\}\)을 잡습니다. 구간 \([0, v_N]\)과 \([u_1, 1]\)의 기여는 음이 아니므로 버려도 되고, 각 쌍 \((v_k, u_k)\)에서 \(|f(u_k) - f(v_k)| = |u_k - (-v_k)| = u_k + v_k\)이므로 \(V_{P_N}(f) \ge \sum_{k=1}^{N}(u_k + v_k)\)입니다.`,
-          en: String.raw`Take the partition \(P_N = \{0, v_N, u_N, \dots, v_1, u_1, 1\}\). The contributions from \([0, v_N]\) and \([u_1, 1]\) are nonnegative, so dropping them only lowers the sum; on each pair \((v_k, u_k)\) we get \(|f(u_k) - f(v_k)| = |u_k - (-v_k)| = u_k + v_k\). Hence \(V_{P_N}(f) \ge \sum_{k=1}^{N}(u_k + v_k)\).`,
+          en: String.raw`Take the partition \(P_N = \{0, v_N, u_N, \dots, v_1, u_1, 1\}\).
+
+The contributions from \([0, v_N]\) and \([u_1, 1]\) are nonnegative, so dropping them only lowers the sum; on each pair \((v_k, u_k)\) we get \(|f(u_k) - f(v_k)| = |u_k - (-v_k)| = u_k + v_k\).
+
+Hence \(V_{P_N}(f) \ge \sum_{k=1}^{N}(u_k + v_k)\).`,
         },
       },
       {
