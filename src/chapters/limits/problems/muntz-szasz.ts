@@ -25,7 +25,7 @@ export const muntzSzaszProblems: readonly ProblemMeta[] = [
       en: String.raw`Prove \(\sum_{n \ge 1} \frac{1}{n^2} = \frac{\pi^2}{6} < \infty\), and deduce from the necessity direction of the Müntz–Szász theorem that \(\operatorname{span}\{1, x, x^4, x^9, \ldots\}\) is not dense in \(C[0,1]\). The proof of the necessity direction itself is marked as an idea-level sketch.`,
     },
     display: [
-      String.raw`\frac{1}{\pi}\int_{-\pi}^{\pi} x^2\,dx = \sum_{k=1}^{\infty} \frac{b_k^2}{2}, \qquad b_k = \frac{2(-1)^{k+1}}{k}`,
+      String.raw`\sum_{k=1}^{\infty} b_k^2 = 4\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{1}{\pi}\int_{-\pi}^{\pi} x^2\,dx = \frac{2\pi^2}{3}, \qquad b_k = \frac{2(-1)^{k+1}}{k}`,
       String.raw`\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6} < \infty \;\Rightarrow\; \operatorname{span}\{1, x^{n^2}\} \text{ not dense}`,
     ],
     preset: { N: 6 },
@@ -36,8 +36,8 @@ export const muntzSzaszProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 \(\sum 1/n^2 = \pi^2/6\)을 계산합니다 (완전한 증명). \(f(x) = x\)를 \((-\pi, \pi)\) 위의 홀함수로 보고 사인 급수를 구하면, 부분적분으로 \(b_k = \frac{1}{\pi}\int_{-\pi}^{\pi} x \sin(kx)\,dx = \frac{2(-1)^{k+1}}{k}\)입니다. Parseval 항등식에 따르면 \(\frac{1}{\pi}\int_{-\pi}^{\pi} x^2\,dx = \sum_{k=1}^{\infty} \frac{b_k^2}{2}\)인데, 좌변은 \(\frac{2\pi^2}{3}\)이므로 \(\frac{2\pi^2}{3} = 2\sum_{k=1}^{\infty} \frac{1}{k^2}\), 즉 \(\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{\pi^2}{6} \approx 1.6449 < \infty\)입니다.`,
-          en: String.raw`First compute \(\sum 1/n^2 = \pi^2/6\) (complete proof). Take \(f(x) = x\) as an odd function on \((-\pi, \pi)\); integration by parts gives its sine coefficients \(b_k = \frac{1}{\pi}\int_{-\pi}^{\pi} x \sin(kx)\,dx = \frac{2(-1)^{k+1}}{k}\). Parseval's identity says \(\frac{1}{\pi}\int_{-\pi}^{\pi} x^2\,dx = \sum_{k=1}^{\infty} \frac{b_k^2}{2}\); the left side is \(\frac{2\pi^2}{3}\), so \(\frac{2\pi^2}{3} = 2\sum_{k=1}^{\infty} \frac{1}{k^2}\), i.e. \(\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{\pi^2}{6} \approx 1.6449 < \infty\).`,
+          ko: String.raw`먼저 \(\sum 1/n^2 = \pi^2/6\)을 계산합니다 (완전한 증명). \(f(x) = x\)를 \((-\pi, \pi)\)에서 봅니다. \(f\)는 연속이므로 \(f \in L^2(-\pi, \pi)\)입니다 (\(\int_{-\pi}^{\pi} x^2\,dx < \infty\)) — 따라서 Parseval 항등식을 \(f\)에 적용할 수 있습니다. \(f\)는 홀함수이므로 모든 코사인 계수가 사라집니다: \(a_0 = 0\)이고 모든 \(k\)에 대해 \(a_k = 0\)이며, 사인 계수 \(b_k = \frac{1}{\pi}\int_{-\pi}^{\pi} x \sin(kx)\,dx = \frac{2(-1)^{k+1}}{k}\) (부분적분은 다음 단계)만 남습니다. \(\frac{1}{\pi}\int_{-\pi}^{\pi} f^2\,dx = \frac{a_0^2}{2} + \sum_{k=1}^{\infty} (a_k^2 + b_k^2)\) 형태의 Parseval 항등식은 따라서 \(\frac{1}{\pi}\int_{-\pi}^{\pi} x^2\,dx = \sum_{k=1}^{\infty} b_k^2\)가 됩니다. 좌변은 \(\frac{2\pi^2}{3}\)이고 \(b_k^2 = \frac{4}{k^2}\)이므로 \(4\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{2\pi^2}{3}\), 즉 \(\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{\pi^2}{6} \approx 1.6449 < \infty\)입니다.`,
+          en: String.raw`First compute \(\sum 1/n^2 = \pi^2/6\) (complete proof). Take \(f(x) = x\) on \((-\pi, \pi)\). Since \(f\) is continuous, \(f \in L^2(-\pi, \pi)\) (indeed \(\int_{-\pi}^{\pi} x^2\,dx < \infty\)), so Parseval's identity applies to \(f\). Since \(f\) is odd, every cosine coefficient vanishes: \(a_0 = 0\) and \(a_k = 0\) for all \(k\), and only the sine coefficients \(b_k = \frac{1}{\pi}\int_{-\pi}^{\pi} x \sin(kx)\,dx = \frac{2(-1)^{k+1}}{k}\) (integration by parts, next step) survive. Parseval in the form \(\frac{1}{\pi}\int_{-\pi}^{\pi} f^2\,dx = \frac{a_0^2}{2} + \sum_{k=1}^{\infty} (a_k^2 + b_k^2)\) therefore reads \(\frac{1}{\pi}\int_{-\pi}^{\pi} x^2\,dx = \sum_{k=1}^{\infty} b_k^2\). The left side is \(\frac{2\pi^2}{3}\), and \(b_k^2 = \frac{4}{k^2}\), so \(4\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{2\pi^2}{3}\), i.e. \(\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{\pi^2}{6} \approx 1.6449 < \infty\).`,
         },
       },
       {

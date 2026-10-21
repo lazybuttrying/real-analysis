@@ -19,8 +19,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(A_n = \sum_{k=1}^{n} a_k\)이라 두자. 가정에 의해 \(A_n \to A\)로 수렴한다. 부분합에 의한 합산 변환(아벨 변환)을 쓰면 \(m \le n\)에 대해 \(\sum_{k=m}^{n} a_k b_k = A_n b_{n+1} - A_{m-1} b_m + \sum_{k=m}^{n} A_k (b_k - b_{k+1})\)이다. 이는 \(a_k = A_k - A_{k-1}\)을 대입하고 망원합으로 정리하면 직접 확인할 수 있다.`,
-                en: String.raw`Put \(A_n = \sum_{k=1}^{n} a_k\). By hypothesis \(A_n \to A\). Summation by parts (Abel's transform) gives, for \(m \le n\), \(\sum_{k=m}^{n} a_k b_k = A_n b_{n+1} - A_{m-1} b_m + \sum_{k=m}^{n} A_k (b_k - b_{k+1})\), which is checked directly by substituting \(a_k = A_k - A_{k-1}\) and collecting the telescoping terms.`,
+                ko: String.raw`\(A_n = \sum_{k=1}^{n} a_k\)이라 두자. 가정에 의해 \(A_n \to A\)로 수렴한다. \(A_0 := 0\)으로 두면 \(m = 1\)인 경우에도 아래 공식이 성립한다(\(A_{m-1} = A_0 = 0\)). 부분합에 의한 합산 변환(아벨 변환)을 쓰면 \(m \le n\)에 대해 \(\sum_{k=m}^{n} a_k b_k = A_n b_{n+1} - A_{m-1} b_m + \sum_{k=m}^{n} A_k (b_k - b_{k+1})\)이다. 이는 \(a_k = A_k - A_{k-1}\)을 대입하고 망원합으로 정리하면 직접 확인할 수 있다.`,
+                en: String.raw`Put \(A_n = \sum_{k=1}^{n} a_k\). By hypothesis \(A_n \to A\). Set \(A_0 := 0\) so the formula below is also valid for \(m = 1\) (with \(A_{m-1} = A_0 = 0\)). Summation by parts (Abel's transform) gives, for \(m \le n\), \(\sum_{k=m}^{n} a_k b_k = A_n b_{n+1} - A_{m-1} b_m + \sum_{k=m}^{n} A_k (b_k - b_{k+1})\), which is checked directly by substituting \(a_k = A_k - A_{k-1}\) and collecting the telescoping terms.`,
               },
             },
             {
@@ -37,8 +37,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`한편 경계항 \(A_n b_{n+1} - A_{m-1} b_m\)을 보자. \(b_k \to b\)로 수렴하므로(\(b\)는 단조·유계 수열의 극한) \(A_n b_{n+1} - A_{m-1} b_m \to A b - A b = 0\) — 코시 의미에서 \(m, n \to \infty\)일 때 \(0\)으로 간다. 이를 앞 항과 합치면 \(\sum_{k=m}^{n} a_k b_k\)의 꼬리가 임의로 작아지므로 \(\sum a_k b_k\)의 부분합은 코시 수열이다. 따라서 수렴한다.`,
-                en: String.raw`Now the boundary term \(A_n b_{n+1} - A_{m-1} b_m\). Since \(b_k \to b\) (a monotone bounded sequence converges), this tends to \(A b - A b = 0\) in the Cauchy sense as \(m, n \to \infty\). Together with the previous estimate, the tails of \(\sum_{k=m}^{n} a_k b_k\) become arbitrarily small, so the partial sums of \(\sum a_k b_k\) form a Cauchy sequence. Hence the series converges.`,
+                ko: String.raw`한편 경계항 \(A_n b_{n+1} - A_{m-1} b_m\)을 보자. \(b_k \to b\)로 수렴하므로(\(b\)는 단조·유계 수열의 극한) \(A_n b_{n+1} - A_{m-1} b_m \to A b - A b = 0\) — 코시 의미에서 \(m, n \to \infty\)일 때 \(0\)으로 간다. 남은 항 \(A(b_m - b_{n+1})\)도 추정해야 한다: \(|A(b_m - b_{n+1})| \le |A| \cdot |b_m - b_{n+1}|\)이고, \(b_k \to b\)이므로 \(m, n \to \infty\)일 때 \(|b_m - b_{n+1}| \to 0\)이다(대략적으로는 \(|b_m - b_{n+1}| \le 2M\)). 따라서 이 항도 \(0\)으로 간다. 분해의 모든 항이 추정되었으므로, 앞 항과 합치면 \(\sum_{k=m}^{n} a_k b_k\)의 꼬리가 임의로 작아지므로 \(\sum a_k b_k\)의 부분합은 코시 수열이다. 따라서 수렴한다.`,
+                en: String.raw`Now the boundary term \(A_n b_{n+1} - A_{m-1} b_m\). Since \(b_k \to b\) (a monotone bounded sequence converges), this tends to \(A b - A b = 0\) in the Cauchy sense as \(m, n \to \infty\). The leftover term \(A(b_m - b_{n+1})\) must also be estimated: \(|A(b_m - b_{n+1})| \le |A| \cdot |b_m - b_{n+1}|\), and since \(b_k \to b\), \(|b_m - b_{n+1}| \to 0\) as \(m, n \to \infty\) (crudely \(|b_m - b_{n+1}| \le 2M\)). Hence this term also tends to \(0\). Every term in the decomposition is now estimated, so together with the previous estimate, the tails of \(\sum_{k=m}^{n} a_k b_k\) become arbitrarily small, so the partial sums of \(\sum a_k b_k\) form a Cauchy sequence. Hence the series converges.`,
               },
             },
           ],

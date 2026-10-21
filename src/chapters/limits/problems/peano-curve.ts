@@ -65,8 +65,8 @@ export const peanoCurveProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\((t_k)\)는 \([0,1]\)의 수열이므로 컴팩트성에 의해 수렴하는 부분수열 \(t_{k_j} \to t\)가 존재합니다. 연속성에 의해 \(p(t_{k_j}) \to p(t)\)입니다. 그런데 \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\)에서, 첫째 항은 균등수렴에 의해, 둘째 항은 두 점이 모두 같은 \(Q^{(k_j)}\) 안에 있으므로, 각각 \(\sqrt{2}\, 3^{-k_j} \to 0\)으로 수렴합니다. 따라서 \(p(t) = y\)입니다.`,
-          en: String.raw`Since \((t_k)\) lies in \([0,1]\), compactness gives a convergent subsequence \(t_{k_j} \to t\). By continuity, \(p(t_{k_j}) \to p(t)\). But \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\): the first term tends to 0 by uniform convergence, and the second because both points lie in the same \(Q^{(k_j)}\) — each is at most \(\sqrt{2}\, 3^{-k_j} \to 0\). Hence \(p(t) = y\).`,
+          ko: String.raw`\((t_k)\)는 \([0,1]\)의 수열이므로 컴팩트성에 의해 수렴하는 부분수열 \(t_{k_j} \to t\)가 존재합니다. 연속성에 의해 \(p(t_{k_j}) \to p(t)\)입니다. 그런데 \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\)에서, 첫째 항은 peano-uniform-limit에서 증명한 균등 꼬리 추정 (\(m > n\)이면 \(|p_m - p_n| \le \frac{3\sqrt{2}}{2}\, 3^{-n}\); \(m \to \infty\)로 보냄)에 의해 \(\frac{3\sqrt{2}}{2}\, 3^{-k_j}\) 이하이고, 둘째 항은 두 점이 모두 지름 \(\sqrt{2}\, 3^{-k_j}\)인 같은 \(Q^{(k_j)}\) 안에 있으므로 \(\sqrt{2}\, 3^{-k_j}\) 이하입니다. 둘 다 \(0\)으로 가므로 \(p(t) = y\)입니다.`,
+          en: String.raw`Since \((t_k)\) lies in \([0,1]\), compactness gives a convergent subsequence \(t_{k_j} \to t\). By continuity, \(p(t_{k_j}) \to p(t)\). But \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\): the first term is at most \(\frac{3\sqrt{2}}{2}\, 3^{-k_j}\) by the uniform tail estimate proved in peano-uniform-limit (\(|p_m - p_n| \le \frac{3\sqrt{2}}{2}\, 3^{-n}\) for \(m > n\); let \(m \to \infty\)), and the second is at most \(\sqrt{2}\, 3^{-k_j}\) because both points lie in the same \(Q^{(k_j)}\) of diameter \(\sqrt{2}\, 3^{-k_j}\). Both tend to \(0\), hence \(p(t) = y\).`,
         },
       },
       {
@@ -100,14 +100,14 @@ export const peanoCurveProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`Netto 정리: 컴팩트 공간에서 Hausdorff 공간으로의 연속 전단사는 동형사상(homeomorphism)입니다. 실제로 \(F \subseteq K\)가 닫혀 있으면 \(F\)는 컴팩트하고, \(f(F)\)는 (A)에 의해 컴팩트하므로 (B)에 의해 \(Y\)에서 닫혀 있습니다 — 즉 \(f\)는 닫힌 사상입니다. 닫힌 전단사는 동형사상입니다 (\((f^{-1})^{-1}(F) = f(F)\)가 닫혀 있으므로 \(f^{-1}\)이 연속).`,
-          en: String.raw`Netto's theorem: a continuous bijection from a compact space to a Hausdorff space is a homeomorphism. Indeed, if \(F \subseteq K\) is closed then \(F\) is compact, so \(f(F)\) is compact by (A) and closed in \(Y\) by (B) — i.e. \(f\) is a closed map. A closed bijection is a homeomorphism (\((f^{-1})^{-1}(F) = f(F)\) is closed, so \(f^{-1}\) is continuous).`,
+          ko: String.raw`Netto 정리: 컴팩트 공간에서 Hausdorff 공간으로의 연속 전단사는 동형사상(homeomorphism)입니다. 실제로 \(F \subseteq K\)가 닫혀 있으면 \(F\)는 컴팩트합니다 — 컴팩트 집합의 닫힌 부분집합은 컴팩트합니다 (\(K = [0,1]\)인 경우 Heine–Borel 정리) — 따라서 \(f(F)\)는 (A)에 의해 컴팩트하므로 (B)에 의해 \(Y\)에서 닫혀 있습니다 — 즉 \(f\)는 닫힌 사상입니다. 닫힌 전단사는 동형사상입니다 (\((f^{-1})^{-1}(F) = f(F)\)가 닫혀 있으므로 \(f^{-1}\)이 연속).`,
+          en: String.raw`Netto's theorem: a continuous bijection from a compact space to a Hausdorff space is a homeomorphism. Indeed, if \(F \subseteq K\) is closed then \(F\) is compact — a closed subset of a compact set is compact (for \(K = [0,1]\) this is Heine–Borel) — so \(f(F)\) is compact by (A) and closed in \(Y\) by (B) — i.e. \(f\) is a closed map. A closed bijection is a homeomorphism (\((f^{-1})^{-1}(F) = f(F)\) is closed, so \(f^{-1}\) is continuous).`,
         },
       },
       {
         text: {
-          ko: String.raw`이제 \(f: [0,1] \to [0,1]^2\)가 연속 전단사라고 가정하면 동형사상이어야 합니다. 내부의 점 \(c \in (0,1)\)을 제거하면 \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\)은 서로소인 비어 있지 않은 열린 집합으로 분리되므로 연결집합이 아닙니다. 반면 \([0,1]^2\)에서 한 점 \(r\)을 제거한 공간이 경로연결임을 식으로 보입니다.`,
-          en: String.raw`If \(f: [0,1] \to [0,1]^2\) were a continuous bijection, it would be a homeomorphism. Removing an interior point \(c \in (0,1)\) disconnects the interval: \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\) is a separation into disjoint nonempty opens. In contrast, \([0,1]^2\) minus a point \(r\) is path-connected, shown here with explicit formulas.`,
+          ko: String.raw`이제 \(f: [0,1] \to [0,1]^2\)가 연속 전단사라고 가정하면 동형사상이어야 합니다. 내부의 점 \(c \in (0,1)\)을 제거하면 \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\)은 서로소인 비어 있지 않은 열린 집합으로 분리되므로 연결집합이 아닙니다. 반면 \([0,1]^2\)에서 대응점 \(r := f(c)\)를 제거한 공간이 경로연결임을 식으로 보입니다.`,
+          en: String.raw`If \(f: [0,1] \to [0,1]^2\) were a continuous bijection, it would be a homeomorphism. Removing an interior point \(c \in (0,1)\) disconnects the interval: \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\) is a separation into disjoint nonempty opens. In contrast, \([0,1]^2\) minus the corresponding point \(r := f(c)\) is path-connected, shown here with explicit formulas.`,
         },
       },
       {
