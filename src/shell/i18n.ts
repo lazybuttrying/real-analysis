@@ -8,7 +8,6 @@ import { h } from './dom';
  * for text the shell itself produces.
  */
 export const STRINGS = {
-  appMissing: { ko: '#app 을 찾을 수 없습니다', en: 'Could not find the #app element' },
   chapterMissing: {
     ko: '챕터 또는 #app 을 찾을 수 없습니다',
     en: 'Could not find the chapter or the #app element',

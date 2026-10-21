@@ -9,7 +9,7 @@ import { buildControls } from './controls';
 import { h } from './dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './i18n';
 import { disposeExercisesPage, exercisesPageTitle, renderExercisesPage } from './exercises-page';
-import { SceneHost } from './scene-host';
+import { mountMiniViz, SceneHost } from './scene-host';
 import { mountSearch } from './search';
 
 const BASE = import.meta.env.BASE_URL;
@@ -183,22 +183,7 @@ function renderProblems(
     .then((module: AnySceneModule) => {
       for (const job of vizJobs) {
         if (!job.host.isConnected) continue;
-        const mini = module.createScene();
-        try {
-          mini.mount(job.host, lang);
-        } catch (error) {
-          console.error(error);
-          continue;
-        }
-        track(() => mini.dispose());
-        Promise.resolve()
-          .then(() => module.model.compute(job.preset))
-          .then(
-            (data: unknown) => {
-              if (job.host.isConnected) mini.render(data, job.preset);
-            },
-            (error: unknown) => console.error(error),
-          );
+        mountMiniViz(module, job.host, lang, job.preset, track);
       }
     })
     .catch((error: unknown) => console.error(error));

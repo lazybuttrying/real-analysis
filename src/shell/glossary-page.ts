@@ -1,11 +1,11 @@
 import { catalog } from '../catalog.ts';
 import { glossary } from '../glossary.ts';
 import { localize, stripInlineMath, type Lang } from '../contracts.ts';
-import { chapterUrl, homeUrl, parsePath, sceneUrl, withLang } from '../paths.ts';
+import { chapterUrl, sceneUrl } from '../paths.ts';
 import { site } from '../site.config.ts';
 import { h } from './dom.ts';
-import { langSwitcher, tr } from './i18n.ts';
-import { mountSearch } from './search.ts';
+import { tr } from './i18n.ts';
+import { pageHeader } from './search.ts';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -31,15 +31,7 @@ function definitionSpan(text: string): HTMLSpanElement {
 export function renderGlossaryPage(root: HTMLElement, lang: Lang): void {
   document.title = `${tr(lang, 'glossary')} | ${site.name.en}`;
 
-  const headerSearch = h('span', { class: 'header-search' });
-  const header = h(
-    'header',
-    { class: 'home-header' },
-    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
-    headerSearch,
-    langSwitcher(lang, (target) => withLang(BASE, parsePath(BASE, location.pathname), target)),
-  );
-  mountSearch(headerSearch, lang);
+  const header = pageHeader(lang);
 
   const main = h('main', { class: 'home glossary' });
   main.append(h('h1', {}, tr(lang, 'glossary')), h('p', {}, tr(lang, 'glossaryIntro')));

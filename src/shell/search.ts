@@ -1,8 +1,9 @@
-import { exercisesUrl, glossaryUrl, sceneUrl } from '../paths.ts';
+import { exercisesUrl, glossaryUrl, homeUrl, parsePath, sceneUrl, withLang } from '../paths.ts';
+import { site } from '../site.config.ts';
 import type { Lang } from '../contracts.ts';
 import type { SearchIndexData } from '../search-index.ts';
 import { h } from './dom.ts';
-import { tr } from './i18n.ts';
+import { langSwitcher, tr } from './i18n.ts';
 
 const BASE = import.meta.env.BASE_URL;
 const MAX_RESULTS = 8;
@@ -29,54 +30,64 @@ export function filterSearchIndex(index: SearchIndexData, query: string, base: s
   const q = query.trim().toLowerCase();
   if (q.length === 0) return [];
   const scored: ScoredHit[] = [];
-  for (const scene of index.scenes) {
-    const inTitle = scene.title.toLowerCase().includes(q);
-    const inSummary = !inTitle && scene.summary.toLowerCase().includes(q);
-    if (inTitle || inSummary) {
-      scored.push({
-        hit: {
-          kind: 'scene',
-          label: scene.title,
-          context: scene.chapterTitle,
-          url: sceneUrl(base, lang, scene.chapterId, scene.sceneId),
-        },
-        score: inTitle ? 2 : 1,
-      });
+  /**
+   * Scores one candidate: a hit in the primary text (title, term, label)
+   * outranks a hit in the secondary text (summary, definition, statement).
+   * The hit is built lazily, only when the candidate matches.
+   */
+  const consider = (primary: string, secondary: string, makeHit: () => RankedHit): void => {
+    const inPrimary = primary.toLowerCase().includes(q);
+    if (inPrimary || secondary.toLowerCase().includes(q)) {
+      scored.push({ hit: makeHit(), score: inPrimary ? 2 : 1 });
     }
+  };
+  for (const scene of index.scenes) {
+    consider(scene.title, scene.summary, () => ({
+      kind: 'scene',
+      label: scene.title,
+      context: scene.chapterTitle,
+      url: sceneUrl(base, lang, scene.chapterId, scene.sceneId),
+    }));
   }
   for (const term of index.terms) {
-    const inTerm = term.term.toLowerCase().includes(q);
-    const inDefinition = !inTerm && term.definition.toLowerCase().includes(q);
-    if (inTerm || inDefinition) {
-      scored.push({
-        hit: {
-          kind: 'term',
-          label: term.term,
-          context: term.sceneTitle,
-          url: `${glossaryUrl(base, lang)}#term-${term.id}`,
-        },
-        score: inTerm ? 2 : 1,
-      });
-    }
+    consider(term.term, term.definition, () => ({
+      kind: 'term',
+      label: term.term,
+      context: term.sceneTitle,
+      url: `${glossaryUrl(base, lang)}#term-${term.id}`,
+    }));
   }
   for (const exercise of index.exercises) {
     const label = `${tr(lang, 'searchExerciseKind')} ${exercise.number}`;
-    const inLabel = label.toLowerCase().includes(q);
-    const inStatement = !inLabel && exercise.statement.toLowerCase().includes(q);
-    if (inLabel || inStatement) {
-      scored.push({
-        hit: {
-          kind: 'exercise',
-          label,
-          context: exercise.chapterTitle,
-          url: `${exercisesUrl(base, lang, exercise.chapterId)}#exercise-${exercise.exerciseId}`,
-        },
-        score: inLabel ? 2 : 1,
-      });
-    }
+    consider(label, exercise.statement, () => ({
+      kind: 'exercise',
+      label,
+      context: exercise.chapterTitle,
+      url: `${exercisesUrl(base, lang, exercise.chapterId)}#exercise-${exercise.exerciseId}`,
+    }));
   }
   scored.sort((a, b) => b.score - a.score || a.hit.label.localeCompare(b.hit.label));
   return scored.slice(0, MAX_RESULTS).map((entry) => entry.hit);
+}
+
+/**
+ * The standard home-style page header — site title, search box, language
+ * switcher — shared by the glossary, learning-paths, and exercises pages.
+ * The switcher routes through withLang, which preserves the current
+ * chapter/scene segments (on the exercises page the 'exercises' scene id
+ * maps to the exercises URL), so one header serves all three pages.
+ */
+export function pageHeader(lang: Lang): HTMLElement {
+  const headerSearch = h('span', { class: 'header-search' });
+  const header = h(
+    'header',
+    { class: 'home-header' },
+    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
+    headerSearch,
+    langSwitcher(lang, (target) => withLang(BASE, parsePath(BASE, location.pathname), target)),
+  );
+  mountSearch(headerSearch, lang);
+  return header;
 }
 
 /**

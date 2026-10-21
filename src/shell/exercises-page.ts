@@ -9,11 +9,12 @@ import {
   type ExerciseMeta,
   type Lang,
 } from '../contracts.ts';
-import { chapterUrl, homeUrl, parsePath, sceneUrl, withLang } from '../paths.ts';
+import { chapterUrl, sceneUrl } from '../paths.ts';
 import { site } from '../site.config.ts';
 import { h } from './dom.ts';
-import { langSwitcher, tr } from './i18n.ts';
-import { mountSearch } from './search.ts';
+import { tr } from './i18n.ts';
+import { mountMiniViz } from './scene-host.ts';
+import { pageHeader } from './search.ts';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -42,21 +43,6 @@ export function exercisesPageTitle(lang: Lang, chapter: ChapterMeta): string {
   // Chapter numbers are automatic: the catalog order is the numbering, never stored in meta files.
   const chapterNumber = catalog.indexOf(chapter) + 1;
   return `${tr(lang, 'exercises')} · ${chapterNumber}. ${localize(chapter.title, lang)} | ${site.name.en}`;
-}
-
-function pageHeader(lang: Lang): HTMLElement {
-  const headerSearch = h('span', { class: 'header-search' });
-  const header = h(
-    'header',
-    { class: 'home-header' },
-    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
-    headerSearch,
-    // withLang routes { chapterId, sceneId: 'exercises' } through sceneUrl,
-    // which produces exactly exercisesUrl(base, lang, chapterId).
-    langSwitcher(lang, (target) => withLang(BASE, parsePath(BASE, location.pathname), target)),
-  );
-  mountSearch(headerSearch, lang);
-  return header;
 }
 
 const difficultyKey = (difficulty: ExerciseDifficulty): 'difficultyEasy' | 'difficultyMedium' | 'difficultyHard' =>
@@ -205,22 +191,9 @@ export function renderExercisesPage(
     loader()
       .then((module: AnySceneModule) => {
         if (!job.host.isConnected) return;
-        const mini = module.createScene();
-        try {
-          mini.mount(job.host, lang);
-        } catch (error) {
-          console.error(error);
-          return;
-        }
-        disposers.push(() => mini.dispose());
-        Promise.resolve()
-          .then(() => module.model.compute(job.preset))
-          .then(
-            (data: unknown) => {
-              if (job.host.isConnected) mini.render(data, job.preset);
-            },
-            (error: unknown) => console.error(error),
-          );
+        mountMiniViz(module, job.host, lang, job.preset, (dispose) => {
+          disposers.push(dispose);
+        });
       })
       .catch((error: unknown) => console.error(error));
   }

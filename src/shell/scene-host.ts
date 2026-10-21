@@ -191,3 +191,35 @@ export class SceneHost {
     );
   }
 }
+
+/**
+ * Mounts one scene module as a static mini visualization: a fixed preset,
+ * rendered once, never listening to controls. Used by the problem and
+ * exercise mini visualizations, which reuse a scene's own module. A failed
+ * mount is logged and registers nothing; a createScene failure propagates
+ * into the caller's loader chain, as it did when this block was inlined.
+ */
+export function mountMiniViz(
+  module: AnySceneModule,
+  host: HTMLElement,
+  lang: Lang,
+  preset: ControlState,
+  registerDispose: (dispose: () => void) => void,
+): void {
+  const mini = module.createScene();
+  try {
+    mini.mount(host, lang);
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+  registerDispose(() => mini.dispose());
+  Promise.resolve()
+    .then(() => module.model.compute(preset))
+    .then(
+      (data: unknown) => {
+        if (host.isConnected) mini.render(data, preset);
+      },
+      (error: unknown) => console.error(error),
+    );
+}

@@ -1,11 +1,11 @@
 import { catalog } from '../catalog.ts';
 import { localize, stripInlineMath, type Lang } from '../contracts.ts';
 import { learningPaths, type LearningPath } from '../learning-paths.ts';
-import { homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths.ts';
+import { pathDetailUrl, pathsUrl, sceneUrl } from '../paths.ts';
 import { site } from '../site.config.ts';
 import { h } from './dom.ts';
-import { langSwitcher, tr } from './i18n.ts';
-import { mountSearch } from './search.ts';
+import { tr } from './i18n.ts';
+import { pageHeader } from './search.ts';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -34,18 +34,6 @@ for (const [chapterIndex, chapter] of catalog.entries()) {
       title: (lang: Lang) => localize(scene.title, lang),
     });
   }
-}
-
-function pageHeader(lang: Lang): HTMLElement {  const headerSearch = h('span', { class: 'header-search' });
-  const header = h(
-    'header',
-    { class: 'home-header' },
-    h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, site.name.en),
-    headerSearch,
-    langSwitcher(lang, (target) => withLang(BASE, parsePath(BASE, location.pathname), target)),
-  );
-  mountSearch(headerSearch, lang);
-  return header;
 }
 
 function sceneCountLabel(path: LearningPath, lang: Lang): string {
