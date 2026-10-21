@@ -101,8 +101,8 @@ export const changeOfVariablesProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(\varphi(x) = -x\)는 \([-1, 0]\)에서 \(C^1\) 단조감소이고 \(\varphi'(x) = -1\)입니다. 치환 법칙에 의해 \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\)이며, \(\varphi(-1) = 1\), \(\varphi(0) = 0\)이므로 우변은 \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\)입니다 — 구간 방향이 뒤집혔습니다.`,
-          en: String.raw`\(\varphi(x) = -x\) is \(C^1\) and decreasing on \([-1, 0]\) with \(\varphi'(x) = -1\). The substitution rule gives \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\); with \(\varphi(-1) = 1\) and \(\varphi(0) = 0\) the right side is \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\) — the orientation flipped.`,
+          ko: String.raw`\(\varphi(x) = -x\)는 \([-1, 0]\)에서 \(C^1\) 단조감소이고 \(\varphi'(x) = -1\)입니다. 치환 법칙의 다른 가정도 확인합니다: \(f(u) = e^u\)는 모든 구간에서 연속입니다. 치환 법칙에 의해 \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\)이며, \(\varphi(-1) = 1\), \(\varphi(0) = 0\)이므로 우변은 \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\)입니다 — 구간 방향이 뒤집혔습니다.`,
+          en: String.raw`\(\varphi(x) = -x\) is \(C^1\) and decreasing on \([-1, 0]\) with \(\varphi'(x) = -1\). Check the substitution rule's other hypothesis as well: \(f(u) = e^u\) is continuous on every interval. The substitution rule gives \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\); with \(\varphi(-1) = 1\) and \(\varphi(0) = 0\) the right side is \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\) — the orientation flipped.`,
         },
       },
       {

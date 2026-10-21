@@ -75,8 +75,8 @@ export const derivativeMonotonicityProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`문제 1과의 차이는 오직 부등식의 엄격함뿐입니다: \(f' \ge 0\)은 평평한 구간을 허용하지만(\(f(x) = x^3 - 3x\)의 \(x = 1\) 근처처럼), \(f' > 0\)은 모든 할선의 기울기를 양수로 강제하므로 그래프가 한순간도 멈추지 않습니다.`,
-          en: String.raw`The only difference from problem 1 is the strictness of the inequality: \(f' \ge 0\) permits flat spots (like \(f(x) = x^3 - 3x\) near \(x = 1\)), while \(f' > 0\) forces every secant slope to be positive, so the graph never pauses for an instant.`,
+          ko: String.raw`문제 1과의 차이는 오직 부등식의 엄격함뿐입니다: \(f' \ge 0\)은 평평한 구간을 허용합니다 — 예컨대 \([-1, 1]\)에서 \(f(x) = (\max(0, x))^2\)로 두면 \(f\)는 \(C^1\)이고, \([-1, 0]\)에서는 \(f' = 0\), \([0, 1]\)에서는 \(f' = 2x \ge 0\)이며 (\(x = 0\)에서 양쪽 차분몫이 모두 \(0\)으로 가므로 \(f'(0) = 0\)), \(f\)는 비감소이지만 \([-1, 0]\)에서 평평하므로 엄격히 증가하지는 않습니다. 반면 \(f' > 0\)은 모든 할선의 기울기를 양수로 강제하므로 그래프가 한순간도 멈추지 않습니다.`,
+          en: String.raw`The only difference from problem 1 is the strictness of the inequality: \(f' \ge 0\) permits flat segments — e.g. \(f(x) = (\max(0, x))^2\) on \([-1, 1]\) is \(C^1\) with \(f' = 0\) on \([-1, 0]\) and \(f' = 2x \ge 0\) on \([0, 1]\) (at \(x = 0\) both one-sided difference quotients tend to \(0\), so \(f'(0) = 0\)); \(f\) is nondecreasing but flat on \([-1, 0]\), hence not strictly increasing. By contrast, \(f' > 0\) forces every secant slope to be positive, so the graph never pauses for an instant.`,
         },
       },
     ],

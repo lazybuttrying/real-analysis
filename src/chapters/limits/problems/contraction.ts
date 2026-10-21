@@ -14,8 +14,8 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'picard-cauchy',
     statement: {
-      ko: String.raw`수축사상 \(T\) (\(d(Tx,Ty) \le q\,d(x,y)\), \(q<1\))의 피카르 반복 \(x_{n+1} = Tx_n\)에 대해 \(m>n\)일 때 \(d(x_n,x_m) \le \frac{q^n}{1-q}\,d(x_0,x_1)\)임을 보이고, \((x_n)\)이 코시수열임을 증명하세요.`,
-      en: String.raw`For the Picard iterates \(x_{n+1} = Tx_n\) of a contraction \(T\) (\(d(Tx,Ty) \le q\,d(x,y)\), \(q<1\)), show \(d(x_n,x_m) \le \frac{q^n}{1-q}\,d(x_0,x_1)\) for \(m>n\), and prove \((x_n)\) is Cauchy.`,
+      ko: String.raw`수축사상 \(T\) (\(d(Tx,Ty) \le q\,d(x,y)\), \(0 \le q < 1\))의 피카르 반복 \(x_{n+1} = Tx_n\)에 대해 \(m>n\)일 때 \(d(x_n,x_m) \le \frac{q^n}{1-q}\,d(x_0,x_1)\)임을 보이고, \((x_n)\)이 코시수열임을 증명하세요.`,
+      en: String.raw`For the Picard iterates \(x_{n+1} = Tx_n\) of a contraction \(T\) (\(d(Tx,Ty) \le q\,d(x,y)\), \(0 \le q < 1\)), show \(d(x_n,x_m) \le \frac{q^n}{1-q}\,d(x_0,x_1)\) for \(m>n\), and prove \((x_n)\) is Cauchy.`,
     },
     display: [
       String.raw`d(x_{k+1},x_{k+2}) \le q\,d(x_k,x_{k+1}) \le q^{k+1}\,d(x_0,x_1)`,
@@ -29,8 +29,8 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`한 걸음씩 조입니다: \(d(x_{k+1},x_{k+2}) = d(Tx_k,Tx_{k+1}) \le q\,d(x_k,x_{k+1})\)이므로, 귀납법으로 모든 \(k\)에 대해 \(d(x_k,x_{k+1}) \le q^k\,d(x_0,x_1)\)입니다.`,
-          en: String.raw`Squeeze one step at a time: \(d(x_{k+1},x_{k+2}) = d(Tx_k,Tx_{k+1}) \le q\,d(x_k,x_{k+1})\), so by induction \(d(x_k,x_{k+1}) \le q^k\,d(x_0,x_1)\) for every \(k\).`,
+          ko: String.raw`먼저 \(q \in [0, 1)\)이라 둡니다: 거리는 항상 \(\ge 0\)이므로 수축상수 \(q\)는 거리들의 비로서 \(q \ge 0\)으로 잡을 수 있습니다 (\(q < 0\)이면 \(d(Tx,Ty) \le q\,d(x,y) \le 0\)이라 모든 \(Tx\)가 같아져 자명해지고, 아래에서 \(q\)를 곱하는 귀납법과 기하급수 꼬리 공식이 부호 때문에 깨집니다). 한 걸음씩 조입니다: \(d(x_{k+1},x_{k+2}) = d(Tx_k,Tx_{k+1}) \le q\,d(x_k,x_{k+1})\)이므로, \(q \ge 0\)인 덕분에 부등식 방향이 유지되어 귀납법으로 모든 \(k\)에 대해 \(d(x_k,x_{k+1}) \le q^k\,d(x_0,x_1)\)입니다.`,
+          en: String.raw`First take \(q \in [0, 1)\): distances are always \(\ge 0\), so the contraction constant \(q\) — a ratio of distances — may be taken with \(q \ge 0\) (if \(q < 0\) then \(d(Tx,Ty) \le q\,d(x,y) \le 0\) would force every \(Tx\) to coincide, and in any case the induction multiplying by \(q\) and the geometric tail formula below would break over the sign). Squeeze one step at a time: \(d(x_{k+1},x_{k+2}) = d(Tx_k,Tx_{k+1}) \le q\,d(x_k,x_{k+1})\), and since \(q \ge 0\) the inequality direction is preserved, so by induction \(d(x_k,x_{k+1}) \le q^k\,d(x_0,x_1)\) for every \(k\).`,
         },
       },
       {
@@ -91,7 +91,7 @@ export const problems: readonly ProblemMeta[] = [
     },
     display: [
       String.raw`d(x_n,x^*) = \lim_{m \to \infty} d(x_n,x_m) \le \frac{q^n}{1-q}\,d(x_1,x_0)`,
-      String.raw`|x^* - y^*| = |Tx^* - Ty^*| \le q|x^* - y^*| \Rightarrow x^* = y^*`,
+      String.raw`d(x^*, y^*) = d(Tx^*, Ty^*) \le q\,d(x^*, y^*) \Rightarrow x^* = y^*`,
     ],
     preset: { map: 'affine', n: 8, x0: 1 },
     presetCaption: {
@@ -101,20 +101,20 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`완비성에 의해 코시수열 \((x_n)\)은 공간 안의 점 \(x^*\)로 수렴합니다. 수축사상은 \(|Tx - Ty| \le q|x - y|\)이므로 연속이고, 따라서 \(Tx^* = T(\lim x_n) = \lim Tx_n = \lim x_{n+1} = x^*\) — \(x^*\)는 고정점입니다.`,
-          en: String.raw`Completeness makes the Cauchy sequence \((x_n)\) converge to a point \(x^*\) inside the space. A contraction is continuous since \(|Tx - Ty| \le q|x - y|\), so \(Tx^* = T(\lim x_n) = \lim Tx_n = \lim x_{n+1} = x^*\) — \(x^*\) is a fixed point.`,
+          ko: String.raw`완비성에 의해 코시수열 \((x_n)\)은 공간 안의 점 \(x^*\)로 수렴합니다. 수축사상은 \(d(Tx,Ty) \le q\,d(x,y)\)이므로 연속이고, 따라서 \(Tx^* = T(\lim x_n) = \lim Tx_n = \lim x_{n+1} = x^*\) — \(x^*\)는 고정점입니다.`,
+          en: String.raw`Completeness makes the Cauchy sequence \((x_n)\) converge to a point \(x^*\) inside the space. A contraction is continuous since \(d(Tx,Ty) \le q\,d(x,y)\), so \(Tx^* = T(\lim x_n) = \lim Tx_n = \lim x_{n+1} = x^*\) — \(x^*\) is a fixed point.`,
         },
       },
       {
         text: {
-          ko: String.raw`첫 번째 문제의 부등식에서 \(m \to \infty\)으로 보내면 (\(d(x_1,x_0) = d(x_0,x_1)\)이므로) 오차 상한 \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\)을 얻습니다. \(T(x) = x/2 + 1\), \(q = 1/2\), \(x_0 = 1\)이면 상한은 \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\)이고, 실제 반복값 \(x_8 = 2 - 2^{-8} = 1.99609375\)는 오차 \(|x_8 - 2| = \frac{1}{256}\)으로 상한과 정확히 일치합니다.`,
-          en: String.raw`Letting \(m \to \infty\) in the first problem's estimate (and \(d(x_1,x_0) = d(x_0,x_1)\)) gives the error bound \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\). For \(T(x) = x/2 + 1\) with \(q = 1/2\) and \(x_0 = 1\), the bound is \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\), and the actual iterate \(x_8 = 2 - 2^{-8} = 1.99609375\) has error \(|x_8 - 2| = \frac{1}{256}\), matching the bound exactly.`,
+          ko: String.raw`극한을 취하는 근거: 거리함수는 연속입니다 — 역삼각부등식에 의해 \(\lvert d(x_n,x_m) - d(x_n,x^*)\rvert \le d(x_m, x^*) \to 0\) (\(m \to \infty\))이므로 \(d(x_n,x_m) \to d(x_n,x^*)\)입니다. 따라서 첫 번째 문제의 부등식에서 \(m \to \infty\)으로 보내면 (\(d(x_1,x_0) = d(x_0,x_1)\)이므로) 오차 상한 \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\)을 얻습니다. \(T(x) = x/2 + 1\), \(q = 1/2\), \(x_0 = 1\)이면 상한은 \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\)이고, 실제 반복값 \(x_8 = 2 - 2^{-8} = 1.99609375\)는 오차 \(|x_8 - 2| = \frac{1}{256}\)으로 상한과 정확히 일치합니다.`,
+          en: String.raw`Justification for passing to the limit: the metric is continuous — by the reverse triangle inequality, \(\lvert d(x_n,x_m) - d(x_n,x^*)\rvert \le d(x_m, x^*) \to 0\) as \(m \to \infty\), so \(d(x_n,x_m) \to d(x_n,x^*)\). Hence letting \(m \to \infty\) in the first problem's estimate (and \(d(x_1,x_0) = d(x_0,x_1)\)) gives the error bound \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\). For \(T(x) = x/2 + 1\) with \(q = 1/2\) and \(x_0 = 1\), the bound is \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\), and the actual iterate \(x_8 = 2 - 2^{-8} = 1.99609375\) has error \(|x_8 - 2| = \frac{1}{256}\), matching the bound exactly.`,
         },
       },
       {
         text: {
-          ko: String.raw`유일성: \(x^*\), \(y^*\)가 모두 고정점이라 가정하면 \(|x^* - y^*| = |Tx^* - Ty^*| \le q|x^* - y^*|\)입니다. \(q < 1\)이므로 \(|x^* - y^*| = 0\), 즉 \(x^* = y^*\)를 강제합니다.`,
-          en: String.raw`Uniqueness: if \(x^*\) and \(y^*\) are both fixed points, \(|x^* - y^*| = |Tx^* - Ty^*| \le q|x^* - y^*|\). Since \(q < 1\), this forces \(|x^* - y^*| = 0\), i.e. \(x^* = y^*\).`,
+          ko: String.raw`유일성: \(x^*\), \(y^*\)가 모두 고정점이라 가정하면 \(d(x^*, y^*) = d(Tx^*, Ty^*) \le q\,d(x^*, y^*)\)입니다. \(q < 1\)이므로 \(d(x^*, y^*) = 0\), 즉 \(x^* = y^*\)를 강제합니다.`,
+          en: String.raw`Uniqueness: if \(x^*\) and \(y^*\) are both fixed points, \(d(x^*, y^*) = d(Tx^*, Ty^*) \le q\,d(x^*, y^*)\). Since \(q < 1\), this forces \(d(x^*, y^*) = 0\), i.e. \(x^* = y^*\).`,
         },
       },
     ],

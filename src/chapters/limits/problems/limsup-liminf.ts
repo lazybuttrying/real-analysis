@@ -59,8 +59,8 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(\varepsilon > 0\)이라 합시다. \(\lim a_n = L\)이므로 \(n \ge N\)일 때 \(|a_n - L| < \varepsilon\)인 \(N\)이 존재하고, 즉 \(L - \varepsilon < a_n < L + \varepsilon\)입니다.`,
-          en: String.raw`Let \(\varepsilon > 0\). Since \(\lim a_n = L\), there is \(N\) with \(|a_n - L| < \varepsilon\), i.e. \(L - \varepsilon < a_n < L + \varepsilon\), for all \(n \ge N\).`,
+          ko: String.raw`먼저 유계성: 수렴수열은 유계입니다 — \(\varepsilon = 1\)로 두면 \(n \ge N_0\)일 때 \(|a_n - L| < 1\)인 \(N_0\)이 있어 꼬리에서는 \(|a_n| \le |L| + 1\)이고, 앞의 유한 개 항은 그 최댓값으로 묶입니다. 따라서 어떤 \(M\)에 대해 모든 \(n\)에서 \(|a_n| \le M\)이며, 모든 꼬리 상한 \(\sup_{n\ge N} a_n\)과 꼬리 하한 \(\inf_{n\ge N} a_n\)은 유한하고 \(\limsup a_n, \liminf a_n\)이 실수로서 잘 정의됩니다. 이제 \(\varepsilon > 0\)이라 합시다. \(\lim a_n = L\)이므로 \(n \ge N\)일 때 \(|a_n - L| < \varepsilon\)인 \(N\)이 존재하고, 즉 \(L - \varepsilon < a_n < L + \varepsilon\)입니다.`,
+          en: String.raw`Boundedness first: a convergent sequence is bounded — with \(\varepsilon = 1\) there is \(N_0\) with \(|a_n - L| < 1\) for \(n \ge N_0\), so \(|a_n| \le |L| + 1\) on the tail, and the finitely many earlier terms are bounded by their maximum; hence \(|a_n| \le M\) for all \(n\) and some \(M\). Therefore every tail supremum \(\sup_{n\ge N} a_n\) and tail infimum \(\inf_{n\ge N} a_n\) is finite, and \(\limsup a_n, \liminf a_n\) are well-defined real numbers. Now let \(\varepsilon > 0\). Since \(\lim a_n = L\), there is \(N\) with \(|a_n - L| < \varepsilon\), i.e. \(L - \varepsilon < a_n < L + \varepsilon\), for all \(n \ge N\).`,
         },
       },
       {
@@ -98,8 +98,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(0 \le r < 1\)이므로 등비급수 \(\sum r^n\)은 수렴합니다. 비교판정법으로 \(\sum |a_n|\)이 수렴하므로 \(\sum a_n\)은 절대수렴합니다.`,
-          en: String.raw`Since \(0 \le r < 1\), the geometric series \(\sum r^n\) converges. By comparison, \(\sum |a_n|\) converges, so \(\sum a_n\) converges absolutely.`,
+          ko: String.raw`모든 \(n\)에 대해 \(|a_n|^{1/n} \ge 0\)이므로 \(\rho = \limsup |a_n|^{1/n} \ge 0\)입니다. 따라서 택한 \(r\)은 \(0 \le \rho < r < 1\)을 만족하고 특히 \(0 \le r < 1\)이므로, 등비급수 \(\sum r^n\)은 수렴합니다. 비교판정법으로 \(\sum |a_n|\)이 수렴하므로 \(\sum a_n\)은 절대수렴합니다.`,
+          en: String.raw`Since \(|a_n|^{1/n} \ge 0\) for every \(n\), \(\rho = \limsup |a_n|^{1/n} \ge 0\); hence the chosen \(r\) satisfies \(0 \le \rho < r < 1\), in particular \(0 \le r < 1\), so the geometric series \(\sum r^n\) converges. By comparison, \(\sum |a_n|\) converges, so \(\sum a_n\) converges absolutely.`,
         },
       },
     ],

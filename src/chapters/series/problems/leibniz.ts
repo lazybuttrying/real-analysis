@@ -8,32 +8,32 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'remainder',
           statement: {
-            ko: String.raw`교대급수 오차 추정 \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+1}\)을 증명하세요.`,
-            en: String.raw`Prove the alternating-series error bound \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+1}\).`,
+            ko: String.raw`\(S_N := \sum_{k=0}^{N} \frac{(-1)^k}{2k+1}\)로 정의할 때, 교대급수 오차 추정 \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+3}\)을 증명하세요.`,
+            en: String.raw`With \(S_N := \sum_{k=0}^{N} \frac{(-1)^k}{2k+1}\), prove the alternating-series error bound \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+3}\).`,
           },
-          display: [String.raw`|L - S_N| \le |S_{N+1} - S_N| = \frac{1}{2N+1}`],
-          preset: { n: 12 },
+          display: [String.raw`|L - S_N| \le |S_{N+1} - S_N| = a_{N+1} = \frac{1}{2N+3}, \qquad S_N = \sum_{k=0}^{N} \frac{(-1)^k}{2k+1}`],
+          preset: { n: 13 },
           presetCaption: {
-            ko: String.raw`\(N = 12\): 오차 \(\le 1/25 = 0.04\) — 위아래에서 조여듭니다.`,
-            en: String.raw`\(N = 12\): error \(\le 1/25 = 0.04\) — squeezed from both sides.`,
+            ko: String.raw`\(N = 12\) (항 13개): 오차 \(\le 1/27 \approx 0.037\) — 위아래에서 조여듭니다.`,
+            en: String.raw`\(N = 12\) (13 terms): error \(\le 1/27 \approx 0.037\) — squeezed from both sides.`,
           },
           proof: [
             {
               text: {
-                ko: String.raw`교대급수 \(\sum_{k=0}^{\infty}(-1)^k a_k\) (\(a_k \downarrow 0\))의 부분합은 진동하며 조여듭니다: 짝수 부분합은 증가하고 홀수 부분합은 감소하며, 극한 \(L\)은 항상 연속한 두 부분합 사이에 있습니다.`,
-                en: String.raw`For an alternating series \(\sum_{k=0}^{\infty}(-1)^k a_k\) with \(a_k \downarrow 0\), the partial sums oscillate inward: even ones increase, odd ones decrease, and the limit \(L\) always lies between two consecutive partial sums.`,
+                ko: String.raw`\(a_k = \frac{1}{2k+1} \downarrow 0\)라 두고 \(S_N = \sum_{k=0}^{N} (-1)^k a_k\)로 정의합니다. 짝을 이룬 차이로 중첩 구조를 증명합니다: \(S_{2m+2} - S_{2m} = -a_{2m+1} + a_{2m+2} = -(a_{2m+1} - a_{2m+2}) \le 0\)이므로 짝수 부분합 \((S_{2m})\)은 감소하고, \(m \ge 1\)에서 \(S_{2m+1} - S_{2m-1} = a_{2m} - a_{2m+1} \ge 0\)이므로 홀수 부분합 \((S_{2m+1})\)은 증가합니다. 또 \(S_{2m} - S_{2m+1} = a_{2m+1} > 0\)입니다.`,
+                en: String.raw`Put \(a_k = \frac{1}{2k+1} \downarrow 0\) and \(S_N = \sum_{k=0}^{N} (-1)^k a_k\). Prove the nesting by paired differences: \(S_{2m+2} - S_{2m} = -a_{2m+1} + a_{2m+2} = -(a_{2m+1} - a_{2m+2}) \le 0\), so the even partial sums \((S_{2m})\) decrease; and for \(m \ge 1\), \(S_{2m+1} - S_{2m-1} = a_{2m} - a_{2m+1} \ge 0\), so the odd partial sums \((S_{2m+1})\) increase. Also \(S_{2m} - S_{2m+1} = a_{2m+1} > 0\).`,
               },
             },
             {
               text: {
-                ko: String.raw`따라서 \(|L - S_N| \le |S_{N+1} - S_N| = a_{N+1}\)입니다. 라이프니츠 급수에서는 \(a_{N+1} = \frac{1}{2N+1}\)이므로 \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+1}\)입니다.`,
-                en: String.raw`Hence \(|L - S_N| \le |S_{N+1} - S_N| = a_{N+1}\). For the Leibniz series \(a_{N+1} = \frac{1}{2N+1}\), so \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+1}\).`,
+                ko: String.raw`\((S_{2m})\)은 아래로 \((S_{2m+1})\)의 값들에 의해 유계이고 \((S_{2m+1})\)은 위로 유계이므로 둘 다 수렴합니다. 간격 \(S_{2m} - S_{2m+1} = a_{2m+1} \to 0\)이므로 두 극한은 같은 값 \(L\)이며, 모든 \(m\)에 대해 \(S_{2m+1} \le L \le S_{2m}\)입니다. 따라서 연속한 두 부분합 사이에 \(L\)이 항상 있고, \(|L - S_N| \le |S_{N+1} - S_N| = a_{N+1}\)입니다. 여기서 \(a_{N+1} = \frac{1}{2(N+1)+1} = \frac{1}{2N+3}\)입니다.`,
+                en: String.raw`The sequence \((S_{2m})\) is decreasing and bounded below by the odd sums, and \((S_{2m+1})\) is increasing and bounded above, so both converge. The gap \(S_{2m} - S_{2m+1} = a_{2m+1} \to 0\), so both limits equal a common \(L\), with \(S_{2m+1} \le L \le S_{2m}\) for every \(m\). Hence \(L\) always lies between two consecutive partial sums, and \(|L - S_N| \le |S_{N+1} - S_N| = a_{N+1}\). Here \(a_{N+1} = \frac{1}{2(N+1)+1} = \frac{1}{2N+3}\).`,
               },
             },
             {
               text: {
-                ko: String.raw`(급수 자체의 수렴은 교대급수 판정법으로 따릅니다 — \(a_k = \frac{1}{2k+1} \downarrow 0\).)`,
-                en: String.raw`(Convergence of the series itself follows from the alternating series test, since \(a_k = \frac{1}{2k+1} \downarrow 0\).)`,
+                ko: String.raw`극한을 동정합니다: 이 급수는 아래 arctan 문제의 급수에 \(x = 1\)을 대입한 것으로, Abel 연속성에 의해 그 합은 \(\arctan 1 = \frac{\pi}{4}\)입니다. 즉 \(L = \frac{\pi}{4}\)이므로 \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+3}\)입니다.`,
+                en: String.raw`Identify the limit: this series is the arctan series of the problem below at \(x = 1\), so by Abel continuity its sum is \(\arctan 1 = \frac{\pi}{4}\). That is, \(L = \frac{\pi}{4}\), hence \(\left|S_N - \frac{\pi}{4}\right| \le \frac{1}{2N+3}\).`,
               },
             },
           ],
@@ -41,14 +41,14 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'three-decimals',
           statement: {
-            ko: String.raw`소수점 아래 3자리까지 정확하려면 몇 개의 항이 필요한가요? 오차 한계를 이용해 구하세요.`,
-            en: String.raw`How many terms are needed for three correct decimal places? Use the error bound.`,
+            ko: String.raw`소수점 아래 3자리까지 정확함을 보장하려면 몇 개의 항이면 충분한가요? 앞 문제의 \(S_N = \sum_{k=0}^{N} \frac{(-1)^k}{2k+1}\)와 오차 한계를 이용해 충분한 개수를 구하세요.`,
+            en: String.raw`How many terms suffice to guarantee three correct decimal places? Use \(S_N = \sum_{k=0}^{N} \frac{(-1)^k}{2k+1}\) from the previous problem and its error bound to give a sufficient number.`,
           },
-          display: [String.raw`\frac{1}{2N+1} < 0.0005 \iff N \ge 1000`],
+          display: [String.raw`\frac{1}{2N+3} < 0.0005 \iff N \ge 999 \quad \text{(1000 terms suffice)}`],
           preset: { n: 60 },
           presetCaption: {
-            ko: String.raw`\(N = 60\)에서도 소수 둘째 자리 — 수렴이 매우 느립니다.`,
-            en: String.raw`Even at \(N = 60\) only two decimals — very slow convergence.`,
+            ko: String.raw`항 60개에서도 소수 둘째 자리 — 수렴이 매우 느립니다.`,
+            en: String.raw`Even with 60 terms only two decimals — very slow convergence.`,
           },
           proof: [
             {
@@ -59,14 +59,14 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`오차 추정으로 \(\frac{1}{2N+1} < 0.0005\), 즉 \(2N + 1 > 2000\)이 필요합니다. \(N = 999\)이면 \(\frac{1}{1999} \approx 0.00050025 > 0.0005\)이므로, \(N \ge 1000\)이어야 합니다.`,
-                en: String.raw`The error bound gives \(\frac{1}{2N+1} < 0.0005\), i.e. \(2N + 1 > 2000\). Since \(\frac{1}{1999} \approx 0.00050025 > 0.0005\) at \(N = 999\), we need \(N \ge 1000\).`,
+                ko: String.raw`오차 추정으로 충분조건은 \(\frac{1}{2N+3} < 0.0005\), 즉 \(2N + 3 > 2000\), \(N > 998.5\)입니다. 따라서 \(N \ge 999\)이면 충분합니다. 확인: \(N = 999\)이면 \(\frac{1}{2001} \approx 0.00049975 < 0.0005\)이고, \(N = 998\)이면 한계값 \(\frac{1}{1999} \approx 0.00050025 > 0.0005\)라 이 한계로는 보장되지 않습니다 (실제 오차가 더 클 것이라는 뜻은 아닙니다).`,
+                en: String.raw`The error bound gives the sufficient condition \(\frac{1}{2N+3} < 0.0005\), i.e. \(2N + 3 > 2000\), \(N > 998.5\). So \(N \ge 999\) suffices. Check: at \(N = 999\), \(\frac{1}{2001} \approx 0.00049975 < 0.0005\); at \(N = 998\) the bound is \(\frac{1}{1999} \approx 0.00050025 > 0.0005\), so this bound does not guarantee the accuracy there (that does not mean the actual error is larger).`,
               },
             },
             {
               text: {
-                ko: String.raw`따라서 1000개의 항이 필요합니다 — 라이프니츠 급수의 악명 높은 느림입니다.`,
-                en: String.raw`So a thousand terms are needed — the notorious slowness of the Leibniz series.`,
+                ko: String.raw`따라서 \(N = 999\), 즉 항 1000개 (\(k = 0, \dots, 999\))이면 정확도가 보장됩니다 — 이는 충분조건이지 최소라는 주장이 아닙니다. 라이프니츠 급수의 악명 높은 느림입니다.`,
+                en: String.raw`So \(N = 999\), i.e. 1000 terms (\(k = 0, \dots, 999\)), suffice to guarantee the accuracy — this is a sufficient guarantee, not a claim of minimality. The notorious slowness of the Leibniz series.`,
               },
             },
           ],
@@ -92,8 +92,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(|x| < 1\)인 구간 \([0, x]\)에서는 균등수렴하므로 항별 적분이 정당합니다: \(\arctan x = \int_0^x \sum_{k=0}^{\infty}(-1)^k t^{2k}\,dt = \sum_{k=0}^{\infty}\frac{(-1)^k x^{2k+1}}{2k+1}\).`,
-                en: String.raw`On \([0, x]\) with \(|x| < 1\) the convergence is uniform, so termwise integration is legitimate: \(\arctan x = \int_0^x \sum_{k=0}^{\infty}(-1)^k t^{2k}\,dt = \sum_{k=0}^{\infty}\frac{(-1)^k x^{2k+1}}{2k+1}\).`,
+                ko: String.raw`고정된 \(|x| < 1\)에 대해, \(0\)과 \(x\) 사이 구간의 모든 \(t\)에서 \(\lvert (-t^2)^k \rvert = \lvert t \rvert^{2k} \le \lvert x \rvert^{2k}\)이고 \(\sum_k \lvert x \rvert^{2k}\)는 수렴하는 기하급수이므로, Weierstrass M-test로 그 구간에서 균등수렴합니다. 따라서 항별 적분이 정당합니다: 먼저 \(0 \le x < 1\)인 경우 \(\arctan x = \int_0^x \sum_{k=0}^{\infty}(-1)^k t^{2k}\,dt = \sum_{k=0}^{\infty}\frac{(-1)^k x^{2k+1}}{2k+1}\)입니다. \(x < 0\)인 경우 구간이 뒤집힙니다: \([x, 0]\)에서 같은 bound가 성립하고 \(\int_0^x = -\int_x^0\)이며 양변이 odd function이므로 같은 식이 성립합니다.`,
+                en: String.raw`For fixed \(|x| < 1\), every \(t\) between \(0\) and \(x\) satisfies \(\lvert (-t^2)^k \rvert = \lvert t \rvert^{2k} \le \lvert x \rvert^{2k}\), and \(\sum_k \lvert x \rvert^{2k}\) is a convergent geometric series, so the Weierstrass M-test gives uniform convergence on that interval. Hence termwise integration is legitimate: for \(0 \le x < 1\), \(\arctan x = \int_0^x \sum_{k=0}^{\infty}(-1)^k t^{2k}\,dt = \sum_{k=0}^{\infty}\frac{(-1)^k x^{2k+1}}{2k+1}\). For \(x < 0\) the interval flips: the same bound holds on \([x, 0]\), \(\int_0^x = -\int_x^0\), and both sides are odd functions, so the same formula holds.`,
               },
             },
             {

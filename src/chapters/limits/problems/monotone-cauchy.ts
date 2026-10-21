@@ -14,8 +14,8 @@ export const problems: readonly ProblemMeta[] = [
           display: [String.raw`a_{n+1} - a_n = \frac{1}{n(n+1)} > 0, \qquad \sup a_n = 1`],
           preset: { n: 8, tailN: 4 },
           presetCaption: {
-            ko: String.raw`\(n = 8\)항: \(a_8 = 1 - 2^{-8} = 0.99609375\). 문제의 \(1 - 1/n\)도 같은 방식으로 \(1\)에 다가갑니다.`,
-            en: String.raw`\(n = 8\) terms: \(a_8 = 1 - 2^{-8} = 0.99609375\). The problem's \(1 - 1/n\) approaches \(1\) the same way.`,
+            ko: String.raw`\(n = 8\)항: 이 문제의 수열에서는 \(a_8 = 1 - \frac{1}{8} = 0.875\)입니다. 장면이 표시하는 수열은 \(1 - 2^{-n}\) (\(n = 8\)에서 \(0.99609375\))으로, 같은 방식으로 \(1\)에 다가갑니다.`,
+            en: String.raw`\(n = 8\) terms: for this problem's sequence, \(a_8 = 1 - \frac{1}{8} = 0.875\). The scene displays \(1 - 2^{-n}\) (\(0.99609375\) at \(n = 8\)), which approaches \(1\) the same way.`,
           },
           proof: [
             {
@@ -110,8 +110,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(2^{-N} < \varepsilon\)인 \(N\)을 잡습니다 (\(N > \log_2 \frac{1}{\varepsilon}\)). 그러면 \(m, n \geq N\)일 때 \(\lvert s_m - s_n\rvert < 2^{-N} < \varepsilon\)이므로 \((s_N)\)은 코시수열입니다.`,
-                en: String.raw`Given \(\varepsilon > 0\), choose \(N\) with \(2^{-N} < \varepsilon\) (\(N > \log_2 \frac{1}{\varepsilon}\)). Then \(m, n \geq N\) implies \(\lvert s_m - s_n\rvert < 2^{-N} < \varepsilon\), so \((s_N)\) is Cauchy.`,
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(2^{-N} < \varepsilon\)인 \(N\)을 잡습니다 (\(N > \log_2 \frac{1}{\varepsilon}\)). \(m, n \geq N\)이라 합시다. \(m = n\)이면 \(\lvert s_m - s_n\rvert = 0 < \varepsilon\)입니다. 그 외의 경우 대칭성 \(\lvert s_m - s_n\rvert = \lvert s_n - s_m\rvert\)에 의해 일반성을 잃지 않고 \(m > n\)이라 둘 수 있고, 2단계에서 \(\lvert s_m - s_n\rvert < 2^{-n} \le 2^{-N} < \varepsilon\)를 얻습니다. 따라서 \((s_N)\)은 코시수열입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), choose \(N\) with \(2^{-N} < \varepsilon\) (\(N > \log_2 \frac{1}{\varepsilon}\)). Let \(m, n \geq N\). If \(m = n\) then \(\lvert s_m - s_n\rvert = 0 < \varepsilon\). Otherwise, by symmetry \(\lvert s_m - s_n\rvert = \lvert s_n - s_m\rvert\), so assume without loss of generality \(m > n\); step 2 then gives \(\lvert s_m - s_n\rvert < 2^{-n} \le 2^{-N} < \varepsilon\). Hence \((s_N)\) is Cauchy.`,
               },
             },
             {

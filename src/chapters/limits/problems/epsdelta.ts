@@ -44,7 +44,7 @@ export const problems: readonly ProblemMeta[] = [
             ko: String.raw`\(\lim_{x \to 1} x^2 = 1\)임을 \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\)로 증명하세요.`,
             en: String.raw`Prove \(\lim_{x \to 1} x^2 = 1\) with \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\).`,
           },
-          display: [String.raw`\lvert x^2 - 1\rvert = \lvert x - 1\rvert \cdot \lvert x + 1\rvert < 3\delta \leq \varepsilon`],
+          display: [String.raw`0 < \lvert x - 1\rvert < \delta \Rightarrow \lvert x^2 - 1\rvert = \lvert x - 1\rvert \cdot \lvert x + 1\rvert < 3\delta \le \varepsilon, \text{ hence } \lvert x^2 - 1\rvert < \varepsilon`],
           preset: { epsilon: 0.6 },
           presetCaption: {
             ko: String.raw`\(\varepsilon = 0.6\), \(\delta = 0.3\) — 곡선 \(x^2\)에는 일정한 비율 \(\delta/\varepsilon\)이 없지만, 이 장면의 직선에는 있습니다.`,
