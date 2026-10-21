@@ -91,7 +91,12 @@ function summarySpan(text: string): HTMLSpanElement {
 }
 
 function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
-  target.replaceChildren(h('h1', {}, localize(scene.title, lang)), h('p', {}, summarySpan(localize(scene.summary, lang))));
+  const summary = localize(scene.summary, lang);
+  const paragraphs = summary.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
+  target.replaceChildren(
+    h('h1', {}, localize(scene.title, lang)),
+    ...paragraphs.map((p) => h('p', {}, summarySpan(p))),
+  );
 
   const tex = scene.tex;
   if (!tex || tex.length === 0) return;
