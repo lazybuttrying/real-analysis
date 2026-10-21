@@ -26,8 +26,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`유한합은 망원합입니다: \(\sum_{n=N+1}^{M}\left(\frac{1}{n-1}-\frac{1}{n}\right) = \frac{1}{N}-\frac{1}{M} < \frac{1}{N}\). \(M \to \infty\)로 보내면 \(R_N \le \frac{1}{N}\)이고, 부등식이 엄격하므로 \(R_N < \frac{1}{N}\)입니다.`,
-                en: String.raw`The finite sum telescopes: \(\sum_{n=N+1}^{M}\left(\frac{1}{n-1}-\frac{1}{n}\right) = \frac{1}{N}-\frac{1}{M} < \frac{1}{N}\). Letting \(M \to \infty\) gives \(R_N < \frac{1}{N}\) (strict, since each term comparison is strict).`,
+                ko: String.raw`유한합은 망원합입니다: \(\sum_{n=N+1}^{M}\left(\frac{1}{n-1}-\frac{1}{n}\right) = \frac{1}{N}-\frac{1}{M} < \frac{1}{N}\). \(M \to \infty\)로만 보내면 \(R_N \le \frac{1}{N}\)까지만 얻어집니다. 엄격성을 되살리려면 차이를 보세요: \(\frac{1}{n(n-1)} - \frac{1}{n^2} = \frac{1}{n^2(n-1)} > 0\)이므로, 모든 \(M\)에 대해 차이의 합은 첫 항 이상입니다: \(\sum_{n=N+1}^{M}\left(\frac{1}{n(n-1)} - \frac{1}{n^2}\right) \ge \frac{1}{N(N+1)^2} > 0\). 따라서 \(\sum_{n=N+1}^{M}\frac{1}{n^2} \le \frac{1}{N} - \frac{1}{M} - \frac{1}{N(N+1)^2}\)이고, \(M \to \infty\)로 보내면 \(R_N \le \frac{1}{N} - \frac{1}{N(N+1)^2} < \frac{1}{N}\)입니다.`,
+                en: String.raw`The finite sum telescopes: \(\sum_{n=N+1}^{M}\left(\frac{1}{n-1}-\frac{1}{n}\right) = \frac{1}{N}-\frac{1}{M} < \frac{1}{N}\). Letting \(M \to \infty\) alone gives only \(R_N \le \frac{1}{N}\). To restore strictness, note the difference: \(\frac{1}{n(n-1)} - \frac{1}{n^2} = \frac{1}{n^2(n-1)} > 0\), so for every \(M\) the difference sum is at least its first term: \(\sum_{n=N+1}^{M}\left(\frac{1}{n(n-1)} - \frac{1}{n^2}\right) \ge \frac{1}{N(N+1)^2} > 0\). Hence \(\sum_{n=N+1}^{M}\frac{1}{n^2} \le \frac{1}{N} - \frac{1}{M} - \frac{1}{N(N+1)^2}\), and letting \(M \to \infty\) gives \(R_N \le \frac{1}{N} - \frac{1}{N(N+1)^2} < \frac{1}{N}\).`,
               },
             },
             {

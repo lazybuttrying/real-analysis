@@ -47,8 +47,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(f(-1) = -1 + 3 = 2\), \(f(2) = 8 - 6 = 2\)이므로 할선의 기울기는 \(\frac{2-2}{3} = 0\)입니다.`,
-                en: String.raw`\(f(-1) = -1 + 3 = 2\) and \(f(2) = 8 - 6 = 2\), so the secant slope is \(\frac{2-2}{3} = 0\).`,
+                ko: String.raw`\(f\)는 다항함수이므로 모든 점에서 연속이고 미분가능합니다; 특히 \([-1, 2]\)에서 연속이고 \((-1, 2)\)에서 미분가능하므로 롤의 정리와 평균값 정리의 가정이 충족됩니다. \(f(-1) = -1 + 3 = 2\), \(f(2) = 8 - 6 = 2\)이므로 할선의 기울기는 \(\frac{2-2}{3} = 0\)입니다.`,
+                en: String.raw`The function \(f\) is a polynomial, hence continuous and differentiable everywhere; in particular it is continuous on \([-1, 2]\) and differentiable on \((-1, 2)\), so the hypotheses of Rolle's theorem and the MVT are satisfied. \(f(-1) = -1 + 3 = 2\) and \(f(2) = 8 - 6 = 2\), so the secant slope is \(\frac{2-2}{3} = 0\).`,
               },
             },
             {
@@ -74,20 +74,20 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(f\)가 \([a, b]\)에서 연속이고 \((a, b)\)에서 미분가능하며 \(f' \equiv 0\)이라 가정합니다.`,
-                en: String.raw`Assume \(f\) is continuous on \([a, b]\), differentiable on \((a, b)\), with \(f' \equiv 0\).`,
+                ko: String.raw`가정은 모든 점에서 \(f' = 0\)이라는 것입니다: \(f\)가 정의역의 모든 구간에서 연속이고 내부에서 미분가능하며 도함수가 항등적으로 \(0\)이라 가정합니다.`,
+                en: String.raw`The hypothesis is that \(f' = 0\) at every point: assume \(f\) is continuous on every interval in its domain, differentiable on the interior, with \(f' \equiv 0\) everywhere.`,
               },
             },
             {
               text: {
-                ko: String.raw`평균값 정리에 의해 어떤 \(\xi \in (a, b)\)에 대해 \(f(b) - f(a) = f'(\xi)(b-a) = 0\cdot(b-a) = 0\)입니다.`,
-                en: String.raw`By the Mean Value Theorem, some \(\xi \in (a, b)\) gives \(f(b) - f(a) = f'(\xi)(b-a) = 0\cdot(b-a) = 0\).`,
+                ko: String.raw`임의의 두 점 \(u < v\)를 잡습니다. 가정이 \([u, v]\)에도 그대로 상속되므로, 평균값 정리에 의해 어떤 \(\xi \in (u, v)\)에 대해 \(f(v) - f(u) = f'(\xi)(v-u) = 0\cdot(v-u) = 0\)입니다.`,
+                en: String.raw`Take any two points \(u < v\). The hypothesis is inherited by \([u, v]\), so by the Mean Value Theorem some \(\xi \in (u, v)\) gives \(f(v) - f(u) = f'(\xi)(v-u) = 0\cdot(v-u) = 0\).`,
               },
             },
             {
               text: {
-                ko: String.raw`따라서 \(f(b) = f(a)\)이고, \(a, b\)가 임의였으므로 \(f\)는 상수함수입니다.`,
-                en: String.raw`Hence \(f(b) = f(a)\), and since \(a, b\) were arbitrary, \(f\) is constant.`,
+                ko: String.raw`따라서 모든 \(u < v\)에 대해 \(f(v) = f(u)\)이므로 \(f\)는 상수함수입니다.`,
+                en: String.raw`Hence \(f(v) = f(u)\) for every pair \(u < v\), so \(f\) is constant.`,
               },
             },
           ],

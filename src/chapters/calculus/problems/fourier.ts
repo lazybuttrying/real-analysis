@@ -92,8 +92,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(N \to \infty\)일 때 괄호 안은 라이프니츠 급수 \(\frac{\pi}{4}\)로 수렴합니다 (급수 챕터).`,
-                en: String.raw`As \(N \to \infty\), the bracket tends to the Leibniz series \(\frac{\pi}{4}\) (series chapter).`,
+                ko: String.raw`\(N \to \infty\)일 때 괄호 안은 라이프니츠 급수 \(\frac{\pi}{4}\)로 수렴합니다 — 근거 (급수 챕터에서 검증): 항 \(\frac{1}{2k-1}\)이 감소하며 \(0\)으로 가므로 라이프니츠(교대급수) 판정법이 수렴을 주고, 값 \(\frac{\pi}{4}\)는 \(\arctan\) 급수를 \(x = 1\)에서 평가한 것입니다.`,
+                en: String.raw`As \(N \to \infty\), the bracket tends to the Leibniz series \(\frac{\pi}{4}\) — grounded as follows (verified in the series chapter): the terms \(\frac{1}{2k-1}\) decrease to \(0\), so the Leibniz (alternating series) test gives convergence, and the value \(\frac{\pi}{4}\) is the \(\arctan\) series evaluated at \(x = 1\).`,
               },
             },
             {
