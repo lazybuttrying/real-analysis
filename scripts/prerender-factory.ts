@@ -249,7 +249,7 @@ export function createPrerender(deps: PrerenderDeps) {
             const scene = sceneOf.get(`${entry.chapterId}/${entry.sceneId}`);
             const sceneLabel = scene ? localize(scene.title, lang) : entry.sceneId;
             return `<article class="glossary-term" id="term-${entry.id}">
-  <h3>${escapeHtml(stripInlineMath(localize(entry.term, lang)))}</h3>
+  <h3>${escapeHtml(stripInlineMath(localize(entry.term, lang)))}<a class="anchor-btn" href="#term-${entry.id}" aria-label="${escapeHtml(localize({ ko: '이 용어의 바로가기 링크', en: 'Link to this term' }, lang))}">¶</a></h3>
   <p>${renderSummaryHtml(localize(entry.definition, lang))}</p>
   <p class="glossary-scene-link"><a href="${sceneUrl(BASE, lang, entry.chapterId, entry.sceneId)}">${escapeHtml(sceneLabel)}</a></p>
   </article>`;

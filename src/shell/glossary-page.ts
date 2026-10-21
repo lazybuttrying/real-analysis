@@ -64,7 +64,20 @@ export function renderGlossaryPage(root: HTMLElement, lang: Lang): void {
       const article = h(
         'article',
         { class: 'glossary-term', id: `term-${entry.id}` },
-        h('h3', {}, stripInlineMath(termText)),
+        h(
+          'h3',
+          {},
+          stripInlineMath(termText),
+          h(
+            'a',
+            {
+              class: 'anchor-btn',
+              href: `#term-${entry.id}`,
+              'aria-label': localize({ ko: '이 용어의 바로가기 링크', en: 'Link to this term' }, lang),
+            },
+            '¶',
+          ),
+        ),
         h('p', {}, definitionSpan(definitionText)),
         h(
           'p',
