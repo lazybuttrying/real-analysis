@@ -39,8 +39,8 @@ export const doubleSeriesProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`반대 방향: 각 \(M\)에 대해 \(\sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} = \sup_N T(M,N) \le S\)입니다 (안쪽 무한합이 안쪽 유한합들의 상한). \(M\)에 대해 상한을 취하면 \(R = \sup_M \sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} \le S\)입니다. 따라서 \(R = S\)입니다.`,
-          en: String.raw`The other direction: for each \(M\), \(\sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} = \sup_N T(M,N) \le S\) (the inner infinite sum is the supremum of the inner finite sums). Taking the supremum over \(M\) gives \(R = \sup_M \sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} \le S\). Hence \(R = S\).`,
+          ko: String.raw`반대 방향: 각 \(M\)에 대해 \(\sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} = \sup_N T(M,N) \le S\)입니다 (안쪽 무한합이 안쪽 유한합들의 상한). 이 등식에는 정당화가 필요합니다: 고정된 \(M\)에 대해 각 안쪽 합 \(\sum_{n \le N} a_{m,n}\)은 \(a_{m,n} \ge 0\)이므로 \(N\)에 대해 증가하고 \(\sum_{n=1}^{\infty} a_{m,n}\)으로 수렴합니다. 유한합(\(M\)개 항)에서는 상한과 합을 교환할 수 있습니다 — 유한한 개수의 증가 수열들의 합은 증가하고, 그 상한은 상한들의 합과 같습니다(항별로 검증 가능). 따라서 \(\sum_{m \le M} \sup_N \sum_{n \le N} a_{m,n} = \sup_N \sum_{m \le M} \sum_{n \le N} a_{m,n} = \sup_N T(M,N)\)입니다. \(M\)에 대해 상한을 취하면 \(R = \sup_M \sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} \le S\)입니다. 따라서 \(R = S\)입니다.`,
+          en: String.raw`The other direction: for each \(M\), \(\sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} = \sup_N T(M,N) \le S\) (the inner infinite sum is the supremum of the inner finite sums). This equality needs justification: for fixed \(M\), each inner sum \(\sum_{n \le N} a_{m,n}\) is increasing in \(N\) (since \(a_{m,n} \ge 0\)) and converges to \(\sum_{n=1}^{\infty} a_{m,n}\). For a finite sum (\(M\) terms), supremum and summation interchange — a finite sum of increasing sequences is increasing, and its supremum equals the sum of the suprema (checked termwise). Hence \(\sum_{m \le M} \sup_N \sum_{n \le N} a_{m,n} = \sup_N \sum_{m \le M} \sum_{n \le N} a_{m,n} = \sup_N T(M,N)\). Taking the supremum over \(M\) gives \(R = \sup_M \sum_{m \le M}\sum_{n=1}^{\infty} a_{m,n} \le S\). Hence \(R = S\).`,
         },
       },
       {

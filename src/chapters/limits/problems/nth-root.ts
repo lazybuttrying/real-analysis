@@ -33,8 +33,8 @@ export const nthRootProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`실수의 완비성(상한 공리)에 의해 \(s = \sup E\)가 존재합니다. \(s \ge 0\)이며, \(s^n = a\)임을 삼단논법으로 보입니다: \(s^n < a\)와 \(s^n > a\)가 모두 불가능함을 보이면 \(s^n = a\)가 남습니다.`,
-          en: String.raw`By completeness of the reals (the least-upper-bound axiom), \(s = \sup E\) exists. We have \(s \ge 0\); we show \(s^n = a\) by trichotomy: ruling out \(s^n < a\) and \(s^n > a\) leaves \(s^n = a\).`,
+          ko: String.raw`단조성 사실 하나를 직접 증명해 둡니다 (1단계와 4단계에서 쓰이며, 독립된 증명은 다음 문제입니다): \(0 \le u < v\)이면 \(v^n - u^n = (v - u)(v^{n-1} + v^{n-2}u + \cdots + u^{n-1}) > 0\)인데, \(v - u > 0\)이고 두 번째 인자는 \(v^{n-1} > 0\)을 포함하는 음이 아닌 항들의 합이기 때문입니다. 따라서 \(t \mapsto t^n\)은 \([0, \infty)\)에서 엄격히 증가하고, \(x \ge y \ge 0\)이면 \(x^n \ge y^n\)입니다. 실수의 완비성(상한 공리)에 의해 \(s = \sup E\)가 존재합니다. \(s \ge 0\)이며, \(s^n = a\)임을 삼단논법으로 보입니다: \(s^n < a\)와 \(s^n > a\)가 모두 불가능함을 보이면 \(s^n = a\)가 남습니다.`,
+          en: String.raw`One monotonicity fact, proved directly (used in steps 1 and 4; the standalone proof is the next problem): for \(0 \le u < v\), \(v^n - u^n = (v - u)(v^{n-1} + v^{n-2}u + \cdots + u^{n-1}) > 0\), because \(v - u > 0\) and the second factor is a sum of nonnegative terms including \(v^{n-1} > 0\). Hence \(t \mapsto t^n\) is strictly increasing on \([0, \infty)\), and \(x \ge y \ge 0\) implies \(x^n \ge y^n\). By completeness of the reals (the least-upper-bound axiom), \(s = \sup E\) exists. We have \(s \ge 0\); we show \(s^n = a\) by trichotomy: ruling out \(s^n < a\) and \(s^n > a\) leaves \(s^n = a\).`,
         },
       },
       {

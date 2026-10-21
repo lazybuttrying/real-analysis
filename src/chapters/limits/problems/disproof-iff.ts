@@ -12,11 +12,11 @@ export const disproofIffProblems: readonly ProblemMeta[] = [
   {
     id: 'disproof-div4',
     statement: {
-      ko: String.raw`“\(n^2\)이 4로 나누어떨어지면 \(n\)도 4로 나누어떨어진다”는 주장을 반례 \(n = 2\)로 반박하세요. 주장의 논리형 \(\forall n\,(4 \mid n^2 \Rightarrow 4 \mid n)\)과 그 부정 \(\exists n\,(4 \mid n^2 \text{ and } 4 \nmid n)\)을 명시적으로 쓰고, 왜 단 하나의 증인으로 증명이 끝나는지 설명하세요.`,
-      en: String.raw`Disprove the claim "if \(n^2\) is divisible by 4 then \(n\) is divisible by 4" using the counterexample \(n = 2\). Write out the claim's logical form \(\forall n\,(4 \mid n^2 \Rightarrow 4 \mid n)\) and its negation \(\exists n\,(4 \mid n^2 \text{ and } 4 \nmid n)\) explicitly, and explain why a single witness settles the matter.`,
+      ko: String.raw`“\(n^2\)이 4로 나누어떨어지면 \(n\)도 4로 나누어떨어진다”는 주장을 반례 \(n = 2\)로 반박하세요. 주장의 논리형 \(\forall n \in \mathbb{Z}\,(4 \mid n^2 \Rightarrow 4 \mid n)\)과 그 부정 \(\exists n \in \mathbb{Z}\,(4 \mid n^2 \text{ and } 4 \nmid n)\)을 명시적으로 쓰고, 왜 단 하나의 증인으로 증명이 끝나는지 설명하세요.`,
+      en: String.raw`Disprove the claim "if \(n^2\) is divisible by 4 then \(n\) is divisible by 4" using the counterexample \(n = 2\). Write out the claim's logical form \(\forall n \in \mathbb{Z}\,(4 \mid n^2 \Rightarrow 4 \mid n)\) and its negation \(\exists n \in \mathbb{Z}\,(4 \mid n^2 \text{ and } 4 \nmid n)\) explicitly, and explain why a single witness settles the matter.`,
     },
     display: [
-      String.raw`\forall n\,(4 \mid n^2 \Rightarrow 4 \mid n),\qquad \lnot\Big(\forall n\,P(n)\Big) = \exists n\,\lnot P(n)`,
+      String.raw`\forall n \in \mathbb{Z}\,(4 \mid n^2 \Rightarrow 4 \mid n),\qquad \lnot\Big(\forall n \in \mathbb{Z}\,P(n)\Big) = \exists n \in \mathbb{Z}\,\lnot P(n)`,
       String.raw`n = 2:\quad n^2 = 4,\; 4 \mid 4,\; \text{but } 4 \nmid 2`,
     ],
     preset: { claim: 'div4', n: 2 },
@@ -27,8 +27,8 @@ export const disproofIffProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`주장은 전칭 명제입니다: \(\forall n\,(4 \mid n^2 \Rightarrow 4 \mid n)\). 논리학의 기본 규칙에 따라 그 부정은 존재 명제 \(\exists n\,\lnot(4 \mid n^2 \Rightarrow 4 \mid n)\)이고, 함축의 부정 \(\lnot(P \Rightarrow Q) = P \wedge \lnot Q\)에 의해 \(\exists n\,(4 \mid n^2 \wedge 4 \nmid n)\)이 됩니다. 즉 “가정은 참인데 결론은 거짓인 \(n\)이 하나라도 존재한다”를 보이면 충분하고, 그 역도 마찬가지입니다.`,
-          en: String.raw`The claim is a universal statement: \(\forall n\,(4 \mid n^2 \Rightarrow 4 \mid n)\). By the basic rules of logic its negation is the existential statement \(\exists n\,\lnot(4 \mid n^2 \Rightarrow 4 \mid n)\), which by \(\lnot(P \Rightarrow Q) = P \wedge \lnot Q\) equals \(\exists n\,(4 \mid n^2 \wedge 4 \nmid n)\). So it suffices to exhibit one \(n\) for which the hypothesis is true and the conclusion false — and conversely, one such \(n\) is all it takes.`,
+          ko: String.raw`주장은 전칭 명제입니다: \(\forall n \in \mathbb{Z}\,(4 \mid n^2 \Rightarrow 4 \mid n)\) — 정의역은 \(n \in \mathbb{Z}\)입니다. 논리학의 기본 규칙에 따라 그 부정은 존재 명제 \(\exists n \in \mathbb{Z}\,\lnot(4 \mid n^2 \Rightarrow 4 \mid n)\)이고, 함축의 부정 \(\lnot(P \Rightarrow Q) = P \wedge \lnot Q\)에 의해 \(\exists n \in \mathbb{Z}\,(4 \mid n^2 \wedge 4 \nmid n)\)이 됩니다. 즉 “가정은 참인데 결론은 거짓인 \(n \in \mathbb{Z}\)가 하나라도 존재한다”를 보이면 충분하고, 그 역도 마찬가지입니다.`,
+          en: String.raw`The claim is a universal statement: \(\forall n \in \mathbb{Z}\,(4 \mid n^2 \Rightarrow 4 \mid n)\) — the domain is \(n \in \mathbb{Z}\). By the basic rules of logic its negation is the existential statement \(\exists n \in \mathbb{Z}\,\lnot(4 \mid n^2 \Rightarrow 4 \mid n)\), which by \(\lnot(P \Rightarrow Q) = P \wedge \lnot Q\) equals \(\exists n \in \mathbb{Z}\,(4 \mid n^2 \wedge 4 \nmid n)\). So it suffices to exhibit one \(n \in \mathbb{Z}\) for which the hypothesis is true and the conclusion false — and conversely, one such \(n\) is all it takes.`,
         },
       },
       {
@@ -37,7 +37,7 @@ export const disproofIffProblems: readonly ProblemMeta[] = [
           en: String.raw`Take \(n = 2\). Then \(n^2 = 4\) and \(4 \mid 4\), so the hypothesis is true. But \(n = 2\) is not divisible by 4, so the conclusion \(4 \mid n\) is false. Hence \(n = 2\) is a witness to \(\exists n\,(4 \mid n^2 \wedge 4 \nmid n)\), and the original universal claim is false.`,
         },
         display: [
-          String.raw`n = 2:\quad 4 \mid n^2 = 4\ \text{true},\qquad 4 \nmid 2\ \text{false}\ \Rightarrow\ \text{counterexample}`,
+          String.raw`n = 2:\quad 4 \mid n^2 = 4\ \text{true},\qquad 4 \mid 2\ \text{false (i.e. } 4 \nmid 2\ \text{true)} \Rightarrow\ \text{counterexample}`,
         ],
       },
       {
@@ -117,8 +117,8 @@ export const disproofIffProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`주석: 이 양방향 정리는 씬의 반례를 설명합니다 — \(|x| = |y|\)는 \(x^2 = y^2\)와 동치이므로, 실제로 강제되는 것은 “\(x = y\)”가 아니라 “\(x = y\) 또는 \(x = -y\)”입니다. 씬의 쌍 \((n, -n)\)은 바로 두 번째 경우의 증인입니다. 반례를 만난 뒤 주장을 어떻게 고쳐야 하는지 보여 주는 전형적인 예입니다.`,
-          en: String.raw`Remark: this biconditional explains the scene's counterexample — since \(|x| = |y|\) is equivalent to \(x^2 = y^2\), what is actually forced is not "\(x = y\)" but "\(x = y\) or \(x = -y\)". The scene's pairs \((n, -n)\) are witnesses to the second alternative. This is the classic pattern: a counterexample shows how the claim must be repaired.`,
+          ko: String.raw`주석: 이 양방향 정리는 씬의 반례를 설명합니다 — 먼저 \(|x| = |y| \iff x^2 = y^2\) 자체를 양방향으로 증명합니다. \((\Rightarrow)\) \(|x| = |y|\)이면 양변을 제곱해 \(x^2 = |x|^2 = |y|^2 = y^2\)입니다 (\(|t|^2 = t^2\) 사용). \((\Leftarrow)\) \(x^2 = y^2\)이면 \(|x|^2 = |y|^2\)이고, \(|x|, |y| \ge 0\)이며 제곱은 \([0, \infty)\)에서 단사(엄격히 증가)이므로 \(|x| = |y|\)입니다. 따라서 \(|x| = |y|\)는 \(x^2 = y^2\)와 동치이고, 실제로 강제되는 것은 “\(x = y\)”가 아니라 “\(x = y\) 또는 \(x = -y\)”입니다. 씬의 쌍 \((n, -n)\)은 바로 두 번째 경우의 증인입니다. 반례를 만난 뒤 주장을 어떻게 고쳐야 하는지 보여 주는 전형적인 예입니다.`,
+          en: String.raw`Remark: this biconditional explains the scene's counterexample — first prove \(|x| = |y| \iff x^2 = y^2\) itself, in both directions. \((\Rightarrow)\) If \(|x| = |y|\), squaring gives \(x^2 = |x|^2 = |y|^2 = y^2\) (using \(|t|^2 = t^2\)). \((\Leftarrow)\) If \(x^2 = y^2\) then \(|x|^2 = |y|^2\); since \(|x|, |y| \ge 0\) and squaring is injective (strictly increasing) on \([0, \infty)\), it follows that \(|x| = |y|\). Hence \(|x| = |y|\) is equivalent to \(x^2 = y^2\), so what is actually forced is not "\(x = y\)" but "\(x = y\) or \(x = -y\)". The scene's pairs \((n, -n)\) are witnesses to the second alternative. This is the classic pattern: a counterexample shows how the claim must be repaired.`,
         },
       },
     ],
