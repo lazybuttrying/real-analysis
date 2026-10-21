@@ -18,8 +18,8 @@ type AbelExample = 'shifted' | 'scaled';
 
 export const MIN_N = 10;
 export const MAX_N = 500;
-export const DEFAULT_N = 120;
-export const DEFAULT_EXAMPLE: AbelExample = 'shifted';
+const DEFAULT_N = 120;
+const DEFAULT_EXAMPLE: AbelExample = 'shifted';
 
 /** Terms used to estimate the limit line drawn in the scene. */
 export const LIMIT_TERMS = 600;

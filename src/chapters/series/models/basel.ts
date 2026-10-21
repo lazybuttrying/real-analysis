@@ -3,7 +3,7 @@ import { KahanSum } from '../../../math/sum';
 
 /** Pure computation. Does not import the DOM, d3, or three. */
 
-export const MAX_N = 40;
+const MAX_N = 40;
 
 /** The limit pi^2/6. Why pi appears at all is an idea-level story (Euler's sine product), not something the numbers below prove. */
 export const LIMIT = (Math.PI * Math.PI) / 6;

@@ -26,11 +26,11 @@ export type CoeffKind = (typeof RL_KINDS)[number];
 export const RL_KIND_INIT: CoeffKind = 'b';
 
 /** Simpson panels over [0, 2pi]; even, so x = pi is a grid point. */
-export const RL_PANELS = 16384;
+const RL_PANELS = 16384;
 
 export const RL_TWO_PI = 2 * Math.PI;
 
-export function rlFunction(mode: RlMode): (x: number) => number {
+function rlFunction(mode: RlMode): (x: number) => number {
   switch (mode) {
     case 'tent':
       return (x) => Math.max(0, 1 - Math.abs(x - Math.PI) / Math.PI);
@@ -68,7 +68,7 @@ export function rlExactB(mode: RlMode, n: number): number {
   return 0;
 }
 
-export interface RiemannLebesgueCoeff {
+interface RiemannLebesgueCoeff {
   n: number;
   a: number;
   b: number;

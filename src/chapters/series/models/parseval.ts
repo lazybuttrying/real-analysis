@@ -20,7 +20,7 @@ export const PARSEVAL_MODES = ['square', 'sawtooth', 'parabola'] as const;
 export type ParsevalMode = (typeof PARSEVAL_MODES)[number];
 export const PARSEVAL_MODE_INIT: ParsevalMode = 'square';
 
-export function parsevalFunction(mode: ParsevalMode): (x: number) => number {
+function parsevalFunction(mode: ParsevalMode): (x: number) => number {
   switch (mode) {
     case 'sawtooth':
       return (x) => x;
@@ -78,7 +78,7 @@ export function parsevalNumericNorm2(mode: ParsevalMode): number {
   return (sum * h) / (3 * Math.PI);
 }
 
-export interface ParsevalTerm {
+interface ParsevalTerm {
   n: number;
   a: number;
   b: number;

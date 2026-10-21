@@ -31,7 +31,7 @@ export interface ImproperData {
   converges: boolean;
 }
 
-export const SAMPLE_COUNT = 240;
+const SAMPLE_COUNT = 240;
 
 function nearOne(p: number): boolean {
   return Math.abs(p - 1) < 1e-9;

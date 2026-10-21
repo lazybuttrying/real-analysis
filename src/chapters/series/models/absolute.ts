@@ -10,7 +10,7 @@ import type { SceneModel } from '../../../contracts';
 
 type AbsSeries = 'abs' | 'cond';
 
-export const MAX_N = 200;
+const MAX_N = 200;
 
 export interface AbsoluteData {
   series: AbsSeries;

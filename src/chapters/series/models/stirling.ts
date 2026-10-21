@@ -8,7 +8,7 @@ import type { SceneModel } from '../../../contracts';
  * Wallis product when the estimate is made precise.)
  */
 
-export const MAX_N = 60;
+const MAX_N = 60;
 
 function stirlingApprox(n: number): number {
   return Math.sqrt(2 * Math.PI * n) * Math.pow(n / Math.E, n);

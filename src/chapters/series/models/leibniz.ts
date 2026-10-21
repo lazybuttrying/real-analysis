@@ -7,7 +7,7 @@ import type { SceneModel } from '../../../contracts';
  * partial sums, and the error is at most the size of the next term.
  */
 
-export const MAX_N = 60;
+const MAX_N = 60;
 
 export const LIMIT = Math.PI / 4;
 

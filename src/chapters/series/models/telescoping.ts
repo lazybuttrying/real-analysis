@@ -6,9 +6,9 @@ import type { SceneModel } from '../../../contracts';
  * the very first 1 (minus a vanishing tail) survives: S_n = 1 - 1/(n+1).
  */
 
-export const MAX_N = 24;
+const MAX_N = 24;
 
-export const LIMIT = 1;
+const LIMIT = 1;
 
 interface TermPair {
   i: number;

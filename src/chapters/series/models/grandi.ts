@@ -10,7 +10,7 @@ import type { SceneModel } from '../../../contracts';
  * value of the series.
  */
 
-export const MAX_N = 40;
+const MAX_N = 40;
 
 export interface GrandiData {
   n: number;

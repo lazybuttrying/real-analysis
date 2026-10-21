@@ -8,9 +8,9 @@ import type { SceneModel } from '../../../contracts';
  * its area is exactly (1/2)^steps.
  */
 
-export const MAX_STEPS = 12;
+const MAX_STEPS = 12;
 
-export const LIMIT = 1;
+const LIMIT = 1;
 
 interface Rect {
   x0: number;

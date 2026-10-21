@@ -8,7 +8,7 @@ import { KahanSum } from '../../../math/sum';
  * zeta(3), Apery's constant) show no such pattern.
  */
 
-export const MAX_N = 20;
+const MAX_N = 20;
 
 export const LIMIT = Math.pow(Math.PI, 4) / 90;
 

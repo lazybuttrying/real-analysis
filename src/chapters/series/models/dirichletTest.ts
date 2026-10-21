@@ -14,7 +14,7 @@ import type { SceneModel } from '../../../contracts';
 
 export const MIN_TERMS = 1;
 export const MAX_TERMS = 80;
-export const DEFAULT_TERMS = 30;
+const DEFAULT_TERMS = 30;
 export const MIN_X = 0.2;
 export const MAX_X = 3.0;
 const DEFAULT_X = 1.0;

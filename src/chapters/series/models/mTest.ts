@@ -15,10 +15,10 @@ import type { SceneModel } from '../../../contracts';
 /** Grid points across [0, 2pi]. */
 export const GRID_POINTS = 241;
 /** Terms used to approximate the limit curve and the infinite tail. */
-export const LIMIT_TERMS = 2000;
+const LIMIT_TERMS = 2000;
 export const MIN_TERMS = 1;
 export const MAX_TERMS = 40;
-export const DEFAULT_TERMS = 8;
+const DEFAULT_TERMS = 8;
 
 /**
  * tailBound(n) = sum_{k=n+1}^{2000} 1/k^2, a proxy for the infinite tail

@@ -6,7 +6,7 @@ import type { SceneModel } from '../../../contracts';
  * series sum_{k>=0} 1/k! sprints - its terms die factorially fast.
  */
 
-export const MAX_N = 30;
+const MAX_N = 30;
 
 export const LIMIT = Math.E;
 

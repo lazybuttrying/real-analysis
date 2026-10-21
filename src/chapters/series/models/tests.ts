@@ -27,7 +27,7 @@ export interface TestsData {
   verdict: TestsVerdict;
 }
 
-export const MAX_N = 30;
+const MAX_N = 30;
 
 function factorial(k: number): number {
   let f = 1;

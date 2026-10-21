@@ -52,7 +52,7 @@ export function rightSumPow(p: number, N: number): number {
   return s;
 }
 
-export type IntegralVerdict = 'converges' | 'diverges';
+type IntegralVerdict = 'converges' | 'diverges';
 
 export interface IntegralTestData {
   p: number;

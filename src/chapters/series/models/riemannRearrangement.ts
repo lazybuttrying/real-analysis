@@ -116,7 +116,7 @@ export function greedyWalk(s: number, n: number): RiemannData {
  * exactly once; the walk's final partial block is included only if it
  * reached s. Returns { step, sum, gap, mag } per crossing, in walk order.
  */
-export interface Crossing {
+interface Crossing {
   step: number;
   sum: number;
   /** |sum - target| at the crossing (the overshoot / undershoot). */

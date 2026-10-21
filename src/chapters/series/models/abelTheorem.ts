@@ -26,7 +26,7 @@ export const GRID_POINTS = 241;
 /** Partial-sum terms range. */
 export const MIN_TERMS = 1;
 export const MAX_TERMS = 200;
-export const DEFAULT_TERMS = 40;
+const DEFAULT_TERMS = 40;
 /** Partial sums shown at x = 1 in the contrast panel (k = 0..SIDE_K). */
 export const SIDE_K = 20;
 

@@ -9,8 +9,8 @@ import type { SceneModel } from '../../../contracts';
  * The rearranged partial sums tend to (3/2) ln 2 instead.
  */
 
-export const MAX_N = 300;
-export const MIN_N = 6;
+const MAX_N = 300;
+const MIN_N = 6;
 
 export const ORIG_LIMIT = Math.LN2;
 export const REARR_LIMIT = 1.5 * Math.LN2;
