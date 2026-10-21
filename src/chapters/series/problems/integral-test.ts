@@ -43,14 +43,14 @@ export const integralTestProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(\int_1^{\infty} f\)가 수렴하면 (즉 \(\int_1^{R} f\)가 \(R \to \infty\)에서 유한 극한을 가지면), 부분합 \(\sum_{n=1}^{N} f(n)\)은 \(f(1) + \int_1^{\infty} f\)로 위가 유계이고 항이 \(0\) 이상이므로 단조수렴정리에 의해 수렴합니다.`,
-          en: String.raw`If \(\int_1^{\infty} f\) converges (i.e. \(\int_1^{R} f\) has a finite limit as \(R \to \infty\)), then the partial sums \(\sum_{n=1}^{N} f(n)\) are bounded above by \(f(1) + \int_1^{\infty} f\) and, the terms being nonnegative, converge by the monotone convergence theorem.`,
+          ko: String.raw`\((\Leftarrow)\) \(\int_1^{\infty} f\)가 수렴하면 (즉 \(\int_1^{R} f\)가 \(R \to \infty\)에서 유한 극한을 가지면), 부분합 \(\sum_{n=1}^{N} f(n)\)은 \(f(1) + \int_1^{\infty} f\)로 위가 유계이고 항이 \(0\) 이상이므로 단조수렴정리에 의해 수렴합니다.`,
+          en: String.raw`\((\Leftarrow)\) If \(\int_1^{\infty} f\) converges (i.e. \(\int_1^{R} f\) has a finite limit as \(R \to \infty\)), then the partial sums \(\sum_{n=1}^{N} f(n)\) are bounded above by \(f(1) + \int_1^{\infty} f\) and, the terms being nonnegative, converge by the monotone convergence theorem.`,
         },
       },
       {
         text: {
-          ko: String.raw`반대로 \(\int_1^{\infty} f\)가 발산하면 (양수 피적분함수이므로 \(+\infty\)로), \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\)이므로 급수도 발산합니다. 따라서 \(\sum f(n)\) 수렴 \(\iff\) \(\int_1^{\infty} f\) 수렴입니다. 증명 끝.`,
-          en: String.raw`Conversely, if \(\int_1^{\infty} f\) diverges (to \(+\infty\), the integrand being positive), then \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\), so the series diverges too. Hence \(\sum f(n)\) converges \(\iff\) \(\int_1^{\infty} f\) converges. QED.`,
+          ko: String.raw`\((\Rightarrow)\) 대우로 보입니다: \(\int_1^{\infty} f\)가 발산하면 (양수 피적분함수이므로 \(+\infty\)로), \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\)이므로 급수도 발산합니다. 따라서 \(\sum f(n)\) 수렴 \(\iff\) \(\int_1^{\infty} f\) 수렴입니다. 증명 끝.`,
+          en: String.raw`\((\Rightarrow)\) By contraposition: if \(\int_1^{\infty} f\) diverges (to \(+\infty\), the integrand being positive), then \(\sum_{n=1}^{N} f(n) \ge \int_1^{N+1} f \to \infty\), so the series diverges too. Hence \(\sum f(n)\) converges \(\iff\) \(\int_1^{\infty} f\) converges. QED.`,
         },
       },
     ],

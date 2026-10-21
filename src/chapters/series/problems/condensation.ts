@@ -34,14 +34,14 @@ export const condensationProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(B_j \le C_j\)를 \(j = 0\)부터 \(N\)까지 더하면 \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\)입니다. \(\sum C_j\)가 수렴하면 \(T_N\)이 유계이므로, \(a_k \ge 0\)인 \(\sum a_n\)의 부분합도 유계가 되어 수렴합니다.`,
-          en: String.raw`Summing \(B_j \le C_j\) for \(j = 0\) to \(N\) gives \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\). If \(\sum C_j\) converges, then \(T_N\) is bounded, so the partial sums of \(\sum a_n\) (with \(a_k \ge 0\)) are bounded and converge.`,
+          ko: String.raw`\((\Leftarrow)\) \(B_j \le C_j\)를 \(j = 0\)부터 \(N\)까지 더하면 \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\)입니다. \(\sum C_j\)가 수렴하면 \(T_N\)이 유계이므로, \(a_k \ge 0\)인 \(\sum a_n\)의 부분합도 유계가 되어 수렴합니다.`,
+          en: String.raw`\((\Leftarrow)\) Summing \(B_j \le C_j\) for \(j = 0\) to \(N\) gives \(S_{2^{N+1}-1} = \sum_{j=0}^{N} B_j \le \sum_{j=0}^{N} C_j = T_N\). If \(\sum C_j\) converges, then \(T_N\) is bounded, so the partial sums of \(\sum a_n\) (with \(a_k \ge 0\)) are bounded and converge.`,
         },
       },
       {
         text: {
-          ko: String.raw`반대로 \(C_{j+1} \le 2 B_j\)를 \(j = 0\)부터 \(N\)까지 더하면 \(T_{N+1} - C_0 = \sum_{j=1}^{N+1} C_j \le 2 \sum_{j=0}^{N} B_j = 2 S_{2^{N+1}-1}\)입니다. \(\sum a_n\)이 수렴하면 오른쪽이 유계이므로 \(\sum C_j\)의 부분합도 유계가 되어 수렴합니다.`,
-          en: String.raw`Conversely, summing \(C_{j+1} \le 2 B_j\) for \(j = 0\) to \(N\) gives \(T_{N+1} - C_0 = \sum_{j=1}^{N+1} C_j \le 2 \sum_{j=0}^{N} B_j = 2 S_{2^{N+1}-1}\). If \(\sum a_n\) converges, the right side is bounded, so the partial sums of \(\sum C_j\) are bounded and converge.`,
+          ko: String.raw`\((\Rightarrow)\) 반대로 \(C_{j+1} \le 2 B_j\)를 \(j = 0\)부터 \(N\)까지 더하면 \(T_{N+1} - C_0 = \sum_{j=1}^{N+1} C_j \le 2 \sum_{j=0}^{N} B_j = 2 S_{2^{N+1}-1}\)입니다. \(\sum a_n\)이 수렴하면 오른쪽이 유계이므로 \(\sum C_j\)의 부분합도 유계가 되어 수렴합니다.`,
+          en: String.raw`\((\Rightarrow)\) Conversely, summing \(C_{j+1} \le 2 B_j\) for \(j = 0\) to \(N\) gives \(T_{N+1} - C_0 = \sum_{j=1}^{N+1} C_j \le 2 \sum_{j=0}^{N} B_j = 2 S_{2^{N+1}-1}\). If \(\sum a_n\) converges, the right side is bounded, so the partial sums of \(\sum C_j\) are bounded and converge.`,
         },
       },
       {
