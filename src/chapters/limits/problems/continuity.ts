@@ -40,8 +40,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`귀납법으로 \(x^n\)이 연속이고(곱 규칙 반복), \(c x^n\)도 연속이며(상수 × 연속), 이들의 합인 다항식도 연속입니다(합 규칙).`,
-                en: String.raw`By induction \(x^n\) is continuous (repeated product rule), \(c x^n\) is continuous (constant times continuous), and their sum — a polynomial — is continuous (sum rule).`,
+                ko: String.raw`귀납법으로 \(x^n\)이 연속임을 보입니다. Base case: \(n = 0\)이면 \(x^0 = 1\)은 위에서 보인 상수함수라 연속이고, \(n = 1\)이면 \(x^1 = x\)는 위에서 보인 항등함수라 연속입니다. Inductive step: \(x^n\)이 연속이라 가정하면 \(x^{n+1} = x^n \cdot x\)는 연속함수들의 곱이라 곱 규칙으로 연속입니다. 따라서 모든 \(n \ge 0\)에 대해 \(x^n\)이 연속입니다. 이어서 \(c x^n\)도 연속이며(상수 \(\times\) 연속, 곱 규칙), 유한개의 항 \(c_k x^k\)들의 합인 임의의 다항식도 연속입니다(합 규칙을 유한 번 반복).`,
+                en: String.raw`We show \(x^n\) is continuous by induction. Base cases: for \(n = 0\), \(x^0 = 1\) is the constant function proved continuous above; for \(n = 1\), \(x^1 = x\) is the identity proved continuous above. Inductive step: if \(x^n\) is continuous, then \(x^{n+1} = x^n \cdot x\) is a product of continuous functions, hence continuous by the product rule. So \(x^n\) is continuous for every \(n \ge 0\). Then \(c x^n\) is continuous (constant times continuous, by the product rule), and any polynomial — a finite sum of such terms \(c_k x^k\) — is continuous (the sum rule, applied finitely many times).`,
               },
             },
           ],

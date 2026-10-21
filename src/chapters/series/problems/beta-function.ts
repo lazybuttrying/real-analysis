@@ -96,14 +96,14 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\)에 \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\)로 부분적분을 적용합니다. 그러면 \(du = p t^{p-1}\,dt\)이고 \(v = -\frac{(1-t)^q}{q}\)입니다.`,
-          en: String.raw`Apply parts to \(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\) with \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\). Then \(du = p t^{p-1}\,dt\) and \(v = -\frac{(1-t)^q}{q}\).`,
+          ko: String.raw`이상적분에 직접 부분적분을 적용하지 않습니다. 절단 구간 \([\delta, 1-\varepsilon]\) (\(0 < \delta < 1-\varepsilon < 1\))에서는 피적분함수가 매끄러우므로, \(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\)의 절단 적분에 \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\)로 부분적분을 적용합니다. 그러면 \(du = p t^{p-1}\,dt\)이고 \(v = -\frac{(1-t)^q}{q}\)입니다. \(0 < p < 1\) 또는 \(0 < q < 1\)이면 도함수가 끝점에서 특이해지므로 이 절단이 필요합니다.`,
+          en: String.raw`Do not apply parts directly to the improper integral. On the truncated interval \([\delta, 1-\varepsilon]\) (\(0 < \delta < 1-\varepsilon < 1\)) the integrand is smooth, so apply parts to the truncated integral of \(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\) with \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\). Then \(du = p t^{p-1}\,dt\) and \(v = -\frac{(1-t)^q}{q}\). The truncation is needed because for \(0 < p < 1\) or \(0 < q < 1\) the derivative is singular at the endpoints.`,
         },
       },
       {
         text: {
-          ko: String.raw`경계항 \(\left[-\frac{t^p(1-t)^q}{q}\right]_0^1\)은 사라집니다: \(t = 1\)에서는 \(q > 0\)이므로 \((1-t)^q \to 0\)이고, \(t = 0\)에서는 \(p > 0\)이므로 \(t^p \to 0\)입니다. 따라서 \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\)입니다.`,
-          en: String.raw`The boundary term \(\left[-\frac{t^p(1-t)^q}{q}\right]_0^1\) vanishes: at \(t = 1\), \((1-t)^q \to 0\) since \(q > 0\); at \(t = 0\), \(t^p \to 0\) since \(p > 0\). Hence \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\).`,
+          ko: String.raw`절단 구간에서의 경계항은 \(\left[-\frac{t^p(1-t)^q}{q}\right]_{\delta}^{1-\varepsilon} = -\frac{(1-\varepsilon)^p \varepsilon^q}{q} + \frac{\delta^p (1-\delta)^q}{q}\)입니다. \(p, q > 0\)이므로 \(t^p (1-t)^q \to 0\)이 양쪽 끝 모두에서 성립합니다: \(\delta \to 0^+\)이면 \(\delta^p \to 0\)이고, \(\varepsilon \to 0^+\)이면 \(\varepsilon^q \to 0\)이므로 경계항은 \(0\)으로 갑니다. \(\delta, \varepsilon \to 0^+\)으로 보내고 문제 1의 수렴을 이용하면 \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\)을 얻습니다.`,
+          en: String.raw`On the truncated interval the boundary term is \(\left[-\frac{t^p(1-t)^q}{q}\right]_{\delta}^{1-\varepsilon} = -\frac{(1-\varepsilon)^p \varepsilon^q}{q} + \frac{\delta^p (1-\delta)^q}{q}\). Since \(p, q > 0\), \(t^p (1-t)^q \to 0\) at both ends: \(\delta^p \to 0\) as \(\delta \to 0^+\) and \(\varepsilon^q \to 0\) as \(\varepsilon \to 0^+\), so the boundary term tends to \(0\). Sending \(\delta, \varepsilon \to 0^+\) and using convergence from problem 1 gives \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\).`,
         },
       },
       {

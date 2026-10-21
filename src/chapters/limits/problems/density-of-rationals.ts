@@ -104,8 +104,8 @@ export const densityOfRationalsProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`위 문제 2에 의해 \((x, y)\) 안에 유리수 \(r < s\)가 존재합니다. \(z = r + (s - r)\frac{\sqrt{2}}{2}\)라 둡니다. \(1 < 2 < 4\)이고 제곱은 \([0, \infty)\)에서 엄격히 증가하므로(위 sqrt2-irrational 장면의 문제 1과 n제곱근 장면), \(1 < \sqrt{2} < 2\) — 따라서 \(0 < \frac{\sqrt{2}}{2} < 1\)입니다.`,
-          en: String.raw`By problem 2 there are rationals \(r < s\) inside \((x, y)\). Put \(z = r + (s - r)\frac{\sqrt{2}}{2}\). Since \(1 < 2 < 4\) and squaring is strictly increasing on \([0, \infty)\) (problem 1 of the sqrt2-irrational scene, plus the n-th root scene), \(1 < \sqrt{2} < 2\) — hence \(0 < \frac{\sqrt{2}}{2} < 1\).`,
+          ko: String.raw`위 문제 2는 유리수 하나만 주므로 두 번 적용합니다: 중간점 \(m = (x + y)/2\)에 대해 문제 2를 \((x, m)\)에 적용해 유리수 \(r\) (\(x < r < m\))을 얻고, \((m, y)\)에 적용해 유리수 \(s\) (\(m < s < y\))를 얻으면 \(r < m < s\)라서 \((x, y)\) 안에 유리수 \(r < s\)가 존재합니다. \(z = r + (s - r)\frac{\sqrt{2}}{2}\)라 둡니다. \(1 < 2 < 4\)이고 제곱은 \([0, \infty)\)에서 엄격히 증가하므로(위 sqrt2-irrational 장면의 문제 1과 n제곱근 장면), \(1 < \sqrt{2} < 2\) — 따라서 \(0 < \frac{\sqrt{2}}{2} < 1\)입니다.`,
+          en: String.raw`Problem 2 alone gives only one rational, so apply it twice: with the midpoint \(m = (x + y)/2\), applying problem 2 in \((x, m)\) gives a rational \(r\) with \(x < r < m\), and applying it in \((m, y)\) gives a rational \(s\) with \(m < s < y\); since \(r < m < s\), there are rationals \(r < s\) inside \((x, y)\). Put \(z = r + (s - r)\frac{\sqrt{2}}{2}\). Since \(1 < 2 < 4\) and squaring is strictly increasing on \([0, \infty)\) (problem 1 of the sqrt2-irrational scene, plus the n-th root scene), \(1 < \sqrt{2} < 2\) — hence \(0 < \frac{\sqrt{2}}{2} < 1\).`,
         },
       },
       {

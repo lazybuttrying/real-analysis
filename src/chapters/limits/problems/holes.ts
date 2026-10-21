@@ -71,8 +71,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(e \notin \mathbb{Q}\)는 정식 정리입니다(예: \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)의 나머지 항 평가로 증명됩니다). 따라서 유리수 수열 \((b_n)\)은 어떤 유리수에도 수렴하지 않습니다 — \(\sqrt2\)와는 다른, \(\mathbb{Q}\)의 또 하나의 구멍입니다.`,
-                en: String.raw`That \(e \notin \mathbb{Q}\) is an established theorem (proved, for instance, by estimating the remainder of \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)). So the rational sequence \((b_n)\) converges to no rational number — another hole in \(\mathbb{Q}\), distinct from the one at \(\sqrt2\).`,
+                ko: String.raw`먼저 두 \(e\)가 같은 수임을 확인합니다. \(S = \sum_{k=0}^{\infty} \frac{1}{k!}\)라 두고, eseries 씬(compound 문제)에서처럼 이항정리로 전개하면 \(b_n = \sum_{k=0}^{n} a_{n,k}\) (단 \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}(1 - \frac{j}{n}) \le \frac{1}{k!}\))입니다. \(K \le n\)을 고정하면 \(b_n \ge \sum_{k=0}^{K} a_{n,k}\)이고, 고정된 \(k\)에 대해 \(n \to \infty\)일 때 \(a_{n,k} \to \frac{1}{k!}\)이므로 \(\liminf b_n \ge \sum_{k=0}^{K} \frac{1}{k!}\)입니다. 또한 \(b_n \le \sum_{k=0}^{n} \frac{1}{k!} \le S\)이므로 \(\limsup b_n \le S\)입니다. \(K \to \infty\)로 보내면 \(\lim b_n = S\) — 여기서 \(\lim b_n\)으로 정의한 \(e\)는 급수 \(S\)와 같은 수입니다. 두 정의가 일치하므로 \(e \notin \mathbb{Q}\)는 정식 정리입니다(예: \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)의 나머지 항 평가로 증명됩니다). 따라서 유리수 수열 \((b_n)\)은 어떤 유리수에도 수렴하지 않습니다 — \(\sqrt2\)와는 다른, \(\mathbb{Q}\)의 또 하나의 구멍입니다.`,
+                en: String.raw`Identification of the two \(e\)'s first. Write \(S = \sum_{k=0}^{\infty} \frac{1}{k!}\) and expand \(b_n\) by the binomial theorem as in the eseries scene (compound problem): \(b_n = \sum_{k=0}^{n} a_{n,k}\) with \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}(1 - \frac{j}{n}) \le \frac{1}{k!}\). Fix \(K \le n\): then \(b_n \ge \sum_{k=0}^{K} a_{n,k}\), and \(a_{n,k} \to \frac{1}{k!}\) as \(n \to \infty\) for each fixed \(k\), so \(\liminf b_n \ge \sum_{k=0}^{K} \frac{1}{k!}\). Also \(b_n \le \sum_{k=0}^{n} \frac{1}{k!} \le S\), so \(\limsup b_n \le S\). Letting \(K \to \infty\) forces \(\lim b_n = S\): the \(e\) defined here as \(\lim b_n\) is the series number \(S\). With the two definitions identified, that \(e \notin \mathbb{Q}\) is an established theorem (proved, for instance, by estimating the remainder of \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)). So the rational sequence \((b_n)\) converges to no rational number — another hole in \(\mathbb{Q}\), distinct from the one at \(\sqrt2\).`,
               },
             },
           ],
@@ -98,8 +98,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`따라서 \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2|\)는 \(m, n\)이 클 때 임의로 작아집니다. 즉 \((x_n)\)은 코시수열입니다.`,
-                en: String.raw`Hence \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2|\) becomes arbitrarily small for large \(m, n\): \((x_n)\) is a Cauchy sequence.`,
+                ko: String.raw`\(\varepsilon > 0\)이라 합시다. \(x_n \to \sqrt2\)이므로 \(n \ge N\)일 때 \(|x_n - \sqrt2| < \varepsilon/2\)인 \(N\)을 잡을 수 있습니다. 그러면 \(m, n \ge N\)일 때 \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2| < \varepsilon/2 + \varepsilon/2 = \varepsilon\)입니다. 즉 \((x_n)\)은 코시수열입니다.`,
+                en: String.raw`Let \(\varepsilon > 0\). Since \(x_n \to \sqrt2\), choose \(N\) with \(|x_n - \sqrt2| < \varepsilon/2\) for all \(n \ge N\). Then for all \(m, n \ge N\), \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2| < \varepsilon/2 + \varepsilon/2 = \varepsilon\). Hence \((x_n)\) is a Cauchy sequence.`,
               },
             },
             {

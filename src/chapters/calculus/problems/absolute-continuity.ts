@@ -26,14 +26,14 @@ export const absoluteContinuityProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`보조정리 (절대연속적분): \(|f|\)의 꼬리가 사라진다는 사실을 이용합니다. Lebesgue 씬에서 본 지배수렴정리에 의해 \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\)가 되는 \(M\)을 고를 수 있습니다.`,
-          en: String.raw`Lemma (absolutely continuous integral): use that the tails of \(|f|\) vanish. By dominated convergence (from the Lebesgue scene), choose \(M\) with \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\).`,
+          ko: String.raw`보조정리 (절대연속적분): 잘린 함수 \(|f| \cdot \mathbf{1}_{\{|f| \le M\}}\)에 지배수렴정리를 적용합니다. 이 함수들은 \(M \to \infty\)일 때 \(|f|\)로 점별 수렴하고, 지배함수는 \(|f| \in L^1\)입니다 (가정). 따라서 \(\int |f| \cdot \mathbf{1}_{\{|f| \le M\}} \to \int |f|\), 즉 꼬리 \(\int_{|f| > M} |f| \to 0\) (\(M \to \infty\))입니다. 그러므로 \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\)인 \(M\)이 존재하고, \(M\)을 키우면 꼬리는 더 작아지므로 \(M \ge 1\)로 잡을 수 있습니다.`,
+          en: String.raw`Lemma (absolutely continuous integral): apply dominated convergence to the truncations \(|f| \cdot \mathbf{1}_{\{|f| \le M\}}\). They converge pointwise to \(|f|\) as \(M \to \infty\), with dominating function \(|f| \in L^1\) (the hypothesis). Hence \(\int |f| \cdot \mathbf{1}_{\{|f| \le M\}} \to \int |f|\), i.e. the tail \(\int_{|f| > M} |f| \to 0\) as \(M \to \infty\). So some \(M\) has \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\), and enlarging \(M\) only shrinks the tail, so take \(M \ge 1\).`,
         },
       },
       {
         text: {
-          ko: String.raw`임의의 가측집합 \(E\)에 대해 \(|f| = |f| \cdot \mathbf{1}_{\{|f| > M\}} + |f| \cdot \mathbf{1}_{\{|f| \le M\}}\)로 나누면 \(\int_E |f| \le \int_{|f| > M} |f| + M \cdot m(E) < \frac{\varepsilon}{2} + M \cdot m(E)\)가 됩니다. 따라서 \(m(E) < \delta := \frac{\varepsilon}{2M}\)이면 \(\int_E |f| < \varepsilon\)입니다.`,
-          en: String.raw`For any measurable \(E\), splitting \(|f| = |f| \cdot \mathbf{1}_{\{|f| > M\}} + |f| \cdot \mathbf{1}_{\{|f| \le M\}}\) gives \(\int_E |f| \le \int_{|f| > M} |f| + M \cdot m(E) < \frac{\varepsilon}{2} + M \cdot m(E)\). So \(\int_E |f| < \varepsilon\) whenever \(m(E) < \delta := \frac{\varepsilon}{2M}\).`,
+          ko: String.raw`임의의 가측집합 \(E\)에 대해 \(|f| = |f| \cdot \mathbf{1}_{\{|f| > M\}} + |f| \cdot \mathbf{1}_{\{|f| \le M\}}\)로 나누면 \(\int_E |f| \le \int_{|f| > M} |f| + M \cdot m(E) < \frac{\varepsilon}{2} + M \cdot m(E)\)가 됩니다. 위에서 \(M \ge 1 > 0\)으로 잡았으므로 \(\delta := \frac{\varepsilon}{2M}\)이 잘 정의되고, \(m(E) < \delta\)이면 \(\int_E |f| < \varepsilon\)입니다.`,
+          en: String.raw`For any measurable \(E\), splitting \(|f| = |f| \cdot \mathbf{1}_{\{|f| > M\}} + |f| \cdot \mathbf{1}_{\{|f| \le M\}}\) gives \(\int_E |f| \le \int_{|f| > M} |f| + M \cdot m(E) < \frac{\varepsilon}{2} + M \cdot m(E)\). Since \(M \ge 1 > 0\) above, \(\delta := \frac{\varepsilon}{2M}\) is well defined, and \(\int_E |f| < \varepsilon\) whenever \(m(E) < \delta\).`,
         },
       },
       {
