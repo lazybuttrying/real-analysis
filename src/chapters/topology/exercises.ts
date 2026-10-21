@@ -128,8 +128,20 @@ export const exercises: readonly ExerciseMeta[] = [
     solution: [
       {
         text: {
-          ko: String.raw`(a) \(f\)가 \(x\)에서 연속일 필요충분조건은 \(\omega_f(x) = 0\)이다: 연속이면 \(\delta\)-구간 안의 진동이 \(0\)으로 가고, 역으로 진동이 \(0\)이면 \(\varepsilon\)-\(\delta\) 조건이 그대로 따라온다. 따라서 \(C(f) = \bigcap_k \{\omega_f < 1/k\}\)이다. \(\omega_f(x_0) < 1/k\)라 하자. 하한의 정의에서 어떤 \(\delta > 0\)에 대해 \(M := \sup\{|f(y) - f(z)| : y, z \in (x_0 - \delta, x_0 + \delta)\} < 1/k\)이다. \(x_1 \in (x_0 - \delta/2, x_0 + \delta/2)\)이면 \((x_1 - \delta/2, x_1 + \delta/2) \subset (x_0 - \delta, x_0 + \delta)\)이므로 \(\omega_f(x_1) \le M < 1/k\)이다. 즉 \(\{\omega_f < 1/k\}\)는 \(x_0\)의 근방을 포함하므로 열려 있다.`,
-          en: String.raw`(a) \(f\) is continuous at \(x\) iff \(\omega_f(x) = 0\): continuity drives the oscillation on \(\delta\)-intervals to \(0\), and conversely vanishing oscillation is exactly the \(\varepsilon\)-\(\delta\) condition. Hence \(C(f) = \bigcap_k \{\omega_f < 1/k\}\). Let \(\omega_f(x_0) < 1/k\). By definition of the infimum, some \(\delta > 0\) gives \(M := \sup\{|f(y) - f(z)| : y, z \in (x_0 - \delta, x_0 + \delta)\} < 1/k\). If \(x_1 \in (x_0 - \delta/2, x_0 + \delta/2)\) then \((x_1 - \delta/2, x_1 + \delta/2) \subset (x_0 - \delta, x_0 + \delta)\), so \(\omega_f(x_1) \le M < 1/k\). Thus \(\{\omega_f < 1/k\}\) contains a neighborhood of \(x_0\): it is open.`,
+          ko: String.raw`(a) \(\Omega(\delta) := \sup\{|f(y) - f(z)| : y, z \in (x-\delta, x+\delta)\}\)라 두면 \(\omega_f(x) = \inf_{\delta > 0} \Omega(\delta)\)입니다. \((\Rightarrow)\) \(f\)가 \(x\)에서 연속이라 하자. 임의의 \(\varepsilon > 0\)에 대해 \(|y - x| < \delta \Rightarrow |f(y) - f(x)| < \varepsilon/2\)인 \(\delta > 0\)이 있다. 그러면 \(y, z \in (x-\delta, x+\delta)\)에 대해 \(|f(y) - f(z)| \le |f(y) - f(x)| + |f(x) - f(z)| < \varepsilon\)이므로 \(\Omega(\delta) \le \varepsilon\)이고, \(\omega_f(x) \le \varepsilon\)이다. \(\varepsilon\)이 임의였으므로 \(\omega_f(x) = 0\)이다.`,
+          en: String.raw`(a) Put \(\Omega(\delta) := \sup\{|f(y) - f(z)| : y, z \in (x-\delta, x+\delta)\}\), so \(\omega_f(x) = \inf_{\delta > 0} \Omega(\delta)\). \((\Rightarrow)\) Suppose \(f\) is continuous at \(x\). For every \(\varepsilon > 0\) there is \(\delta > 0\) with \(|y - x| < \delta \Rightarrow |f(y) - f(x)| < \varepsilon/2\). Then for \(y, z \in (x-\delta, x+\delta)\), \(|f(y) - f(z)| \le |f(y) - f(x)| + |f(x) - f(z)| < \varepsilon\), so \(\Omega(\delta) \le \varepsilon\) and \(\omega_f(x) \le \varepsilon\). Since \(\varepsilon\) was arbitrary, \(\omega_f(x) = 0\).`,
+        },
+      },
+      {
+        text: {
+          ko: String.raw`\((\Leftarrow)\) \(\omega_f(x) = 0\)이라 하자. 임의의 \(\varepsilon > 0\)에 대해 \(\inf_{\delta > 0} \Omega(\delta) = 0 < \varepsilon\)이므로 \(\Omega(\delta) < \varepsilon\)인 \(\delta > 0\)이 있다. 그러면 \(|y - x| < \delta \Rightarrow |f(y) - f(x)| \le \Omega(\delta) < \varepsilon\) (\(z = x\)인 경우) — \(f\)는 \(x\)에서 연속이다. 따라서 \(x \in C(f) \iff \omega_f(x) = 0 \iff \omega_f(x) < 1/k \ (\forall k) \iff x \in \bigcap_k \{\omega_f < 1/k\}\), 즉 \(C(f) = \bigcap_k \{\omega_f < 1/k\}\)이다.`,
+          en: String.raw`\((\Leftarrow)\) Suppose \(\omega_f(x) = 0\). For every \(\varepsilon > 0\), \(\inf_{\delta > 0} \Omega(\delta) = 0 < \varepsilon\), so some \(\delta > 0\) has \(\Omega(\delta) < \varepsilon\). Then \(|y - x| < \delta \Rightarrow |f(y) - f(x)| \le \Omega(\delta) < \varepsilon\) (the case \(z = x\)) — \(f\) is continuous at \(x\). Hence \(x \in C(f) \iff \omega_f(x) = 0 \iff \omega_f(x) < 1/k \ (\forall k) \iff x \in \bigcap_k \{\omega_f < 1/k\}\); that is, \(C(f) = \bigcap_k \{\omega_f < 1/k\}\).`,
+        },
+      },
+      {
+        text: {
+          ko: String.raw`각 \(\{\omega_f < 1/k\}\)가 열려 있음을 보인다. \(\omega_f(x_0) < 1/k\)라 하자. 하한의 정의에서 어떤 \(\delta > 0\)에 대해 \(M := \sup\{|f(y) - f(z)| : y, z \in (x_0 - \delta, x_0 + \delta)\} < 1/k\)이다. \(x_1 \in (x_0 - \delta/2, x_0 + \delta/2)\)이면 \((x_1 - \delta/2, x_1 + \delta/2) \subset (x_0 - \delta, x_0 + \delta)\)이므로 \(\omega_f(x_1) \le M < 1/k\)이다. 즉 \(\{\omega_f < 1/k\}\)는 \(x_0\)의 근방을 포함하므로 열려 있다.`,
+          en: String.raw`Each \(\{\omega_f < 1/k\}\) is open. Let \(\omega_f(x_0) < 1/k\). By definition of the infimum, some \(\delta > 0\) gives \(M := \sup\{|f(y) - f(z)| : y, z \in (x_0 - \delta, x_0 + \delta)\} < 1/k\). If \(x_1 \in (x_0 - \delta/2, x_0 + \delta/2)\) then \((x_1 - \delta/2, x_1 + \delta/2) \subset (x_0 - \delta, x_0 + \delta)\), so \(\omega_f(x_1) \le M < 1/k\). Thus \(\{\omega_f < 1/k\}\) contains a neighborhood of \(x_0\): it is open.`,
         },
       },
       {
