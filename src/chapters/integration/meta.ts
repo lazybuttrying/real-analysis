@@ -49,8 +49,16 @@ export const integration: ChapterMeta = {
       title: { ko: '감마함수', en: 'The Gamma Function' },
       order: 1,
       summary: {
-        ko: String.raw`팩토리얼을 실수로 늘인 함수 — \(\Gamma(x+1) = x\Gamma(x)\)라서 \(\Gamma(n+1) = n!\)입니다. \(x > 0\)에서 이상적분이 수렴함을 확인합니다.`,
-        en: String.raw`The factorial stretched to real arguments — \(\Gamma(x+1) = x\Gamma(x)\), so \(\Gamma(n+1) = n!\). Watch the improper integral converge for \(x > 0\).`,
+        ko: String.raw`팩토리얼을 실수까지 늘인 함수를 봅니다. 정수에서는 계단처럼 뛰던 값이 매끄러운 곡선이 됩니다.
+
+핵심 규칙은 한 칸 밀면 그 칸의 수가 곱해진다는 것입니다. 이 규칙이 정수 사이 값을 채웁니다. 넓이로 정의되는 적분이 그 곡선을 만듭니다.
+
+예를 들면, 🪜 계단이 1, 2, 6, 24처럼 점프하는 사이에 미끄럼틀 같은 곡선을 끼워 넣은 거예요. 이제 계단 사이의 높이도 잴 수 있어요.`,
+        en: String.raw`The factorial stretched to real arguments. Values that jumped like stairs become one smooth curve.
+
+The key rule: shifting by one multiplies by the shift amount. That rule fills in the values between integers. An integral, an area, draws the whole curve.
+
+For example, picture a 🪜 staircase jumping 1, 2, 6, 24, with a smooth slide fitted between its steps. Now the heights between steps can be measured too.`,
       },
       tex: [
         String.raw`\Gamma(x) = \int_0^\infty t^{x-1} e^{-t}\,dt \quad (x > 0)`,
@@ -65,12 +73,20 @@ problems: gammaProblems,
       title: { ko: '베타 함수', en: 'The Beta Function' },
       order: 2,
       summary: {
-        ko: String.raw`\\(t^{p-1}(1-t)^{q-1}\\) 곡선 아래 넓이가 베타 함수 — \\(p\\), \\(q\\) 슬라이더로 모양이 바뀌는 모습을 보세요. 감마함수와의 관계 \\(B(p,q) = \\Gamma(p)\\Gamma(q)/\\Gamma(p+q)\\)도 함께 다룹니다.`,
-        en: String.raw`The area under \\(t^{p-1}(1-t)^{q-1}\\) is the beta function — morph its shape with the \\(p\\), \\(q\\) sliders. Also covers \\(B(p,q) = \\Gamma(p)\\Gamma(q)/\\Gamma(p+q)\\), the bridge to the gamma function.`,
+        ko: String.raw`두 지수 p와 q가 만드는 곡선 아래 넓이가 베타 함수입니다. 슬라이더로 곡선 모양이 바뀌는 것을 봅니다.
+
+곡선은 양 끝에서 서로 다른 힘으로 당겨집니다. 그래서 봉우리의 위치와 높이가 달라집니다. 이 넓이는 감마함수들의 비율과 정확히 같습니다.
+
+예를 들면, 🧵 줄의 양쪽 끝을 서로 다른 힘으로 당기면 가운데 볼록한 모양이 달라져요. 양 끝 힘을 조절하는 것이 p와 q의 역할이에요.`,
+        en: String.raw`The area under a curve shaped by two exponents, p and q, is the beta function. Sliders morph the curve's shape.
+
+The two ends of the curve are pulled with different strengths. So the hump shifts and changes height. This area equals an exact ratio of gamma functions.
+
+For example, pull the two ends of a 🧵 string with different strengths and the bulge in the middle changes shape. Adjusting the end pulls is what p and q do.`,
       },
       tex: [
-        String.raw`B(p,q)=\\int_0^1 t^{p-1}(1-t)^{q-1}\\,dt\\quad(p,q>0)`,
-        String.raw`B(p,q)=\\frac{\\Gamma(p)\\Gamma(q)}{\\Gamma(p+q)}`,
+        String.raw`B(p,q)=\int_0^1 t^{p-1}(1-t)^{q-1}\,dt\quad(p,q>0)`,
+        String.raw`B(p,q)=\frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}`,
       ],
       prerequisites: ['gamma'],
       controls: [
@@ -84,8 +100,16 @@ problems: betaFunctionProblems,
       title: { ko: '보어-몰레루프 정리', en: 'Bohr–Mollerup Theorem' },
       order: 3,
       summary: {
-        ko: String.raw`\(f(1) = 1\)과 \(f(x+1) = x\,f(x)\)만으로는 팩토리얼의 연속 확장이 하나로 정해지지 않습니다 — impostor \(\Gamma(x)(1 + a\sin 2\pi x)\)가 모든 정수점에서 \(\Gamma\)와 완전히 일치하면서도 살아남기 때문입니다. secant 테스트로 로그볼록성이 \(\Gamma\)의 진짜 지문임을 직접 확인하세요.`,
-        en: String.raw`\(f(1) = 1\) and \(f(x+1) = x\,f(x)\) do not pin down the continuous extension of the factorial — the impostor \(\Gamma(x)(1 + a\sin 2\pi x)\) matches \(\Gamma\) at every integer and survives. Watch the secant test expose log-convexity as \(\Gamma\)'s true fingerprint.`,
+        ko: String.raw`두 가지 규칙만으로는 팩토리얼의 확장 함수가 하나로 정해지지 않습니다. 정수마다 감마함수와 똑같은 가짜 함수가 살아남습니다.
+
+가짜를 걸러내는 추가 조건이 로그볼록성입니다. 로그를 씌운 그래프가 볼록해야 진짜입니다. 현 테스트가 그 지문을 드러냅니다.
+
+예를 들면, 🧑 친구의 키와 몸무게만으로는 그 친구인지 확정할 수 없어요. 지문까지 같아야 확실해요. 로그볼록성이 감마함수의 지문이에요.`,
+        en: String.raw`Two rules alone do not pin down the factorial's extension. An impostor matching the gamma function at every integer survives.
+
+One extra condition filters the impostor out: log-convexity. The graph of the logarithm must be convex. The secant test exposes this fingerprint.
+
+For example, height and weight alone cannot confirm a 🧑 friend's identity. A matching fingerprint settles it. Log-convexity is the gamma function's fingerprint.`,
       },
       tex: [
         String.raw`f(1) = 1`,
@@ -105,8 +129,16 @@ problems: bohrMollerupProblems,
       title: { ko: '이상적분', en: 'Improper Integrals' },
       order: 4,
       summary: {
-        ko: String.raw`\(\int_1^\infty \frac{dx}{x^p}\)는 \(p > 1\)일 때만 수렴하고, \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\)처럼 특이점 쪽도 다룹니다 — p급수와의 쌍대 장면.`,
-        en: String.raw`\(\int_1^\infty \frac{dx}{x^p}\) converges only for \(p > 1\), plus the singular kind \(\int_0^1 \frac{dx}{\sqrt{x}} = 2\) — the twin of the p-series scene.`,
+        ko: String.raw`끝이 무한히 뻗거나 높이가 폭발하는 구간의 적분을 봅니다. 지수 p가 수렴과 발산을 가릅니다.
+
+무한히 이어져도 넓이가 유한할 수 있습니다. 꼬리가 충분히 빨리 가늘어지면 됩니다. 너무 두꺼우면 넓이는 끝없이 쌓입니다.
+
+예를 들면, 💧 물이 새는 양이 빠르게 줄어들면 영원히 새어도 전체 양은 한 바가지로 정해져요. 줄어드는 속도가 느리면 바가지는 결국 넘쳐요.`,
+        en: String.raw`Integrals over intervals that run forever or blow up. The exponent p decides convergence against divergence.
+
+An endless region can still have finite area. Its tail just has to thin out fast enough. Too thick a tail piles area up forever.
+
+For example, a 💧 water leak that slows down quickly spills only one bucketful, even leaking forever. A leak that slows too little overflows the bucket in the end.`,
       },
       tex: [
         String.raw`\int_1^{\infty}\frac{dx}{x^p} = \frac{1}{p-1}\ \ (p>1)`,
@@ -126,8 +158,16 @@ problems: improperProblems,
       title: { ko: '가브리엘의 나팔', en: "Gabriel's Horn" },
       order: 5,
       summary: {
-        ko: String.raw`\(y = 1/x\) (\(x \ge 1\))를 회전시키면 부피는 \(\pi\)로 유한하지만 겉넓이는 무한대인 나팔이 됩니다 — \(\pi\)만큼의 페인트로는 채울 수 있지만, 표면을 칠하려면 무한대가 필요합니다. 화가의 역설입니다.`,
-        en: String.raw`Rotating \(y = 1/x\) (\(x \ge 1\)) makes a horn with finite volume \(\pi\) but infinite surface area — fillable with \(\pi\) of paint, yet unpaintable. The painter's paradox.`,
+        ko: String.raw`곡선을 회전시켜 만든 나팔의 역설을 봅니다. 부피는 유한한데 겉넓이는 무한대입니다.
+
+안에 채우는 양과 겉을 칠하는 양이 다르게 행동합니다. 얇아지는 속도가 두 계산에서 갈립니다. 그래서 한쪽은 멈추고 한쪽은 계속 자랍니다.
+
+예를 들면, 🧵 줄을 말아 넣으면 작은 📦 상자에 다 들어가요. 하지만 그 줄을 전부 펴서 바닥에 깔면 끝없이 넓은 방이 필요해요.`,
+        en: String.raw`Spin a curve into a horn and meet a paradox. The volume is finite but the surface area is infinite.
+
+Filling the inside and painting the outside behave differently. The thinning rate splits the two computations. One total stops growing while the other never does.
+
+For example, a coiled 🧵 string fits inside a small 📦 box. Spread that same string flat across the floor and it would need an endless room.`,
       },
       tex: [
         String.raw`V = \pi\int_1^{\infty} \frac{dx}{x^2} = \pi`,
@@ -144,8 +184,16 @@ problems: improperProblems,
       title: { ko: '리만합 스퀴즈', en: 'Upper and Lower Sums Close In' },
       order: 6,
       summary: {
-        ko: String.raw`\(f(x) = x^2\) 아래에 직사각형을 채워봅니다. 아래합과 위합이 \(\frac{1}{3}\)을 양쪽에서 조여옵니다.`,
-        en: String.raw`Fill rectangles under \(f(x) = x^2\). The lower and upper sums squeeze \(\frac{1}{3}\) from both sides.`,
+        ko: String.raw`곡선 아래에 직사각형을 채워 넓이를 재는 씬입니다. 아래합과 위합이 진짜 넓이를 양쪽에서 조여옵니다.
+
+낮게 채운 값과 높게 채운 값 사이에 답이 있습니다. 분할을 잘게 할수록 두 값의 틈이 좁혀집니다. 틈이 사라지면 그 값이 적분입니다.
+
+예를 들면, 🍰 케이크의 곡선 모양을 네모난 조각들로 채우는 것과 같아요. 조각을 잘게 자를수록 빈틈이 줄고 모양에 딱 맞아요.`,
+        en: String.raw`Rectangles pack the region under a curve to measure its area. Lower and upper sums squeeze the true area from both sides.
+
+The answer sits between the underfilled and overfilled totals. Finer partitions narrow the gap between them. When the gap vanishes, that value is the integral.
+
+For example, fit square pieces into the curved shape of a 🍰 cake. The smaller you cut the pieces, the fewer gaps remain and the better they match.`,
       },
       tex: [String.raw`L(f,P) \le \int_a^b f \le U(f,P)`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Subdivisions n' }, min: 1, max: 48, step: 1, init: 12 }],
@@ -156,8 +204,16 @@ problems: riemannProblems,
       title: { ko: '디리클레 함수', en: 'The Dirichlet Function' },
       order: 7,
       summary: {
-        ko: String.raw`\(\mathbf{1}_{\mathbb{Q}}\)는 \([0, 1]\) 위에서 유리수면 1, 무리수면 0 — 모든 부분구간에 유리수와 무리수가 둘 다 들어 있어서 위합은 항상 1, 아래합은 항상 0입니다. 분할을 잘게 쪼개도 틈이 닫히지 않는, 리만 적분 불가능의 대표 반례입니다.`,
-        en: String.raw`\(\mathbf{1}_{\mathbb{Q}}\) is 1 on the rationals and 0 on the irrationals of \([0, 1]\) — every subinterval holds both, so the upper sum is always 1 and the lower sum always 0. The canonical non-Riemann-integrable function: no refinement closes the gap.`,
+        ko: String.raw`유리수에서만 1이고 무리수에서는 0인 함수입니다. 리만 적분이 실패하는 대표 반례입니다.
+
+어느 작은 구간에도 유리수와 무리수가 함께 들어 있습니다. 그래서 위합은 항상 1에 머뭅니다. 아래합은 항상 0에 머물러 틈이 닫히지 않습니다.
+
+예를 들면, 검은 ⚽ 공과 흰 공이 아무리 잘게 섞여 있어도, 어떤 무더기를 떠도 두 색이 다 들어 있는 것과 같아요. 그래서 높이를 하나로 정할 수 없어요.`,
+        en: String.raw`A function that is 1 on the rationals and 0 on the irrationals. It is the canonical failure of the Riemann integral.
+
+Every tiny interval holds rationals and irrationals together. So the upper sum stays pinned at 1. The lower sum stays at 0 and the gap never closes.
+
+For example, mix black and white ⚽ balls as finely as you like, and every scoop still holds both colors. No single height can be assigned.`,
       },
       tex: [
         String.raw`U(f,P) = 1,\ L(f,P) = 0\ \forall P`,
@@ -172,8 +228,16 @@ problems: riemannProblems,
       title: { ko: 'Volterra 함수', en: "Volterra's Function" },
       order: 8,
       summary: {
-        ko: String.raw`어디서나 미분가능하고 도함수가 유계인데, 그 도함수는 리만 적분 불가능 — 팻 칸토어 집합 위에 올린 \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)형 혹들의 합이 만드는 전설적인 반례입니다.`,
-        en: String.raw`Differentiable everywhere with a bounded derivative — yet the derivative is not Riemann integrable. A sum of \((x-a)^2(b-x)^2\sin\frac{1}{x-a}\)-type bumps over a fat Cantor set builds this legendary counterexample.`,
+        ko: String.raw`어디서나 미분가능하고 도함수도 유계인데, 그 도함수는 리만 적분이 안 되는 반례입니다. 팻 칸토어 집합 위에 혹들을 올립니다.
+
+함수 자체는 매끄럽게 이어집니다. 문제는 도함수가 두꺼운 집합 위에서 심하게 출렁인다는 것입니다. 리만합은 그 출렁임을 잡아내지 못합니다.
+
+예를 들면, 매끄러운 길 위를 📏 자로 기울기를 재는데, 자가 닿는 곳마다 값이 튀어 기록할 수 없는 것과 같아요. 길은 멀쩡한데 측정이 실패하는 거예요.`,
+        en: String.raw`Differentiable everywhere with a bounded derivative, yet that derivative is not Riemann integrable. Bumps rise over a fat Cantor set.
+
+The function itself joins up smoothly. The trouble is its derivative, oscillating hard on a thick set. Riemann sums cannot capture that oscillation.
+
+For example, measure the slope of a smooth road with a 📏 ruler, but the reading jumps wherever the ruler touches. The road is fine; the measurement fails.`,
       },
       tex: [
         String.raw`\varphi(x) = (x-a)^2(b-x)^2\sin\frac{1}{x-a}`,
@@ -191,8 +255,16 @@ problems: volterraFunctionProblems,
       title: { ko: '미적분 기본정리', en: "The Area Function's Derivative Is the Function" },
       order: 9,
       summary: {
-        ko: String.raw`넓이함수 \(A(x) = \int_a^x f(t)\,dt\)의 기울기를 재보면 \(f(x)\)와 일치합니다. \(x\)를 움직여보세요.`,
-        en: String.raw`Measure the slope of the area function \(A(x) = \int_a^x f(t)\,dt\) — it equals \(f(x)\). Drag \(x\).`,
+        ko: String.raw`넓이를 쌓는 함수의 기울기를 재는 씬입니다. 그 기울기가 원래 함수와 일치합니다.
+
+넓이가 쌓이는 속도는 그 지점의 높이와 같습니다. 오른쪽 끝을 조금 밀면 그만큼의 띠가 붙습니다. 띠의 넓이는 높이 곱하기 이동 거리입니다.
+
+예를 들면, 💧 물을 탱크에 채울 때 물이 차오르는 속도는 지금 나오는 물의 양과 같아요. 쌓인 양을 미분하면 나오는 양이 되는 거예요.`,
+        en: String.raw`Measure the slope of the accumulated-area function. It matches the original function exactly.
+
+Area grows at a rate equal to the height at that point. Nudge the right edge and a thin strip attaches. The strip's area is height times the nudge.
+
+For example, filling a tank with 💧 water, the level rises at the rate the water pours in. Differentiate what has accumulated and you recover what is pouring.`,
       },
       tex: [String.raw`A(x) = \int_a^x f(t)\,dt \;\Rightarrow\; A'(x) = f(x)`],
       controls: [
@@ -212,8 +284,16 @@ problems: ftcProblems,
       title: { ko: '부분적분', en: 'Integration by Parts' },
       order: 10,
       summary: {
-        ko: String.raw`곱의 미분법칙을 적분하면 \(\int u\,dv = [uv] - \int v\,du\) — 면적을 두 조각으로 나누어 각각 계산합니다. \(b\)를 움직이면 양변이 소수점 아래로 일치합니다.`,
-        en: String.raw`Integrate the product rule and get \(\int u\,dv = [uv] - \int v\,du\) — split the area into two pieces and compute each. Move \(b\): both sides agree to the last decimal.`,
+        ko: String.raw`곱의 미분법칙을 거꾸로 돌려 적분을 바꾸는 씬입니다. 면적을 두 조각으로 나누어 각각 계산합니다.
+
+어려운 적분을 경계값과 쉬운 적분으로 바꿉니다. 넓이 그림에서는 큰 직사각형을 두 조각으로 나눈 것입니다. 양쪽 계산이 소수점 끝까지 일치합니다.
+
+예를 들면, 🍰 케이크의 넓이를 잴 때 전체 네모에서 한 조각을 빼는 방식으로 바꾸면 계산이 쉬워지는 것과 같아요. 나눠서 재면 어려운 모양도 잴 수 있어요.`,
+        en: String.raw`Run the product rule backwards to trade one integral for another. The area splits into two pieces, each computed separately.
+
+A hard integral becomes a boundary term plus an easier integral. In the area picture, one big rectangle splits into two pieces. Both computations agree to the last decimal.
+
+For example, measuring a 🍰 cake's area gets easier when you swap to a full rectangle minus one piece. Split the measuring and even awkward shapes become manageable.`,
       },
       tex: [
         String.raw`\int_a^b u\,dv = [uv]_a^b - \int_a^b v\,du`,
@@ -237,8 +317,16 @@ problems: ftcProblems,
       title: { ko: '치환적분', en: 'Change of Variables' },
       order: 11,
       summary: {
-        ko: String.raw`\(u = \varphi(x)\)로 축을 늘이고 줄이면 적분 구간이 따라 바뀝니다 — \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\). 두 치환이 같은 적분으로 모이는 것을 보세요.`,
-        en: String.raw`Stretch and squeeze the axis with \(u = \varphi(x)\) and the limits follow — \(\int_a^b f(\varphi)\varphi' = \int_{\varphi(a)}^{\varphi(b)} f\). Watch two substitutions collapse onto the same integral.`,
+        ko: String.raw`축을 늘이고 줄여 적분 구간을 바꾸는 씬입니다. 서로 다른 두 치환이 같은 적분값으로 모입니다.
+
+눈금을 바꾸면 구간의 끝점도 함께 바뀝니다. 늘어난 비율만큼 넓이를 보정해야 합니다. 보정이 끝나면 어려운 적분이 쉬운 적분이 됩니다.
+
+예를 들면, 눈금이 2배로 늘어난 📏 자로 길이를 재면 잰 값도 2배가 돼요. 그래서 반으로 나눠 보정해야 진짜 길이가 나와요.`,
+        en: String.raw`Stretch and squeeze the axis to rewrite an integral. Two different substitutions land on the same value.
+
+Change the scale and the endpoints move along. Areas need correcting by the stretch factor. After the correction, a hard integral turns easy.
+
+For example, measure with a 📏 ruler whose marks are stretched twofold and every reading doubles. Halving the reading corrects it back to the true length.`,
       },
       tex: [
         String.raw`\int_a^b f(\varphi(x))\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(u)\,du`,
@@ -262,8 +350,16 @@ problems: ftcProblems,
       title: { ko: '유계변동 함수', en: 'Functions of Bounded Variation' },
       order: 12,
       summary: {
-        ko: String.raw`분할을 잘게 쪼갤 때 \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\)이 유한한 상한 안에 머무르면 유계변동 — 단조함수는 전부 해당하고, \(x\sin(1/x)\)처럼 0 근처에서 끝없이 출렁이면 탈락합니다.`,
-        en: String.raw`A function has bounded variation when \(\sum \lvert f(x_i) - f(x_{i-1})\rvert\) stays under a finite ceiling as partitions refine — every monotone function qualifies, while \(x\sin(1/x)\), wiggling endlessly near 0, does not.`,
+        ko: String.raw`함수가 출렁인 총 거리를 재는 씬입니다. 그 합이 유한한 상한 안에 머물면 유계변동입니다.
+
+출발점과 도착점만으로는 부족합니다. 중간에 오르내린 양을 전부 더해야 합니다. 단조함수는 출렁임이 한 방향뿐이라 통과합니다. 끝없이 떨리는 함수는 합이 폭발해 탈락합니다.
+
+예를 들면, 🚗 자동차가 오르락내리락 달려도 주행 거리 총합이 정해져 있으면 유계변동이에요. 한자리에서 끝없이 떨면 거리가 무한히 쌓여요.`,
+        en: String.raw`This scene measures the total distance a function wiggles. If that sum stays under a finite ceiling, the function has bounded variation.
+
+Start and finish alone are not enough. Every up and down in between must be added. Monotone functions pass since they wiggle one way only. Endless trembling makes the sum explode.
+
+For example, a 🚗 car driving up and down has bounded variation while its total mileage stays definite. Trembling in place forever would pile the distance up without end.`,
       },
       tex: [
         String.raw`V_a^b(f) = \sup_P \sum_{i=1}^{n} \lvert f(x_i) - f(x_{i-1})\rvert < \infty`,
@@ -287,8 +383,16 @@ problems: boundedVariationProblems,
       title: { ko: '리만-스틸체스 적분', en: 'The Riemann–Stieltjes Integral' },
       order: 13,
       summary: {
-        ko: String.raw`적분자를 바꾸는 법 — \(\int_a^b f\,d\alpha\)는 구간의 길이가 아니라 \(\Delta\alpha_i = \alpha(x_i) - \alpha(x_{i-1})\)로 무게를 잽니다. \(\alpha(x) = x\)이면 리만합 그 자체, 계단 \(\alpha\)면 점프 하나로 붕괴, \(\alpha(x) = x^2\)이면 \(\int f\alpha'\,dx\)가 됩니다.`,
-        en: String.raw`Changing the integrator — \(\int_a^b f\,d\alpha\) weighs intervals by \(\Delta\alpha_i = \alpha(x_i) - \alpha(x_{i-1})\) instead of length. \(\alpha(x) = x\) recovers Riemann sums, a step \(\alpha\) collapses to a single jump, \(\alpha(x) = x^2\) gives \(\int f\alpha'\,dx\).`,
+        ko: String.raw`구간의 길이가 아니라 적분자의 증가분으로 무게를 재는 적분입니다. 적분자를 바꾸면 같은 구간도 다르게 셉니다.
+
+구간마다 무게가 다를 수 있습니다. 계단형 적분자는 한 점에 무게를 몰아넣습니다. 그 경우 적분은 그 점의 값 하나로 정해집니다.
+
+예를 들면, 📦 상자마다 무게가 다른 짐을 합칠 때 개수가 아니라 무게로 합치는 것과 같아요. 한 상자에 무게가 몰리면 전체 합은 그 상자가 정해요.`,
+        en: String.raw`An integral that weighs intervals by the integrator's growth, not their length. Change the integrator and the same intervals count differently.
+
+Each interval can carry a different weight. A step integrator dumps all its weight on one point. Then the integral is decided by that point alone.
+
+For example, total cargo by weight, not by count, when each 📦 box weighs differently. If one box holds all the weight, it alone decides the total.`,
       },
       tex: [
         String.raw`U(f,P,\alpha) = \sum M_i\,\Delta\alpha_i`,
@@ -306,8 +410,16 @@ problems: boundedVariationProblems,
       title: { ko: '조르당 분해', en: 'Jordan Decomposition' },
       order: 14,
       summary: {
-        ko: String.raw`유계변동 함수는 두 단조증가 함수의 차입니다 — \(f = g - h\), 여기서 \(g(x) = V_0^x(f)\)는 변동함수. \(x^2\sin\frac{1}{x}\) 위에서 점을 움직이며 분해가 점마다 성립하는 것을 확인하세요.`,
-        en: String.raw`Every BV function is a difference of two increasing functions — \(f = g - h\) with \(g(x) = V_0^x(f)\) the variation function. Drag the probe point over \(x^2\sin\frac{1}{x}\) and watch the identity hold pointwise.`,
+        ko: String.raw`유계변동 함수를 두 증가함수의 차이로 나누는 씬입니다. 점을 움직이며 분해가 지점마다 성립하는 것을 확인합니다.
+
+오른 양과 내린 양을 따로 기록합니다. 지금까지 오른 총합에서 내린 총합을 빼면 현재 높이가 됩니다. 변동함수가 오른 총합의 기록입니다.
+
+예를 들면, 🐷 저금통에 넣은 💰 돈의 총합에서 꺼낸 돈의 총합을 빼면 지금 남은 돈이 되는 것과 같아요. 넣기와 빼기를 따로 세는 거예요.`,
+        en: String.raw`Every bounded-variation function splits into a difference of two increasing functions. Drag the probe and watch the identity hold pointwise.
+
+Record the total rise and the total fall separately. Subtract falls from rises to get the current height. The variation function is the running record of rises.
+
+For example, money now in a 🐷 piggy bank is the total 💰 money put in minus the total taken out. Rises and falls are counted on separate tallies.`,
       },
       tex: [
         String.raw`f = g - h, \quad g(x) = V_a^x(f), \; h = g - f`,
@@ -324,8 +436,16 @@ problems: boundedVariationProblems,
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
       order: 15,
       summary: {
-        ko: String.raw`외측도는 집합을 덮는 가산 구간 덮개 중 가장 싼 값입니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다. 가측집합과 가산 가법성은 Carathéodory 구성 너머의 이야기입니다 (아이디어 수준).`,
-        en: String.raw`Outer measure is the cheapest countable interval cover of a set. A single point — and even all the rationals — cost nothing. Measurable sets and countable additivity need the Carathéodory construction (idea level only).`,
+        ko: String.raw`집합의 크기를 재는 가장 싼 덮개 값을 봅니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다.
+
+길이를 재는 규칙을 점이나 유리수 같은 집합까지 넓힙니다. 덮개들의 총 길이가 가장 작은 값을 찾습니다. 그 값이 집합의 크기 후보가 됩니다.
+
+예를 들면, 🧵 줄 조각으로 어떤 집합을 덮을 때, 줄의 총 길이가 가장 짧은 덮개가 그 집합의 크기예요. 점 하나는 줄이 거의 없어도 덮여요.`,
+        en: String.raw`The cheapest interval cover prices a set's size. A single point, and even all the rationals, cost nothing.
+
+Length measurement extends to sets like points and rationals. Among all covers, take the smallest total length. That smallest total is the set's size.
+
+For example, cover a set with pieces of 🧵 string; the shortest total string length is the set's size. A single point needs almost no string, so its size is zero.`,
       },
       tex: [String.raw`m^*(A) = \inf \sum \ell(I_n)`, String.raw`m^*(\mathbb{Q}\cap[0,1]) = 0`],
       prerequisites: ['riemann'],
@@ -341,8 +461,16 @@ problems: boundedVariationProblems,
       title: { ko: '비탈리 집합', en: 'The Vitali Set' },
       order: 16,
       summary: {
-        ko: String.raw`선택공리로 \(\mathbb{R}/\mathbb{Q}\)의 각 동치류에서 대표원 하나씩을 뽑으면 — 측도를 잴 수 없는 집합이 탄생합니다. 가산개의 서로소 평행이동이 \([0,1]\)을 덮으면서 \([-1,2]\) 안에 들어가는데, 측도가 0이면 합이 0, 양수면 무한대 — 둘 다 모순입니다.`,
-        en: String.raw`Using the axiom of choice to pick one representative from each class of \(\mathbb{R}/\mathbb{Q}\) births a non-measurable set. Countably many disjoint translates cover \([0,1]\) inside \([-1,2]\) — yet measure 0 gives total 0 and positive measure gives infinity. Both impossible.`,
+        ko: String.raw`선택공리로 각 무리에서 대표 하나씩을 뽑아 만든 집합입니다. 그 결과, 크기를 잴 수 없는 집합이 탄생합니다.
+
+이 집합을 유리수만큼 밀어낸 복사본들이 구간을 덮습니다. 크기가 0이면 복사본의 합도 0이어야 합니다. 양수이면 합이 무한대가 됩니다. 둘 다 모순이라 크기를 정할 수 없습니다.
+
+예를 들면, 📦 상자 하나를 복사해 늘어놓으면 방을 채우는데, 상자 크기가 0이면 합도 0이어야 하고 조금이라도 있으면 합이 끝없이 커지는 것과 같아요. 그래서 크기를 정할 수 없어요.`,
+        en: String.raw`Pick one representative from each equivalence class using the axiom of choice. The result is a set whose size cannot be measured.
+
+Shifted copies of this set cover a whole interval. If its size were zero, the copies would total zero. If positive, the copies would total infinity. Both contradict, so no size exists.
+
+For example, copies of one 📦 box can fill a room, yet if the box's size were zero the total should be zero, and if it were anything more the total would explode. So the size cannot be assigned.`,
       },
       tex: [
         String.raw`[0,1] \subseteq \bigsqcup_{q \in \mathbb{Q}\cap[-1,1]} (V + q) \subseteq [-1,2]`,
@@ -359,8 +487,16 @@ problems: boundedVariationProblems,
       title: { ko: '보렐-칸텔리 보조정리', en: 'Borel–Cantelli Lemmas' },
       order: 17,
       summary: {
-        ko: String.raw`길이의 총합이 유한하면 무한히 자주 일어나는 점은 측도 0입니다 — \(\sum m(E_n) < \infty \Rightarrow m(\limsup E_n) = 0\). 독립이면 역도 성립합니다.`,
-        en: String.raw`If the total length is finite, the points hit infinitely often form a null set — \(\sum m(E_n) < \infty \Rightarrow m(\limsup E_n) = 0\). With independence the converse holds.`,
+        ko: String.raw`길이의 총합이 유한하면, 무한히 자주 일어나는 일은 거의 일어나지 않습니다. 그 경계를 수치로 확인하는 씬입니다.
+
+사건들이 겹치는 지점들을 모아 봅니다. 총 길이가 유한하면 겹침은 점점 희귀해집니다. 독립인 사건에서는 거꾸로도 성립합니다.
+
+예를 들면, 💧 물방울이 점점 작아지는 비가 내려도, 방울 전체 양이 정해져 있으면 한 지점이 끝없이 맞는 일은 거의 없는 것과 같아요.`,
+        en: String.raw`If total length is finite, points hit infinitely often form a null set. This scene checks that boundary numerically.
+
+Collect the points where the events keep overlapping. Finite total length makes the overlaps rarer and rarer. With independence, the converse also holds.
+
+For example, in rain whose 💧 water drops keep shrinking, a finite total volume means one spot is almost never hit endlessly.`,
       },
       tex: [
         String.raw`m(\limsup_{n\to\infty} E_n) = 0 \quad \left(\sum_{n=1}^{\infty} m(E_n) < \infty\right)`,
@@ -378,8 +514,16 @@ problems: boundedVariationProblems,
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
       order: 18,
       summary: {
-        ko: String.raw`유리수를 \(\varepsilon/2^k\) 덮개로 하나씩 덮으면 총길이가 \(\varepsilon\) 아래로 떨어집니다. 리만은 꼼짝 못 합니다.`,
-        en: String.raw`Cover the rationals one by one with \(\varepsilon/2^k\) covers — the total length drops below \(\varepsilon\). Riemann can't move.`,
+        ko: String.raw`유리수를 하나씩 덮개로 덮으면 총 길이가 얼마든지 작아집니다. 리만 적분이 꼼짝 못하는 장면입니다.
+
+유리수는 셀 수 있게 많습니다. 그래서 번호를 매겨 점점 작은 덮개를 씌울 수 있습니다. 덮개 크기의 합은 원하는 만큼 작아집니다.
+
+예를 들면, 바닥에 흩어진 🍬 사탕을 하나씩 점점 작은 컵으로 덮으면, 컵 크기의 합을 얼마든지 작게 만들 수 있는 것과 같아요.`,
+        en: String.raw`Cover the rationals one by one and the total length drops below any bound. The Riemann integral cannot move here.
+
+The rationals are countably many. So they can be numbered and given shrinking covers. The covers' total can be made as small as you wish.
+
+For example, cover 🍬 candies scattered on the floor, one by one, with smaller and smaller cups, and the cups' total size shrinks as low as you like.`,
       },
       tex: [String.raw`m(\mathbb{Q}\cap[0,1]) = 0`],
       controls: [
@@ -393,8 +537,16 @@ problems: lebesgueProblems,
       title: { ko: '르벡 수렴 정리', en: 'Lebesgue Convergence Theorems' },
       order: 19,
       summary: {
-        ko: String.raw`단조수렴·파투·지배수렴 — 극한과 적분의 순서를 바꾸는 세 기둥입니다. 질량이 도망가는(escape·spike) 예에서 가설이 왜 필요한지 눈으로 확인하세요.`,
-        en: String.raw`Monotone convergence, Fatou, dominated convergence — the three pillars for swapping limits and integrals. Watch mass escape (escape·spike) to see why each hypothesis is needed.`,
+        ko: String.raw`극한과 적분의 순서를 바꾸는 세 가지 정리를 봅니다. 질량이 도망가는 예에서 각 조건이 왜 필요한지 확인합니다.
+
+순서를 바꾸려면 질량이 새지 않아야 합니다. 위로 받쳐주는 함수가 있으면 안전합니다. 조건이 없으면 넓이가 극한에서 사라질 수 있습니다.
+
+예를 들면, 💧 물을 컵에서 컵으로 옮길 때 새는 물이 없으면 전체 양이 그대로예요. 한 방울이 옆으로 튀면 옮긴 뒤의 양은 줄어들어요.`,
+        en: String.raw`Three theorems license swapping limits and integrals. Examples with escaping mass show why each hypothesis is needed.
+
+Swapping the order requires that no mass leaks away. A dominating function overhead keeps things safe. Without conditions, area can vanish in the limit.
+
+For example, pour 💧 water from cup to cup with no spill and the total stays the same. One drop escaping sideways shrinks the total that arrives.`,
       },
       tex: [
         String.raw`f_n \uparrow f \Rightarrow \int f_n \uparrow \int f`,
@@ -413,8 +565,16 @@ problems: lebesgueProblems,
       title: { ko: '푸비니-토넬리 정리', en: 'Fubini–Tonelli Theorem' },
       order: 20,
       summary: {
-        ko: String.raw`음이 아닌 함수(Tonelli)나 적분 가능한 함수(Fubini)는 적분 순서를 바꿔도 같습니다 — 행부터 더하나 열부터 더하나 같은 수. 적분 가능성 없이는 깨집니다.`,
-        en: String.raw`Nonnegative (Tonelli) or integrable (Fubini) functions give the same iterated integrals in either order — rows-first or columns-first. Without integrability it breaks.`,
+        ko: String.raw`이중적분에서 적분 순서를 바꿔도 같은 값이 나옵니다. 행부터 더하나 열부터 더하나 같습니다.
+
+음이 아닌 함수에서는 항상 안전합니다. 적분 가능한 함수에서도 안전합니다. 적분 가능성이 없으면 두 순서가 갈라질 수 있습니다.
+
+예를 들면, 📦 상자에 격자로 담긴 🍎 사과를 셀 때 가로줄로 세나 세로줄로 세나 개수는 똑같은 것과 같아요.`,
+        en: String.raw`Iterated integrals agree in either order. Sum the rows first or the columns first, the total is the same.
+
+For nonnegative functions this is always safe. For integrable functions it is safe too. Without integrability, the two orders can split apart.
+
+For example, count 🍎 apples packed in a grid inside a 📦 box: counting by rows or by columns gives the same total.`,
       },
       tex: [
         String.raw`\iint f = \int\!\!\left(\int f\,dx\right)\!dy = \int\!\!\left(\int f\,dy\right)\!dx`,
@@ -431,8 +591,16 @@ problems: lebesgueProblems,
       title: { ko: '에고로프 정리', en: "Egorov's Theorem" },
       order: 21,
       summary: {
-        ko: String.raw`유한 측도에서 a.e. 수렴은 "거의" 균등수렴입니다 — 나쁜 집합의 측도를 \(\varepsilon\) 아래로 누르면 나머지에선 균등하게 수렴합니다.`,
-        en: String.raw`On finite measure, a.e. convergence is "almost" uniform — squeeze the bad set's measure below \(\varepsilon\) and convergence is uniform on the rest.`,
+        ko: String.raw`유한한 구간에서 점별 수렴은 거의 균등수렴입니다. 나쁜 집합을 작게 누르면 나머지는 고르게 수렴합니다.
+
+수렴이 느린 지점은 작은 집합에 몰려 있습니다. 그 집합을 떼어내면 나머지는 한 속도로 수렴합니다. 전체 구간이 유한해야 이 정리가 성립합니다.
+
+예를 들면, 🧑 친구 30명이 결승선에 거의 다 왔는데 한두 명이 느려도, 그 친구들을 빼면 나머지는 비슷한 속도로 들어오는 것과 같아요.`,
+        en: String.raw`On a finite-measure set, pointwise convergence is almost uniform. Squeeze the bad set small and the rest converges uniformly.
+
+The slow points hide inside one small set. Remove that set and the rest converges at one pace. The whole space must have finite measure.
+
+For example, of 30 🧑 friends racing to a finish line, one or two may lag; set them aside and the rest arrive at nearly the same pace.`,
       },
       tex: [
         String.raw`m(E \setminus F) < \varepsilon \Rightarrow f_n \to f \text{ uniformly on } F`,
@@ -449,8 +617,16 @@ problems: lebesgueProblems,
       title: { ko: '절대연속성', en: 'Absolute Continuity' },
       order: 22,
       summary: {
-        ko: String.raw`\(F(x) = x^2\)는 절대연속 — 구간들의 총 길이가 0으로 가면 \(\sum |\Delta F|\)도 0으로 갑니다. 칸토어 함수는 균등연속이지만 절대연속이 아닙니다: 총 길이 \(\left(\frac23\right)^n \to 0\)인데 \(\sum |\Delta c| = 1\)에 고정됩니다. 절대연속인 함수는 정확히 Lebesgue 적분 가능한 함수의 부정적분입니다.`,
-        en: String.raw`\(F(x) = x^2\) is absolutely continuous — when the intervals' total length goes to 0, so does \(\sum |\Delta F|\). The Cantor function is uniformly continuous but not absolutely continuous: total length \(\left(\frac23\right)^n \to 0\) while \(\sum |\Delta c| = 1\) stays frozen. Absolutely continuous functions are exactly the indefinite integrals of Lebesgue-integrable functions.`,
+        ko: String.raw`구간들의 총 길이가 0으로 가면 함수값 변화의 합도 0으로 가는 성질입니다. 칸토어 함수는 이 성질이 없는 연속함수입니다.
+
+작은 입력 변화가 큰 출력을 만들 수 없어야 합니다. 이런 함수는 정확히 적분으로 만들어지는 함수입니다. 칸토어 함수는 평평한데도 0에서 1로 올라가 규칙을 깹니다.
+
+예를 들면, 수도꼭지를 조금만 열면 💧 물도 조금만 나오는 것과 같아요. 칸토어 함수는 꼭지를 거의 안 열었는데 물이 한 바가지 나오는 이상한 수도예요.`,
+        en: String.raw`Shrink the total length of intervals to zero and the total change shrinks too. The Cantor function is a continuous function failing this.
+
+Tiny input changes must not create large outputs. Such functions are exactly the ones built as integrals. The Cantor function stays flat yet climbs from 0 to 1, breaking the rule.
+
+For example, open a tap a little and only a little 💧 water comes out. The Cantor function is a strange tap that pours a bucketful while barely opened.`,
       },
       tex: [
         String.raw`F \text{ absolutely continuous } \iff \forall \varepsilon > 0\, \exists \delta > 0: \sum (b_i - a_i) < \delta \Rightarrow \sum |F(b_i) - F(a_i)| < \varepsilon`,
@@ -468,8 +644,16 @@ problems: absoluteContinuityProblems,
       title: { ko: '적분기호 아래에서의 미분', en: 'Differentiation Under the Integral Sign' },
       order: 23,
       summary: {
-        ko: String.raw`\(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\) — 곡선 위의 점과 접선을 움직이며, 적분기호 안에서 미분한 \(\int_0^1 t^x \ln t\,dt\)가 접선의 기울기 \(-\frac{1}{(x+1)^2}\)와 일치함을 수치로 확인합니다.`,
-        en: String.raw`\(F(x) = \int_0^1 t^x\,dt = \frac{1}{x+1}\) — drag along the curve and its tangent while the numerics confirm that differentiating inside the integral, \(\int_0^1 t^x \ln t\,dt\), gives the tangent slope \(-\frac{1}{(x+1)^2}\).`,
+        ko: String.raw`적분기호 안에서 미분한 값이 곡선의 접선 기울기와 일치하는지 수치로 확인합니다. 곡선 위의 점과 접선을 직접 움직여 봅니다.
+
+전체를 미분하나 안에서 미분하나 결과는 같습니다. 각 지점의 변화가 전체의 변화로 쌓이기 때문입니다. 지배 조건이 이 교환을 안전하게 만듭니다.
+
+예를 들면, 🌡️ 온도계로 방의 평균 온도가 오르는 속도를 잴 때, 각 지점이 데워지는 속도를 평균 내도 같은 답이 나오는 것과 같아요.`,
+        en: String.raw`Numerics confirm that differentiating inside the integral matches the tangent slope. Drag the point and its tangent along the curve.
+
+Differentiating the whole or the inside gives the same answer. Each point's change accumulates into the total change. A domination condition makes the swap safe.
+
+For example, measure how fast a room's average 🌡️ thermometer reading rises: averaging how fast each spot warms up gives the same answer.`,
       },
       tex: [
         String.raw`\frac{d}{dx}\int_0^1 t^x\,dt = \int_0^1 t^x \ln t\,dt = -\frac{1}{(x+1)^2}`,
@@ -486,8 +670,16 @@ problems: absoluteContinuityProblems,
       title: { ko: '민코프스키 부등식', en: "Minkowski's Inequality" },
       order: 24,
       summary: {
-        ko: String.raw`\(L^p\) 삼각부등식 — \([0,1]\) 위에서 \(\|f+g\|_p \le \|f\|_p + \|g\|_p\). \(f(t) = t^a\), \(g(t) = (1-t)^b\)로 두고 \(p\)를 움직이면 두 막대 사이 틈새가 벌어졌다 좁아집니다. \(p = 1\)에서는 적분의 선형성 때문에 틈새가 0으로 닫힙니다.`,
-        en: String.raw`The \(L^p\) triangle inequality — \(\|f+g\|_p \le \|f\|_p + \|g\|_p\) on \([0,1]\). With \(f(t) = t^a\), \(g(t) = (1-t)^b\), sliding \(p\) opens and closes the gap between the two bars. At \(p = 1\) linearity of the integral closes the gap to 0.`,
+        ko: String.raw`두 함수의 합의 크기가 각 크기의 합을 넘지 않는다는 부등식입니다. 지수 p를 움직이면 두 막대 사이 틈새가 벌어졌다 좁아집니다.
+
+이것은 삼각부등식을 함수로 옮긴 것입니다. 곧장 가는 길이 두 구간을 이어 가는 길보다 길 수 없습니다. p가 1이면 틈새가 완전히 닫힙니다.
+
+예를 들면, 🚗 자동차가 두 번 꺾어 달린 거리는 한 번에 직선으로 잰 거리보다 짧을 수 없어요. 합친 움직임의 크기는 각 움직임 크기의 합을 넘지 않아요.`,
+        en: String.raw`The size of a sum of two functions never exceeds the sum of their sizes. Slide the exponent p and the gap between the bars opens and closes.
+
+This is the triangle inequality moved to functions. A straight route is never longer than two joined legs. At exponent 1 the gap closes completely.
+
+For example, a 🚗 car that drives two legs in an L shape travels at least the straight-line distance, never more than the two legs added together.`,
       },
       tex: [
         String.raw`\|f+g\|_p \le \|f\|_p + \|g\|_p \quad (1 \le p < \infty)`,
