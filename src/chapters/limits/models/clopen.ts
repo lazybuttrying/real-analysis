@@ -16,7 +16,7 @@ export interface Interval {
   readonly hiOpen: boolean;
 }
 
-export interface ClopenCase {
+interface ClopenCase {
   readonly id: string;
   readonly ambient: readonly Interval[];
   readonly setA: readonly Interval[];
@@ -103,12 +103,10 @@ export const CLOPEN_CASE_INIT = 'clopen-pieces';
 
 export const CLOPEN_X_MIN = -0.6;
 export const CLOPEN_X_MAX = 3.6;
-export const CLOPEN_X_STEP = 0.01;
 export const CLOPEN_X_INIT = 0.5;
 
 export const CLOPEN_EPS_MIN = 0.01;
 export const CLOPEN_EPS_MAX = 2;
-export const CLOPEN_EPS_STEP = 0.01;
 export const CLOPEN_EPS_INIT = 0.2;
 
 export function intervalContains(iv: Interval, t: number): boolean {
@@ -247,7 +245,7 @@ function clampEps(eps: number): number {
   return Math.max(CLOPEN_EPS_MIN, Math.min(CLOPEN_EPS_MAX, eps));
 }
 
-export function clopenData(caseId: string, x: number, eps: number): ClopenData {
+function clopenData(caseId: string, x: number, eps: number): ClopenData {
   const fallback = CLOPEN_CASES.find((k) => k.id === CLOPEN_CASE_INIT)!;
   const c = CLOPEN_CASES.find((k) => k.id === caseId) ?? fallback;
   const xx = clampX(x, c);

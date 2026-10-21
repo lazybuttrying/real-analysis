@@ -48,7 +48,7 @@ export const MIN_N = 2;
 export const MAX_N = 8;
 export const DEFAULT_N = 6;
 /** Grid points on [0,1] for the discrete least-squares fit and sup errors. */
-export const GRID_POINTS = 2001;
+const GRID_POINTS = 2001;
 
 /** The target function: f(x) = sqrt(x). */
 export function targetFn(x: number): number {

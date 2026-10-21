@@ -88,7 +88,7 @@ export interface ZornLemmaData {
 }
 
 /** Pure: no DOM, no d3. */
-export function zornLemmaData(selected: number): ZornLemmaData {
+function zornLemmaData(selected: number): ZornLemmaData {
   const clamped = Math.round(Math.min(CHAIN_MAX, Math.max(CHAIN_MIN, selected)));
   const selectedChain = CHAINS[clamped] ?? CHAINS[CHAIN_INIT] ?? [];
   return {

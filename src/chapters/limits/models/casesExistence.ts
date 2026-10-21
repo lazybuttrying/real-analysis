@@ -13,7 +13,7 @@ import { clampNumber } from '../../../math/clamp';
  */
 
 export const CASES_EXISTENCE_PART_OPTIONS = ['cases', 'existence'] as const;
-export type CasesExistencePart = (typeof CASES_EXISTENCE_PART_OPTIONS)[number];
+type CasesExistencePart = (typeof CASES_EXISTENCE_PART_OPTIONS)[number];
 
 export const CASES_X_MIN = -5;
 export const CASES_X_MAX = 5;
@@ -21,7 +21,6 @@ export const CASES_X_INIT = -2;
 export const CASES_Y_MIN = -5;
 export const CASES_Y_MAX = 5;
 export const CASES_Y_INIT = 3;
-export const CASES_STEP = 0.5;
 
 /** The four sign cases, plus 'zero' when x == 0 or y == 0. */
 export type SignCaseId = 'pos-pos' | 'pos-neg' | 'neg-pos' | 'neg-neg' | 'zero';

@@ -7,8 +7,8 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const GRID_POINTS = 400;
-export const MAX_N = 60;
+const GRID_POINTS = 400;
+const MAX_N = 60;
 
 export interface UniformSample {
   x: number;

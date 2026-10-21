@@ -13,12 +13,10 @@ import type { SceneModel } from '../../../contracts';
 
 export const PEANO_ORDER_MIN = 1;
 export const PEANO_ORDER_MAX = 4;
-export const PEANO_ORDER_STEP = 1;
 export const PEANO_ORDER_INIT = 2;
 
 export const PEANO_T_MIN = 0;
 export const PEANO_T_MAX = 1;
-export const PEANO_T_STEP = 0.001;
 export const PEANO_T_INIT = 0.5;
 
 export const PEANO_SHOW_GRID_INIT = true;
@@ -145,7 +143,7 @@ export interface PeanoData {
   readonly maxStep: number;
 }
 
-export function peanoCurveData(order: number, t: number, showGrid: boolean): PeanoData {
+function peanoCurveData(order: number, t: number, showGrid: boolean): PeanoData {
   const k = clampOrder(order);
   const tt = clampT(t);
   return {

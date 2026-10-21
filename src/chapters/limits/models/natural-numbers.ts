@@ -11,7 +11,7 @@ const MAX_DOMINOES = 10;
 const MIN_DOMINOES = 1;
 const DEFAULT_DOMINOES = 6;
 
-export interface Domino {
+interface Domino {
   k: number;
   label: string;
 }

@@ -10,7 +10,6 @@ import type { SceneModel } from '../../../contracts';
 
 export const TS_XMIN_MIN = 0.005;
 export const TS_XMIN_MAX = 1;
-export const TS_XMIN_STEP = 0.005;
 export const TS_XMIN_INIT = 0.05;
 
 export const TS_XMAX = 2;
@@ -46,7 +45,7 @@ function clampToggle(v: unknown, init: boolean): boolean {
   return typeof v === 'boolean' ? v : init;
 }
 
-export function topologistSineData(
+function topologistSineData(
   xMin: number,
   showSegment: boolean,
   showSeq: boolean,

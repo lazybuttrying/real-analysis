@@ -18,9 +18,9 @@ export const CONTRAPOSITIVE_N_INIT = 7;
 
 export type Parity = 'even' | 'odd';
 
-export type ContrapositiveView = 'statement' | 'contrapositive';
+type ContrapositiveView = 'statement' | 'contrapositive';
 
-export interface ParityRow {
+interface ParityRow {
   n: number;
   n2: number;
   parityN: Parity;

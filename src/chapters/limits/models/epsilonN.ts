@@ -6,7 +6,7 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation. Does not import the DOM, d3, or three.
  */
 
-export const MAX_K = 80;
+const MAX_K = 80;
 
 type SequenceKey = 'inv' | 'alt' | 'frac' | 'sq';
 

@@ -17,7 +17,7 @@ import type { SceneModel } from '../../../contracts';
  *   (x, y) with denominator <= denom.
  */
 
-export const PRESET_IDS = ['a', 'b', 'c'] as const;
+const PRESET_IDS = ['a', 'b', 'c'] as const;
 export type DensityPresetId = (typeof PRESET_IDS)[number];
 export const PRESET_INIT: DensityPresetId = 'a';
 
@@ -31,7 +31,7 @@ export const DENOM_MIN = 1;
 export const DENOM_MAX = 200;
 export const DENOM_INIT = 24;
 
-export interface ConstructedRational {
+interface ConstructedRational {
   /**
    * The n from the Archimedean step: floor(1/(y-x)) + 1, stepped up if
    * needed so that x < m/n < y holds strictly in floating point.
@@ -66,7 +66,7 @@ export function constructRational(x: number, y: number): ConstructedRational {
   return { n, m, value, verified: x < value && value < y };
 }
 
-export interface RationalTick {
+interface RationalTick {
   p: number;
   q: number;
   value: number;

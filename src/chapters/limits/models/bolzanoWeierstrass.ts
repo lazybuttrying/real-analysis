@@ -7,11 +7,11 @@ import type { SceneModel } from '../../../contracts';
  * convergent subsequence. Pure computation: no DOM, d3, or three.
  */
 
-export const MAX_STEPS = 8;
+const MAX_STEPS = 8;
 const POINT_COUNT = 400;
 
 /** Deterministic PRNG so the same seed always draws the same sequence. */
-export function mulberry32(seed: number): () => number {
+function mulberry32(seed: number): () => number {
   let state = seed >>> 0;
   return () => {
     state |= 0;

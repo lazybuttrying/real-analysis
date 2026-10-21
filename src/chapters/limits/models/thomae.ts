@@ -37,7 +37,7 @@ export function gcd(a: number, b: number): number {
   return x;
 }
 
-export interface ThomaeDot {
+interface ThomaeDot {
   /** x = p/q in lowest terms. */
   x: number;
   /** Denominator in lowest terms. */

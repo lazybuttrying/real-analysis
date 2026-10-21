@@ -9,7 +9,7 @@ import type { SceneModel } from '../../../contracts';
  * Exact fractions are tracked with BigInt. Pure computation: no DOM, d3, or three.
  */
 
-export const MAX_TERMS = 6;
+const MAX_TERMS = 6;
 
 interface ConstructionTerm {
   n: number;

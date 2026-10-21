@@ -28,31 +28,31 @@ import { clampNumber } from '../../../math/clamp';
  */
 
 const FN_OPTIONS = ['square', 'jump'] as const;
-export type ContFn = (typeof FN_OPTIONS)[number];
+type ContFn = (typeof FN_OPTIONS)[number];
 
 const VIEW_OPTIONS = ['epsdelta', 'sequential', 'preimage'] as const;
 export type ContView = (typeof VIEW_OPTIONS)[number];
 
-export const X0 = 0;
+const X0 = 0;
 export const EPS_MIN = 0.05;
 export const EPS_MAX = 1;
 export const EPS_INIT = 0.3;
 /** Curve samples per branch. */
-export const CURVE_SAMPLES = 160;
+const CURVE_SAMPLES = 160;
 /** Plot half-width: the x-range is [-XRANGE, XRANGE]. */
 export const XRANGE = 1.2;
 /** Sequential view: x_n = X0 + (-1)^n / n for n = 1..SEQ_TERMS. */
 export const SEQ_TERMS = 40;
 /** Tolerance deciding whether f(x_n) has reached f(x0). */
-export const SEQ_TOL = 0.05;
+const SEQ_TOL = 0.05;
 /** Delta grid for the sampled maximal working delta. */
-export const DELTA_MAX = 1;
-export const DELTA_STEP = 0.01;
+const DELTA_MAX = 1;
+const DELTA_STEP = 0.01;
 /** Preimage x-samples on [-XRANGE, XRANGE]. */
-export const PREIMAGE_SAMPLES = 480;
+const PREIMAGE_SAMPLES = 480;
 /** Radius grid for the sampled preimage neighborhood. */
-export const PREIMAGE_R_MAX = 0.5;
-export const PREIMAGE_R_STEP = 0.05;
+const PREIMAGE_R_MAX = 0.5;
+const PREIMAGE_R_STEP = 0.05;
 
 export function contFnOf(raw: unknown): ContFn {
   return raw === 'jump' ? 'jump' : 'square';
@@ -69,13 +69,13 @@ export function evaluateContFn(fn: ContFn, x: number): number {
   return x < X0 ? x * x : x * x + 1;
 }
 
-export interface SeqTerm {
+interface SeqTerm {
   n: number;
   xn: number;
   fxn: number;
 }
 
-export interface Interval {
+interface Interval {
   lo: number;
   hi: number;
 }
@@ -197,7 +197,7 @@ export function preimageData(
   return { intervals, radius };
 }
 
-export function continuityEquivalencesData(
+function continuityEquivalencesData(
   fn: ContFn,
   view: ContView,
   eps: number,

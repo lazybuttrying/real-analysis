@@ -21,15 +21,9 @@ import { clampNumber } from '../../../math/clamp';
 
 export type QuantifierStatement = 'forall-exists' | 'exists-forall' | 'eps-delta';
 
-export const QUANTIFIER_OPTIONS: readonly QuantifierStatement[] = [
-  'forall-exists',
-  'exists-forall',
-  'eps-delta',
-];
 export const QUANTIFIER_STATEMENT_INIT: QuantifierStatement = 'forall-exists';
 export const QUANTIFIERS_X_MIN = -5;
 export const QUANTIFIERS_X_MAX = 5;
-export const QUANTIFIERS_X_STEP = 0.5;
 export const QUANTIFIERS_X_INIT = 2;
 export const QUANTIFIERS_NEGATED_INIT = false;
 

@@ -9,9 +9,9 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export const MIN_TERMS = 2;
-export const MAX_TERMS = 60;
-export const DEFAULT_TERMS = 24;
+const MIN_TERMS = 2;
+const MAX_TERMS = 60;
+const DEFAULT_TERMS = 24;
 
 /** The sequence value a_n = (-1)^n (1 + 1/n) for n >= 1. */
 export function term(n: number): number {

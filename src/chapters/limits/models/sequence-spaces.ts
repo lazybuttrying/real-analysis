@@ -19,7 +19,7 @@ const VIEW_KINDS = ['balls', 'sequence'] as const;
 type ViewKind = (typeof VIEW_KINDS)[number];
 
 const P_KINDS = ['1', '2', 'inf'] as const;
-export type PKind = (typeof P_KINDS)[number];
+type PKind = (typeof P_KINDS)[number];
 
 /** Number of terms used for the partial-sum norm readouts. */
 export const TERMS = 200;

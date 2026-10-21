@@ -21,7 +21,7 @@ export const DENOM_MIN = 1;
 export const DENOM_MAX = 12;
 export const DENOM_INIT = 6;
 
-export interface Sqrt2RationalPoint {
+interface Sqrt2RationalPoint {
   /** Numerator, in lowest terms (for display). */
   p: number;
   /** Denominator, in lowest terms, 1 <= q <= N (for display). */

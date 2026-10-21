@@ -22,7 +22,7 @@ import { clampNumber } from '../../../math/clamp';
  */
 
 const KIND_OPTIONS = ['power', 'root'] as const;
-export type LimitKind = (typeof KIND_OPTIONS)[number];
+type LimitKind = (typeof KIND_OPTIONS)[number];
 
 export const X_MIN = -2;
 export const X_MAX = 2;
@@ -41,9 +41,9 @@ export function limitKindOf(raw: unknown): LimitKind {
 }
 
 /** The asymptotic regime of the plotted sequence. */
-export type Regime = 'converges-zero' | 'converges-one' | 'oscillates' | 'unbounded';
+type Regime = 'converges-zero' | 'converges-one' | 'oscillates' | 'unbounded';
 
-export interface StandardLimitPoint {
+interface StandardLimitPoint {
   k: number;
   value: number;
 }

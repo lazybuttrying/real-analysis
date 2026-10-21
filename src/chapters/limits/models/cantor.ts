@@ -6,7 +6,7 @@ import type { SceneModel } from '../../../contracts';
  * surviving points are uncountable. Pure computation: no DOM, d3, or three.
  */
 
-export const MAX_STAGE = 8;
+const MAX_STAGE = 8;
 
 interface CantorInterval {
   l: number;

@@ -16,7 +16,6 @@ import type { SceneModel } from '../../../contracts';
 
 export type Connective = 'and' | 'or' | 'implies' | 'iff';
 
-export const CONNECTIVE_OPTIONS: readonly Connective[] = ['and', 'or', 'implies', 'iff'];
 export const CONNECTIVE_INIT: Connective = 'implies';
 export const CONTRAPOSITIVE_INIT = true;
 

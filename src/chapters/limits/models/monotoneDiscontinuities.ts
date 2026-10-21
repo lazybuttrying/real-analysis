@@ -30,7 +30,7 @@ export const MAX_N = 32;
 export const DEFAULT_N = 4;
 
 /** Number of grid points used to render the staircase of f. */
-export const SAMPLE_COUNT = 801;
+const SAMPLE_COUNT = 801;
 
 /** One discontinuity of the example function. */
 interface RationalJump {

@@ -25,7 +25,7 @@ export const CONTRACTION_Q = 0.5;
 const MIN_ITERATES = 0;
 const MAX_ITERATES = 12;
 const DEFAULT_ITERATES = 5;
-export const DEFAULT_X0 = 1;
+const DEFAULT_X0 = 1;
 
 const MAP_KEYS = ['affine', 'half'] as const;
 type ContractionMap = (typeof MAP_KEYS)[number];
@@ -43,7 +43,7 @@ export function applyMap(map: ContractionMap, x: number): number {
  * Limit of the Picard iterates in the ambient space: 2 for the affine map,
  * 0 for the half map. For 'half' this point is not in (0, 1].
  */
-export function ambientLimit(map: ContractionMap): number {
+function ambientLimit(map: ContractionMap): number {
   return map === 'affine' ? 2 : 0;
 }
 

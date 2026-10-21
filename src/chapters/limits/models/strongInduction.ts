@@ -71,7 +71,7 @@ export function treeLeaves(node: FactorNode): number[] {
 }
 
 /** Number of nodes in a factor tree. */
-export function treeNodeCount(node: FactorNode): number {
+function treeNodeCount(node: FactorNode): number {
   return 1 + node.children.reduce((sum, c) => sum + treeNodeCount(c), 0);
 }
 

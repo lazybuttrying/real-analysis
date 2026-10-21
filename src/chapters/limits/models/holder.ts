@@ -51,7 +51,7 @@ function clampN(n: number): number {
   return Math.max(HOLDER_N_MIN, Math.min(HOLDER_N_MAX, Math.round(n)));
 }
 
-export function holderData(p: number, n: number): HolderData {
+function holderData(p: number, n: number): HolderData {
   const pp = clampP(p);
   const nn = clampN(n);
   const q = conjugateExponent(pp);
