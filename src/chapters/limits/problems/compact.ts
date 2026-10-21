@@ -101,7 +101,7 @@ export const problems: readonly ProblemMeta[] = [
       en: String.raw`Prove that if \(K\) is compact and \(f\) is continuous on \(K\), then the image \(f(K)\) is compact.`,
     },
     display: [
-      String.raw`y_n = f(x_n), \quad x_{n_k} \to x \in K \Rightarrow f(x_{n_k}) \to f(x) \in f(K)`,
+      String.raw`f^{-1}(V_i) \text{ open in } K,\quad K \subseteq \bigcup_{j=1}^{n} f^{-1}(V_{i_j}) \ \Longrightarrow\ f(K) \subseteq \bigcup_{j=1}^{n} V_{i_j}`,
       String.raw`K = [0,1] \text{ compact} \Rightarrow f(K) \text{ compact } \Rightarrow \max f, \min f \text{ exist (EVT)}`,
     ],
     preset: { set: 'closed', step: 6 },
@@ -112,26 +112,26 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(y_n \in f(K)\)를 임의의 수열이라 하자. 각 \(y_n = f(x_n)\)인 \(x_n \in K\)를 택한다.`,
-          en: String.raw`Let \(y_n \in f(K)\) be any sequence, and pick \(x_n \in K\) with \(y_n = f(x_n)\) for each \(n\).`,
+          ko: String.raw`열린 덮개 정의를 씁니다 — 이 논증은 \(K\)가 거리공간이라는 가정이 필요 없어 일반적인 컴팩트 \(K\)에서 성립합니다. \(\{V_i\}_{i \in I}\)를 \(f(K)\)의 임의의 열린 덮개라 하자.`,
+          en: String.raw`Use the open-cover definition — this argument needs no assumption that \(K\) is metric, so it works for a general compact \(K\). Let \(\{V_i\}_{i \in I}\) be an arbitrary open cover of \(f(K)\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(K\)가 컴팩트이므로 \((x_n)\)은 \(x \in K\)로 수렴하는 부분수열 \((x_{n_k})\)를 갖는다 (순차 컴팩트).`,
-          en: String.raw`Since \(K\) is compact, \((x_n)\) has a subsequence \((x_{n_k})\) converging to some \(x \in K\) (sequential compactness).`,
+          ko: String.raw`각 \(i\)에 대해 \(U_i = f^{-1}(V_i)\)는 \(f\)의 연속성에 의해 \(K\)에서 열려 있습니다. 또 \(x \in K\)이면 \(f(x) \in f(K)\)이므로 \(f(x) \in V_i\)인 \(i\)가 있어 \(x \in U_i\)입니다 — 즉 \(\{U_i\}\)는 \(K\)의 열린 덮개입니다.`,
+          en: String.raw`For each \(i\), \(U_i = f^{-1}(V_i)\) is open in \(K\) by continuity of \(f\). And if \(x \in K\) then \(f(x) \in f(K)\), so \(f(x) \in V_i\) for some \(i\), i.e. \(x \in U_i\) — hence \(\{U_i\}\) is an open cover of \(K\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(f\)는 \(x\)에서 연속이므로 \(f(x_{n_k}) \to f(x)\)이다. 즉 부분수열 \(y_{n_k} = f(x_{n_k})\)는 \(f(x) \in f(K)\)로 수렴한다.`,
-          en: String.raw`Continuity of \(f\) at \(x\) gives \(f(x_{n_k}) \to f(x)\). So the subsequence \(y_{n_k} = f(x_{n_k})\) converges to \(f(x) \in f(K)\).`,
+          ko: String.raw`\(K\)가 컴팩트이므로 유한 부분덮개가 있습니다: \(K \subseteq U_{i_1} \cup \cdots \cup U_{i_n}\). 그러면 대응하는 \(V_{i_1}, \dots, V_{i_n}\)이 \(f(K)\)를 덮습니다 — \(y = f(x) \in f(K)\)이면 \(x \in U_{i_j}\)인 \(j\)가 있어 \(y = f(x) \in V_{i_j}\)이기 때문입니다.`,
+          en: String.raw`Since \(K\) is compact, there is a finite subcover: \(K \subseteq U_{i_1} \cup \cdots \cup U_{i_n}\). Then the corresponding \(V_{i_1}, \dots, V_{i_n}\) cover \(f(K)\): if \(y = f(x) \in f(K)\), then \(x \in U_{i_j}\) for some \(j\), so \(y = f(x) \in V_{i_j}\).`,
         },
       },
       {
         text: {
-          ko: String.raw`따라서 \(f(K)\) 안의 모든 수열은 \(f(K)\) 안의 점으로 수렴하는 부분수열을 갖는다: \(f(K)\)는 순차 컴팩트이며, 따라서 컴팩트이다. 이것이 최댓값 정리(evt 씬)의 엔진이다 — \([0,1]\) 위의 연속함수 \(f\)에 대해 \(f([0,1])\)이 컴팩트이므로 \(\mathbb{R}\)에서 닫혀 있고 유계이며, 상한·하한을 실제로 취한다.`,
-          en: String.raw`Every sequence in \(f(K)\) therefore has a subsequence converging to a point of \(f(K)\): \(f(K)\) is sequentially compact, hence compact. This is the engine of the Extreme Value Theorem (the evt scene) — for continuous \(f\) on \([0,1]\), the set \(f([0,1])\) is compact, hence closed and bounded in \(\mathbb{R}\), so its supremum and infimum are actually attained.`,
+          ko: String.raw`따라서 \(f(K)\)의 모든 열린 덮개는 유한 부분덮개를 가지므로 \(f(K)\)는 컴팩트입니다. 이것이 최댓값 정리(evt 씬)의 엔진이다 — \([0,1]\) 위의 연속함수 \(f\)에 대해 \(f([0,1])\)이 컴팩트이므로 \(\mathbb{R}\)에서 닫혀 있고 유계이며, 상한·하한을 실제로 취한다.`,
+          en: String.raw`Hence every open cover of \(f(K)\) has a finite subcover, so \(f(K)\) is compact. This is the engine of the Extreme Value Theorem (the evt scene) — for continuous \(f\) on \([0,1]\), the set \(f([0,1])\) is compact, hence closed and bounded in \(\mathbb{R}\), so its supremum and infimum are actually attained.`,
         },
       },
     ],

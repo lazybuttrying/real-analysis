@@ -91,11 +91,11 @@ Finally use the negation of an implication: \(\lnot(P \to Q) \equiv P \land \lno
   {
     id: 'quantifiers-unbounded-one-over-x',
     statement: {
-      ko: String.raw`"\(f\)는 \([0,1]\)에서 유계" — 즉 \(\exists M\ \forall x \in [0,1]\ |f(x)| \le M\) — 를 부정하여 \(\forall M\ \exists x\ |f(x)| > M\)을 얻은 뒤, 그 형태를 이용해 \(f(x) = 1/x\)가 \((0,1]\)에서 유계가 아님을 증명하세요.`,
-      en: String.raw`Negate "\(f\) is bounded on \([0,1]\)" — i.e. \(\exists M\ \forall x \in [0,1]\ |f(x)| \le M\) — to obtain \(\forall M\ \exists x\ |f(x)| > M\), then use that form to prove \(f(x) = 1/x\) is unbounded on \((0,1]\).`,
+      ko: String.raw`"\(f\)는 \((0,1]\)에서 유계" — 즉 \(\exists M\ \forall x \in (0,1]\ |f(x)| \le M\) — 를 부정하여 \(\forall M\ \exists x \in (0,1]\ |f(x)| > M\)을 얻은 뒤, 그 형태를 이용해 \(f(x) = 1/x\)가 \((0,1]\)에서 유계가 아님을 증명하세요.`,
+      en: String.raw`Negate "\(f\) is bounded on \((0,1]\)" — i.e. \(\exists M\ \forall x \in (0,1]\ |f(x)| \le M\) — to obtain \(\forall M\ \exists x \in (0,1]\ |f(x)| > M\), then use that form to prove \(f(x) = 1/x\) is unbounded on \((0,1]\).`,
     },
     display: [
-      String.raw`\lnot\big(\exists M\ \forall x \in [0,1]\ (|f(x)| \le M)\big)\ \equiv\ \forall M\ \exists x \in [0,1]\ (|f(x)| > M)`,
+      String.raw`\lnot\big(\exists M\ \forall x \in (0,1]\ (|f(x)| \le M)\big)\ \equiv\ \forall M\ \exists x \in (0,1]\ (|f(x)| > M)`,
       String.raw`x = \frac{1}{|M|+2} \in (0,1],\qquad f(x) = |M|+2 > M`,
     ],
     preset: { statement: 'exists-forall', x: 2, negated: true },
@@ -106,10 +106,10 @@ Finally use the negation of an implication: \(\lnot(P \to Q) \equiv P \land \lno
     proof: [
       {
         text: {
-          ko: String.raw`유계의 정의를 부정합니다: \(\lnot\big(\exists M\ \forall x \in [0,1]\ (|f(x)| \le M)\big)\).
-부정을 안으로 밀면 \(\forall M\ \lnot\big(\forall x \in [0,1]\ (|f(x)| \le M)\big)\)가 되고, 다시 밀면 \(\forall M\ \exists x \in [0,1]\ \lnot(|f(x)| \le M)\), 즉 \(\forall M\ \exists x \in [0,1]\ (|f(x)| > M)\)입니다. 말로 풀면: "어떤 경계 \(M\)을 제시해도, 그것을 초과하는 점 \(x\)가 존재한다" — 이것이 무계의 정의입니다.`,
-          en: String.raw`Negate the definition of boundedness: \(\lnot\big(\exists M\ \forall x \in [0,1]\ (|f(x)| \le M)\big)\).
-Pushing the negation inward gives \(\forall M\ \lnot\big(\forall x \in [0,1]\ (|f(x)| \le M)\big)\), then \(\forall M\ \exists x \in [0,1]\ \lnot(|f(x)| \le M)\), i.e. \(\forall M\ \exists x \in [0,1]\ (|f(x)| > M)\). In words: "whatever bound \(M\) is proposed, there is a point \(x\) exceeding it" — that is the definition of unboundedness.`,
+          ko: String.raw`유계의 정의를 부정합니다: \(\lnot\big(\exists M\ \forall x \in (0,1]\ (|f(x)| \le M)\big)\).
+부정을 안으로 밀면 \(\forall M\ \lnot\big(\forall x \in (0,1]\ (|f(x)| \le M)\big)\)가 되고, 다시 밀면 \(\forall M\ \exists x \in (0,1]\ \lnot(|f(x)| \le M)\), 즉 \(\forall M\ \exists x \in (0,1]\ (|f(x)| > M)\)입니다. 말로 풀면: "어떤 경계 \(M\)을 제시해도, 그것을 초과하는 점 \(x\)가 존재한다" — 이것이 무계의 정의입니다.`,
+          en: String.raw`Negate the definition of boundedness: \(\lnot\big(\exists M\ \forall x \in (0,1]\ (|f(x)| \le M)\big)\).
+Pushing the negation inward gives \(\forall M\ \lnot\big(\forall x \in (0,1]\ (|f(x)| \le M)\big)\), then \(\forall M\ \exists x \in (0,1]\ \lnot(|f(x)| \le M)\), i.e. \(\forall M\ \exists x \in (0,1]\ (|f(x)| > M)\). In words: "whatever bound \(M\) is proposed, there is a point \(x\) exceeding it" — that is the definition of unboundedness.`,
         },
       },
       {
@@ -120,8 +120,8 @@ Pushing the negation inward gives \(\forall M\ \lnot\big(\forall x \in [0,1]\ (|
       },
       {
         text: {
-          ko: String.raw`\(M\)은 임의였으므로, 모든 \(M\)에 대해 \(|f(x)| > M\)인 \(x \in (0,1]\)가 존재합니다 — 곧 \(\forall M\ \exists x\ (|f(x)| > M)\)이 성립하므로 \(f\)는 \((0,1]\)에서 유계가 아닙니다. 핵심은 양화사 순서입니다: \(M\)이 먼저 주어지면(∀M) 그에 맞는 \(x\)를 나중에(∃x) 골라도 되기 때문에, \(M\)에 의존하는 선택 \(x = 1/(|M|+2)\)가 허용됩니다.`,
-          en: String.raw`Since \(M\) was arbitrary, for every \(M\) there is an \(x \in (0,1]\) with \(|f(x)| > M\) — i.e. \(\forall M\ \exists x\ (|f(x)| > M)\) holds, so \(f\) is unbounded on \((0,1]\). The key is the quantifier order: because \(M\) is given first (\(\forall M\)), the witness \(x\) may be chosen afterwards (\(\exists x\)), which is why the \(M\)-dependent choice \(x = 1/(|M|+2)\) is legitimate.`,
+          ko: String.raw`\(M\)은 임의였으므로, 모든 \(M\)에 대해 \(|f(x)| > M\)인 \(x \in (0,1]\)가 존재합니다 — 곧 \(\forall M\ \exists x \in (0,1]\ (|f(x)| > M)\)이 성립하므로 \(f\)는 \((0,1]\)에서 유계가 아닙니다. 핵심은 양화사 순서입니다: \(M\)이 먼저 주어지면(∀M) 그에 맞는 \(x\)를 나중에(∃x) 골라도 되기 때문에, \(M\)에 의존하는 선택 \(x = 1/(|M|+2)\)가 허용됩니다.`,
+          en: String.raw`Since \(M\) was arbitrary, for every \(M\) there is an \(x \in (0,1]\) with \(|f(x)| > M\) — i.e. \(\forall M\ \exists x \in (0,1]\ (|f(x)| > M)\) holds, so \(f\) is unbounded on \((0,1]\). The key is the quantifier order: because \(M\) is given first (\(\forall M\)), the witness \(x\) may be chosen afterwards (\(\exists x\)), which is why the \(M\)-dependent choice \(x = 1/(|M|+2)\) is legitimate.`,
         },
       },
     ],

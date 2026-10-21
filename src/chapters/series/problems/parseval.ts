@@ -46,8 +46,8 @@ export const parsevalProblems: readonly ProblemMeta[] = [
   {
     id: 'parseval-bessel',
     statement: {
-      ko: String.raw`삼각 함수계의 직교성을 이용해 \(\|f - S_N\|_2^2 \ge 0\)을 전개함으로써 베셀 부등식 \(\frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2) \le \frac{1}{\pi}\int_{-\pi}^{\pi} f^2\)를 완전히 증명하세요 (파스발의 유한 핵심).`,
-      en: String.raw`Using the orthogonality of the trigonometric system, expand \(\|f - S_N\|_2^2 \ge 0\) to prove completely Bessel's inequality \(\frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2) \le \frac{1}{\pi}\int_{-\pi}^{\pi} f^2\) (the finite core of Parseval).`,
+      ko: String.raw`\([-\pi, \pi]\)에서 Riemann integrable한 \(f\)에 대해, 삼각 함수계의 직교성을 이용해 \(\|f - S_N\|_2^2 \ge 0\)을 전개함으로써 베셀 부등식 \(\frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2) \le \frac{1}{\pi}\int_{-\pi}^{\pi} f^2\)를 완전히 증명하세요 (파스발의 유한 핵심).`,
+      en: String.raw`For \(f\) Riemann integrable on \([-\pi, \pi]\), using the orthogonality of the trigonometric system, expand \(\|f - S_N\|_2^2 \ge 0\) to prove completely Bessel's inequality \(\frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2) \le \frac{1}{\pi}\int_{-\pi}^{\pi} f^2\) (the finite core of Parseval).`,
     },
     display: [
       String.raw`0 \le \|f - S_N\|_2^2 = \|f\|_2^2 - \left(\frac{a_0^2}{2} + \sum_{n=1}^{N}(a_n^2 + b_n^2)\right)`,
@@ -60,8 +60,8 @@ export const parsevalProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`내적을 \(\langle g, h\rangle = \frac{1}{\pi}\int_{-\pi}^{\pi} g(x)h(x)\,dx\)로 두면 삼각 함수계 \(\{1/\sqrt{2}, \cos(nx), \sin(nx)\}\)는 정규직교계입니다. 푸리에 부분합을 \(S_N = \frac{a_0}{2} + \sum_{n=1}^{N}(a_n\cos(nx) + b_n\sin(nx))\)라 쓰면, \(\|f - S_N\|_2^2 = \langle f - S_N, f - S_N\rangle = \|f\|_2^2 - 2\langle f, S_N\rangle + \|S_N\|_2^2\)입니다 — 항상 0 이상입니다.`,
-          en: String.raw`With the inner product \(\langle g, h\rangle = \frac{1}{\pi}\int_{-\pi}^{\pi} g(x)h(x)\,dx\), the trigonometric system \(\{1/\sqrt{2}, \cos(nx), \sin(nx)\}\) is orthonormal. Writing the Fourier partial sum as \(S_N = \frac{a_0}{2} + \sum_{n=1}^{N}(a_n\cos(nx) + b_n\sin(nx))\), we get \(\|f - S_N\|_2^2 = \langle f - S_N, f - S_N\rangle = \|f\|_2^2 - 2\langle f, S_N\rangle + \|S_N\|_2^2\) — always nonnegative.`,
+          ko: String.raw`가설을 명시합니다: \(f\)는 \([-\pi, \pi]\)에서 Riemann integrable하다고 가정합니다. 그러면 \(f^2\)도 integrable하고, 푸리에 계수 \(a_n, b_n\)과 \(\int_{-\pi}^{\pi} f^2\)가 모두 잘 정의됩니다. 내적을 \(\langle g, h\rangle = \frac{1}{\pi}\int_{-\pi}^{\pi} g(x)h(x)\,dx\)로 두면 삼각 함수계 \(\{1/\sqrt{2}, \cos(nx), \sin(nx)\}\)는 정규직교계입니다. 푸리에 부분합을 \(S_N = \frac{a_0}{2} + \sum_{n=1}^{N}(a_n\cos(nx) + b_n\sin(nx))\)라 쓰면, \(\|f - S_N\|_2^2 = \langle f - S_N, f - S_N\rangle = \|f\|_2^2 - 2\langle f, S_N\rangle + \|S_N\|_2^2\)입니다 — 항상 0 이상입니다.`,
+          en: String.raw`State the hypotheses: assume \(f\) is Riemann integrable on \([-\pi, \pi]\). Then \(f^2\) is integrable as well, and the Fourier coefficients \(a_n, b_n\) and \(\int_{-\pi}^{\pi} f^2\) are all well-defined. With the inner product \(\langle g, h\rangle = \frac{1}{\pi}\int_{-\pi}^{\pi} g(x)h(x)\,dx\), the trigonometric system \(\{1/\sqrt{2}, \cos(nx), \sin(nx)\}\) is orthonormal. Writing the Fourier partial sum as \(S_N = \frac{a_0}{2} + \sum_{n=1}^{N}(a_n\cos(nx) + b_n\sin(nx))\), we get \(\|f - S_N\|_2^2 = \langle f - S_N, f - S_N\rangle = \|f\|_2^2 - 2\langle f, S_N\rangle + \|S_N\|_2^2\) — always nonnegative.`,
         },
       },
       {
@@ -107,8 +107,8 @@ export const parsevalProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`다리 (아이디어 수준): 파스발 항등식 자체가 성립하려면 삼각 함수계가 "완비"해야 합니다 — 유한 삼각다항식으로 \(f\)를 \(L^2\)에서 원하는 만큼 가깝게 근사할 수 있다는 뜻입니다. 이 조밀성은 연속 함수의 바이어슈트라스 근사 정리 + 연속 함수가 \(L^2\)에서 조밀하다는 것으로 보이며, 그 증명은 여기서 생략합니다. 일단 다리가 놓이면 위의 함의가 \(L^2\) 수렴을 완성합니다.`,
-          en: String.raw`The bridge (idea level): Parseval's identity itself needs the trigonometric system to be "complete" — finite trigonometric polynomials must approximate \(f\) in \(L^2\) to any accuracy. That density follows from the Weierstrass approximation theorem for continuous functions plus density of continuous functions in \(L^2\); the proof is omitted here. Once the bridge stands, the implication above completes the \(L^2\) convergence.`,
+          ko: String.raw`다리 (아이디어 수준): 파스발 항등식 자체가 성립하려면 삼각 함수계가 "완비"해야 합니다 — 유한 삼각다항식으로 \(f\)를 \(L^2\)에서 원하는 만큼 가깝게 근사할 수 있다는 뜻입니다. 주의: 모든 trigonometric polynomial은 \(T(-\pi) = T(\pi)\)를 만족하므로, 연속함수 \(f\)의 uniform approximation에는 가설 \(f(-\pi) = f(\pi)\)가 필요합니다 (이 경우 Stone-Weierstrass theorem for trigonometric polynomials를 적용합니다). 일반적인 \(f\)에 대해서는 endpoint가 \(L^2\)에서 measure zero이므로 이 조건이 \(L^2\) 근사를 막지 않습니다: 먼저 \(f\)를 \(L^2\)에서 연속함수로 근사하고, endpoint 값을 맞춰 조정한 뒤 위 근사를 적용합니다. 그 증명은 여기서 생략합니다. 일단 다리가 놓이면 위의 함의가 \(L^2\) 수렴을 완성합니다.`,
+          en: String.raw`The bridge (idea level): Parseval's identity itself needs the trigonometric system to be "complete" — finite trigonometric polynomials must approximate \(f\) in \(L^2\) to any accuracy. Caution: every trigonometric polynomial satisfies \(T(-\pi) = T(\pi)\), so uniform approximation of a continuous \(f\) needs the hypothesis \(f(-\pi) = f(\pi)\) (in that case the Stone-Weierstrass theorem for trigonometric polynomials applies). For a general \(f\) the endpoints are measure zero in \(L^2\), so this condition does not block \(L^2\) approximation: first approximate \(f\) in \(L^2\) by continuous functions, adjust the endpoint values to match, then apply the approximation above. The proof is omitted here. Once the bridge stands, the implication above completes the \(L^2\) convergence.`,
         },
       },
     ],

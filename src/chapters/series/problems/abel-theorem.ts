@@ -131,8 +131,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`직접 확인도 됩니다: \(|t| < 1\)에서 \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\)를 \(0\)부터 \(x\)까지 적분하면 \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\)이며 \(|R_N(x)| \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\)). 따라서 멱급수의 합은 정확히 \(\ln(1+x)\)입니다.`,
-          en: String.raw`A direct check agrees: integrating \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\) (for \(|t| < 1\)) from \(0\) to \(x\) gives \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\) with \(|R_N(x)| \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\)). So the power series sums to exactly \(\ln(1+x)\).`,
+          ko: String.raw`직접 확인도 됩니다: \(0 \le x < 1\)로 제한합니다. 이 범위에서는 적분 구간 \([0, x]\) 위의 \(t\)가 \(0 \le t \le x < 1\)을 만족하고 \(1 + t \ge 1\)입니다. \(|t| < 1\)에서 \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\)를 \(0\)부터 \(x\)까지 적분하면 \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\)이며 \(|R_N(x)| \le \int_0^x \frac{t^{N+1}}{1+t}\,dt \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\))입니다(\(1 + t \ge 1\) 사용). 따라서 \(0 \le x < 1\)에서 멱급수의 합은 정확히 \(\ln(1+x)\)입니다. \(x = 1\)인 경우는 이 적분 단계가 아니라 Abel 정리의 연속성으로 따릅니다.`,
+          en: String.raw`A direct check agrees: restrict to \(0 \le x < 1\). Then \(t\) on the integration interval \([0, x]\) satisfies \(0 \le t \le x < 1\) and \(1 + t \ge 1\). Integrating \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\) (for \(|t| < 1\)) from \(0\) to \(x\) gives \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\) with \(|R_N(x)| \le \int_0^x \frac{t^{N+1}}{1+t}\,dt \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\)), using \(1 + t \ge 1\). So for \(0 \le x < 1\) the power series sums to exactly \(\ln(1+x)\). The case \(x = 1\) then follows by Abel's theorem (continuity), not by this integration step.`,
         },
       },
       {

@@ -64,8 +64,8 @@ export const zornLemmaProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(C \subseteq P\)를 임의의 사슬이라 하자. \(P\)는 원소가 6개뿐이므로 \(C\)도 유한하고, 유한 사슬은 최대원소 \(\max C\)를 가집니다 (유한집합의 전순서 부분집합). \(c \in C\)인 모든 \(c\)에 대해 \(c \mid \max C\)이므로, \(\max C \in P\)는 \(C\)의 상한입니다. 즉 모든 사슬이 \(P\) 안에 상한을 가집니다.`,
-          en: String.raw`Let \(C \subseteq P\) be any chain. Since \(P\) has only 6 elements, \(C\) is finite, and a finite chain has a greatest element \(\max C\) (a finite totally ordered subset). Every \(c \in C\) satisfies \(c \mid \max C\), so \(\max C \in P\) is an upper bound of \(C\). Every chain has an upper bound in \(P\).`,
+          ko: String.raw`\(C \subseteq P\)를 임의의 사슬이라 하자. 빈 사슬 경우: \(C = \varnothing\)이면 \(\max C\)가 존재하지 않지만, \(P\)의 임의의 원소 (예: \(1\))가 공허하게(vacuously) \(C\)의 상한이 됩니다 — 나눌 원소가 없기 때문입니다. 이하 \(C \ne \varnothing\)라 둡니다. \(P\)는 원소가 6개뿐이므로 \(C\)도 유한하고, 비어 있지 않은 유한 사슬은 최대원소 \(\max C\)를 가집니다 (유한집합의 전순서 부분집합). \(c \in C\)인 모든 \(c\)에 대해 \(c \mid \max C\)이므로, \(\max C \in P\)는 \(C\)의 상한입니다. 즉 모든 사슬 (빈 사슬 포함)이 \(P\) 안에 상한을 가집니다.`,
+          en: String.raw`Let \(C \subseteq P\) be any chain. Empty-chain case: if \(C = \varnothing\), \(\max C\) does not exist, but any element of \(P\) (e.g. \(1\)) is vacuously an upper bound of \(C\) — there is no element to divide. Assume henceforth \(C \ne \varnothing\). Since \(P\) has only 6 elements, \(C\) is finite, and a nonempty finite chain has a greatest element \(\max C\) (a finite totally ordered subset). Every \(c \in C\) satisfies \(c \mid \max C\), so \(\max C \in P\) is an upper bound of \(C\). Every chain (including the empty one) has an upper bound in \(P\).`,
         },
       },
       {
