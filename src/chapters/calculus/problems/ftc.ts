@@ -74,8 +74,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(F(u) = \int_0^u \sin t\,dt\)라 두면 기본정리 제1형태에 의해 \(F'(u) = \sin u\)입니다.`,
-                en: String.raw`Put \(F(u) = \int_0^u \sin t\,dt\); then \(F'(u) = \sin u\) by the first form.`,
+                ko: String.raw`\(F(u) = \int_0^u \sin t\,dt\)라 두면, 피적분함수 \(\sin\)이 연속이므로 기본정리 제1형태의 연속성 가정이 성립하고, 이에 의해 \(F'(u) = \sin u\)입니다.`,
+                en: String.raw`Put \(F(u) = \int_0^u \sin t\,dt\); the integrand \(\sin\) is continuous, so the continuity hypothesis of the first form of the Fundamental Theorem holds, and it gives \(F'(u) = \sin u\).`,
               },
             },
             {

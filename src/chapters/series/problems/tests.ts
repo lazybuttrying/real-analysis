@@ -20,8 +20,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`비율 판정법: \(a_k > 0\)이고 \(r_k = \frac{a_{k+1}}{a_k} \to L < 1\)이면 \(\sum a_k\)는 수렴합니다. 실제로 \(L < \rho < 1\)인 \(\rho\)를 잡으면 충분히 큰 \(k\)에서 \(r_k \le \rho\)이므로, \(a_{k+1} \le \rho a_k\)가 반복되어 꼬리가 수렴하는 기하급수 \(\sum \rho^k\) 아래에 깔립니다.`,
-                en: String.raw`Ratio test: if \(a_k > 0\) and \(r_k = \frac{a_{k+1}}{a_k} \to L < 1\), then \(\sum a_k\) converges. Indeed, picking \(\rho\) with \(L < \rho < 1\), eventually \(r_k \le \rho\), so \(a_{k+1} \le \rho a_k\) iterates and the tail sits under the convergent geometric series \(\sum \rho^k\).`,
+                ko: String.raw`비율 판정법: \(a_k > 0\)이고 \(r_k = \frac{a_{k+1}}{a_k} \to L < 1\)이면 \(\sum a_k\)는 수렴합니다. 실제로 \(L < \rho < 1\)인 \(\rho\)를 잡으면 어떤 \(K\)가 있어 \(k \ge K\)에서 \(r_k \le \rho\)이므로 \(a_{k+1} \le \rho a_k\)입니다. 귀납법으로 \(a_{K+j} \le \rho^j a_K\) (\(j \ge 0\))를 얻으므로, 꼬리는 \(a_{K+j} \le a_K\rho^{-K}\rho^{K+j}\)로서 수렴하는 기하급수 \(\sum \rho^k\)의 상수배 아래에 깔립니다.`,
+                en: String.raw`Ratio test: if \(a_k > 0\) and \(r_k = \frac{a_{k+1}}{a_k} \to L < 1\), then \(\sum a_k\) converges. Indeed, picking \(\rho\) with \(L < \rho < 1\), there is \(K\) with \(r_k \le \rho\) for \(k \ge K\), so \(a_{k+1} \le \rho a_k\). Induction gives \(a_{K+j} \le \rho^j a_K\) for \(j \ge 0\), hence \(a_{K+j} \le a_K\rho^{-K}\rho^{K+j}\): the tail sits under a constant multiple of the convergent geometric series \(\sum \rho^k\).`,
               },
             },
             {

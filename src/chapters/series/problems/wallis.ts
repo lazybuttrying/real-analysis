@@ -8,8 +8,8 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'reduction',
           statement: {
-            ko: String.raw`\(I_n = \int_0^{\pi/2}\sin^n x\,dx\)가 점화식 \(I_n = \frac{n-1}{n}I_{n-2}\)를 만족함을 부분적분으로 증명하세요.`,
-            en: String.raw`Prove \(I_n = \int_0^{\pi/2}\sin^n x\,dx\) satisfies \(I_n = \frac{n-1}{n}I_{n-2}\) by integration by parts.`,
+            ko: String.raw`\(n \ge 2\)일 때 \(I_n = \int_0^{\pi/2}\sin^n x\,dx\)가 점화식 \(I_n = \frac{n-1}{n}I_{n-2}\)를 만족함을 부분적분으로 증명하세요.`,
+            en: String.raw`For \(n \ge 2\), prove \(I_n = \int_0^{\pi/2}\sin^n x\,dx\) satisfies \(I_n = \frac{n-1}{n}I_{n-2}\) by integration by parts.`,
           },
           display: [String.raw`I_n = \frac{n-1}{n}I_{n-2}, \qquad I_0=\frac{\pi}{2},\ I_1=1`],
           preset: { n: 12 },
@@ -20,8 +20,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(I_n = \int_0^{\pi/2}\sin^{n-1}x\cdot\sin x\,dx\)에서 \(u = \sin^{n-1}x\), \(dv = \sin x\,dx\)로 부분적분하면, \(I_n = \left[-\cos x\sin^{n-1}x\right]_0^{\pi/2} + (n-1)\int_0^{\pi/2}\cos^2x\sin^{n-2}x\,dx\)입니다.`,
-                en: String.raw`Write \(I_n = \int_0^{\pi/2}\sin^{n-1}x\cdot\sin x\,dx\) and integrate by parts with \(u = \sin^{n-1}x\), \(dv = \sin x\,dx\): \(I_n = \left[-\cos x\sin^{n-1}x\right]_0^{\pi/2} + (n-1)\int_0^{\pi/2}\cos^2x\sin^{n-2}x\,dx\).`,
+                ko: String.raw`\(n \ge 2\)라고 둡니다 — 그래야 \(\sin^{n-2}x\)와 \(I_{n-2}\)가 정의되고 아래 경계항 논증이 성립합니다. \(I_n = \int_0^{\pi/2}\sin^{n-1}x\cdot\sin x\,dx\)에서 \(u = \sin^{n-1}x\), \(dv = \sin x\,dx\)로 부분적분하면, \(I_n = \left[-\cos x\sin^{n-1}x\right]_0^{\pi/2} + (n-1)\int_0^{\pi/2}\cos^2x\sin^{n-2}x\,dx\)입니다.`,
+                en: String.raw`Assume \(n \ge 2\) — this is what makes \(\sin^{n-2}x\) and \(I_{n-2}\) defined and the boundary-term argument below valid. Write \(I_n = \int_0^{\pi/2}\sin^{n-1}x\cdot\sin x\,dx\) and integrate by parts with \(u = \sin^{n-1}x\), \(dv = \sin x\,dx\): \(I_n = \left[-\cos x\sin^{n-1}x\right]_0^{\pi/2} + (n-1)\int_0^{\pi/2}\cos^2x\sin^{n-2}x\,dx\).`,
               },
             },
             {
@@ -41,8 +41,8 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'to-wallis',
           statement: {
-            ko: String.raw`\(0 \le x \le \frac{\pi}{2}\)에서 \(\sin^{2n+1}x \le \sin^{2n}x \le \sin^{2n-1}x\)임을 이용해 \(\frac{I_{2n}}{I_{2n+1}} \to 1\)을 보이고, 월리스 곱을 유도하세요.`,
-            en: String.raw`From \(\sin^{2n+1}x \le \sin^{2n}x \le \sin^{2n-1}x\) on \([0,\frac{\pi}{2}]\), show \(\frac{I_{2n}}{I_{2n+1}} \to 1\) and derive the Wallis product.`,
+            ko: String.raw`\(n \ge 1\)일 때, \(0 \le x \le \frac{\pi}{2}\)에서 \(\sin^{2n+1}x \le \sin^{2n}x \le \sin^{2n-1}x\)임을 이용해 \(\frac{I_{2n}}{I_{2n+1}} \to 1\)을 보이고, 월리스 곱을 유도하세요.`,
+            en: String.raw`For \(n \ge 1\), from \(\sin^{2n+1}x \le \sin^{2n}x \le \sin^{2n-1}x\) on \([0,\frac{\pi}{2}]\), show \(\frac{I_{2n}}{I_{2n+1}} \to 1\) and derive the Wallis product.`,
           },
           display: [String.raw`\frac{I_{2n}}{I_{2n+1}} = \frac{\pi}{2}\prod_{k=1}^{n}\frac{(2k-1)(2k+1)}{(2k)^2} = \frac{\pi/2}{W_n} \to 1`],
           preset: { n: 12 },
@@ -53,8 +53,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`적분하면 \(I_{2n+1} \le I_{2n} \le I_{2n-1}\)이므로, \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\)입니다. 조임 정리로 \(\frac{I_{2n}}{I_{2n+1}} \to 1\)입니다.`,
-                en: String.raw`Integrating gives \(I_{2n+1} \le I_{2n} \le I_{2n-1}\), so \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\). By the squeeze theorem, \(\frac{I_{2n}}{I_{2n+1}} \to 1\).`,
+                ko: String.raw`\(n \ge 1\)이라 둡니다(\(n = 0\)이면 \(I_{-1}\)이 필요해 성립하지 않습니다). 적분하면 \(I_{2n+1} \le I_{2n} \le I_{2n-1}\)이므로, \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\)입니다. 조임 정리로 \(\frac{I_{2n}}{I_{2n+1}} \to 1\)입니다.`,
+                en: String.raw`Take \(n \ge 1\) (\(n = 0\) would require \(I_{-1}\)). Integrating gives \(I_{2n+1} \le I_{2n} \le I_{2n-1}\), so \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\). By the squeeze theorem, \(\frac{I_{2n}}{I_{2n+1}} \to 1\).`,
               },
             },
             {
@@ -92,14 +92,14 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\frac{\pi}{2} \approx 1.57080\)이므로 오차는 약 \(0.0697\)입니다.`,
-                en: String.raw`Since \(\frac{\pi}{2} \approx 1.57080\), the error is about \(0.0697\).`,
+                ko: String.raw`\(\frac{\pi}{2} \approx 1.57080\)이므로 절대 오차는 약 \(0.0697\)이고, 상대 오차는 \(\frac{0.0697}{1.57080} \approx 4.4\%\)입니다.`,
+                en: String.raw`Since \(\frac{\pi}{2} \approx 1.57080\), the absolute error is about \(0.0697\), and the relative error is \(\frac{0.0697}{1.57080} \approx 4.4\%\).`,
               },
             },
             {
               text: {
-                ko: String.raw`수렴이 느립니다 — 다섯 개 항으로는 7% 오차입니다. (정확한 분수 계산은 테스트로 검증했습니다.)`,
-                en: String.raw`Convergence is slow — five factors still leave a 7% error. (The exact fraction is verified by test.)`,
+                ko: String.raw`수렴이 느립니다 — 다섯 개 항으로는 약 \(4.4\%\)의 상대 오차(절대 오차 \(0.0697\))가 남습니다. (정확한 분수 계산은 테스트로 검증했습니다.)`,
+                en: String.raw`Convergence is slow — five factors still leave about \(4.4\%\) relative error (absolute error \(0.0697\)). (The exact fraction is verified by test.)`,
               },
             },
           ],

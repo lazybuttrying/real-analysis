@@ -62,8 +62,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(A\)를 이산 거리 공간의 임의의 부분집합이라 하고, \(x \in A\)를 잡자.`,
-                en: String.raw`Let \(A\) be any subset of a discrete metric space, and take \(x \in A\).`,
+                ko: String.raw`\(A\)를 이산 거리 공간의 임의의 부분집합이라 하자. \(A = \emptyset\)이면 확인할 점이 없어 \(A\)는 자명하게 열린집합이다. 그 외의 경우 \(x \in A\)를 잡자.`,
+                en: String.raw`Let \(A\) be any subset of a discrete metric space. If \(A = \emptyset\), then \(A\) is open vacuously — there is no point of \(A\) at which openness could fail. Otherwise take \(x \in A\).`,
               },
             },
             {

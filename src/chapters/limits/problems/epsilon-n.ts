@@ -59,8 +59,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\frac{1}{n+1} < \varepsilon\)은 \(n + 1 > \frac{1}{\varepsilon}\), 즉 \(n > \frac{1}{\varepsilon} - 1\)과 동치입니다. \(N\)을 \(\frac{1}{\varepsilon} - 1\)보다 큰 정수로 잡으면 \(n > N\)일 때 \(\left|a_n - 1\right| < \varepsilon\)이므로 \(a_n \to 1\)입니다.`,
-                en: String.raw`\(\frac{1}{n+1} < \varepsilon\) is equivalent to \(n + 1 > \frac{1}{\varepsilon}\), i.e. \(n > \frac{1}{\varepsilon} - 1\). Taking \(N\) to be any integer larger than \(\frac{1}{\varepsilon} - 1\) gives \(\left|a_n - 1\right| < \varepsilon\) for \(n > N\), so \(a_n \to 1\).`,
+                ko: String.raw`\(\frac{1}{n+1} < \varepsilon\)은 \(n + 1 > \frac{1}{\varepsilon}\), 즉 \(n > \frac{1}{\varepsilon} - 1\)과 동치입니다. \(\mathbb{R}\)의 아르키메데스 성질에 의해 \(\frac{1}{\varepsilon} - 1\)보다 큰 정수 \(N\)이 존재합니다. 그런 \(N\)을 잡으면 \(n > N\)일 때 \(\left|a_n - 1\right| < \varepsilon\)이므로 \(a_n \to 1\)입니다.`,
+                en: String.raw`\(\frac{1}{n+1} < \varepsilon\) is equivalent to \(n + 1 > \frac{1}{\varepsilon}\), i.e. \(n > \frac{1}{\varepsilon} - 1\). By the Archimedean property of \(\mathbb{R}\) there exists an integer \(N\) larger than \(\frac{1}{\varepsilon} - 1\). Taking any such \(N\) gives \(\left|a_n - 1\right| < \varepsilon\) for \(n > N\), so \(a_n \to 1\).`,
               },
             },
             {
@@ -92,8 +92,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(N > \frac{1}{\varepsilon}\)인 정수 \(N\)을 잡습니다. 그러면 \(n > N\)일 때 \(\frac{1}{n} < \varepsilon\)이므로 \(\left|a_n - 0\right| < \varepsilon\)입니다.`,
-                en: String.raw`Given \(\varepsilon > 0\), take an integer \(N > \frac{1}{\varepsilon}\). Then \(n > N\) implies \(\frac{1}{n} < \varepsilon\), so \(\left|a_n - 0\right| < \varepsilon\).`,
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면, \(\mathbb{R}\)의 아르키메데스 성질에 의해 \(N > \frac{1}{\varepsilon}\)인 정수 \(N\)이 존재하므로 그런 \(N\)을 잡습니다. 그러면 \(n > N\)일 때 \(\frac{1}{n} < \varepsilon\)이므로 \(\left|a_n - 0\right| < \varepsilon\)입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), by the Archimedean property of \(\mathbb{R}\) there exists an integer \(N > \frac{1}{\varepsilon}\); take any such \(N\). Then \(n > N\) implies \(\frac{1}{n} < \varepsilon\), so \(\left|a_n - 0\right| < \varepsilon\).`,
               },
             },
             {

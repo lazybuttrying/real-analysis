@@ -59,8 +59,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`앞 문제의 공식에 \(r = \frac{1}{10}\): 합 \(= 9\cdot\frac{1/10}{1-1/10} = 9\cdot\frac{1}{9} = 1\)입니다.`,
-                en: String.raw`By the previous formula with \(r = \frac{1}{10}\): the sum \(= 9\cdot\frac{1/10}{1-1/10} = 9\cdot\frac{1}{9} = 1\).`,
+                ko: String.raw`앞 문제의 공식 \(\sum_{k=0}^{\infty} r^k = \frac{1}{1-r}\)에서 \(k = 0\) 항 \(1\)을 빼면 \(\sum_{k=1}^{\infty} r^k = \frac{1}{1-r} - 1 = \frac{r}{1-r}\)입니다 (또는 \(r\)을 factor로 묶습니다). \(r = \frac{1}{10}\)을 대입하면 합 \(= 9\cdot\frac{1/10}{1-1/10} = 9\cdot\frac{1}{9} = 1\)입니다.`,
+                en: String.raw`From the previous formula \(\sum_{k=0}^{\infty} r^k = \frac{1}{1-r}\), subtract the \(k = 0\) term \(1\) to get \(\sum_{k=1}^{\infty} r^k = \frac{1}{1-r} - 1 = \frac{r}{1-r}\) (equivalently, factor out \(r\)). With \(r = \frac{1}{10}\): the sum \(= 9\cdot\frac{1/10}{1-1/10} = 9\cdot\frac{1}{9} = 1\).`,
               },
             },
           ],

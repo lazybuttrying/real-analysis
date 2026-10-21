@@ -90,8 +90,8 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
             {
               text: {
-                ko: String.raw`바이어슈트라스 정리: 모든 점에서 연속이지만 어떤 점에서도 미분가능하지 않은 함수가 존재합니다. 고전적인 예는 \(0 < a < 1\), \(ab > 1 + \frac{3\pi}{2}\)인 \(\sum_{n=0}^{\infty} a^n \cos(b^n \pi x)\) 형태의 급수입니다.`,
-                en: String.raw`Weierstrass's theorem: there exists a function continuous at every point yet differentiable at none. A classic example is a series of the form \(\sum_{n=0}^{\infty} a^n \cos(b^n \pi x)\) with \(0 < a < 1\) and \(ab > 1 + \frac{3\pi}{2}\).`,
+                ko: String.raw`바이어슈트라스 정리: 모든 점에서 연속이지만 어떤 점에서도 미분가능하지 않은 함수가 존재합니다. 고전적인 예는 \(0 < a < 1\), \(b\)가 홀수인 양의 정수, \(ab > 1 + \frac{3\pi}{2}\)인 \(\sum_{n=0}^{\infty} a^n \cos(b^n \pi x)\) 형태의 급수입니다.`,
+                en: String.raw`Weierstrass's theorem: there exists a function continuous at every point yet differentiable at none. A classic example is a series of the form \(\sum_{n=0}^{\infty} a^n \cos(b^n \pi x)\) with \(0 < a < 1\), \(b\) an odd positive integer, and \(ab > 1 + \frac{3\pi}{2}\).`,
               },
             },
             {

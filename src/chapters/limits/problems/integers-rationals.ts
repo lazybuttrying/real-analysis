@@ -74,8 +74,8 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'rational-inverse',
     statement: {
-      ko: String.raw`0이 아닌 유리수 \(\frac{a}{b}\)에 대해 \(\frac{b}{a}\)가 그 곱셈 역원임을 증명하고, 이를 통해 \(\mathbb{Q}\)가 체(field)임을 설명하세요.`,
-      en: String.raw`For a nonzero rational \(\frac{a}{b}\), prove that \(\frac{b}{a}\) is its multiplicative inverse, and explain why this makes \(\mathbb{Q}\) a field.`,
+      ko: String.raw`0이 아닌 유리수 \(\frac{a}{b}\)에 대해 \(\frac{b}{a}\)가 그 곱셈 역원임을 증명하세요.`,
+      en: String.raw`For a nonzero rational \(\frac{a}{b}\), prove that \(\frac{b}{a}\) is its multiplicative inverse.`,
     },
     display: [String.raw`\frac{a}{b}\cdot\frac{b}{a}=1\qquad(a\ne 0)`],
     preset: { set: 'rationals', denom: 4 },
@@ -98,8 +98,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`0이 아닌 모든 유리수가 역원을 가지므로, \(\mathbb{Q}\)에서는 0이 아닌 수로 나누기가 항상 가능합니다 — 잘 정의된 덧셈·곱셈과 함께 \(\mathbb{Q}\)는 체(field)가 됩니다. 체의 공리와 구조는 groups-fields 씬에서 다룹니다.`,
-          en: String.raw`Since every nonzero rational has an inverse, division by a nonzero number is always possible in \(\mathbb{Q}\) — together with the well-defined addition and multiplication, \(\mathbb{Q}\) is a field. The field axioms and their structure are covered in the groups-fields scene.`,
+          ko: String.raw`이로써 주장한 바가 정확히 증명됩니다: 0이 아닌 모든 유리수는 곱셈 역원을 가지므로, \(\mathbb{Q}\)에서는 0이 아닌 유리수로 나누기가 항상 가능합니다. 나머지 체 공리(덧셈·곱셈의 잘 정의됨, 결합법칙, 교환법칙, 분배법칙)는 여기서 증명하지 않습니다 — groups-fields 씬에서 검증되며, 그것들과 합쳐질 때 비로소 \(\mathbb{Q}\)가 체(field)가 됩니다.`,
+          en: String.raw`This proves exactly the claimed statement: every nonzero rational has a multiplicative inverse, so division by a nonzero rational is always possible in \(\mathbb{Q}\). The remaining field axioms (well-defined addition and multiplication, associativity, commutativity, distributivity) are not proved here; they are verified in the groups-fields scene, and only together with them does \(\mathbb{Q}\) become a field.`,
         },
       },
     ],

@@ -100,6 +100,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
+                ko: String.raw`점근 동등이 제곱과 나눗셈 아래에서 유지됨을 먼저 확인합니다: 양의 수열에 대해 \(A_n \sim B_n\), \(C_n \sim D_n\)이면 \(A_n = B_n(1 + o(1))\), \(C_n = D_n(1 + o(1))\)로 쓸 수 있어 상대오차가 \(0\)으로 가므로, \(A_n^2 \sim B_n^2\)이고 \(\frac{A_n}{C_n} \sim \frac{B_n}{D_n}\)입니다. 따라서 위의 \(\approx\)들을 \(\sim\)로 읽어도 정당합니다.`,
+                en: String.raw`First note asymptotic equivalence is preserved under squaring and division: for positive sequences, if \(A_n \sim B_n\) and \(C_n \sim D_n\), write \(A_n = B_n(1 + o(1))\) and \(C_n = D_n(1 + o(1))\); since the relative errors tend to \(0\), \(A_n^2 \sim B_n^2\) and \(\frac{A_n}{C_n} \sim \frac{B_n}{D_n}\). So reading the \(\approx\)'s above as \(\sim\) is legitimate.`,
+              },
+            },
+            {
+              text: {
                 ko: String.raw`나누면 \(\frac{\sqrt{4\pi n}}{2\pi n}\cdot\frac{(2n)^{2n}}{n^{2n}} = \frac{1}{\sqrt{\pi n}}\cdot 4^n\)입니다. (스털링 근사 자체는 가정했습니다.)`,
                 en: String.raw`Dividing gives \(\frac{\sqrt{4\pi n}}{2\pi n}\cdot\frac{(2n)^{2n}}{n^{2n}} = \frac{1}{\sqrt{\pi n}}\cdot 4^n\). (Stirling's formula itself is assumed.)`,
               },

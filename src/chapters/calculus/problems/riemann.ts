@@ -32,8 +32,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(n \to \infty\)일 때 둘 다 \(\frac{2n^3}{6n^3} = \frac13\)으로 가므로, 조임에 의해 적분값은 \(\frac13\)입니다.`,
-                en: String.raw`Both tend to \(\frac{2n^3}{6n^3} = \frac13\) as \(n \to \infty\), so the integral is \(\frac13\) by squeezing.`,
+                ko: String.raw`\(n \to \infty\)일 때 둘 다 \(\frac{2n^3}{6n^3} = \frac13\)으로 갑니다. 이것이 임의의 분할이 아닌 균등분할만으로 충분한 이유: 하적분과 상적분은 모든 분할에 대한 하한·상한이므로, 각 \(n\)마다 \(L_n = L(P_n, f) \le \underline{\int_0^1} f \le \overline{\int_0^1} f \le U(P_n, f) = U_n\)입니다. 양쪽 끝이 모두 \(\frac13\)으로 가므로 조임에 의해 하적분과 상적분이 모두 \(\frac13\)이고, 적분값은 \(\frac13\)입니다.`,
+                en: String.raw`Both tend to \(\frac{2n^3}{6n^3} = \frac13\) as \(n \to \infty\). The uniform partitions suffice because the lower and upper integrals are the supremum/infimum over all partitions: for each \(n\), \(L_n = L(P_n, f) \le \underline{\int_0^1} f \le \overline{\int_0^1} f \le U(P_n, f) = U_n\). Both ends tend to \(\frac13\), so by squeezing the lower and upper integrals both equal \(\frac13\), and the integral is \(\frac13\).`,
               },
             },
           ],

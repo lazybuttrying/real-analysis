@@ -65,8 +65,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`중간값 정리에 의해 \(\sin \xi = \frac12\)인 \(\xi \in (0, \frac{\pi}{2})\)가 존재합니다. 참고로 \(\sin \frac{\pi}{6} = \frac12\)이므로 실제로 \(\xi = \frac{\pi}{6}\)입니다 — 정리는 존재를 보장하고, 정확한 값은 별개의 계산입니다.`,
-                en: String.raw`By the Intermediate Value Theorem there is \(\xi \in (0, \frac{\pi}{2})\) with \(\sin \xi = \frac12\). For reference, \(\sin \frac{\pi}{6} = \frac12\), so in fact \(\xi = \frac{\pi}{6}\) — the theorem guarantees existence; the exact value is a separate computation.`,
+                ko: String.raw`중간값 정리에 의해 \(\sin \xi = \frac12\)인 \(\xi \in (0, \frac{\pi}{2})\)가 존재합니다. 이 증인은 유일합니다: \(0 \le x < y \le \frac{\pi}{2}\)이면 \(\sin y - \sin x = 2\cos\frac{x+y}{2}\sin\frac{y-x}{2} > 0\)인데, \(\frac{x+y}{2} \in [0, \frac{\pi}{2})\)라서 \(\cos\frac{x+y}{2} > 0\)이고 \(\frac{y-x}{2} \in (0, \frac{\pi}{4}]\)라서 \(\sin\frac{y-x}{2} > 0\)이기 때문입니다 — 즉 \(\sin\)은 \([0, \frac{\pi}{2}]\)에서 엄격히 증가합니다. \(\sin \frac{\pi}{6} = \frac12\)이므로 유일성에 의해 \(\xi = \frac{\pi}{6}\)입니다.`,
+                en: String.raw`By the Intermediate Value Theorem there is \(\xi \in (0, \frac{\pi}{2})\) with \(\sin \xi = \frac12\). The witness is unique: for \(0 \le x < y \le \frac{\pi}{2}\), \(\sin y - \sin x = 2\cos\frac{x+y}{2}\sin\frac{y-x}{2} > 0\), since \(\frac{x+y}{2} \in [0, \frac{\pi}{2})\) gives \(\cos\frac{x+y}{2} > 0\) and \(\frac{y-x}{2} \in (0, \frac{\pi}{4}]\) gives \(\sin\frac{y-x}{2} > 0\) — so \(\sin\) is strictly increasing on \([0, \frac{\pi}{2}]\). Since \(\sin \frac{\pi}{6} = \frac12\), uniqueness forces \(\xi = \frac{\pi}{6}\).`,
               },
             },
           ],
