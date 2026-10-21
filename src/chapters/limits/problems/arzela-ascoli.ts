@@ -86,8 +86,8 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`대각선 \(m_j = n^{(j)}_j\)를 둡니다. 먼저 \((m_j)\)는 엄격증가 수열입니다: \(n^{(j+1)}\)이 \(n^{(j)}\)의 부분수열이므로 엄격증가 사상 \(\sigma^{(j)}: \mathbb{N} \to \mathbb{N}\)에 대해 \(n^{(j+1)}_i = n^{(j)}_{\sigma^{(j)}(i)}\)라 쓰면, \(m_{j+1} = n^{(j+1)}_{j+1} = n^{(j)}_{\sigma^{(j)}(j+1)} > n^{(j)}_j = m_j\)입니다 (단 \(\sigma^{(j)}(j+1) > j+1 > j\)).`,
-          en: String.raw`Set the diagonal \(m_j = n^{(j)}_j\). First, \((m_j)\) is strictly increasing: writing \(n^{(j+1)}_i = n^{(j)}_{\sigma^{(j)}(i)}\) with the strictly increasing refinement map \(\sigma^{(j)}: \mathbb{N} \to \mathbb{N}\), we get \(m_{j+1} = n^{(j+1)}_{j+1} = n^{(j)}_{\sigma^{(j)}(j+1)} > n^{(j)}_j = m_j\) (since \(\sigma^{(j)}(j+1) > j+1 > j\)).`,
+          ko: String.raw`대각선 \(m_j = n^{(j)}_j\)를 둡니다. 먼저 \((m_j)\)는 엄격증가 수열입니다: \(n^{(j+1)}\)이 \(n^{(j)}\)의 부분수열이므로 엄격증가 사상 \(\sigma^{(j)}: \mathbb{N} \to \mathbb{N}\)에 대해 \(n^{(j+1)}_i = n^{(j)}_{\sigma^{(j)}(i)}\)라 쓰면, \(m_{j+1} = n^{(j+1)}_{j+1} = n^{(j)}_{\sigma^{(j)}(j+1)} > n^{(j)}_j = m_j\)입니다 (단 \(\sigma^{(j)}(j+1) \ge j+1 > j\) — 엄격증가 사상은 \(\sigma(i) \ge i\)를 만족하고, 항등 세분화에서는 등호가 됩니다).`,
+          en: String.raw`Set the diagonal \(m_j = n^{(j)}_j\). First, \((m_j)\) is strictly increasing: writing \(n^{(j+1)}_i = n^{(j)}_{\sigma^{(j)}(i)}\) with the strictly increasing refinement map \(\sigma^{(j)}: \mathbb{N} \to \mathbb{N}\), we get \(m_{j+1} = n^{(j+1)}_{j+1} = n^{(j)}_{\sigma^{(j)}(j+1)} > n^{(j)}_j = m_j\) (since \(\sigma^{(j)}(j+1) \ge j+1 > j\) — a strictly increasing map satisfies \(\sigma(i) \ge i\), with equality for the identity refinement).`,
         },
       },
       {
@@ -111,7 +111,7 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
       en: String.raw`Let \((f_n) \subset C(K)\) be equicontinuous and pointwise bounded (\(K\) compact metric), converging pointwise on a countable dense set \(\{x_k\}\). Prove by the \(\varepsilon/3\) argument that the convergence is uniform on all of \(K\), and deduce as a corollary that \((x^n)\) has no uniformly convergent subsequence on \([0,1]\).`,
     },
     display: [
-      String.raw`\lvert f_{m_j}(x) - f_{m_\ell}(x) \rvert \le \tfrac{\varepsilon}{3} + \tfrac{\varepsilon}{3} + \tfrac{\varepsilon}{3} = \varepsilon \quad \text{(uniformly Cauchy)}`,
+      String.raw`\lvert f_p(x) - f_q(x) \rvert \le \tfrac{\varepsilon}{3} + \tfrac{\varepsilon}{3} + \tfrac{\varepsilon}{3} = \varepsilon \quad (p, q \ge N,\ \text{uniformly Cauchy)}`,
       String.raw`x^n \to \begin{cases} 0 & x \in [0, 1) \\ 1 & x = 1 \end{cases} \quad \text{(discontinuous pointwise limit)}`,
     ],
     preset: { members: 6 },
@@ -128,26 +128,26 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`유한 개의 점 \(x_{k_i}\)에서는 점별 수렴이 "균등"해집니다: \(N\)을 크게 잡아 \(j, \ell \ge N\)이면 모든 \(i\)에 대해 \(\lvert f_{m_j}(x_{k_i}) - f_{m_\ell}(x_{k_i}) \rvert < \varepsilon/3\)이 되도록 합니다 (유한 교집합).`,
-          en: String.raw`At the finitely many net points, pointwise convergence becomes "uniform": choose \(N\) so large that \(j, \ell \ge N\) gives \(\lvert f_{m_j}(x_{k_i}) - f_{m_\ell}(x_{k_i}) \rvert < \varepsilon/3\) for every \(i\) (a finite intersection of tails).`,
+          ko: String.raw`유한 개의 점 \(x_{k_i}\)에서는 \((f_n)\) 자체의 점별 수렴이 "균등"해집니다: 각 \(i\)마다 \((f_n(x_{k_i}))\)가 수렴하므로 Cauchy이고, \(N\)을 크게 잡아 \(p, q \ge N\)이면 모든 \(i\)에 대해 \(\lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert < \varepsilon/3\)이 되도록 합니다 (유한 교집합).`,
+          en: String.raw`At the finitely many net points, the pointwise convergence of \((f_n)\) itself becomes "uniform": each \((f_n(x_{k_i}))\) converges, hence is Cauchy, so choose \(N\) so large that \(p, q \ge N\) gives \(\lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert < \varepsilon/3\) for every \(i\) (a finite intersection of tails).`,
         },
       },
       {
         text: {
-          ko: String.raw`임의의 \(x \in K\)에 대해 \(d(x, x_{k_i}) < \delta\)인 \(x_{k_i}\)를 고릅니다. 삼각부등식: \(\lvert f_{m_j}(x) - f_{m_\ell}(x) \rvert \le \lvert f_{m_j}(x) - f_{m_j}(x_{k_i}) \rvert + \lvert f_{m_j}(x_{k_i}) - f_{m_\ell}(x_{k_i}) \rvert + \lvert f_{m_\ell}(x_{k_i}) - f_{m_\ell}(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\). 따라서 \((f_{m_j})\)는 균등 Cauchy이므로, \(C(K)\)의 완비성에 의해 균등수렴합니다.`,
-          en: String.raw`For arbitrary \(x \in K\), pick \(x_{k_i}\) with \(d(x, x_{k_i}) < \delta\). By the triangle inequality, \(\lvert f_{m_j}(x) - f_{m_\ell}(x) \rvert \le \lvert f_{m_j}(x) - f_{m_j}(x_{k_i}) \rvert + \lvert f_{m_j}(x_{k_i}) - f_{m_\ell}(x_{k_i}) \rvert + \lvert f_{m_\ell}(x_{k_i}) - f_{m_\ell}(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\). Hence \((f_{m_j})\) is uniformly Cauchy, so it converges uniformly by completeness of \(C(K)\).`,
+          ko: String.raw`임의의 \(x \in K\)에 대해 \(d(x, x_{k_i}) < \delta\)인 \(x_{k_i}\)를 고릅니다. 삼각부등식: \(p, q \ge N\)이면 \(\lvert f_p(x) - f_q(x) \rvert \le \lvert f_p(x) - f_p(x_{k_i}) \rvert + \lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert + \lvert f_q(x_{k_i}) - f_q(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\)입니다. 따라서 \((f_n)\) 자체가 균등 Cauchy이므로, \(C(K)\)의 완비성에 의해 \((f_n)\)이 균등수렴합니다.`,
+          en: String.raw`For arbitrary \(x \in K\), pick \(x_{k_i}\) with \(d(x, x_{k_i}) < \delta\). By the triangle inequality, for \(p, q \ge N\), \(\lvert f_p(x) - f_q(x) \rvert \le \lvert f_p(x) - f_p(x_{k_i}) \rvert + \lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert + \lvert f_q(x_{k_i}) - f_q(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\). Hence \((f_n)\) itself is uniformly Cauchy, so \((f_n)\) converges uniformly by completeness of \(C(K)\).`,
         },
       },
       {
         text: {
-          ko: String.raw`이로써 (\(\Longleftarrow\))가 완성됩니다: 점별 유계 + 등연속이면 (앞 문제의 언급대로) 균등 유계이고, 모든 수열이 균등수렴 부분수열을 가지므로, 거리공간에서의 순차 컴팩트성에 의해 집합은 상대 컴팩트입니다.`,
-          en: String.raw`This completes (\(\Longleftarrow\)): pointwise bounded + equicontinuous implies uniformly bounded (as noted in the first problem), and every sequence has a uniformly convergent subsequence, so by sequential compactness in metric spaces the set is relatively compact.`,
+          ko: String.raw`이로써 (\(\Longleftarrow\))가 완성됩니다: 점별 유계 + 등연속이면 (앞 문제의 언급대로) 균등 유계입니다. 또 임의의 수열에 앞 문제의 대각선 추출을 적용하면 조밀 집합 위에서 수렴하는 부분수열을 얻고, 위의 1–3단계를 그 부분수열에 적용하면 그 부분수열이 균등수렴합니다. 따라서 모든 수열이 균등수렴 부분수열을 가지므로, 거리공간에서의 순차 컴팩트성에 의해 집합은 상대 컴팩트입니다.`,
+          en: String.raw`This completes (\(\Longleftarrow\)): pointwise bounded + equicontinuous implies uniformly bounded (as noted in the first problem). Also, applying the diagonal extraction of the previous problem to any sequence gives a subsequence converging on the dense set, and applying steps 1–3 to that subsequence shows it converges uniformly. Hence every sequence has a uniformly convergent subsequence, so by sequential compactness in metric spaces the set is relatively compact.`,
         },
       },
       {
         text: {
-          ko: String.raw`따름정리: \((x^n)\)은 \([0,1]\)에서 균등수렴하는 부분수열을 갖지 않습니다. 점별 극한은 \([0,1)\)에서 0, \(x = 1\)에서 1로 불연속입니다. 만약 어떤 부분수열이 균등수렴했다면 그 극한은 연속함수들의 균등 극한이므로 연속이어야 하고, 점별 극한과 일치해야 하므로 모순입니다. 즉 \(\{x^n\}\)은 \(x = 1\)에서 등연속이 아닙니다 — 씬의 대조군 차트가 보여주듯 서로 다른 두 항의 상한 거리는 0.47 이상으로 벌어진 채 남습니다.`,
-          en: String.raw`Corollary: \((x^n)\) has no uniformly convergent subsequence on \([0,1]\). Its pointwise limit is discontinuous — 0 on \([0,1)\), 1 at \(x = 1\). If some subsequence converged uniformly, its limit would be continuous (a uniform limit of continuous functions) and would have to equal the pointwise limit — contradiction. So \(\{x^n\}\) is not equicontinuous at \(x = 1\): as the scene's contrast chart shows, pairwise sup distances between distinct members stay at least 0.47 apart.`,
+          ko: String.raw`따름정리: \((x^n)\)은 \([0,1]\)에서 균등수렴하는 부분수열을 갖지 않습니다. 점별 극한은 \([0,1)\)에서 0, \(x = 1\)에서 1로 불연속입니다. 만약 어떤 부분수열이 균등수렴했다면 그 극한은 연속함수들의 균등 극한이므로 연속이어야 하고, 점별 극한과 일치해야 하므로 모순입니다. 즉 \(\{x^n\}\)은 \(x = 1\)에서 등연속이 아니고 완전 유계도 아닙니다: 부분수열 \(x^{4^k}\)는 \(7/16\)-분리되어 있습니다 — \(a = 4^k < 4^\ell = b\)이면 증인점 \(x = 2^{-1/a}\)에서 \(x^a = 1/2\)이고 \(x^b = 2^{-b/a} \le 2^{-4} = 1/16\)이므로 \(\lVert x^a - x^b \rVert_\infty \ge 1/2 - 1/16 = 7/16 = 0.4375 \ge 0.4\)입니다. (모든 서로 다른 쌍이 이렇게 떨어져 있는 것은 아닙니다: \(\lVert x - x^2 \rVert_\infty = 1/4\)입니다.)`,
+          en: String.raw`Corollary: \((x^n)\) has no uniformly convergent subsequence on \([0,1]\). Its pointwise limit is discontinuous — 0 on \([0,1)\), 1 at \(x = 1\). If some subsequence converged uniformly, its limit would be continuous (a uniform limit of continuous functions) and would have to equal the pointwise limit — contradiction. So \(\{x^n\}\) is not equicontinuous at \(x = 1\), and not totally bounded either: the subsequence \(x^{4^k}\) is \(7/16\)-separated — for \(a = 4^k < 4^\ell = b\), at the witness point \(x = 2^{-1/a}\) we have \(x^a = 1/2\) and \(x^b = 2^{-b/a} \le 2^{-4} = 1/16\), so \(\lVert x^a - x^b \rVert_\infty \ge 1/2 - 1/16 = 7/16 = 0.4375 \ge 0.4\). (Not every distinct pair is this far apart: \(\lVert x - x^2 \rVert_\infty = 1/4\).)`,
         },
       },
     ],

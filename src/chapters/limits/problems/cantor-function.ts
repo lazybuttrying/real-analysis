@@ -22,7 +22,7 @@ export const problems: readonly ProblemMeta[] = [
     },
     display: [
       String.raw`0.0222\ldots_3:\ N = \infty,\ b = 0.0111\ldots_2 = \tfrac12 \qquad\text{vs}\qquad 0.1_3:\ N = 1,\ b_1 = 1 \Rightarrow f = \tfrac12`,
-      String.raw`x < y,\ \text{first differing digit } m \Rightarrow f(x) \le S + 2^{-m} \le f(y)`,
+      String.raw`x < y,\ k = \text{first index with a digit } 1 \text{ or a difference} \Rightarrow f(x) \le S + 2^{-k} \le f(y)\ \text{or}\ f(x) = f(y) = S + 2^{-k}`,
       String.raw`|f - f_n| \le 2^{-n}\ \text{uniformly},\ f_n\ \text{piecewise linear} \Rightarrow f\ \text{continuous}`,
     ],
     preset: { stage: 3 },
@@ -39,8 +39,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(f\)는 단조증가이다. \(x < y\)라 하고 (선택한) 삼진 전개가 처음으로 달라지는 자리를 \(m\)이라 하자. 그러면 \((c_m(x),\, c_m(y))\)는 \((0,1)\), \((0,2)\), \((1,2)\) 중 하나이다. 앞 \(m-1\)자리의 공통 기여를 \(S\)라 쓰자. \((0,1)\)인 경우: \(x\)는 \(b_m = 0\)이고 꼬리가 \(\sum_{k>m} 2^{-k} = 2^{-m}\) 이하이므로 \(f(x) \le S + 2^{-m}\)이고, \(y\)는 \(m\)에서 첫 \(1\)이 나오므로 \(f(y) = S + 2^{-m}\)이다. \((0,2)\)인 경우: \(f(x) \le S + 2^{-m}\)이고 \(y\)는 \(b_m = 1\), 꼬리 \(\ge 0\)이므로 \(f(y) \ge S + 2^{-m}\)이다. \((1,2)\)인 경우: \(f(x) = S + 2^{-m}\)이고 \(f(y) \ge S + 2^{-m}\)이다. 끝점의 모호성은 이미 잘 정의성에서 해소되었으므로 \(f(x) \le f(y)\)이다.`,
-          en: String.raw`The function \(f\) is nondecreasing. Let \(x < y\) and let \(m\) be the first index where the (chosen) ternary expansions differ; then \((c_m(x),\, c_m(y))\) is one of \((0,1)\), \((0,2)\), \((1,2)\). Write \(S\) for the shared contribution of the first \(m-1\) digits. Case \((0,1)\): \(x\) has \(b_m = 0\) and tail at most \(\sum_{k>m} 2^{-k} = 2^{-m}\), so \(f(x) \le S + 2^{-m}\); \(y\) sees its first \(1\) at \(m\), so \(f(y) = S + 2^{-m}\). Case \((0,2)\): \(f(x) \le S + 2^{-m}\) while \(y\) has \(b_m = 1\) and tail \(\ge 0\), so \(f(y) \ge S + 2^{-m}\). Case \((1,2)\): \(f(x) = S + 2^{-m}\) and \(f(y) \ge S + 2^{-m}\). Endpoint ambiguity was already settled by well-definedness, so \(f(x) \le f(y)\).`,
+          ko: String.raw`\(f\)는 단조증가이다. \(x < y\)라 하고 (선택한) 삼진 전개를 봅니다. 처음으로 어느 한쪽에 숫자 \(1\)이 나타나거나 두 전개가 달라지는 자리를 \(k\)라 두자 (\(x \ne y\)이므로 이런 자리는 존재합니다). 앞 \(k-1\)자리는 공통이고 \(1\)이 없으므로 \(\{0,2\}\)에서 오며, 그 공통 기여를 \(S = \sum_{i<k}(c_i/2)2^{-i}\)라 쓰자. 자리 \(k\)에서의 쌍 \((c_k(x),\, c_k(y))\)는 \((1,1)\), \((0,1)\), \((0,2)\), \((1,2)\) 중 하나입니다. \((1,1)\)인 경우: 양쪽 모두 첫 \(1\)이 \(k\)에서 나오므로 \(f(x) = f(y) = S + 2^{-k}\)입니다 (예: \(x = 0.1000\ldots_3\), \(y = 0.1200\ldots_3\)이면 \(k = 1\)이고 \(f(x) = f(y) = 1/2\)). \((0,1)\)인 경우: \(x\)는 \(b_k = 0\)이고 꼬리가 \(\sum_{i>k} 2^{-i} = 2^{-k}\) 이하이므로 \(f(x) \le S + 2^{-k}\)이고, \(y\)는 \(k\)에서 첫 \(1\)이 나오므로 \(f(y) = S + 2^{-k}\)입니다. \((0,2)\)인 경우: \(f(x) \le S + 2^{-k}\)이고 \(y\)는 \(b_k = 1\), 꼬리 \(\ge 0\)이므로 \(f(y) \ge S + 2^{-k}\)입니다. \((1,2)\)인 경우: \(f(x) = S + 2^{-k}\)이고 \(f(y) \ge S + 2^{-k}\)입니다. 모든 경우에 \(f(x) \le f(y)\)이고, 끝점의 모호성은 이미 잘 정의성에서 해소되었습니다.`,
+          en: String.raw`The function \(f\) is nondecreasing. Let \(x < y\) and look at the (chosen) ternary expansions. Let \(k\) be the first index where either expansion has digit \(1\) or the two expansions differ (such an index exists since \(x \ne y\)). The first \(k-1\) digits are shared and contain no \(1\), so they lie in \(\{0,2\}\); write \(S = \sum_{i<k}(c_i/2)2^{-i}\) for their shared contribution. The pair \((c_k(x),\, c_k(y))\) at index \(k\) is one of \((1,1)\), \((0,1)\), \((0,2)\), \((1,2)\). Case \((1,1)\): both see their first \(1\) at \(k\), so \(f(x) = f(y) = S + 2^{-k}\) (e.g. \(x = 0.1000\ldots_3\), \(y = 0.1200\ldots_3\) gives \(k = 1\) and \(f(x) = f(y) = 1/2\)). Case \((0,1)\): \(x\) has \(b_k = 0\) and tail at most \(\sum_{i>k} 2^{-i} = 2^{-k}\), so \(f(x) \le S + 2^{-k}\); \(y\) sees its first \(1\) at \(k\), so \(f(y) = S + 2^{-k}\). Case \((0,2)\): \(f(x) \le S + 2^{-k}\) while \(y\) has \(b_k = 1\) and tail \(\ge 0\), so \(f(y) \ge S + 2^{-k}\). Case \((1,2)\): \(f(x) = S + 2^{-k}\) and \(f(y) \ge S + 2^{-k}\). In every case \(f(x) \le f(y)\), and endpoint ambiguity was already settled by well-definedness.`,
         },
       },
       {
@@ -107,8 +107,8 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`문제 1에서 \(f\)는 \([0,1]\)에서 연속이고 \(f(0) = 0\), \(f(1) = 1\)이므로 \(f(1) - f(0) = 1\)이다. 한편 단조함수는 거의 모든 곳에서 미분가능하다는 르베그 정리와 문제 2에 의해 \(f'\)은 존재하는 거의 모든 점에서 \(0\)이다 — 즉 \(f' = 0\) a.e.이므로 (르베그) 적분 \(\int_0^1 f' = 0\)이다.`,
-          en: String.raw`By problem 1, \(f\) is continuous on \([0,1]\) with \(f(0) = 0\) and \(f(1) = 1\), so \(f(1) - f(0) = 1\). On the other hand, Lebesgue's theorem says a monotone function is differentiable almost everywhere, and problem 2 gives \(f' = 0\) wherever it exists — so \(f' = 0\) a.e., and the (Lebesgue) integral \(\int_0^1 f' = 0\).`,
+          ko: String.raw`문제 1에서 \(f\)는 \([0,1]\)에서 연속이고 \(f(0) = 0\), \(f(1) = 1\)이므로 \(f(1) - f(0) = 1\)이다. 한편 문제 2가 주는 것은 칸토어 집합의 여집합 위에서 \(f' = 0\)이라는 것뿐입니다. 그러나 여집합의 길이가 \(1\)이고 칸토어 집합 \(C\)의 측도는 \(0\)이므로, \(f' = 0\) a.e.입니다 (\(C\) 위에서의 값은 a.e. 진술에 영향을 주지 않습니다). 단조함수는 거의 모든 곳에서 미분가능하다는 르베그 정리와 합치면, (르베그) 적분 \(\int_0^1 f' = 0\)입니다. 절대연속인 함수는 \(f' = 0\) a.e.이면 상수여야 하므로, 이는 아래 모순의 핵심입니다.`,
+          en: String.raw`By problem 1, \(f\) is continuous on \([0,1]\) with \(f(0) = 0\) and \(f(1) = 1\), so \(f(1) - f(0) = 1\). On the other hand, problem 2 gives only that \(f' = 0\) on the complement of the Cantor set. But that complement has length \(1\) and the Cantor set \(C\) has measure \(0\), so \(f' = 0\) a.e. (the values on \(C\) do not affect an a.e. statement). Combined with Lebesgue's theorem that a monotone function is differentiable almost everywhere, the (Lebesgue) integral is \(\int_0^1 f' = 0\). An absolutely continuous function with \(f' = 0\) a.e. must be constant, which is the heart of the contradiction below.`,
         },
       },
       {

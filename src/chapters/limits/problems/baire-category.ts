@@ -33,8 +33,8 @@ export const baireCategoryProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(E_1\)이 nowhere dense이므로 \(\operatorname{int}(\overline{E_1}) = \varnothing\)이고, \(U_1 = X \setminus \overline{E_1}\)은 비어 있지 않은 열린집합입니다. \(x_1 \in U_1\)을 잡으면 \(B(x_1, \rho) \subseteq U_1\)인 \(\rho > 0\)이 있고, \(r_1 = \min(\rho/2, 1/2)\)로 두면 닫힌공 \(\overline{B}(x_1, r_1) \subseteq U_1\)이며 \(r_1 < 1\)입니다.`,
-          en: String.raw`Since \(E_1\) is nowhere dense, \(\operatorname{int}(\overline{E_1}) = \varnothing\), so \(U_1 = X \setminus \overline{E_1}\) is a nonempty open set. Pick \(x_1 \in U_1\); some \(\rho > 0\) has \(B(x_1, \rho) \subseteq U_1\), and with \(r_1 = \min(\rho/2, 1/2)\) the closed ball \(\overline{B}(x_1, r_1) \subseteq U_1\) with \(r_1 < 1\).`,
+          ko: String.raw`먼저 \(X \ne \varnothing\)라고 가정합니다 — \(X = \varnothing\)이면 \(X = \bigcup_n \varnothing\)로 빈 공간은 자기 안에서 meagre하므로, 비어 있지 않음이 정리에서 필수입니다. \(E_1\)이 nowhere dense이므로 \(\operatorname{int}(\overline{E_1}) = \varnothing\)이고, \(U_1 = X \setminus \overline{E_1}\)은 비어 있지 않은 열린집합입니다 (\(U_1 = \varnothing\)이면 \(\overline{E_1} = X\)라 \(\operatorname{int}(\overline{E_1}) = X \ne \varnothing\)가 되기 때문입니다). \(x_1 \in U_1\)을 잡으면 \(B(x_1, \rho) \subseteq U_1\)인 \(\rho > 0\)이 있고, \(r_1 = \min(\rho/2, 1/2)\)로 두면 닫힌공 \(\overline{B}(x_1, r_1) \subseteq U_1\)이며 \(r_1 < 1\)입니다.`,
+          en: String.raw`Assume first that \(X \ne \varnothing\) — if \(X = \varnothing\) then \(X = \bigcup_n \varnothing\), so the empty space is meagre in itself and nonemptiness is essential to the theorem. Since \(E_1\) is nowhere dense, \(\operatorname{int}(\overline{E_1}) = \varnothing\), so \(U_1 = X \setminus \overline{E_1}\) is a nonempty open set (if \(U_1 = \varnothing\) then \(\overline{E_1} = X\), giving \(\operatorname{int}(\overline{E_1}) = X \ne \varnothing\)). Pick \(x_1 \in U_1\); some \(\rho > 0\) has \(B(x_1, \rho) \subseteq U_1\), and with \(r_1 = \min(\rho/2, 1/2)\) the closed ball \(\overline{B}(x_1, r_1) \subseteq U_1\) with \(r_1 < 1\).`,
         },
       },
       {
@@ -45,8 +45,8 @@ export const baireCategoryProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`수열 \((x_k)\)는 Cauchy입니다: \(m > k\)이면 \(x_m \in \overline{B}(x_{k+1}, r_{k+1}) \subseteq B(x_k, r_k)\)이므로 \(d(x_k, x_m) < r_k\)이고, \(r_k < 2^{-(k-1)} r_1 \to 0\)이기 때문입니다. \(X\)가 완비이므로 \(x_k \to x \in X\)인 극한이 존재합니다.`,
-          en: String.raw`The sequence \((x_k)\) is Cauchy: for \(m > k\), \(x_m \in \overline{B}(x_{k+1}, r_{k+1}) \subseteq B(x_k, r_k)\), so \(d(x_k, x_m) < r_k\), and \(r_k < 2^{-(k-1)} r_1 \to 0\). Completeness of \(X\) gives a limit \(x_k \to x \in X\).`,
+          ko: String.raw`수열 \((x_k)\)는 Cauchy입니다: \(m > k\)이면 \(x_m \in \overline{B}(x_{k+1}, r_{k+1}) \subseteq B(x_k, r_k)\)이므로 \(d(x_k, x_m) < r_k\)이고, \(r_k \le 2^{-(k-1)} r_1 \to 0\)이기 때문입니다 (\(k = 1\)에서는 등호이고, \(k \ge 2\)에서는 \(r_{j+1} < r_j/2\)를 반복 적용해 엄격한 부등식을 얻습니다). \(X\)가 완비이므로 \(x_k \to x \in X\)인 극한이 존재합니다.`,
+          en: String.raw`The sequence \((x_k)\) is Cauchy: for \(m > k\), \(x_m \in \overline{B}(x_{k+1}, r_{k+1}) \subseteq B(x_k, r_k)\), so \(d(x_k, x_m) < r_k\), and \(r_k \le 2^{-(k-1)} r_1 \to 0\) (equality at \(k = 1\); for \(k \ge 2\) iterating \(r_{j+1} < r_j/2\) gives the strict inequality). Completeness of \(X\) gives a limit \(x_k \to x \in X\).`,
         },
       },
       {

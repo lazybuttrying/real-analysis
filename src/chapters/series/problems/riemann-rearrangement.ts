@@ -139,8 +139,8 @@ export const riemannRearrangementProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`블록이 영원히 반복되므로 (2단계) 양항·음항 번호는 둘 다 \(\infty\)로 가고, \(q_{\text{last}} \to 0\)이며 \(p_{\text{cross}} \to 0\)입니다 (경계를 넘긴 양항들은 \(p_i\)의 부분수열). 따라서 \(\lvert S_N - s \rvert \to 0\), 즉 \(S_N \to s\)입니다. 음항 블록도 대칭적입니다. 이것은 유한한 \(s\)에 대한 리만 재배열 정리의 탐욕 증명입니다 (\(\pm\infty\)도 같은 기계로, 목표를 무한히 키우며 도달합니다).`,
-          en: String.raw`Since the blocks recur forever (step 2), both term indices tend to \(\infty\): \(q_{\text{last}} \to 0\) and \(p_{\text{cross}} \to 0\) (the crossing positives are a subsequence of the \(p_i\)). Hence \(\lvert S_N - s \rvert \to 0\), i.e. \(S_N \to s\). Negative blocks are symmetric. This is the greedy proof of Riemann's rearrangement theorem for finite \(s\) (the \(\pm\infty\) cases use the same machine with an ever-growing target).`,
+          ko: String.raw`블록이 영원히 반복되므로 (2단계) 양항·음항 번호는 둘 다 \(\infty\)로 가고, \(q_{\text{last}} \to 0\)이며 \(p_{\text{cross}} \to 0\)입니다 (경계를 넘긴 양항들은 \(p_i\)의 부분수열). 따라서 \(\lvert S_N - s \rvert \to 0\), 즉 \(S_N \to s\)입니다. 음항 블록도 대칭적입니다. 이것은 유한한 \(s\)에 대한 리만 재배열 정리의 탐욕 증명입니다. (\(\pm\infty\)인 경우는 이 명제의 범위 밖이며 별도 구성이 필요합니다: 예를 들어 목표 \(+\infty\)에서는 고정된 목표 \(s\)를 단계 목표 \(m \to +\infty\)로 바꾸어, \(m\)단계에서 부분합이 \(m\)을 넘을 때까지 양항을 취하는 식으로 수정합니다.)`,
+          en: String.raw`Since the blocks recur forever (step 2), both term indices tend to \(\infty\): \(q_{\text{last}} \to 0\) and \(p_{\text{cross}} \to 0\) (the crossing positives are a subsequence of the \(p_i\)). Hence \(\lvert S_N - s \rvert \to 0\), i.e. \(S_N \to s\). Negative blocks are symmetric. This is the greedy proof of Riemann's rearrangement theorem for finite \(s\). (The \(\pm\infty\) cases lie outside this statement's scope and need a separate construction: for target \(+\infty\), for instance, replace the fixed target \(s\) by stage targets \(m \to +\infty\) — at stage \(m\), take positive terms until the partial sum exceeds \(m\).)`,
         },
       },
     ],
