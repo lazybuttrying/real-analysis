@@ -17,7 +17,9 @@ export const monotoneDiscontinuitiesProblems: readonly ProblemMeta[] = [
     id: 'monotone-one-sided-limits',
     statement: {
       ko: String.raw`단조증가함수 \(f\)가 \([a, b]\)에서 정의될 때, 각 점 \(x \in (a, b]\)에서 왼쪽 극한 \(f(x-) = \sup\{f(t) : t < x\}\)가 존재하고, 각 점 \(x \in [a, b)\)에서 오른쪽 극한 \(f(x+) = \inf\{f(t) : t > x\}\)가 존재함을 보이세요.`,
-      en: String.raw`Let \(f\) be increasing on \([a, b]\). Show that the left limit \(f(x-) = \sup\{f(t) : t < x\}\) exists at every \(x \in (a, b]\), and the right limit \(f(x+) = \inf\{f(t) : t > x\}\) exists at every \(x \in [a, b)\).`,
+      en: String.raw`Let \(f\) be increasing on \([a, b]\).
+
+Show that the left limit \(f(x-) = \sup\{f(t) : t < x\}\) exists at every \(x \in (a, b]\), and the right limit \(f(x+) = \inf\{f(t) : t > x\}\) exists at every \(x \in [a, b)\).`,
     },
     display: [
       String.raw`f(x-) = \sup\{f(t) : t < x\}, \qquad f(x+) = \inf\{f(t) : t > x\}`,
@@ -37,8 +39,12 @@ export const monotoneDiscontinuitiesProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이 상한이 실제로 왼쪽 극한임을 확인합니다. \(\varepsilon > 0\)에 대해 상한의 정의에 의해 \(f(t_0) > f(x-) - \varepsilon\)인 \(t_0 < x\)가 존재합니다. 단조성에 의해 \(t_0 < t < x\)이면 \(f(t_0) \le f(t) \le f(x-) < f(x-) + \varepsilon\)이므로 \(|f(t) - f(x-)| < \varepsilon\) — 즉 \(\lim_{t \uparrow x} f(t) = f(x-)\)입니다.`,
-          en: String.raw`This supremum is indeed the left limit. Given \(\varepsilon > 0\), the definition of the supremum yields \(t_0 < x\) with \(f(t_0) > f(x-) - \varepsilon\). By monotonicity, \(t_0 < t < x\) implies \(f(t_0) \le f(t) \le f(x-) < f(x-) + \varepsilon\), so \(|f(t) - f(x-)| < \varepsilon\) — i.e. \(\lim_{t \uparrow x} f(t) = f(x-)\).`,
+          ko: String.raw`이 상한이 실제로 왼쪽 극한임을 확인합니다. \(\varepsilon > 0\)에 대해 상한의 정의에 의해 \(f(t_0) > f(x-) - \varepsilon\)인 \(t_0 < x\)가 존재합니다.
+
+단조성에 의해 \(t_0 < t < x\)이면 \(f(t_0) \le f(t) \le f(x-) < f(x-) + \varepsilon\)이므로 \(|f(t) - f(x-)| < \varepsilon\) — 즉 \(\lim_{t \uparrow x} f(t) = f(x-)\)입니다.`,
+          en: String.raw`This supremum is indeed the left limit. Given \(\varepsilon > 0\), the definition of the supremum yields \(t_0 < x\) with \(f(t_0) > f(x-) - \varepsilon\).
+
+By monotonicity, \(t_0 < t < x\) implies \(f(t_0) \le f(t) \le f(x-) < f(x-) + \varepsilon\), so \(|f(t) - f(x-)| < \varepsilon\) — i.e. \(\lim_{t \uparrow x} f(t) = f(x-)\).`,
         },
       },
       {
@@ -58,8 +64,12 @@ export const monotoneDiscontinuitiesProblems: readonly ProblemMeta[] = [
   {
     id: 'monotone-countable',
     statement: {
-      ko: String.raw`\([a, b]\)에서 단조인 \(f\)의 불연속점은 최대 가산개임을 보이세요. 힌트: 점프 \(j(x) = f(x+) - f(x-) \ge 0\)의 합이 \(|f(b) - f(a)|\)를 넘지 않음을 보이고, \(\{x : j(x) > 1/n\}\)이 최대 \(n|f(b) - f(a)|\)개의 점을 갖는 유한집합임을 이용하세요.`,
-      en: String.raw`Show that a monotone function \(f\) on \([a, b]\) has at most countably many discontinuities. Hint: show the jumps \(j(x) = f(x+) - f(x-) \ge 0\) sum to at most \(|f(b) - f(a)|\), and that \(\{x : j(x) > 1/n\}\) is finite with at most \(n|f(b) - f(a)|\) points.`,
+      ko: String.raw`\([a, b]\)에서 단조인 \(f\)의 불연속점은 최대 가산개임을 보이세요.
+
+힌트: 점프 \(j(x) = f(x+) - f(x-) \ge 0\)의 합이 \(|f(b) - f(a)|\)를 넘지 않음을 보이고, \(\{x : j(x) > 1/n\}\)이 최대 \(n|f(b) - f(a)|\)개의 점을 갖는 유한집합임을 이용하세요.`,
+      en: String.raw`Show that a monotone function \(f\) on \([a, b]\) has at most countably many discontinuities.
+
+Hint: show the jumps \(j(x) = f(x+) - f(x-) \ge 0\) sum to at most \(|f(b) - f(a)|\), and that \(\{x : j(x) > 1/n\}\) is finite with at most \(n|f(b) - f(a)|\) points.`,
     },
     display: [
       String.raw`j(x) := f(x+) - f(x-) \ge 0, \qquad \sum_{x} j(x) \le |f(b) - f(a)|`,
@@ -73,14 +83,26 @@ export const monotoneDiscontinuitiesProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`축소와 끝점 규약: \(f\)가 감소함수이면 \(-f\)는 증가함수이고 \(f\)와 불연속점이 같으며 점프 크기는 \((-f)(x+) - (-f)(x-) = f(x-) - f(x+) = |f(x+) - f(x-)|\)입니다; \(-f\)에 대한 결론(상한 \((-f)(b) - (-f)(a) = |f(b) - f(a)|\))이 곧 \(f\)에 대한 결론입니다. 따라서 아래에서는 \(f\)가 증가한다고 가정하고 상한은 \(f(b) - f(a)\)로 씁니다. 끝점에서는 안쪽 방향의 편측극한만 존재하므로 \(f(a-) := f(a)\), \(f(b+) := f(b)\)로 읽습니다: 끝점 점프는 \(j(a) = f(a+) - f(a)\), \(j(b) = f(b) - f(b-)\)이며, 이 규약 아래 모든 점에서 \(j(x) \ge 0\)입니다. 먼저 불연속점은 점프에서만 생깁니다. 예제 1에서 \(f(x-)\)와 \(f(x+)\)가 항상 존재하므로, \(\lim_{t \to x} f(t) = f(x)\)가 실패하려면 \(f(x-) < f(x+)\)이어야 합니다 — 제거가능 불연속점도, 진동 불연속점도 불가능하고 오직 점프 \(j(x) = f(x+) - f(x-) > 0\)만 남습니다.`,
-          en: String.raw`Reduction and endpoints: if \(f\) is decreasing, \(-f\) is increasing with the same discontinuity set and jump sizes \((-f)(x+) - (-f)(x-) = f(x-) - f(x+) = |f(x+) - f(x-)|\); the conclusion for \(-f\) (bound \((-f)(b) - (-f)(a) = |f(b) - f(a)|\)) is then the conclusion for \(f\). So assume \(f\) is increasing from here, with bound \(f(b) - f(a)\). At the endpoints only the inward one-sided limit exists, so read \(f(a-) := f(a)\) and \(f(b+) := f(b)\): the endpoint jumps are \(j(a) = f(a+) - f(a)\) and \(j(b) = f(b) - f(b-)\), and \(j(x) \ge 0\) at every point with this convention. First, discontinuities can only be jumps. By problem 1, \(f(x-)\) and \(f(x+)\) always exist, so failure of \(\lim_{t \to x} f(t) = f(x)\) forces \(f(x-) < f(x+)\) — neither removable nor oscillatory discontinuities are possible; only a jump \(j(x) = f(x+) - f(x-) > 0\) remains.`,
+          ko: String.raw`축소와 끝점 규약: \(f\)가 감소함수이면 \(-f\)는 증가함수이고 \(f\)와 불연속점이 같으며 점프 크기는 \((-f)(x+) - (-f)(x-) = f(x-) - f(x+) = |f(x+) - f(x-)|\)입니다; \(-f\)에 대한 결론(상한 \((-f)(b) - (-f)(a) = |f(b) - f(a)|\))이 곧 \(f\)에 대한 결론입니다. 따라서 아래에서는 \(f\)가 증가한다고 가정하고 상한은 \(f(b) - f(a)\)로 씁니다.
+
+끝점에서는 안쪽 방향의 편측극한만 존재하므로 \(f(a-) := f(a)\), \(f(b+) := f(b)\)로 읽습니다: 끝점 점프는 \(j(a) = f(a+) - f(a)\), \(j(b) = f(b) - f(b-)\)이며, 이 규약 아래 모든 점에서 \(j(x) \ge 0\)입니다. 먼저 불연속점은 점프에서만 생깁니다. 예제 1에서 \(f(x-)\)와 \(f(x+)\)가 항상 존재하므로, \(\lim_{t \to x} f(t) = f(x)\)가 실패하려면 \(f(x-) < f(x+)\)이어야 합니다 — 제거가능 불연속점도, 진동 불연속점도 불가능하고 오직 점프 \(j(x) = f(x+) - f(x-) > 0\)만 남습니다.`,
+          en: String.raw`Reduction and endpoints: if \(f\) is decreasing, \(-f\) is increasing with the same discontinuity set and jump sizes \((-f)(x+) - (-f)(x-) = f(x-) - f(x+) = |f(x+) - f(x-)|\); the conclusion for \(-f\) (bound \((-f)(b) - (-f)(a) = |f(b) - f(a)|\)) is then the conclusion for \(f\). So assume \(f\) is increasing from here, with bound \(f(b) - f(a)\).
+
+At the endpoints only the inward one-sided limit exists, so read \(f(a-) := f(a)\) and \(f(b+) := f(b)\): the endpoint jumps are \(j(a) = f(a+) - f(a)\) and \(j(b) = f(b) - f(b-)\), and \(j(x) \ge 0\) at every point with this convention. First, discontinuities can only be jumps. By problem 1, \(f(x-)\) and \(f(x+)\) always exist, so failure of \(\lim_{t \to x} f(t) = f(x)\) forces \(f(x-) < f(x+)\) — neither removable nor oscillatory discontinuities are possible; only a jump \(j(x) = f(x+) - f(x-) > 0\) remains.`,
         },
       },
       {
         text: {
-          ko: String.raw`유한 개의 점 \(x_1 < \cdots < x_m\)을 봅니다. \(x_i < x_{i+1}\)이면 그 사이의 임의의 \(t\) (\(x_i < t < x_{i+1}\))에 대해 단조성으로 \(f(x_i+) = \inf_{s > x_i} f(s) \le f(t) \le \sup_{s < x_{i+1}} f(s) = f(x_{i+1}-)\)입니다. 따라서 \(f(x_i+) \le f(x_{i+1}-)\) — 점프 구간 \([f(x_i-), f(x_i+)]\)와 \([f(x_{i+1}-), f(x_{i+1}+)]\)의 내부는 서로 겹치지 않습니다 (끝점을 공유할 수는 있음). 끝점 위치도 성립합니다: \(a < t < x_1\)이면 \(f(a+) \le f(t) \le f(x_1-)\)이므로 \(f(a+) \le f(x_1-)\)이고, 마찬가지로 \(f(x_m+) \le f(b-)\)입니다. 모두 이으면 \(f(a+) \le f(x_1-) \le f(x_1+) \le f(x_2-) \le \cdots \le f(x_m+) \le f(b-)\)입니다. 따라서 점프 구간들은 \([f(a+), f(b-)]\)의 서로 겹치지 않는 부분구간들이고, 겹치지 않는 부분구간들의 길이 합은 담는 구간의 길이를 넘지 않습니다 — 이 사슬을 따라 망원합하면 아래 부등식이 됩니다. 모든 점프 구간은 \([f(a+), f(b-)] \subseteq [f(a), f(b)]\) 안에 들어 있으므로, \(\sum_{i=1}^{m} j(x_i) = \sum_{i=1}^{m} \big(f(x_i+) - f(x_i-)\big) \le f(b-) - f(a+) \le f(b) - f(a)\)입니다. \(m\)이 임의이므로 전체 점프의 합도 \(\sum_x j(x) \le f(b) - f(a)\)를 만족합니다.`,
-          en: String.raw`Take finitely many points \(x_1 < \cdots < x_m\). If \(x_i < x_{i+1}\) then for any \(t\) with \(x_i < t < x_{i+1}\), monotonicity gives \(f(x_i+) = \inf_{s > x_i} f(s) \le f(t) \le \sup_{s < x_{i+1}} f(s) = f(x_{i+1}-)\). Hence \(f(x_i+) \le f(x_{i+1}-)\) — the interiors of the jump intervals \([f(x_i-), f(x_i+)]\) and \([f(x_{i+1}-), f(x_{i+1}+)]\) are pairwise disjoint (they may share an endpoint). The endpoint positions also hold: for \(a < t < x_1\), \(f(a+) \le f(t) \le f(x_1-)\), so \(f(a+) \le f(x_1-)\), and likewise \(f(x_m+) \le f(b-)\). Chaining everything: \(f(a+) \le f(x_1-) \le f(x_1+) \le f(x_2-) \le \cdots \le f(x_m+) \le f(b-)\). The jump intervals are therefore disjoint subintervals of \([f(a+), f(b-)]\), and the sum of the lengths of disjoint subintervals is at most the length of the containing interval — telescoping along this chain gives the inequality below. Every jump interval lies in \([f(a+), f(b-)] \subseteq [f(a), f(b)]\), so \(\sum_{i=1}^{m} j(x_i) = \sum_{i=1}^{m} \big(f(x_i+) - f(x_i-)\big) \le f(b-) - f(a+) \le f(b) - f(a)\). Since \(m\) is arbitrary, the sum over all jumps satisfies \(\sum_x j(x) \le f(b) - f(a)\).`,
+          ko: String.raw`유한 개의 점 \(x_1 < \cdots < x_m\)을 봅니다. \(x_i < x_{i+1}\)이면 그 사이의 임의의 \(t\) (\(x_i < t < x_{i+1}\))에 대해 단조성으로 \(f(x_i+) = \inf_{s > x_i} f(s) \le f(t) \le \sup_{s < x_{i+1}} f(s) = f(x_{i+1}-)\)입니다. 따라서 \(f(x_i+) \le f(x_{i+1}-)\) — 점프 구간 \([f(x_i-), f(x_i+)]\)와 \([f(x_{i+1}-), f(x_{i+1}+)]\)의 내부는 서로 겹치지 않습니다 (끝점을 공유할 수는 있음).
+
+끝점 위치도 성립합니다: \(a < t < x_1\)이면 \(f(a+) \le f(t) \le f(x_1-)\)이므로 \(f(a+) \le f(x_1-)\)이고, 마찬가지로 \(f(x_m+) \le f(b-)\)입니다. 모두 이으면 \(f(a+) \le f(x_1-) \le f(x_1+) \le f(x_2-) \le \cdots \le f(x_m+) \le f(b-)\)입니다. 따라서 점프 구간들은 \([f(a+), f(b-)]\)의 서로 겹치지 않는 부분구간들이고, 겹치지 않는 부분구간들의 길이 합은 담는 구간의 길이를 넘지 않습니다 — 이 사슬을 따라 망원합하면 아래 부등식이 됩니다.
+
+모든 점프 구간은 \([f(a+), f(b-)] \subseteq [f(a), f(b)]\) 안에 들어 있으므로, \(\sum_{i=1}^{m} j(x_i) = \sum_{i=1}^{m} \big(f(x_i+) - f(x_i-)\big) \le f(b-) - f(a+) \le f(b) - f(a)\)입니다. \(m\)이 임의이므로 전체 점프의 합도 \(\sum_x j(x) \le f(b) - f(a)\)를 만족합니다.`,
+          en: String.raw`Take finitely many points \(x_1 < \cdots < x_m\). If \(x_i < x_{i+1}\) then for any \(t\) with \(x_i < t < x_{i+1}\), monotonicity gives \(f(x_i+) = \inf_{s > x_i} f(s) \le f(t) \le \sup_{s < x_{i+1}} f(s) = f(x_{i+1}-)\). Hence \(f(x_i+) \le f(x_{i+1}-)\) — the interiors of the jump intervals \([f(x_i-), f(x_i+)]\) and \([f(x_{i+1}-), f(x_{i+1}+)]\) are pairwise disjoint (they may share an endpoint).
+
+The endpoint positions also hold: for \(a < t < x_1\), \(f(a+) \le f(t) \le f(x_1-)\), so \(f(a+) \le f(x_1-)\), and likewise \(f(x_m+) \le f(b-)\). Chaining everything: \(f(a+) \le f(x_1-) \le f(x_1+) \le f(x_2-) \le \cdots \le f(x_m+) \le f(b-)\). The jump intervals are therefore disjoint subintervals of \([f(a+), f(b-)]\), and the sum of the lengths of disjoint subintervals is at most the length of the containing interval — telescoping along this chain gives the inequality below.
+
+Every jump interval lies in \([f(a+), f(b-)] \subseteq [f(a), f(b)]\), so \(\sum_{i=1}^{m} j(x_i) = \sum_{i=1}^{m} \big(f(x_i+) - f(x_i-)\big) \le f(b-) - f(a+) \le f(b) - f(a)\). Since \(m\) is arbitrary, the sum over all jumps satisfies \(\sum_x j(x) \le f(b) - f(a)\).`,
         },
       },
       {
@@ -101,7 +123,9 @@ export const monotoneDiscontinuitiesProblems: readonly ProblemMeta[] = [
     id: 'monotone-rational-jumps',
     statement: {
       ko: String.raw`\((q_k)\)가 \((0, 1)\)의 유리수 열거이고, \(g(x) = \sum_{k : q_k < x} 2^{-k}\)라 하자. \(g\)가 \([0, 1]\)에서 단조증가이며 유리수에서 정확히 불연속이고 무리수에서는 연속임을 보이세요.`,
-      en: String.raw`Let \((q_k)\) enumerate the rationals of \((0, 1)\) and \(g(x) = \sum_{k : q_k < x} 2^{-k}\). Show that \(g\) is increasing on \([0, 1]\), discontinuous exactly at the rationals, and continuous at every irrational.`,
+      en: String.raw`Let \((q_k)\) enumerate the rationals of \((0, 1)\) and \(g(x) = \sum_{k : q_k < x} 2^{-k}\).
+
+Show that \(g\) is increasing on \([0, 1]\), discontinuous exactly at the rationals, and continuous at every irrational.`,
     },
     display: [
       String.raw`g(x) = \sum_{k : q_k < x} 2^{-k}, \qquad g(q_m+) - g(q_m) = 2^{-m}`,
@@ -121,14 +145,22 @@ export const monotoneDiscontinuitiesProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x = q_m\)이라 합시다. \(g(q_m)\)의 합에는 \(k = m\)이 들어가지 않습니다 (조건 \(q_k < q_m\)은 \(q_m\) 자신을 제외). \(t > q_m\)이면 \(g(t) - g(q_m) = 2^{-m} + \sum_{k \ne m:\, q_m < q_k < t} 2^{-k}\)입니다: \(2^{-m}\) 항이 켜지고, \((q_m, t)\) 안의 다른 유리수들의 기여가 더해집니다. 이 추가 합은 \(t \downarrow q_m\)일 때 \(0\)으로 갑니다: \(\varepsilon > 0\)에 대해 \(\sum_{k > K} 2^{-k} < \varepsilon\)인 \(K\)를 택하면, \(k \le K\), \(k \ne m\)인 유한 개의 \(q_k\)는 \(q_m\)에서 양의 거리만큼 떨어져 있으므로, \(\delta > 0\)을 그 거리들보다 작게 잡고 \(q_m < t < q_m + \delta\)이면 \(k \ne m\), \(k \le K\)인 어떤 \(q_k\)도 \((q_m, t)\)에 들어가지 않아 추가 합은 \(\sum_{k > K} 2^{-k} < \varepsilon\) 이하입니다. 따라서 \(g(t) \to g(q_m) + 2^{-m}\), 즉 \(g(q_m+) = g(q_m) + 2^{-m}\) — \(g\)는 \(q_m\)에서 \(\frac{1}{2^m}\)만큼 점프하므로 불연속입니다.`,
-          en: String.raw`Let \(x = q_m\). The sum defining \(g(q_m)\) excludes \(k = m\) (the condition \(q_k < q_m\) leaves out \(q_m\) itself). For \(t > q_m\), \(g(t) - g(q_m) = 2^{-m} + \sum_{k \ne m:\, q_m < q_k < t} 2^{-k}\): the \(2^{-m}\) term switches on, plus contributions from other rationals in \((q_m, t)\). The extra sum tends to \(0\) as \(t \downarrow q_m\): given \(\varepsilon > 0\), choose \(K\) with \(\sum_{k > K} 2^{-k} < \varepsilon\); the finitely many \(q_k\) with \(k \le K\), \(k \ne m\), stay a positive distance from \(q_m\), so for \(\delta > 0\) smaller than all those distances and \(q_m < t < q_m + \delta\), no \(k \le K\) with \(k \ne m\) has \(q_k \in (q_m, t)\), and the extra sum is at most \(\sum_{k > K} 2^{-k} < \varepsilon\). Hence \(g(t) \to g(q_m) + 2^{-m}\), i.e. \(g(q_m+) = g(q_m) + 2^{-m}\) — \(g\) jumps by \(\frac{1}{2^m}\) at \(q_m\), so it is discontinuous there.`,
+          ko: String.raw`\(x = q_m\)이라 합시다. \(g(q_m)\)의 합에는 \(k = m\)이 들어가지 않습니다 (조건 \(q_k < q_m\)은 \(q_m\) 자신을 제외). \(t > q_m\)이면 \(g(t) - g(q_m) = 2^{-m} + \sum_{k \ne m:\, q_m < q_k < t} 2^{-k}\)입니다: \(2^{-m}\) 항이 켜지고, \((q_m, t)\) 안의 다른 유리수들의 기여가 더해집니다.
+
+이 추가 합은 \(t \downarrow q_m\)일 때 \(0\)으로 갑니다: \(\varepsilon > 0\)에 대해 \(\sum_{k > K} 2^{-k} < \varepsilon\)인 \(K\)를 택하면, \(k \le K\), \(k \ne m\)인 유한 개의 \(q_k\)는 \(q_m\)에서 양의 거리만큼 떨어져 있으므로, \(\delta > 0\)을 그 거리들보다 작게 잡고 \(q_m < t < q_m + \delta\)이면 \(k \ne m\), \(k \le K\)인 어떤 \(q_k\)도 \((q_m, t)\)에 들어가지 않아 추가 합은 \(\sum_{k > K} 2^{-k} < \varepsilon\) 이하입니다. 따라서 \(g(t) \to g(q_m) + 2^{-m}\), 즉 \(g(q_m+) = g(q_m) + 2^{-m}\) — \(g\)는 \(q_m\)에서 \(\frac{1}{2^m}\)만큼 점프하므로 불연속입니다.`,
+          en: String.raw`Let \(x = q_m\). The sum defining \(g(q_m)\) excludes \(k = m\) (the condition \(q_k < q_m\) leaves out \(q_m\) itself). For \(t > q_m\), \(g(t) - g(q_m) = 2^{-m} + \sum_{k \ne m:\, q_m < q_k < t} 2^{-k}\): the \(2^{-m}\) term switches on, plus contributions from other rationals in \((q_m, t)\).
+
+The extra sum tends to \(0\) as \(t \downarrow q_m\): given \(\varepsilon > 0\), choose \(K\) with \(\sum_{k > K} 2^{-k} < \varepsilon\); the finitely many \(q_k\) with \(k \le K\), \(k \ne m\), stay a positive distance from \(q_m\), so for \(\delta > 0\) smaller than all those distances and \(q_m < t < q_m + \delta\), no \(k \le K\) with \(k \ne m\) has \(q_k \in (q_m, t)\), and the extra sum is at most \(\sum_{k > K} 2^{-k} < \varepsilon\). Hence \(g(t) \to g(q_m) + 2^{-m}\), i.e. \(g(q_m+) = g(q_m) + 2^{-m}\) — \(g\) jumps by \(\frac{1}{2^m}\) at \(q_m\), so it is discontinuous there.`,
         },
       },
       {
         text: {
-          ko: String.raw`이제 \(x\)가 무리수라 합시다. \(\varepsilon > 0\)에 대해 \(\sum_{k > N} 2^{-k} < \varepsilon\)인 \(N\)을 택합니다 (꼬리가 0으로 가므로 가능). \(x\)가 무리수이므로 \(\delta := \min_{1 \le k \le N} |x - q_k| > 0\)입니다. \(|t - x| < \delta\)이면 \(q_1, \dots, q_N\) 중 \(x\)와 \(t\) 사이에 끼는 것이 없어, \(g(t) - g(x)\)의 차이는 꼬리 \(\sum_{k > N} 2^{-k}\) 이하 — 즉 \(|g(t) - g(x)| < \varepsilon\)이므로 \(g\)는 \(x\)에서 연속입니다.`,
-          en: String.raw`Now let \(x\) be irrational. Given \(\varepsilon > 0\), pick \(N\) with \(\sum_{k > N} 2^{-k} < \varepsilon\) (possible since the tail tends to 0). Since \(x\) is irrational, \(\delta := \min_{1 \le k \le N} |x - q_k| > 0\). If \(|t - x| < \delta\), none of \(q_1, \dots, q_N\) lies strictly between \(x\) and \(t\), so the difference \(g(t) - g(x)\) comes only from the tail: \(|g(t) - g(x)| < \varepsilon\). Hence \(g\) is continuous at \(x\).`,
+          ko: String.raw`이제 \(x\)가 무리수라 합시다. \(\varepsilon > 0\)에 대해 \(\sum_{k > N} 2^{-k} < \varepsilon\)인 \(N\)을 택합니다 (꼬리가 0으로 가므로 가능). \(x\)가 무리수이므로 \(\delta := \min_{1 \le k \le N} |x - q_k| > 0\)입니다.
+
+\(|t - x| < \delta\)이면 \(q_1, \dots, q_N\) 중 \(x\)와 \(t\) 사이에 끼는 것이 없어, \(g(t) - g(x)\)의 차이는 꼬리 \(\sum_{k > N} 2^{-k}\) 이하 — 즉 \(|g(t) - g(x)| < \varepsilon\)이므로 \(g\)는 \(x\)에서 연속입니다.`,
+          en: String.raw`Now let \(x\) be irrational. Given \(\varepsilon > 0\), pick \(N\) with \(\sum_{k > N} 2^{-k} < \varepsilon\) (possible since the tail tends to 0). Since \(x\) is irrational, \(\delta := \min_{1 \le k \le N} |x - q_k| > 0\).
+
+If \(|t - x| < \delta\), none of \(q_1, \dots, q_N\) lies strictly between \(x\) and \(t\), so the difference \(g(t) - g(x)\) comes only from the tail: \(|g(t) - g(x)| < \varepsilon\). Hence \(g\) is continuous at \(x\).`,
         },
       },
       {

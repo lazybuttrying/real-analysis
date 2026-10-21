@@ -19,8 +19,12 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
   {
     id: 'rel-compact-equicont',
     statement: {
-      ko: String.raw`\(K\)를 컴팩트 거리공간, \(F \subset C(K)\)를 상한 노름에서 상대 컴팩트라고 하자. 유한 \(\varepsilon/3\)-net을 이용해 \(F\)가 등연속임을 증명하세요 (힌트: 각 net 원소는 컴팩트 \(K\) 위에서 균등연속).`,
-      en: String.raw`Let \(K\) be a compact metric space and \(F \subset C(K)\) relatively compact in the sup norm. Prove \(F\) is equicontinuous using a finite \(\varepsilon/3\)-net (hint: each net member is uniformly continuous on the compact \(K\)).`,
+      ko: String.raw`\(K\)를 컴팩트 거리공간, \(F \subset C(K)\)를 상한 노름에서 상대 컴팩트라고 하자.
+
+유한 \(\varepsilon/3\)-net을 이용해 \(F\)가 등연속임을 증명하세요 (힌트: 각 net 원소는 컴팩트 \(K\) 위에서 균등연속).`,
+      en: String.raw`Let \(K\) be a compact metric space and \(F \subset C(K)\) relatively compact in the sup norm.
+
+Prove \(F\) is equicontinuous using a finite \(\varepsilon/3\)-net (hint: each net member is uniformly continuous on the compact \(K\)).`,
     },
     display: [
       String.raw`\lvert f(x) - f(y) \rvert \le \lVert f - g_j \rVert_\infty + \lvert g_j(x) - g_j(y) \rvert + \lVert g_j - f \rVert_\infty < \varepsilon`,
@@ -33,8 +37,16 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`상대 컴팩트이면 완전 유계입니다: 임의의 \(\varepsilon > 0\)에 대해 폐포 \(\overline{F}\)의 유한 \(\varepsilon/3\)-net \(\{g_1, \dots, g_m\}\)이 존재합니다. 즉 모든 \(f \in F\)에 대해 \(\lVert f - g_j \rVert_\infty < \varepsilon/3\)인 \(g_j\)가 있습니다. \(g_j\)는 \(F\)에 속하지 않아도 됩니다 — 연속이기만 하면 됩니다.`,
-          en: String.raw`Relatively compact implies totally bounded: for any \(\varepsilon > 0\) there is a finite \(\varepsilon/3\)-net \(\{g_1, \dots, g_m\}\) of the closure \(\overline{F}\). That is, every \(f \in F\) has some \(g_j\) with \(\lVert f - g_j \rVert_\infty < \varepsilon/3\). The \(g_j\) need not lie in \(F\) — continuity is all we need.`,
+          ko: String.raw`상대 컴팩트이면 완전 유계입니다: 임의의 \(\varepsilon > 0\)에 대해 폐포 \(\overline{F}\)의 유한 \(\varepsilon/3\)-net \(\{g_1, \dots, g_m\}\)이 존재합니다.
+
+즉 모든 \(f \in F\)에 대해 \(\lVert f - g_j \rVert_\infty < \varepsilon/3\)인 \(g_j\)가 있습니다.
+
+\(g_j\)는 \(F\)에 속하지 않아도 됩니다 — 연속이기만 하면 됩니다.`,
+          en: String.raw`Relatively compact implies totally bounded: for any \(\varepsilon > 0\) there is a finite \(\varepsilon/3\)-net \(\{g_1, \dots, g_m\}\) of the closure \(\overline{F}\).
+
+That is, every \(f \in F\) has some \(g_j\) with \(\lVert f - g_j \rVert_\infty < \varepsilon/3\).
+
+The \(g_j\) need not lie in \(F\) — continuity is all we need.`,
         },
       },
       {
@@ -45,8 +57,16 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이제 \(f \in F\)와 \(d(x, y) < \delta\)인 \(x, y\)를 봅니다. \(\lVert f - g_j \rVert_\infty < \varepsilon/3\)인 \(g_j\)를 고르면 삼각부등식으로 \(\lvert f(x) - f(y) \rvert \le \lvert f(x) - g_j(x) \rvert + \lvert g_j(x) - g_j(y) \rvert + \lvert g_j(y) - f(y) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\)입니다. \(\delta\)가 모든 \(f \in F\)에 공통이므로 \(F\)는 등연속입니다.`,
-          en: String.raw`Now take \(f \in F\) and \(x, y\) with \(d(x, y) < \delta\). Picking \(g_j\) with \(\lVert f - g_j \rVert_\infty < \varepsilon/3\), the triangle inequality gives \(\lvert f(x) - f(y) \rvert \le \lvert f(x) - g_j(x) \rvert + \lvert g_j(x) - g_j(y) \rvert + \lvert g_j(y) - f(y) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\). Since \(\delta\) works for every \(f \in F\), the family \(F\) is equicontinuous.`,
+          ko: String.raw`이제 \(f \in F\)와 \(d(x, y) < \delta\)인 \(x, y\)를 봅니다.
+
+\(\lVert f - g_j \rVert_\infty < \varepsilon/3\)인 \(g_j\)를 고르면 삼각부등식으로 \(\lvert f(x) - f(y) \rvert \le \lvert f(x) - g_j(x) \rvert + \lvert g_j(x) - g_j(y) \rvert + \lvert g_j(y) - f(y) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\)입니다.
+
+\(\delta\)가 모든 \(f \in F\)에 공통이므로 \(F\)는 등연속입니다.`,
+          en: String.raw`Now take \(f \in F\) and \(x, y\) with \(d(x, y) < \delta\).
+
+Picking \(g_j\) with \(\lVert f - g_j \rVert_\infty < \varepsilon/3\), the triangle inequality gives \(\lvert f(x) - f(y) \rvert \le \lvert f(x) - g_j(x) \rvert + \lvert g_j(x) - g_j(y) \rvert + \lvert g_j(y) - f(y) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\).
+
+Since \(\delta\) works for every \(f \in F\), the family \(F\) is equicontinuous.`,
         },
       },
       {
@@ -60,8 +80,12 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
   {
     id: 'diagonal-extraction',
     statement: {
-      ko: String.raw`\(K\)를 컴팩트 거리공간, \(\{x_k\}\)를 \(K\)의 가산 조밀 부분집합, \((f_n)\)을 \(\sup_n \lVert f_n \rVert_\infty \le M\)인 \(C(K)\)의 수열이라 하자. 대각선 논법으로 모든 \(x_k\)에서 수렴하는 부분수열을 구성하세요.`,
-      en: String.raw`Let \(K\) be a compact metric space, \(\{x_k\}\) a countable dense subset of \(K\), and \((f_n)\) a sequence in \(C(K)\) with \(\sup_n \lVert f_n \rVert_\infty \le M\). Construct, by the diagonal argument, a subsequence converging at every \(x_k\).`,
+      ko: String.raw`\(K\)를 컴팩트 거리공간, \(\{x_k\}\)를 \(K\)의 가산 조밀 부분집합, \((f_n)\)을 \(\sup_n \lVert f_n \rVert_\infty \le M\)인 \(C(K)\)의 수열이라 하자.
+
+대각선 논법으로 모든 \(x_k\)에서 수렴하는 부분수열을 구성하세요.`,
+      en: String.raw`Let \(K\) be a compact metric space, \(\{x_k\}\) a countable dense subset of \(K\), and \((f_n)\) a sequence in \(C(K)\) with \(\sup_n \lVert f_n \rVert_\infty \le M\).
+
+Construct, by the diagonal argument, a subsequence converging at every \(x_k\).`,
     },
     display: [
       String.raw`n^{(1)} \supset n^{(2)} \supset \cdots \quad \text{(nested index sequences)}, \qquad m_j = n^{(j)}_j \ \text{(diagonal)}`,
@@ -74,8 +98,16 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`컴팩트 거리공간은 가분입니다 (각 \(r\)에 대한 유한 \(1/r\)-net의 합집합). 이제 수열 \((f_n)\)을 봅니다. 각 \(k\)에 대해 수열 \((f_n(x_k))_n\)은 \([-M, M]\)에 갇힌 실수 수열이므로, Bolzano–Weierstrass 정리로 수렴하는 부분수열을 가집니다.`,
-          en: String.raw`A compact metric space is separable (take the union of finite \(1/r\)-nets). Now look at \((f_n)\). For each \(k\), the scalar sequence \((f_n(x_k))_n\) is trapped in \([-M, M]\), so by Bolzano–Weierstrass it has a convergent subsequence.`,
+          ko: String.raw`컴팩트 거리공간은 가분입니다 (각 \(r\)에 대한 유한 \(1/r\)-net의 합집합).
+
+이제 수열 \((f_n)\)을 봅니다.
+
+각 \(k\)에 대해 수열 \((f_n(x_k))_n\)은 \([-M, M]\)에 갇힌 실수 수열이므로, Bolzano–Weierstrass 정리로 수렴하는 부분수열을 가집니다.`,
+          en: String.raw`A compact metric space is separable (take the union of finite \(1/r\)-nets).
+
+Now look at \((f_n)\).
+
+For each \(k\), the scalar sequence \((f_n(x_k))_n\) is trapped in \([-M, M]\), so by Bolzano–Weierstrass it has a convergent subsequence.`,
         },
       },
       {
@@ -92,8 +124,24 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(k\)를 고정합니다. \(j \ge k\)인 각 \(j\)에 대해 \(m_j = n^{(j)}_j\)는 \((n^{(k)}_i)\)의 항이므로 \(m_j = n^{(k)}_{i_j}\)인 \(i_j\)가 존재합니다. 중첩 합성 \(\psi_k(j) = \sigma^{(k)} \circ \cdots \circ \sigma^{(j-1)}(j)\)에 대해 \(i_j = \psi_k(j)\)이고, 엄격증가 합성은 엄격증가를 보존하므로 지표 부등식 \(i_{j+1} = \psi_k(j+1) > \psi_k(j) = i_j\)를 얻습니다. 따라서 꼬리 \((m_j)_{j \ge k} = (n^{(k)}_{i_j})_{j \ge k}\)는 \((n^{(k)}_i)\)의 부분수열이고, \(f_{m_j}(x_k)\)는 수렴 수열 \((f_{n^{(k)}_i}(x_k))_i\)의 부분수열이므로 수렴합니다. \(k\)가 임의였으므로 \((f_{m_j})\)는 모든 \(x_k\)에서 수렴합니다 — 조밀 집합 위의 점별 수렴입니다.`,
-          en: String.raw`Fix \(k\). For each \(j \ge k\), \(m_j = n^{(j)}_j\) is a term of \((n^{(k)}_i)\), so write \(m_j = n^{(k)}_{i_j}\). The nested composition \(\psi_k(j) = \sigma^{(k)} \circ \cdots \circ \sigma^{(j-1)}(j)\) gives \(i_j = \psi_k(j)\), and strictly increasing composition preserves strict increase, yielding the index inequality \(i_{j+1} = \psi_k(j+1) > \psi_k(j) = i_j\). Hence the tail \((m_j)_{j \ge k} = (n^{(k)}_{i_j})_{j \ge k}\) is a subsequence of \((n^{(k)}_i)\), and \(f_{m_j}(x_k)\) is a subsequence of the convergent sequence \((f_{n^{(k)}_i}(x_k))_i\), so it converges. Since \(k\) was arbitrary, \((f_{m_j})\) converges at every \(x_k\) — pointwise convergence on the dense set.`,
+          ko: String.raw`\(k\)를 고정합니다.
+
+\(j \ge k\)인 각 \(j\)에 대해 \(m_j = n^{(j)}_j\)는 \((n^{(k)}_i)\)의 항이므로 \(m_j = n^{(k)}_{i_j}\)인 \(i_j\)가 존재합니다.
+
+중첩 합성 \(\psi_k(j) = \sigma^{(k)} \circ \cdots \circ \sigma^{(j-1)}(j)\)에 대해 \(i_j = \psi_k(j)\)이고, 엄격증가 합성은 엄격증가를 보존하므로 지표 부등식 \(i_{j+1} = \psi_k(j+1) > \psi_k(j) = i_j\)를 얻습니다.
+
+따라서 꼬리 \((m_j)_{j \ge k} = (n^{(k)}_{i_j})_{j \ge k}\)는 \((n^{(k)}_i)\)의 부분수열이고, \(f_{m_j}(x_k)\)는 수렴 수열 \((f_{n^{(k)}_i}(x_k))_i\)의 부분수열이므로 수렴합니다.
+
+\(k\)가 임의였으므로 \((f_{m_j})\)는 모든 \(x_k\)에서 수렴합니다 — 조밀 집합 위의 점별 수렴입니다.`,
+          en: String.raw`Fix \(k\).
+
+For each \(j \ge k\), \(m_j = n^{(j)}_j\) is a term of \((n^{(k)}_i)\), so write \(m_j = n^{(k)}_{i_j}\).
+
+The nested composition \(\psi_k(j) = \sigma^{(k)} \circ \cdots \circ \sigma^{(j-1)}(j)\) gives \(i_j = \psi_k(j)\), and strictly increasing composition preserves strict increase, yielding the index inequality \(i_{j+1} = \psi_k(j+1) > \psi_k(j) = i_j\).
+
+Hence the tail \((m_j)_{j \ge k} = (n^{(k)}_{i_j})_{j \ge k}\) is a subsequence of \((n^{(k)}_i)\), and \(f_{m_j}(x_k)\) is a subsequence of the convergent sequence \((f_{n^{(k)}_i}(x_k))_i\), so it converges.
+
+Since \(k\) was arbitrary, \((f_{m_j})\) converges at every \(x_k\) — pointwise convergence on the dense set.`,
         },
       },
       {
@@ -107,8 +155,12 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
   {
     id: 'uniform-upgrade',
     statement: {
-      ko: String.raw`등연속인 점별 유계 수열 \((f_n) \subset C(K)\) (\(K\) 컴팩트 거리공간)가 가산 조밀 집합 \(\{x_k\}\) 위에서 점별 수렴한다고 하자. \(\varepsilon/3\) 논증으로 이 수렴이 \(K\) 전체에서 균등함을 증명하고, 따름정리로 \((x^n)\)이 \([0,1]\)에서 균등수렴하는 부분수열을 갖지 않음을 보이세요.`,
-      en: String.raw`Let \((f_n) \subset C(K)\) be equicontinuous and pointwise bounded (\(K\) compact metric), converging pointwise on a countable dense set \(\{x_k\}\). Prove by the \(\varepsilon/3\) argument that the convergence is uniform on all of \(K\), and deduce as a corollary that \((x^n)\) has no uniformly convergent subsequence on \([0,1]\).`,
+      ko: String.raw`등연속인 점별 유계 수열 \((f_n) \subset C(K)\) (\(K\) 컴팩트 거리공간)가 가산 조밀 집합 \(\{x_k\}\) 위에서 점별 수렴한다고 하자.
+
+\(\varepsilon/3\) 논증으로 이 수렴이 \(K\) 전체에서 균등함을 증명하고, 따름정리로 \((x^n)\)이 \([0,1]\)에서 균등수렴하는 부분수열을 갖지 않음을 보이세요.`,
+      en: String.raw`Let \((f_n) \subset C(K)\) be equicontinuous and pointwise bounded (\(K\) compact metric), converging pointwise on a countable dense set \(\{x_k\}\).
+
+Prove by the \(\varepsilon/3\) argument that the convergence is uniform on all of \(K\), and deduce as a corollary that \((x^n)\) has no uniformly convergent subsequence on \([0,1]\).`,
     },
     display: [
       String.raw`\lvert f_p(x) - f_q(x) \rvert \le \tfrac{\varepsilon}{3} + \tfrac{\varepsilon}{3} + \tfrac{\varepsilon}{3} = \varepsilon \quad (p, q \ge N,\ \text{uniformly Cauchy)}`,
@@ -134,20 +186,50 @@ export const arzelaAscoliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`임의의 \(x \in K\)에 대해 \(d(x, x_{k_i}) < \delta\)인 \(x_{k_i}\)를 고릅니다. 삼각부등식: \(p, q \ge N\)이면 \(\lvert f_p(x) - f_q(x) \rvert \le \lvert f_p(x) - f_p(x_{k_i}) \rvert + \lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert + \lvert f_q(x_{k_i}) - f_q(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\)입니다. 따라서 \((f_n)\) 자체가 균등 Cauchy이므로, \(C(K)\)의 완비성에 의해 \((f_n)\)이 균등수렴합니다.`,
-          en: String.raw`For arbitrary \(x \in K\), pick \(x_{k_i}\) with \(d(x, x_{k_i}) < \delta\). By the triangle inequality, for \(p, q \ge N\), \(\lvert f_p(x) - f_q(x) \rvert \le \lvert f_p(x) - f_p(x_{k_i}) \rvert + \lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert + \lvert f_q(x_{k_i}) - f_q(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\). Hence \((f_n)\) itself is uniformly Cauchy, so \((f_n)\) converges uniformly by completeness of \(C(K)\).`,
+          ko: String.raw`임의의 \(x \in K\)에 대해 \(d(x, x_{k_i}) < \delta\)인 \(x_{k_i}\)를 고릅니다.
+
+삼각부등식: \(p, q \ge N\)이면 \(\lvert f_p(x) - f_q(x) \rvert \le \lvert f_p(x) - f_p(x_{k_i}) \rvert + \lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert + \lvert f_q(x_{k_i}) - f_q(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\)입니다.
+
+따라서 \((f_n)\) 자체가 균등 Cauchy이므로, \(C(K)\)의 완비성에 의해 \((f_n)\)이 균등수렴합니다.`,
+          en: String.raw`For arbitrary \(x \in K\), pick \(x_{k_i}\) with \(d(x, x_{k_i}) < \delta\).
+
+By the triangle inequality, for \(p, q \ge N\), \(\lvert f_p(x) - f_q(x) \rvert \le \lvert f_p(x) - f_p(x_{k_i}) \rvert + \lvert f_p(x_{k_i}) - f_q(x_{k_i}) \rvert + \lvert f_q(x_{k_i}) - f_q(x) \rvert < \varepsilon/3 + \varepsilon/3 + \varepsilon/3 = \varepsilon\).
+
+Hence \((f_n)\) itself is uniformly Cauchy, so \((f_n)\) converges uniformly by completeness of \(C(K)\).`,
         },
       },
       {
         text: {
-          ko: String.raw`이로써 (\(\Longleftarrow\))가 완성됩니다: 점별 유계 + 등연속이면 (앞 문제의 언급대로) 균등 유계입니다. 또 임의의 수열에 앞 문제의 대각선 추출을 적용하면 조밀 집합 위에서 수렴하는 부분수열을 얻고, 위의 1–3단계를 그 부분수열에 적용하면 그 부분수열이 균등수렴합니다. 따라서 모든 수열이 균등수렴 부분수열을 가지므로, 거리공간에서의 순차 컴팩트성에 의해 집합은 상대 컴팩트입니다.`,
-          en: String.raw`This completes (\(\Longleftarrow\)): pointwise bounded + equicontinuous implies uniformly bounded (as noted in the first problem). Also, applying the diagonal extraction of the previous problem to any sequence gives a subsequence converging on the dense set, and applying steps 1–3 to that subsequence shows it converges uniformly. Hence every sequence has a uniformly convergent subsequence, so by sequential compactness in metric spaces the set is relatively compact.`,
+          ko: String.raw`이로써 (\(\Longleftarrow\))가 완성됩니다: 점별 유계 + 등연속이면 (앞 문제의 언급대로) 균등 유계입니다.
+
+또 임의의 수열에 앞 문제의 대각선 추출을 적용하면 조밀 집합 위에서 수렴하는 부분수열을 얻고, 위의 1–3단계를 그 부분수열에 적용하면 그 부분수열이 균등수렴합니다.
+
+따라서 모든 수열이 균등수렴 부분수열을 가지므로, 거리공간에서의 순차 컴팩트성에 의해 집합은 상대 컴팩트입니다.`,
+          en: String.raw`This completes (\(\Longleftarrow\)): pointwise bounded + equicontinuous implies uniformly bounded (as noted in the first problem).
+
+Also, applying the diagonal extraction of the previous problem to any sequence gives a subsequence converging on the dense set, and applying steps 1–3 to that subsequence shows it converges uniformly.
+
+Hence every sequence has a uniformly convergent subsequence, so by sequential compactness in metric spaces the set is relatively compact.`,
         },
       },
       {
         text: {
-          ko: String.raw`따름정리: \((x^n)\)은 \([0,1]\)에서 균등수렴하는 부분수열을 갖지 않습니다. 점별 극한은 \([0,1)\)에서 0, \(x = 1\)에서 1로 불연속입니다. 만약 어떤 부분수열이 균등수렴했다면 그 극한은 연속함수들의 균등 극한이므로 연속이어야 하고, 점별 극한과 일치해야 하므로 모순입니다. 즉 \(\{x^n\}\)은 \(x = 1\)에서 등연속이 아니고 완전 유계도 아닙니다: 부분수열 \(x^{4^k}\)는 \(7/16\)-분리되어 있습니다 — \(a = 4^k < 4^\ell = b\)이면 증인점 \(x = 2^{-1/a}\)에서 \(x^a = 1/2\)이고 \(x^b = 2^{-b/a} \le 2^{-4} = 1/16\)이므로 \(\lVert x^a - x^b \rVert_\infty \ge 1/2 - 1/16 = 7/16 = 0.4375 \ge 0.4\)입니다. (모든 서로 다른 쌍이 이렇게 떨어져 있는 것은 아닙니다: \(\lVert x - x^2 \rVert_\infty = 1/4\)입니다.)`,
-          en: String.raw`Corollary: \((x^n)\) has no uniformly convergent subsequence on \([0,1]\). Its pointwise limit is discontinuous — 0 on \([0,1)\), 1 at \(x = 1\). If some subsequence converged uniformly, its limit would be continuous (a uniform limit of continuous functions) and would have to equal the pointwise limit — contradiction. So \(\{x^n\}\) is not equicontinuous at \(x = 1\), and not totally bounded either: the subsequence \(x^{4^k}\) is \(7/16\)-separated — for \(a = 4^k < 4^\ell = b\), at the witness point \(x = 2^{-1/a}\) we have \(x^a = 1/2\) and \(x^b = 2^{-b/a} \le 2^{-4} = 1/16\), so \(\lVert x^a - x^b \rVert_\infty \ge 1/2 - 1/16 = 7/16 = 0.4375 \ge 0.4\). (Not every distinct pair is this far apart: \(\lVert x - x^2 \rVert_\infty = 1/4\).)`,
+          ko: String.raw`따름정리: \((x^n)\)은 \([0,1]\)에서 균등수렴하는 부분수열을 갖지 않습니다.
+
+점별 극한은 \([0,1)\)에서 0, \(x = 1\)에서 1로 불연속입니다.
+
+만약 어떤 부분수열이 균등수렴했다면 그 극한은 연속함수들의 균등 극한이므로 연속이어야 하고, 점별 극한과 일치해야 하므로 모순입니다.
+
+즉 \(\{x^n\}\)은 \(x = 1\)에서 등연속이 아니고 완전 유계도 아닙니다: 부분수열 \(x^{4^k}\)는 \(7/16\)-분리되어 있습니다 — \(a = 4^k < 4^\ell = b\)이면 증인점 \(x = 2^{-1/a}\)에서 \(x^a = 1/2\)이고 \(x^b = 2^{-b/a} \le 2^{-4} = 1/16\)이므로 \(\lVert x^a - x^b \rVert_\infty \ge 1/2 - 1/16 = 7/16 = 0.4375 \ge 0.4\)입니다.
+
+(모든 서로 다른 쌍이 이렇게 떨어져 있는 것은 아닙니다: \(\lVert x - x^2 \rVert_\infty = 1/4\)입니다.)`,
+          en: String.raw`Corollary: \((x^n)\) has no uniformly convergent subsequence on \([0,1]\).
+
+Its pointwise limit is discontinuous — 0 on \([0,1)\), 1 at \(x = 1\). If some subsequence converged uniformly, its limit would be continuous (a uniform limit of continuous functions) and would have to equal the pointwise limit — contradiction.
+
+So \(\{x^n\}\) is not equicontinuous at \(x = 1\), and not totally bounded either: the subsequence \(x^{4^k}\) is \(7/16\)-separated — for \(a = 4^k < 4^\ell = b\), at the witness point \(x = 2^{-1/a}\) we have \(x^a = 1/2\) and \(x^b = 2^{-b/a} \le 2^{-4} = 1/16\), so \(\lVert x^a - x^b \rVert_\infty \ge 1/2 - 1/16 = 7/16 = 0.4375 \ge 0.4\).
+
+(Not every distinct pair is this far apart: \(\lVert x - x^2 \rVert_\infty = 1/4\).)`,
         },
       },
     ],
