@@ -20,8 +20,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\([0,1]\)에서 \(x^2\)은 증가함수입니다: \(0 \leq x_1 < x_2 \leq 1\)이면 \(x_1^2 < x_2^2\)입니다.`,
-                en: String.raw`\(x^2\) is increasing on \([0,1]\): \(0 \leq x_1 < x_2 \leq 1\) implies \(x_1^2 < x_2^2\).`,
+                ko: String.raw`\([0,1]\)에서 \(x^2\)은 증가함수입니다: \(0 \leq x_1 < x_2 \leq 1\)이면 인수분해 \(x_2^2 - x_1^2 = (x_2 - x_1)(x_1 + x_2)\)에서 \(x_2 - x_1 > 0\)이고, \(x_1 + x_2 > 0\)입니다 (\(x_1 = x_2 = 0\)인 경우는 \(x_1 < x_2\)라 제외되고, \(x_1 = 0 < x_2\)이면 \(x_1 + x_2 = x_2 > 0\)). 따라서 곱이 양수라 \(x_1^2 < x_2^2\)입니다.`,
+                en: String.raw`\(x^2\) is increasing on \([0,1]\): if \(0 \leq x_1 < x_2 \leq 1\), factor \(x_2^2 - x_1^2 = (x_2 - x_1)(x_1 + x_2)\); here \(x_2 - x_1 > 0\) and \(x_1 + x_2 > 0\) (the case \(x_1 = x_2 = 0\) is excluded by \(x_1 < x_2\), and if \(x_1 = 0 < x_2\) then \(x_1 + x_2 = x_2 > 0\)). Hence the product is positive, so \(x_1^2 < x_2^2\).`,
               },
             },
             {

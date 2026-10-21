@@ -26,8 +26,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`기저 \(n = 0\): 좌변은 \((x+y)^0 = 1\)이고, 우변은 \(k=0\)인 항 하나뿐이라 \(\binom{0}{0}x^0y^0 = 1\cdot 1\cdot 1 = 1\) — 성립합니다.`,
-          en: String.raw`Base case \(n = 0\): the left side is \((x+y)^0 = 1\), and the right side has only the term \(k = 0\), giving \(\binom{0}{0}x^0y^0 = 1\cdot 1\cdot 1 = 1\) — it holds.`,
+          ko: String.raw`기저 \(n = 0\): 여기서 \(0^0 = 1\)이라는 관례를 씁니다 (빈 곱, empty product) — \(x + y = 0\)이어도 \((x+y)^0 = 1\)이고, \(x = 0\) 또는 \(y = 0\)이어도 \(x^0, y^0\) 항은 \(1\)입니다. 좌변은 \((x+y)^0 = 1\)이고, 우변은 \(k=0\)인 항 하나뿐이라 \(\binom{0}{0}x^0y^0 = 1\cdot 1\cdot 1 = 1\) — 성립합니다.`,
+          en: String.raw`Base case \(n = 0\): use the convention \(0^0 = 1\) here (the empty product) — \((x+y)^0 = 1\) even when \(x + y = 0\), and the factors \(x^0, y^0\) are \(1\) even when \(x = 0\) or \(y = 0\). The left side is \((x+y)^0 = 1\), and the right side has only the term \(k = 0\), giving \(\binom{0}{0}x^0y^0 = 1\cdot 1\cdot 1 = 1\) — it holds.`,
         },
       },
       {

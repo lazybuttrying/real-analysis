@@ -53,8 +53,14 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\((a_n)\)과 \((b_n)\)은 모두 유리수 수열입니다. 차이는 \(a_n - b_n = \frac1n \to 0\)이므로, 동치 관계의 정의에 의해 \((a_n) \sim (b_n)\)입니다.`,
-                en: String.raw`Both \((a_n)\) and \((b_n)\) are rational sequences. Their difference is \(a_n - b_n = \frac1n \to 0\), so \((a_n) \sim (b_n)\) by the definition of the equivalence relation.`,
+                ko: String.raw`먼저 두 수열이 모두 유리수 코시수열임을 확인합니다 (\([(a_n)] = [(b_n)]\)라는 표기 자체가 이를 전제합니다). \((b_n)\)은 상수수열이라 \(|b_m - b_n| = 0\)으로 자명히 코시입니다. \((a_n)\)에 대해서는 \(|a_m - a_n| = |1/m - 1/n| \le 1/m + 1/n\)이므로, \(\varepsilon > 0\)에 대해 \(N > 2/\varepsilon\)로 잡으면 \(m, n \ge N\)일 때 \(|a_m - a_n| < \varepsilon\)입니다 — \((a_n)\)도 코시입니다.`,
+                en: String.raw`First verify both are rational Cauchy sequences (the notation \([(a_n)] = [(b_n)]\) presupposes this). The constant sequence \((b_n)\) is trivially Cauchy: \(|b_m - b_n| = 0\). For \((a_n)\), \(|a_m - a_n| = |1/m - 1/n| \le 1/m + 1/n\), so given \(\varepsilon > 0\), taking \(N > 2/\varepsilon\) gives \(|a_m - a_n| < \varepsilon\) for \(m, n \ge N\) — \((a_n)\) is Cauchy too.`,
+              },
+            },
+            {
+              text: {
+                ko: String.raw`두 수열은 서로 다릅니다: 모든 \(n\)에 대해 \(a_n - b_n = \frac1n \ne 0\), 즉 \(a_n \ne b_n\)입니다 (수열로서는 항마다 다릅니다). 그런데 그 차이 \(\frac1n \to 0\)이므로, 동치 관계의 정의에 의해 \((a_n) \sim (b_n)\)입니다.`,
+                en: String.raw`The two sequences are different: \(a_n - b_n = \frac1n \ne 0\) for every \(n\), i.e. \(a_n \ne b_n\) (they differ term by term as sequences). But their difference \(\frac1n \to 0\), so \((a_n) \sim (b_n)\) by the definition of the equivalence relation.`,
               },
             },
             {

@@ -53,8 +53,8 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`두 행 \((1, 2, 3)\)와 \((4, 5, 6)\) 중 어느 것도 다른 하나의 스칼라 배수가 아니므로(예: \(4 \cdot (1, 2, 3) = (4, 8, 12) \ne (4, 5, 6)\)) 두 행은 선형독립입니다. 따라서 행공간(열공간)의 차원인 랭크는 \(\operatorname{rank} T = 2\)입니다.`,
-          en: String.raw`Neither row is a scalar multiple of the other (e.g. \(4 \cdot (1, 2, 3) = (4, 8, 12) \ne (4, 5, 6)\)), so the rows \((1, 2, 3)\) and \((4, 5, 6)\) are linearly independent. Hence the rank, the dimension of the row (column) space, is \(\operatorname{rank} T = 2\).`,
+          ko: String.raw`두 행 \((1, 2, 3)\)와 \((4, 5, 6)\)는 모두 0이 아닌 벡터입니다 — 이 확인이 필요합니다: 0인 행은 다른 행의 \(0\)배이므로, "스칼라 배수가 아니다"라는 판정은 0이 아닌 행에서만 독립을 줍니다. 어느 행도 다른 행의 스칼라 배수가 아니므로(예: \(4 \cdot (1, 2, 3) = (4, 8, 12) \ne (4, 5, 6)\), 첫 좌표로 강제되는 배수 \(4\)가 둘째 좌표에서 실패합니다) 두 행은 선형독립이라 행 랭크는 \(2\)입니다. 열 랭크도 직접 확인합니다(행 랭크 \(=\) 열 랭크를 인용하지 않습니다): 처음 두 열 \((1, 4)^T\), \((2, 5)^T\)에 대해 \(\det \begin{pmatrix} 1 & 2 \\ 4 & 5 \end{pmatrix} = 1 \cdot 5 - 2 \cdot 4 = -3 \ne 0\)이므로 이 두 열은 선형독립이고, 열공간은 \(\mathbb{R}^2\) 전체라 열 랭크도 \(2\)입니다. 따라서 랭크는 \(\operatorname{rank} T = 2\)입니다.`,
+          en: String.raw`Both rows \((1, 2, 3)\) and \((4, 5, 6)\) are nonzero — this check is needed: a zero row IS a scalar multiple (\(0\) times) of the other, so the "not a scalar multiple" criterion yields independence only for nonzero rows. Neither row is a scalar multiple of the other (e.g. \(4 \cdot (1, 2, 3) = (4, 8, 12) \ne (4, 5, 6)\): the multiple \(4\) forced by the first coordinate already fails at the second), so the rows are linearly independent and the row rank is \(2\). Verify the column rank directly too (without citing row rank \(=\) column rank): for the first two columns \((1, 4)^T\), \((2, 5)^T\), \(\det \begin{pmatrix} 1 & 2 \\ 4 & 5 \end{pmatrix} = 1 \cdot 5 - 2 \cdot 4 = -3 \ne 0\), so these two columns are linearly independent, the column space is all of \(\mathbb{R}^2\), and the column rank is also \(2\). Hence \(\operatorname{rank} T = 2\).`,
         },
       },
       {
@@ -92,14 +92,14 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`두 열은 \((2, 4)^T = 2(1, 2)^T\)이므로 한 열은 다른 열의 스칼라 배수입니다. 열 \((1, 2)^T\) 하나만으로 열공간 전체가 생성됩니다.`,
-          en: String.raw`The columns satisfy \((2, 4)^T = 2(1, 2)^T\), so one column is a scalar multiple of the other. The single column \((1, 2)^T\) spans the whole column space.`,
+          ko: String.raw`두 열은 \((2, 4)^T = 2(1, 2)^T\)이므로 한 열은 다른 열의 스칼라 배수입니다. 열 \((1, 2)^T\) 하나만으로 열공간 전체가 생성됩니다(생성). 독립성도 필요합니다: \((1, 2)^T \ne (0, 0)^T\)이므로 원소가 하나뿐인 집합 \(\{(1, 2)^T\}\)는 선형독립입니다 (\(c(1, 2)^T = 0\)이면 \(c = 0\)).`,
+          en: String.raw`The columns satisfy \((2, 4)^T = 2(1, 2)^T\), so one column is a scalar multiple of the other. The single column \((1, 2)^T\) spans the whole column space (spanning). Independence is also required: since \((1, 2)^T \ne (0, 0)^T\), the singleton \(\{(1, 2)^T\}\) is linearly independent (if \(c(1, 2)^T = 0\) then \(c = 0\)).`,
         },
       },
       {
         text: {
-          ko: String.raw`따라서 열공간의 기저는 \(\{(1, 2)^T\}\)이고, \(\dim\)(열공간) \(= 1 =\) 랭크입니다.`,
-          en: String.raw`Hence a basis of the column space is \(\{(1, 2)^T\}\), and \(\dim\)(column space) \(= 1 =\) the rank.`,
+          ko: String.raw`생성하고 독립이므로 열공간의 기저는 \(\{(1, 2)^T\}\)이고, \(\dim\)(열공간) \(= 1 =\) 랭크입니다.`,
+          en: String.raw`Spanning and independent, hence a basis of the column space is \(\{(1, 2)^T\}\), and \(\dim\)(column space) \(= 1 =\) the rank.`,
         },
       },
     ],

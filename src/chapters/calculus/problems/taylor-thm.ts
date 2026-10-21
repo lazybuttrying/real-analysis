@@ -63,8 +63,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(a_n = \frac{|x|^{n+1}}{(n+1)!}\)이라 두면 \(\frac{a_{n+1}}{a_n} = \frac{|x|}{n+2}\)입니다. \(n + 2 > 2|x|\)인 \(n\)부터는 \(a_{n+1} \le \frac{1}{2}a_n\)이므로, \(N = \lceil 2|x| \rceil\)에 대해 \(n \ge N\)일 때 \(a_n \le a_N\left(\frac{1}{2}\right)^{n-N} \to 0\)입니다 — 팩토리얼이 거듭제곱을 기하급수적으로 이깁니다.`,
-                en: String.raw`Put \(a_n = \frac{|x|^{n+1}}{(n+1)!}\); then \(\frac{a_{n+1}}{a_n} = \frac{|x|}{n+2}\). Once \(n + 2 > 2|x|\) we get \(a_{n+1} \le \frac{1}{2}a_n\), so for \(n \ge N := \lceil 2|x| \rceil\), \(a_n \le a_N\left(\frac{1}{2}\right)^{n-N} \to 0\) — the factorial beats the power geometrically.`,
+                ko: String.raw`먼저 \(x = 0\)인 경우는 자명합니다: 급수는 항등적으로 \(0 = \sin 0\)입니다 (\(a_n = 0\)이라 비율은 \(0/0\)이 되므로 아래 비율 논증에서 제외합니다). \(x \ne 0\)라 두고 \(a_n = \frac{|x|^{n+1}}{(n+1)!}\)이라 두면 \(\frac{a_{n+1}}{a_n} = \frac{|x|}{n+2}\)입니다. \(n + 2 > 2|x|\)인 \(n\)부터는 \(a_{n+1} \le \frac{1}{2}a_n\)이므로, \(N = \lceil 2|x| \rceil\)에 대해 \(n \ge N\)일 때 \(a_n \le a_N\left(\frac{1}{2}\right)^{n-N} \to 0\)입니다 — 팩토리얼이 거듭제곱을 기하급수적으로 이깁니다.`,
+                en: String.raw`The case \(x = 0\) is trivial and separate: the series is identically \(0 = \sin 0\) (here \(a_n = 0\) identically, so the ratio below would be \(0/0\)). Assume \(x \ne 0\) and put \(a_n = \frac{|x|^{n+1}}{(n+1)!}\); then \(\frac{a_{n+1}}{a_n} = \frac{|x|}{n+2}\). Once \(n + 2 > 2|x|\) we get \(a_{n+1} \le \frac{1}{2}a_n\), so for \(n \ge N := \lceil 2|x| \rceil\), \(a_n \le a_N\left(\frac{1}{2}\right)^{n-N} \to 0\) — the factorial beats the power geometrically.`,
               },
             },
             {
@@ -90,8 +90,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\)가 \(a\) 근처에서 수렴하고 항별 미분이 가능하다고 가정합니다.`,
-                en: String.raw`Assume \(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\) converges near \(a\) and can be differentiated term by term.`,
+                ko: String.raw`\(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\)가 \(a\) 근처에서 수렴한다고 가정합니다. 거듭제곱급수 정리에 의해 거듭제곱급수는 수렴반경 내부에서 모든 차수에 대해 항별 미분이 가능하므로, 아래에서 필요한 반복 항별 미분(임의의 \(j\)에 대해 \(j\)번)이 정당합니다 — 이는 가정이 아니라 인용하는 정리입니다.`,
+                en: String.raw`Assume \(f(x) = \sum_{k=0}^{\infty} c_k (x-a)^k\) converges near \(a\). By the power series theorem, a power series is termwise differentiable to all orders inside its radius of convergence, so the repeated termwise differentiation used below (differentiating \(j\) times for arbitrary \(j\)) is justified — this theorem is cited here to align the hypotheses.`,
               },
             },
             {

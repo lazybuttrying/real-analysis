@@ -23,14 +23,14 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(x_n = 1/n\)이라 두자. \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\)이므로, 제곱합이 유한 — 즉 \(x \in \ell^2\)이다.`,
-                en: String.raw`Put \(x_n = 1/n\). Then \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\): the sum of squares is finite, so \(x \in \ell^2\).`,
+                ko: String.raw`\(x_n = 1/n\)이라 두자. \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\)이므로, 제곱합이 유한 — 즉 \(x \in \ell^2\)이다. (값 \(\sum 1/n^2 = \pi^2/6\)은 muntz-szasz 씬에서 Parseval로 증명되며, 수렴 자체는 급수 단원의 적분판정법으로도 얻어진다.)`,
+                en: String.raw`Put \(x_n = 1/n\). Then \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\): the sum of squares is finite, so \(x \in \ell^2\). (The value \(\sum 1/n^2 = \pi^2/6\) is proved by Parseval in the muntz-szasz scene; convergence alone follows from the integral test in the series chapter.)`,
               },
             },
             {
               text: {
-                ko: String.raw`반면 조화급수 \(\sum_{n=1}^{\infty} |x_n| = \sum_{n=1}^{\infty} 1/n = \infty\)는 발산하므로 \(x \notin \ell^1\)이다.`,
-                en: String.raw`But the harmonic series \(\sum_{n=1}^{\infty} |x_n| = \sum_{n=1}^{\infty} 1/n = \infty\) diverges, so \(x \notin \ell^1\).`,
+                ko: String.raw`반면 조화급수 \(\sum_{n=1}^{\infty} |x_n| = \sum_{n=1}^{\infty} 1/n = \infty\)는 발산하므로 \(x \notin \ell^1\)이다. (발산은 Oresme의 묶음 논증이다: 블록 \(1/(2^k+1) + \cdots + 1/2^{k+1}\)은 항이 \(2^k\)개이고 각 항이 \(\ge 1/2^{k+1}\)이라 합이 \(\ge 1/2\)이다; 급수 단원에서 증명된다.)`,
+                en: String.raw`But the harmonic series \(\sum_{n=1}^{\infty} |x_n| = \sum_{n=1}^{\infty} 1/n = \infty\) diverges, so \(x \notin \ell^1\). (Divergence is Oresme's grouping argument: the block \(1/(2^k+1) + \cdots + 1/2^{k+1}\) has \(2^k\) terms each \(\ge 1/2^{k+1}\), hence sums to \(\ge 1/2\); proved in the series chapter.)`,
               },
             },
             {
@@ -89,8 +89,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(x, y \in \ell^\infty\)이면 \((|x_n - y_n|)\)은 유계 수열이므로 상한이 존재하고 유한하다 — \(d_\infty(x, y)\)는 잘 정의되고 \(d_\infty(x, y) \geq 0\)이다.`,
-                en: String.raw`If \(x, y \in \ell^\infty\) then \((|x_n - y_n|)\) is a bounded sequence, so the supremum exists and is finite — \(d_\infty(x, y)\) is well defined and \(d_\infty(x, y) \geq 0\).`,
+                ko: String.raw`\(x, y \in \ell^\infty\)이면 모든 \(n\)에 대해 \(|x_n - y_n| \le |x_n| + |y_n| \le \|x\|_\infty + \|y\|_\infty < \infty\)이므로 \((|x_n - y_n|)\)은 \(\|x\|_\infty + \|y\|_\infty\)로 유계이고, 상한이 존재하고 유한하다 — \(d_\infty(x, y)\)는 잘 정의되고 \(d_\infty(x, y) \geq 0\)이다.`,
+                en: String.raw`If \(x, y \in \ell^\infty\) then for every \(n\), \(|x_n - y_n| \le |x_n| + |y_n| \le \|x\|_\infty + \|y\|_\infty < \infty\), so \((|x_n - y_n|)\) is bounded by \(\|x\|_\infty + \|y\|_\infty\) and the supremum exists and is finite — \(d_\infty(x, y)\) is well defined and \(d_\infty(x, y) \geq 0\).`,
               },
             },
             {

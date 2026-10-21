@@ -65,8 +65,8 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x_2 = tx_1+(1-t)x_3\)이라 두면 \(\frac{x_3-x_2}{x_3-x_1} = t\), \(\frac{x_2-x_1}{x_3-x_1} = 1-t\)이므로 부등식은 \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — 볼록성의 정의입니다. 참고로 \(f'' \ge 0\)이면 \(f'\)에 평균값정리를 적용해 \(f'\)이 증가합니다.`,
-          en: String.raw`With \(x_2 = tx_1+(1-t)x_3\) we have \(\frac{x_3-x_2}{x_3-x_1} = t\) and \(\frac{x_2-x_1}{x_3-x_1} = 1-t\), so the inequality becomes \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — the definition of convexity. Note that \(f'' \ge 0\) makes \(f'\) increasing by applying the mean value theorem to \(f'\).`,
+          ko: String.raw`\(x_2 = tx_1+(1-t)x_3\)이라 두면 \(\frac{x_3-x_2}{x_3-x_1} = t\), \(\frac{x_2-x_1}{x_3-x_1} = 1-t\)이므로 부등식은 \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — 볼록성의 정의입니다. 퇴화 경우는 자명합니다: \(t = 0\) 또는 \(t = 1\)이면 양변이 같아 등호가 성립하고, 점들이 겹치면 (\(x_1 = x_3\)) 역시 등호만 남습니다. 참고로 \(f'' \ge 0\)이면 \(f'\)이 증가합니다 — 단, 이는 추가 가정 하에서입니다: \(f\)가 두 번 미분가능하면 (\(f'\)이 연속이고 내부에서 미분가능하며 도함수가 \(f''\)) \(f'\)에 평균값정리를 적용할 수 있습니다.`,
+          en: String.raw`With \(x_2 = tx_1+(1-t)x_3\) we have \(\frac{x_3-x_2}{x_3-x_1} = t\) and \(\frac{x_2-x_1}{x_3-x_1} = 1-t\), so the inequality becomes \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — the definition of convexity. The degenerate cases are trivial: \(t = 0\) or \(t = 1\) gives equality on both sides, and equal points (\(x_1 = x_3\)) likewise leave only equality. Note that \(f'' \ge 0\) makes \(f'\) increasing — under an extra hypothesis: if \(f\) is twice differentiable (so \(f'\) is continuous and differentiable on the interior with derivative \(f''\)), the mean value theorem applied to \(f'\) gives this.`,
         },
       },
     ],
@@ -74,8 +74,8 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'am-gm',
     statement: {
-      ko: String.raw`log의 오목성으로부터 두 수의 AM–GM 부등식을 유도하세요.`,
-      en: String.raw`Derive the AM–GM inequality for two numbers from the concavity of log.`,
+      ko: String.raw`log의 오목성으로부터 두 양수 \(a, b > 0\)의 AM–GM 부등식을 유도하세요.`,
+      en: String.raw`Derive the AM–GM inequality for two numbers \(a, b > 0\) from the concavity of log.`,
     },
     display: [String.raw`\log\frac{a+b}{2} \ge \frac{\log a + \log b}{2} = \log\sqrt{ab}`],
     preset: { fn: 'square', a: 1, b: 2 },
@@ -86,8 +86,8 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\((\log)''(x) = -\frac{1}{x^2} < 0\)이므로, 이차도함수 판정의 오목 버전(문제 2의 부등호 반전)에 의해 \(\log\)는 오목함수입니다 — 현이 그래프 아래에 놓입니다.`,
-          en: String.raw`Since \((\log)''(x) = -\frac{1}{x^2} < 0\), the concave version of the second-derivative test (the reverse of the inequality in problem 2) makes \(\log\) concave — the chord lies below the graph.`,
+          ko: String.raw`\(\log\)는 \((0, \infty)\)에서 \(C^2\) 함수이고 \((\log)'(x) = \frac{1}{x}\)는 감소합니다 (\(0 < x_1 < x_2\)이면 \(\frac{1}{x_1} > \frac{1}{x_2}\)). 문제 2의 증명을 부등호만 뒤집어 그대로 적용하면 — 도함수가 감소하는 함수는 오목합니다 — \(\log\)는 오목함수입니다: 현이 그래프 아래에 놓입니다. (실제로는 \(C^1\)이고 도함수가 감소하는 것만으로 충분합니다.)`,
+          en: String.raw`\(\log\) is \(C^2\) on \((0, \infty)\), and \((\log)'(x) = \frac{1}{x}\) is decreasing (\(0 < x_1 < x_2\) gives \(\frac{1}{x_1} > \frac{1}{x_2}\)). Problem 2's proof, with every inequality reversed, shows a function with decreasing derivative is concave — applying it to \(\log\) makes \(\log\) concave: the chord lies below the graph. (In fact \(C^1\) with decreasing derivative suffices.)`,
         },
       },
       {

@@ -93,8 +93,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`극한 \(S = \ln 2\)는 항상 연속한 두 부분합 \(S_n\)과 \(S_{n+1}\) 사이에 끼이므로, \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\)입니다.`,
-                en: String.raw`The limit \(S = \ln 2\) always lies between two consecutive partial sums \(S_n\) and \(S_{n+1}\), so \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\).`,
+                ko: String.raw`이제 끼임(sandwich)을 정당화합니다. 짝수 부분합 \((S_{2m})\)은 증가하고 모든 홀수 부분합 이하이므로 유계이며, 홀수 부분합 \((S_{2m+1})\)은 감소하고 모든 짝수 부분합 이상이므로 유계입니다. 간격은 \(S_{2m+1} - S_{2m} = a_{2m+1} \to 0\)이므로 두 부분수열은 공통 극한 \(S\) (\(= \ln 2\))로 수렴하고, 모든 \(m\)에 대해 \(S_{2m} \le S \le S_{2m+1}\)입니다. 따라서 모든 \(n\)에 대해 극한 \(S = \ln 2\)는 연속한 두 부분합 \(S_n\)과 \(S_{n+1}\) 사이에 끼이므로, \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\)입니다.`,
+                en: String.raw`Now justify the sandwich. The even sums \((S_{2m})\) increase and are bounded above by every odd sum, and the odd sums \((S_{2m+1})\) decrease and are bounded below by every even sum. The gap is \(S_{2m+1} - S_{2m} = a_{2m+1} \to 0\), so both subsequences converge to a common limit \(S\) (\(= \ln 2\)), with \(S_{2m} \le S \le S_{2m+1}\) for all \(m\). Hence for every \(n\) the limit \(S = \ln 2\) lies between two consecutive partial sums \(S_n\) and \(S_{n+1}\), so \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\).`,
               },
             },
             {

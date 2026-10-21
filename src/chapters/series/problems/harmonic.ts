@@ -20,8 +20,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`항들을 묶습니다: \(\frac{1}{3}+\frac{1}{4} > \frac{1}{4}+\frac{1}{4} = \frac{1}{2}\), \(\frac{1}{5}+\cdots+\frac{1}{8} > 4\cdot\frac{1}{8} = \frac{1}{2}\). 일반적으로 \(\frac{1}{2^{m-1}+1}+\cdots+\frac{1}{2^m} > 2^{m-1}\cdot\frac{1}{2^m} = \frac{1}{2}\)입니다.`,
-                en: String.raw`Group the terms: \(\frac{1}{3}+\frac{1}{4} > \frac{1}{4}+\frac{1}{4} = \frac{1}{2}\), \(\frac{1}{5}+\cdots+\frac{1}{8} > 4\cdot\frac{1}{8} = \frac{1}{2}\). In general \(\frac{1}{2^{m-1}+1}+\cdots+\frac{1}{2^m} > 2^{m-1}\cdot\frac{1}{2^m} = \frac{1}{2}\).`,
+                ko: String.raw`항들을 묶습니다: \(\frac{1}{3}+\frac{1}{4} > \frac{1}{4}+\frac{1}{4} = \frac{1}{2}\), \(\frac{1}{5}+\cdots+\frac{1}{8} > 4\cdot\frac{1}{8} = \frac{1}{2}\). 일반적으로 \(m \ge 2\)에서 \(\frac{1}{2^{m-1}+1}+\cdots+\frac{1}{2^m} > 2^{m-1}\cdot\frac{1}{2^m} = \frac{1}{2}\)입니다 (\(m = 1\)인 block은 항 \(\frac{1}{2}\) 하나뿐이라 별도로 계산하며, strict inequality가 성립하지 않습니다).`,
+                en: String.raw`Group the terms: \(\frac{1}{3}+\frac{1}{4} > \frac{1}{4}+\frac{1}{4} = \frac{1}{2}\), \(\frac{1}{5}+\cdots+\frac{1}{8} > 4\cdot\frac{1}{8} = \frac{1}{2}\). In general, for \(m \ge 2\), \(\frac{1}{2^{m-1}+1}+\cdots+\frac{1}{2^m} > 2^{m-1}\cdot\frac{1}{2^m} = \frac{1}{2}\) (the \(m = 1\) block is the single term \(\frac{1}{2}\), computed separately; the strict inequality does not hold there).`,
               },
             },
             {
@@ -86,8 +86,8 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(f(x) = \frac{1}{x^p}\)는 양의 감소함수입니다. \(n \ge 2\)에서 \(\frac{1}{n^p} \le \int_{n-1}^{n}\frac{dx}{x^p}\)이므로, \(S_N \le 1 + \int_{1}^{N}\frac{dx}{x^p}\)입니다.`,
-                en: String.raw`\(f(x) = x^{-p}\) is positive and decreasing. For \(n \ge 2\), \(\frac{1}{n^p} \le \int_{n-1}^{n}\frac{dx}{x^p}\), so \(S_N \le 1 + \int_{1}^{N}\frac{dx}{x^p}\).`,
+                ko: String.raw`먼저 \(p \le 0\)인 경우를 분리합니다: 이때 \(\frac{1}{n^p} = n^{-p} \ge 1\)이라 일반항이 \(0\)으로 가지 않으므로 term test로 발산합니다 (이 범위에서는 \(f(x) = x^{-p}\)가 decreasing이 아니므로 아래 적분 비교를 적용하지 않습니다). 이제 \(p > 0\)인 경우만 다루면 \(f(x) = \frac{1}{x^p}\)는 양의 감소함수입니다. \(n \ge 2\)에서 \(\frac{1}{n^p} \le \int_{n-1}^{n}\frac{dx}{x^p}\)이므로, \(S_N \le 1 + \int_{1}^{N}\frac{dx}{x^p}\)입니다.`,
+                en: String.raw`Separate \(p \le 0\) first: then \(\frac{1}{n^p} = n^{-p} \ge 1\), so the general term does not tend to \(0\) and the series diverges by the term test (on this range \(f(x) = x^{-p}\) is not decreasing, so the integral comparison below is not applied there). Now assume \(p > 0\); then \(f(x) = x^{-p}\) is positive and decreasing. For \(n \ge 2\), \(\frac{1}{n^p} \le \int_{n-1}^{n}\frac{dx}{x^p}\), so \(S_N \le 1 + \int_{1}^{N}\frac{dx}{x^p}\).`,
               },
             },
             {
@@ -98,8 +98,8 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(p \le 1\)이면 \(\frac{1}{n^p} \ge \frac{1}{n}\)이므로 조화급수와의 비교로 발산합니다.`,
-                en: String.raw`If \(p \le 1\), \(\frac{1}{n^p} \ge \frac{1}{n}\), so comparison with the harmonic series gives divergence.`,
+                ko: String.raw`\(0 < p \le 1\)이면 \(\frac{1}{n^p} \ge \frac{1}{n}\)이므로 조화급수와의 비교로 발산합니다 (\(p \le 0\)인 경우는 1단계의 term test로 이미 처리했습니다).`,
+                en: String.raw`If \(0 < p \le 1\), \(\frac{1}{n^p} \ge \frac{1}{n}\), so comparison with the harmonic series gives divergence (the case \(p \le 0\) was already handled by the term test in step 1).`,
               },
             },
           ],
