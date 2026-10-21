@@ -13,8 +13,12 @@ export const bohrMollerupProblems: readonly ProblemMeta[] = [
   {
     id: 'factorial',
     statement: {
-      ko: String.raw`\(f: (0,\infty) \to (0,\infty)\)가 \(f(1) = 1\)과 \(f(x+1) = x\,f(x)\) (\(x > 0\))를 만족한다고 하자. 모든 양의 정수 \(n\)에 대해 \(f(n) = (n-1)!\)임을 증명하세요.`,
-      en: String.raw`Let \(f: (0,\infty) \to (0,\infty)\) satisfy \(f(1) = 1\) and \(f(x+1) = x\,f(x)\) for all \(x > 0\). Prove that \(f(n) = (n-1)!\) for every positive integer \(n\).`,
+      ko: String.raw`\(f: (0,\infty) \to (0,\infty)\)가 \(f(1) = 1\)과 \(f(x+1) = x\,f(x)\) (\(x > 0\))를 만족한다고 하자.
+
+모든 양의 정수 \(n\)에 대해 \(f(n) = (n-1)!\)임을 증명하세요.`,
+      en: String.raw`Let \(f: (0,\infty) \to (0,\infty)\) satisfy \(f(1) = 1\) and \(f(x+1) = x\,f(x)\) for all \(x > 0\).
+
+Prove that \(f(n) = (n-1)!\) for every positive integer \(n\).`,
     },
     display: [String.raw`f(1) = 1, \qquad f(x+1) = x\,f(x) \quad \Longrightarrow \quad f(n) = (n-1)!`],
     preset: { amp: 0.3, probe: 0.6 },
@@ -43,8 +47,24 @@ export const bohrMollerupProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`교훈: 이 증명은 처음 두 조건만 사용합니다 — 정수 사이에서는 \(f\)가 전혀 결정되지 않습니다. 실제로 \(|a| < 1\)일 때(예: preset \(a = 0.3\)) impostor \(f_a(x) = \Gamma(x)(1 + a\sin 2\pi x)\)를 보세요. \(|a| < 1\)이면 \(1 + a\sin 2\pi x \ge 1 - |a| > 0\)이므로 \(f_a > 0\)이고 공역 \((0,\infty)\)를 만족합니다(\(|a| \ge 1\)이면 양수성이 깨질 수 있습니다). \(\sin 2\pi n = 0\)이므로 모든 정수 \(n\)에서 \(\Gamma\)와 완전히 일치하면서도, 정수 사이에서는 전혀 다른 함수입니다. 세 번째 조건(로그볼록성)이 바로 이 틈을 메웁니다.`,
-          en: String.raw`The lesson: this proof uses only the first two conditions — \(f\) is not determined at all between the integers. Indeed, for \(|a| < 1\) (e.g. the preset \(a = 0.3\)), consider the impostor \(f_a(x) = \Gamma(x)(1 + a\sin 2\pi x)\). If \(|a| < 1\) then \(1 + a\sin 2\pi x \ge 1 - |a| > 0\), so \(f_a > 0\) and the codomain \((0,\infty)\) is respected (for \(|a| \ge 1\) positivity can fail). It matches \(\Gamma\) exactly at every integer \(n\) (since \(\sin 2\pi n = 0\)) while differing wildly between them. The third condition (log-convexity) is what closes this gap.`,
+          ko: String.raw`교훈: 이 증명은 처음 두 조건만 사용합니다 — 정수 사이에서는 \(f\)가 전혀 결정되지 않습니다.
+
+실제로 \(|a| < 1\)일 때(예: preset \(a = 0.3\)) impostor \(f_a(x) = \Gamma(x)(1 + a\sin 2\pi x)\)를 보세요.
+
+\(|a| < 1\)이면 \(1 + a\sin 2\pi x \ge 1 - |a| > 0\)이므로 \(f_a > 0\)이고 공역 \((0,\infty)\)를 만족합니다(\(|a| \ge 1\)이면 양수성이 깨질 수 있습니다).
+
+\(\sin 2\pi n = 0\)이므로 모든 정수 \(n\)에서 \(\Gamma\)와 완전히 일치하면서도, 정수 사이에서는 전혀 다른 함수입니다.
+
+세 번째 조건(로그볼록성)이 바로 이 틈을 메웁니다.`,
+          en: String.raw`The lesson: this proof uses only the first two conditions — \(f\) is not determined at all between the integers.
+
+Indeed, for \(|a| < 1\) (e.g. the preset \(a = 0.3\)), consider the impostor \(f_a(x) = \Gamma(x)(1 + a\sin 2\pi x)\).
+
+If \(|a| < 1\) then \(1 + a\sin 2\pi x \ge 1 - |a| > 0\), so \(f_a > 0\) and the codomain \((0,\infty)\) is respected (for \(|a| \ge 1\) positivity can fail).
+
+It matches \(\Gamma\) exactly at every integer \(n\) (since \(\sin 2\pi n = 0\)) while differing wildly between them.
+
+The third condition (log-convexity) is what closes this gap.`,
         },
       },
     ],
@@ -109,8 +129,32 @@ export const bohrMollerupProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(\varphi = \ln f\)라 둡니다. 볼록함수의 기울기 단조성을 이용합니다: \(a < b < c\)이면 \(\frac{\varphi(b) - \varphi(a)}{b-a} \le \frac{\varphi(c) - \varphi(b)}{c-b}\)입니다. \(0 < x < 1\), 정수 \(n \ge 2\)에 대해 세 점 \(n-1 < n < n+x\)에 적용하면 아래쪽 bound \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x}\)을 직접 얻습니다. 위쪽 bound는 직접 따르지 않습니다: \(n < n+x < n+1\)에서는 \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\)까지만 얻어집니다. 왼쪽 끝점이 같은 기울기들의 가중평균을 이용하세요: \(\varphi(n+1) - \varphi(n) = x \cdot \frac{\varphi(n+x) - \varphi(n)}{x} + (1-x) \cdot \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\)이며, 두 번째 기울기가 첫 번째 이상이므로 이 가중평균은 첫 번째 기울기 이상입니다. 따라서 \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\)입니다. 합치면 \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\)을 얻습니다.`,
-          en: String.raw`Set \(\varphi = \ln f\). We use slope monotonicity of convex functions: for \(a < b < c\), \(\frac{\varphi(b) - \varphi(a)}{b-a} \le \frac{\varphi(c) - \varphi(b)}{c-b}\). For \(0 < x < 1\) and integer \(n \ge 2\), applying this to \(n-1 < n < n+x\) gives the lower bound \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x}\) directly. The upper bound does not follow directly: from \(n < n+x < n+1\) we only get \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\). Use the weighted average of slopes with the same left endpoint: \(\varphi(n+1) - \varphi(n) = x \cdot \frac{\varphi(n+x) - \varphi(n)}{x} + (1-x) \cdot \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\), and since the second slope is at least the first, this weighted average is at least the first slope. Hence \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\). Together, \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\).`,
+          ko: String.raw`\(\varphi = \ln f\)라 둡니다.
+
+볼록함수의 기울기 단조성을 이용합니다: \(a < b < c\)이면 \(\frac{\varphi(b) - \varphi(a)}{b-a} \le \frac{\varphi(c) - \varphi(b)}{c-b}\)입니다.
+
+\(0 < x < 1\), 정수 \(n \ge 2\)에 대해 세 점 \(n-1 < n < n+x\)에 적용하면 아래쪽 bound \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x}\)을 직접 얻습니다.
+
+위쪽 bound는 직접 따르지 않습니다: \(n < n+x < n+1\)에서는 \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\)까지만 얻어집니다.
+
+왼쪽 끝점이 같은 기울기들의 가중평균을 이용하세요: \(\varphi(n+1) - \varphi(n) = x \cdot \frac{\varphi(n+x) - \varphi(n)}{x} + (1-x) \cdot \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\)이며, 두 번째 기울기가 첫 번째 이상이므로 이 가중평균은 첫 번째 기울기 이상입니다.
+
+따라서 \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\)입니다.
+
+합치면 \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\)을 얻습니다.`,
+          en: String.raw`Set \(\varphi = \ln f\).
+
+We use slope monotonicity of convex functions: for \(a < b < c\), \(\frac{\varphi(b) - \varphi(a)}{b-a} \le \frac{\varphi(c) - \varphi(b)}{c-b}\).
+
+For \(0 < x < 1\) and integer \(n \ge 2\), applying this to \(n-1 < n < n+x\) gives the lower bound \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x}\) directly.
+
+The upper bound does not follow directly: from \(n < n+x < n+1\) we only get \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\).
+
+Use the weighted average of slopes with the same left endpoint: \(\varphi(n+1) - \varphi(n) = x \cdot \frac{\varphi(n+x) - \varphi(n)}{x} + (1-x) \cdot \frac{\varphi(n+1) - \varphi(n+x)}{1-x}\), and since the second slope is at least the first, this weighted average is at least the first slope.
+
+Hence \(\frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\).
+
+Together, \(\varphi(n) - \varphi(n-1) \le \frac{\varphi(n+x) - \varphi(n)}{x} \le \varphi(n+1) - \varphi(n)\).`,
         },
       },
       {
@@ -133,15 +177,31 @@ export const bohrMollerupProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`Gauss 극한과 Euler 적분을 연결합니다. 절단 적분 \(I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt\)에 \(s = \frac{t}{n}\)을 대입하면 \(I_n(x) = n^x\int_0^1 s^{x-1}(1-s)^n\,ds\)입니다. 부분적분을 반복하면 \(\int_0^1 s^{x-1}(1-s)^k\,ds = \frac{k}{x}\int_0^1 s^{x}(1-s)^{k-1}\,ds\)이므로 (경계항은 \(x > 0\)에서 0), \(\int_0^1 s^{x-1}(1-s)^n\,ds = \frac{n!}{x(x+1)\cdots(x+n)}\) — 따라서 \(I_n(x) = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n\)입니다 (\(U_n\)은 위의 위쪽 조임 bound).`,
-          en: String.raw`Connecting the Gauss limit to Euler's integral. In the truncated integral \(I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt\), substitute \(s = \frac{t}{n}\) to get \(I_n(x) = n^x\int_0^1 s^{x-1}(1-s)^n\,ds\). Repeated integration by parts gives \(\int_0^1 s^{x-1}(1-s)^k\,ds = \frac{k}{x}\int_0^1 s^{x}(1-s)^{k-1}\,ds\) (boundary terms vanish for \(x > 0\)), so \(\int_0^1 s^{x-1}(1-s)^n\,ds = \frac{n!}{x(x+1)\cdots(x+n)}\) — hence \(I_n(x) = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n\), where \(U_n\) is the upper squeeze bound above.`,
+          ko: String.raw`Gauss 극한과 Euler 적분을 연결합니다.
+
+절단 적분 \(I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt\)에 \(s = \frac{t}{n}\)을 대입하면 \(I_n(x) = n^x\int_0^1 s^{x-1}(1-s)^n\,ds\)입니다.
+
+부분적분을 반복하면 \(\int_0^1 s^{x-1}(1-s)^k\,ds = \frac{k}{x}\int_0^1 s^{x}(1-s)^{k-1}\,ds\)이므로 (경계항은 \(x > 0\)에서 0), \(\int_0^1 s^{x-1}(1-s)^n\,ds = \frac{n!}{x(x+1)\cdots(x+n)}\) — 따라서 \(I_n(x) = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n\)입니다 (\(U_n\)은 위의 위쪽 조임 bound).`,
+          en: String.raw`Connecting the Gauss limit to Euler's integral.
+
+In the truncated integral \(I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt\), substitute \(s = \frac{t}{n}\) to get \(I_n(x) = n^x\int_0^1 s^{x-1}(1-s)^n\,ds\).
+
+Repeated integration by parts gives \(\int_0^1 s^{x-1}(1-s)^k\,ds = \frac{k}{x}\int_0^1 s^{x}(1-s)^{k-1}\,ds\) (boundary terms vanish for \(x > 0\)), so \(\int_0^1 s^{x-1}(1-s)^n\,ds = \frac{n!}{x(x+1)\cdots(x+n)}\) — hence \(I_n(x) = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n\), where \(U_n\) is the upper squeeze bound above.`,
         },
         display: [String.raw`I_n(x) = \int_0^n t^{x-1}\left(1-\frac{t}{n}\right)^n\,dt = \frac{n^x n!}{x(x+1)\cdots(x+n)} = \frac{n}{n+x}\,U_n`],
       },
       {
         text: {
-          ko: String.raw`이제 \(n \to \infty\): 각 \(t\)에서 \(\left(1-\frac{t}{n}\right)^n \to e^{-t}\)이므로 피적분함수는 \(t^{x-1}e^{-t}\)로 점별 수렴합니다. 지배는 \(\ln(1-u) \le -u\)에서 나옵니다: \(0 \le t \le n\)일 때 \(\left(1-\frac{t}{n}\right)^n = e^{n\ln(1-t/n)} \le e^{-t}\)이므로 지배함수 \(t^{x-1}e^{-t}\) (\(x > 0\)에서 \((0,\infty)\) 위 적분 가능)를 얻습니다. 지배수렴정리로 \(I_n(x) \to \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x)\)입니다.`,
-          en: String.raw`Now \(n \to \infty\): for each \(t\), \(\left(1-\frac{t}{n}\right)^n \to e^{-t}\), so the integrand converges pointwise to \(t^{x-1}e^{-t}\). Domination comes from \(\ln(1-u) \le -u\): for \(0 \le t \le n\), \(\left(1-\frac{t}{n}\right)^n = e^{n\ln(1-t/n)} \le e^{-t}\), giving the integrable dominating function \(t^{x-1}e^{-t}\) on \((0,\infty)\) (for \(x > 0\)). By dominated convergence, \(I_n(x) \to \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x)\).`,
+          ko: String.raw`이제 \(n \to \infty\): 각 \(t\)에서 \(\left(1-\frac{t}{n}\right)^n \to e^{-t}\)이므로 피적분함수는 \(t^{x-1}e^{-t}\)로 점별 수렴합니다.
+
+지배는 \(\ln(1-u) \le -u\)에서 나옵니다: \(0 \le t \le n\)일 때 \(\left(1-\frac{t}{n}\right)^n = e^{n\ln(1-t/n)} \le e^{-t}\)이므로 지배함수 \(t^{x-1}e^{-t}\) (\(x > 0\)에서 \((0,\infty)\) 위 적분 가능)를 얻습니다.
+
+지배수렴정리로 \(I_n(x) \to \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x)\)입니다.`,
+          en: String.raw`Now \(n \to \infty\): for each \(t\), \(\left(1-\frac{t}{n}\right)^n \to e^{-t}\), so the integrand converges pointwise to \(t^{x-1}e^{-t}\).
+
+Domination comes from \(\ln(1-u) \le -u\): for \(0 \le t \le n\), \(\left(1-\frac{t}{n}\right)^n = e^{n\ln(1-t/n)} \le e^{-t}\), giving the integrable dominating function \(t^{x-1}e^{-t}\) on \((0,\infty)\) (for \(x > 0\)).
+
+By dominated convergence, \(I_n(x) \to \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x)\).`,
         },
         display: [String.raw`I_n(x) \longrightarrow \int_0^\infty t^{x-1}e^{-t}\,dt = \Gamma(x) \qquad (n \to \infty)`],
       },

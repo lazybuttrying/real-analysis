@@ -30,8 +30,12 @@ export const peanoCurveProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(p_{k+1}\)은 세분(refinement)입니다: 구간 \([(j-1)/9^k,\, j/9^k]\) 위에서 \(p_{k+1}\)은 같은 \(Q_j^{(k)}\) 안에 들어 있는 9개의 \((k+1)\)단계 부분정사각형을 돕니다 (재귀가 각 \(Q_j\) 안에서 같은 패턴을 적용하므로). 따라서 모든 \(t\)에 대해 \(p_k(t)\)와 \(p_{k+1}(t)\)는 같은 \(Q_j^{(k)}\) 안에 있고, \(|p_{k+1}(t) - p_k(t)| \le \mathrm{diam}\, Q_j^{(k)} = \sqrt{2}\, 3^{-k}\)입니다. 꼬리합을 취합니다: \(m > n\)이면 삼각부등식으로 \(|p_m(t) - p_n(t)| \le \sum_{j=n}^{m-1} |p_{j+1}(t) - p_j(t)| \le \sum_{j=n}^{m-1} \sqrt{2}\, 3^{-j} = \sqrt{2}\, 3^{-n}\, \frac{1 - 3^{-(m-n)}}{1 - 1/3} \le \frac{3\sqrt{2}}{2}\, 3^{-n}\)입니다. 우변은 \(t\)와 \(m\)에 무관하게 \(n \to \infty\)일 때 0으로 가므로 \((p_k)\)는 균등 코시 수열입니다. \(\mathbb{R}^2\)이 완비이므로 각 \(t\)에서 \(p_k(t)\)가 수렴하고, 균등 코시성은 그 수렴이 균등함을 보장합니다 — 극한을 \(p\)라 하세요.`,
-          en: String.raw`\(p_{k+1}\) refines \(p_k\): on \([(j-1)/9^k,\, j/9^k]\) it traverses the 9 level-\((k+1)\) subsquares inside the same \(Q_j^{(k)}\) (the recursion applies the same pattern within each \(Q_j\)). Hence for every \(t\), \(p_k(t)\) and \(p_{k+1}(t)\) both lie in \(Q_j^{(k)}\), so \(|p_{k+1}(t) - p_k(t)| \le \mathrm{diam}\, Q_j^{(k)} = \sqrt{2}\, 3^{-k}\). Sum the tail: for \(m > n\), the triangle inequality gives \(|p_m(t) - p_n(t)| \le \sum_{j=n}^{m-1} |p_{j+1}(t) - p_j(t)| \le \sum_{j=n}^{m-1} \sqrt{2}\, 3^{-j} = \sqrt{2}\, 3^{-n}\, \frac{1 - 3^{-(m-n)}}{1 - 1/3} \le \frac{3\sqrt{2}}{2}\, 3^{-n}\). The right side tends to 0 as \(n \to \infty\), independently of \(t\) and \(m\), so \((p_k)\) is uniformly Cauchy. Since \(\mathbb{R}^2\) is complete, \(p_k(t)\) converges for each \(t\), and uniform Cauchyness makes the convergence uniform — call the limit \(p\).`,
+          ko: String.raw`\(p_{k+1}\)은 세분(refinement)입니다: 구간 \([(j-1)/9^k,\, j/9^k]\) 위에서 \(p_{k+1}\)은 같은 \(Q_j^{(k)}\) 안에 들어 있는 9개의 \((k+1)\)단계 부분정사각형을 돕니다 (재귀가 각 \(Q_j\) 안에서 같은 패턴을 적용하므로). 따라서 모든 \(t\)에 대해 \(p_k(t)\)와 \(p_{k+1}(t)\)는 같은 \(Q_j^{(k)}\) 안에 있고, \(|p_{k+1}(t) - p_k(t)| \le \mathrm{diam}\, Q_j^{(k)} = \sqrt{2}\, 3^{-k}\)입니다.
+
+꼬리합을 취합니다: \(m > n\)이면 삼각부등식으로 \(|p_m(t) - p_n(t)| \le \sum_{j=n}^{m-1} |p_{j+1}(t) - p_j(t)| \le \sum_{j=n}^{m-1} \sqrt{2}\, 3^{-j} = \sqrt{2}\, 3^{-n}\, \frac{1 - 3^{-(m-n)}}{1 - 1/3} \le \frac{3\sqrt{2}}{2}\, 3^{-n}\)입니다. 우변은 \(t\)와 \(m\)에 무관하게 \(n \to \infty\)일 때 0으로 가므로 \((p_k)\)는 균등 코시 수열입니다. \(\mathbb{R}^2\)이 완비이므로 각 \(t\)에서 \(p_k(t)\)가 수렴하고, 균등 코시성은 그 수렴이 균등함을 보장합니다 — 극한을 \(p\)라 하세요.`,
+          en: String.raw`\(p_{k+1}\) refines \(p_k\): on \([(j-1)/9^k,\, j/9^k]\) it traverses the 9 level-\((k+1)\) subsquares inside the same \(Q_j^{(k)}\) (the recursion applies the same pattern within each \(Q_j\)). Hence for every \(t\), \(p_k(t)\) and \(p_{k+1}(t)\) both lie in \(Q_j^{(k)}\), so \(|p_{k+1}(t) - p_k(t)| \le \mathrm{diam}\, Q_j^{(k)} = \sqrt{2}\, 3^{-k}\).
+
+Sum the tail: for \(m > n\), the triangle inequality gives \(|p_m(t) - p_n(t)| \le \sum_{j=n}^{m-1} |p_{j+1}(t) - p_j(t)| \le \sum_{j=n}^{m-1} \sqrt{2}\, 3^{-j} = \sqrt{2}\, 3^{-n}\, \frac{1 - 3^{-(m-n)}}{1 - 1/3} \le \frac{3\sqrt{2}}{2}\, 3^{-n}\). The right side tends to 0 as \(n \to \infty\), independently of \(t\) and \(m\), so \((p_k)\) is uniformly Cauchy. Since \(\mathbb{R}^2\) is complete, \(p_k(t)\) converges for each \(t\), and uniform Cauchyness makes the convergence uniform — call the limit \(p\).`,
         },
       },
       {
@@ -59,14 +63,22 @@ export const peanoCurveProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(y \in [0,1]^2\)를 임의로 잡습니다. 각 단계 \(k\)에서 \(y\)는 어떤 \(k\)단계 부분정사각형 \(Q^{(k)}\) (한 변 \(3^{-k}\)) 안에 들어 있습니다. \(p_k\)는 모든 \(k\)단계 부분정사각형을 방문하므로, \(p_k(t_k) \in Q^{(k)}\)인 \(t_k\)가 존재합니다.`,
-          en: String.raw`Take any \(y \in [0,1]^2\). At each level \(k\), \(y\) lies in some level-\(k\) subsquare \(Q^{(k)}\) (side \(3^{-k}\)). Since \(p_k\) visits every level-\(k\) subsquare, there is \(t_k\) with \(p_k(t_k) \in Q^{(k)}\).`,
+          ko: String.raw`\(y \in [0,1]^2\)를 임의로 잡습니다. 각 단계 \(k\)에서 \(y\)는 어떤 \(k\)단계 부분정사각형 \(Q^{(k)}\) (한 변 \(3^{-k}\)) 안에 들어 있습니다.
+
+\(p_k\)는 모든 \(k\)단계 부분정사각형을 방문하므로, \(p_k(t_k) \in Q^{(k)}\)인 \(t_k\)가 존재합니다.`,
+          en: String.raw`Take any \(y \in [0,1]^2\). At each level \(k\), \(y\) lies in some level-\(k\) subsquare \(Q^{(k)}\) (side \(3^{-k}\)).
+
+Since \(p_k\) visits every level-\(k\) subsquare, there is \(t_k\) with \(p_k(t_k) \in Q^{(k)}\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\((t_k)\)는 \([0,1]\)의 수열이므로 컴팩트성에 의해 수렴하는 부분수열 \(t_{k_j} \to t\)가 존재합니다. 연속성에 의해 \(p(t_{k_j}) \to p(t)\)입니다. 그런데 \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\)에서, 첫째 항은 peano-uniform-limit에서 증명한 균등 꼬리 추정 (\(m > n\)이면 \(|p_m - p_n| \le \frac{3\sqrt{2}}{2}\, 3^{-n}\); \(m \to \infty\)로 보냄)에 의해 \(\frac{3\sqrt{2}}{2}\, 3^{-k_j}\) 이하이고, 둘째 항은 두 점이 모두 지름 \(\sqrt{2}\, 3^{-k_j}\)인 같은 \(Q^{(k_j)}\) 안에 있으므로 \(\sqrt{2}\, 3^{-k_j}\) 이하입니다. 둘 다 \(0\)으로 가므로 \(p(t) = y\)입니다.`,
-          en: String.raw`Since \((t_k)\) lies in \([0,1]\), compactness gives a convergent subsequence \(t_{k_j} \to t\). By continuity, \(p(t_{k_j}) \to p(t)\). But \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\): the first term is at most \(\frac{3\sqrt{2}}{2}\, 3^{-k_j}\) by the uniform tail estimate proved in peano-uniform-limit (\(|p_m - p_n| \le \frac{3\sqrt{2}}{2}\, 3^{-n}\) for \(m > n\); let \(m \to \infty\)), and the second is at most \(\sqrt{2}\, 3^{-k_j}\) because both points lie in the same \(Q^{(k_j)}\) of diameter \(\sqrt{2}\, 3^{-k_j}\). Both tend to \(0\), hence \(p(t) = y\).`,
+          ko: String.raw`\((t_k)\)는 \([0,1]\)의 수열이므로 컴팩트성에 의해 수렴하는 부분수열 \(t_{k_j} \to t\)가 존재합니다. 연속성에 의해 \(p(t_{k_j}) \to p(t)\)입니다.
+
+그런데 \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\)에서, 첫째 항은 peano-uniform-limit에서 증명한 균등 꼬리 추정 (\(m > n\)이면 \(|p_m - p_n| \le \frac{3\sqrt{2}}{2}\, 3^{-n}\); \(m \to \infty\)로 보냄)에 의해 \(\frac{3\sqrt{2}}{2}\, 3^{-k_j}\) 이하이고, 둘째 항은 두 점이 모두 지름 \(\sqrt{2}\, 3^{-k_j}\)인 같은 \(Q^{(k_j)}\) 안에 있으므로 \(\sqrt{2}\, 3^{-k_j}\) 이하입니다. 둘 다 \(0\)으로 가므로 \(p(t) = y\)입니다.`,
+          en: String.raw`Since \((t_k)\) lies in \([0,1]\), compactness gives a convergent subsequence \(t_{k_j} \to t\). By continuity, \(p(t_{k_j}) \to p(t)\).
+
+But \(|p(t_{k_j}) - y| \le |p(t_{k_j}) - p_{k_j}(t_{k_j})| + |p_{k_j}(t_{k_j}) - y|\): the first term is at most \(\frac{3\sqrt{2}}{2}\, 3^{-k_j}\) by the uniform tail estimate proved in peano-uniform-limit (\(|p_m - p_n| \le \frac{3\sqrt{2}}{2}\, 3^{-n}\) for \(m > n\); let \(m \to \infty\)), and the second is at most \(\sqrt{2}\, 3^{-k_j}\) because both points lie in the same \(Q^{(k_j)}\) of diameter \(\sqrt{2}\, 3^{-k_j}\). Both tend to \(0\), hence \(p(t) = y\).`,
         },
       },
       {
@@ -94,38 +106,62 @@ export const peanoCurveProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`두 보조정리부터 증명합니다. (A) 컴팩트 집합의 연속상은 컴팩트: \(K\) 컴팩트, \(f\) 연속이면 \(f(K)\)의 열린 덮개 \(\{U_i\}\)에 대해 \(\{f^{-1}(U_i)\}\)는 \(K\)의 열린 덮개이므로 유한 부분덮개가 있고, 그 상들이 \(f(K)\)를 덮습니다. (B) Hausdorff 공간의 컴팩트 부분집합은 닫혀 있음: \(K \subseteq Y\) 컴팩트, \(y \notin K\)이면 각 \(x \in K\)에 대해 서로소인 근방 \(U_x \ni x\), \(V_x \ni y\)가 존재하고 (Hausdorff), 유한개의 \(U_{x_i}\)가 \(K\)를 덮으므로 \(\bigcap V_{x_i}\)는 \(K\)와 만나지 않는 \(y\)의 근방입니다.`,
-          en: String.raw`Two lemmas first. (A) The continuous image of a compact set is compact: if \(K\) is compact and \(f\) continuous, an open cover \(\{U_i\}\) of \(f(K)\) pulls back to an open cover \(\{f^{-1}(U_i)\}\) of \(K\), which has a finite subcover whose images cover \(f(K)\). (B) A compact subset of a Hausdorff space is closed: if \(K \subseteq Y\) is compact and \(y \notin K\), each \(x \in K\) has disjoint neighborhoods \(U_x \ni x\), \(V_x \ni y\) (Hausdorff); finitely many \(U_{x_i}\) cover \(K\), so \(\bigcap V_{x_i}\) is a neighborhood of \(y\) missing \(K\).`,
+          ko: String.raw`두 보조정리부터 증명합니다. (A) 컴팩트 집합의 연속상은 컴팩트: \(K\) 컴팩트, \(f\) 연속이면 \(f(K)\)의 열린 덮개 \(\{U_i\}\)에 대해 \(\{f^{-1}(U_i)\}\)는 \(K\)의 열린 덮개이므로 유한 부분덮개가 있고, 그 상들이 \(f(K)\)를 덮습니다.
+
+(B) Hausdorff 공간의 컴팩트 부분집합은 닫혀 있음: \(K \subseteq Y\) 컴팩트, \(y \notin K\)이면 각 \(x \in K\)에 대해 서로소인 근방 \(U_x \ni x\), \(V_x \ni y\)가 존재하고 (Hausdorff), 유한개의 \(U_{x_i}\)가 \(K\)를 덮으므로 \(\bigcap V_{x_i}\)는 \(K\)와 만나지 않는 \(y\)의 근방입니다.`,
+          en: String.raw`Two lemmas first. (A) The continuous image of a compact set is compact: if \(K\) is compact and \(f\) continuous, an open cover \(\{U_i\}\) of \(f(K)\) pulls back to an open cover \(\{f^{-1}(U_i)\}\) of \(K\), which has a finite subcover whose images cover \(f(K)\).
+
+(B) A compact subset of a Hausdorff space is closed: if \(K \subseteq Y\) is compact and \(y \notin K\), each \(x \in K\) has disjoint neighborhoods \(U_x \ni x\), \(V_x \ni y\) (Hausdorff); finitely many \(U_{x_i}\) cover \(K\), so \(\bigcap V_{x_i}\) is a neighborhood of \(y\) missing \(K\).`,
         },
       },
       {
         text: {
-          ko: String.raw`Netto 정리: 컴팩트 공간에서 Hausdorff 공간으로의 연속 전단사는 동형사상(homeomorphism)입니다. 실제로 \(F \subseteq K\)가 닫혀 있으면 \(F\)는 컴팩트합니다 — 컴팩트 집합의 닫힌 부분집합은 컴팩트합니다 (\(K = [0,1]\)인 경우 Heine–Borel 정리) — 따라서 \(f(F)\)는 (A)에 의해 컴팩트하므로 (B)에 의해 \(Y\)에서 닫혀 있습니다 — 즉 \(f\)는 닫힌 사상입니다. 닫힌 전단사는 동형사상입니다 (\((f^{-1})^{-1}(F) = f(F)\)가 닫혀 있으므로 \(f^{-1}\)이 연속).`,
-          en: String.raw`Netto's theorem: a continuous bijection from a compact space to a Hausdorff space is a homeomorphism. Indeed, if \(F \subseteq K\) is closed then \(F\) is compact — a closed subset of a compact set is compact (for \(K = [0,1]\) this is Heine–Borel) — so \(f(F)\) is compact by (A) and closed in \(Y\) by (B) — i.e. \(f\) is a closed map. A closed bijection is a homeomorphism (\((f^{-1})^{-1}(F) = f(F)\) is closed, so \(f^{-1}\) is continuous).`,
+          ko: String.raw`Netto 정리: 컴팩트 공간에서 Hausdorff 공간으로의 연속 전단사는 동형사상(homeomorphism)입니다. 실제로 \(F \subseteq K\)가 닫혀 있으면 \(F\)는 컴팩트합니다 — 컴팩트 집합의 닫힌 부분집합은 컴팩트합니다 (\(K = [0,1]\)인 경우 Heine–Borel 정리) — 따라서 \(f(F)\)는 (A)에 의해 컴팩트하므로 (B)에 의해 \(Y\)에서 닫혀 있습니다 — 즉 \(f\)는 닫힌 사상입니다.
+
+닫힌 전단사는 동형사상입니다 (\((f^{-1})^{-1}(F) = f(F)\)가 닫혀 있으므로 \(f^{-1}\)이 연속).`,
+          en: String.raw`Netto's theorem: a continuous bijection from a compact space to a Hausdorff space is a homeomorphism. Indeed, if \(F \subseteq K\) is closed then \(F\) is compact — a closed subset of a compact set is compact (for \(K = [0,1]\) this is Heine–Borel) — so \(f(F)\) is compact by (A) and closed in \(Y\) by (B) — i.e. \(f\) is a closed map.
+
+A closed bijection is a homeomorphism (\((f^{-1})^{-1}(F) = f(F)\) is closed, so \(f^{-1}\) is continuous).`,
         },
       },
       {
         text: {
-          ko: String.raw`이제 \(f: [0,1] \to [0,1]^2\)가 연속 전단사라고 가정하면 동형사상이어야 합니다. 내부의 점 \(c \in (0,1)\)을 제거하면 \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\)은 서로소인 비어 있지 않은 열린 집합으로 분리되므로 연결집합이 아닙니다. 반면 \([0,1]^2\)에서 대응점 \(r := f(c)\)를 제거한 공간이 경로연결임을 식으로 보입니다.`,
-          en: String.raw`If \(f: [0,1] \to [0,1]^2\) were a continuous bijection, it would be a homeomorphism. Removing an interior point \(c \in (0,1)\) disconnects the interval: \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\) is a separation into disjoint nonempty opens. In contrast, \([0,1]^2\) minus the corresponding point \(r := f(c)\) is path-connected, shown here with explicit formulas.`,
+          ko: String.raw`이제 \(f: [0,1] \to [0,1]^2\)가 연속 전단사라고 가정하면 동형사상이어야 합니다. 내부의 점 \(c \in (0,1)\)을 제거하면 \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\)은 서로소인 비어 있지 않은 열린 집합으로 분리되므로 연결집합이 아닙니다.
+
+반면 \([0,1]^2\)에서 대응점 \(r := f(c)\)를 제거한 공간이 경로연결임을 식으로 보입니다.`,
+          en: String.raw`If \(f: [0,1] \to [0,1]^2\) were a continuous bijection, it would be a homeomorphism. Removing an interior point \(c \in (0,1)\) disconnects the interval: \([0,1] \setminus \{c\} = [0,c) \cup (c,1]\) is a separation into disjoint nonempty opens.
+
+In contrast, \([0,1]^2\) minus the corresponding point \(r := f(c)\) is path-connected, shown here with explicit formulas.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(p, q \ne r\)인 두 점을 잡습니다. \(p = q\)이면 상수 경로 \(\gamma(t) \equiv p\)입니다. \(p \ne q\)인 경우 직선 \(L(t) = (1-t)p + tq\) (\(t \in [0,1]\))를 봅니다. \(r \notin L([0,1])\)이면 \(\gamma = L\)이 원하는 경로입니다. \(r \in L([0,1])\)이면 \(r = L(t_0)\)인 \(t_0 \in (0,1)\)이 유일하게 존재합니다 (\(r \ne p, q\)이므로). 중점 \(m = \frac{p+q}{2}\), 방향 \(d = q - p\), 단위 법선 \(n = \frac{(-d_2, d_1)}{|d|}\)를 두고, 우회점 \(s = m + \varepsilon n\) (\(\varepsilon \ne 0\), 아래에서 명시적으로 선택)을 잡습니다. 경로는 두 선분의 연결입니다: \(\gamma(t) = (1-2t)p + 2ts\) (\(0 \le t \le \frac12\)), \(\gamma(t) = (2-2t)s + (2t-1)q\) (\(\frac12 \le t \le 1\)).`,
-          en: String.raw`Take two points \(p, q \ne r\). If \(p = q\), the constant path \(\gamma(t) \equiv p\) works. If \(p \ne q\), look at the line \(L(t) = (1-t)p + tq\) (\(t \in [0,1]\)). If \(r \notin L([0,1])\), then \(\gamma = L\) is the desired path. If \(r \in L([0,1])\), there is a unique \(t_0 \in (0,1)\) with \(r = L(t_0)\) (since \(r \ne p, q\)). Set the midpoint \(m = \frac{p+q}{2}\), direction \(d = q - p\), unit normal \(n = \frac{(-d_2, d_1)}{|d|}\), and pick the detour point \(s = m + \varepsilon n\) (\(\varepsilon \ne 0\), chosen explicitly below). The path is two segments joined: \(\gamma(t) = (1-2t)p + 2ts\) (\(0 \le t \le \frac12\)), \(\gamma(t) = (2-2t)s + (2t-1)q\) (\(\frac12 \le t \le 1\)).`,
+          ko: String.raw`\(p, q \ne r\)인 두 점을 잡습니다. \(p = q\)이면 상수 경로 \(\gamma(t) \equiv p\)입니다. \(p \ne q\)인 경우 직선 \(L(t) = (1-t)p + tq\) (\(t \in [0,1]\))를 봅니다. \(r \notin L([0,1])\)이면 \(\gamma = L\)이 원하는 경로입니다.
+
+\(r \in L([0,1])\)이면 \(r = L(t_0)\)인 \(t_0 \in (0,1)\)이 유일하게 존재합니다 (\(r \ne p, q\)이므로). 중점 \(m = \frac{p+q}{2}\), 방향 \(d = q - p\), 단위 법선 \(n = \frac{(-d_2, d_1)}{|d|}\)를 두고, 우회점 \(s = m + \varepsilon n\) (\(\varepsilon \ne 0\), 아래에서 명시적으로 선택)을 잡습니다. 경로는 두 선분의 연결입니다: \(\gamma(t) = (1-2t)p + 2ts\) (\(0 \le t \le \frac12\)), \(\gamma(t) = (2-2t)s + (2t-1)q\) (\(\frac12 \le t \le 1\)).`,
+          en: String.raw`Take two points \(p, q \ne r\). If \(p = q\), the constant path \(\gamma(t) \equiv p\) works. If \(p \ne q\), look at the line \(L(t) = (1-t)p + tq\) (\(t \in [0,1]\)). If \(r \notin L([0,1])\), then \(\gamma = L\) is the desired path.
+
+If \(r \in L([0,1])\), there is a unique \(t_0 \in (0,1)\) with \(r = L(t_0)\) (since \(r \ne p, q\)). Set the midpoint \(m = \frac{p+q}{2}\), direction \(d = q - p\), unit normal \(n = \frac{(-d_2, d_1)}{|d|}\), and pick the detour point \(s = m + \varepsilon n\) (\(\varepsilon \ne 0\), chosen explicitly below). The path is two segments joined: \(\gamma(t) = (1-2t)p + 2ts\) (\(0 \le t \le \frac12\)), \(\gamma(t) = (2-2t)s + (2t-1)q\) (\(\frac12 \le t \le 1\)).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(r\)을 피하는지 확인합니다. 직선 \(pq\) 위의 점 \(x\)는 \(n \cdot (x - m) = 0\)을 만족하고 (\(n \perp d\)), \(r\)도 그 위에 있으므로 \(n \cdot (r - m) = 0\)입니다. \([p,s]\) 위의 점 \((1-u)p + us = (1-\frac{u}{2})p + \frac{u}{2}q + u\varepsilon n\)에 대해 \(n \cdot (x - m) = u\varepsilon\)이므로, 이것이 \(r\)과 같아지려면 \(u\varepsilon = 0\), 즉 \(u = 0\) — 그 점은 \(p \ne r\)뿐입니다. \([s,q]\) 위의 점 \((1-u)s + uq = \frac{1-u}{2}p + \frac{1+u}{2}q + (1-u)\varepsilon n\)에 대해서도 \(n \cdot (y - m) = (1-u)\varepsilon\)이므로 \((1-u)\varepsilon = 0\)에서 \(u = 1\) — 즉 점 \(q \ne r\)뿐입니다. 따라서 \(\gamma\)는 \(r\)을 지나지 않습니다.`,
-          en: String.raw`Check that \(r\) is avoided. Points \(x\) on the line \(pq\) satisfy \(n \cdot (x - m) = 0\) (since \(n \perp d\)), and \(r\) lies on it, so \(n \cdot (r - m) = 0\). For a point \((1-u)p + us = (1-\frac{u}{2})p + \frac{u}{2}q + u\varepsilon n\) on \([p,s]\), \(n \cdot (x - m) = u\varepsilon\); equaling \(r\) forces \(u\varepsilon = 0\), i.e. \(u = 0\) — only the point \(p \ne r\). For a point \((1-u)s + uq = \frac{1-u}{2}p + \frac{1+u}{2}q + (1-u)\varepsilon n\) on \([s,q]\), \(n \cdot (y - m) = (1-u)\varepsilon\), so \((1-u)\varepsilon = 0\) gives \(u = 1\) — only the point \(q \ne r\). Hence \(\gamma\) never passes through \(r\).`,
+          ko: String.raw`\(r\)을 피하는지 확인합니다. 직선 \(pq\) 위의 점 \(x\)는 \(n \cdot (x - m) = 0\)을 만족하고 (\(n \perp d\)), \(r\)도 그 위에 있으므로 \(n \cdot (r - m) = 0\)입니다. \([p,s]\) 위의 점 \((1-u)p + us = (1-\frac{u}{2})p + \frac{u}{2}q + u\varepsilon n\)에 대해 \(n \cdot (x - m) = u\varepsilon\)이므로, 이것이 \(r\)과 같아지려면 \(u\varepsilon = 0\), 즉 \(u = 0\) — 그 점은 \(p \ne r\)뿐입니다.
+
+\([s,q]\) 위의 점 \((1-u)s + uq = \frac{1-u}{2}p + \frac{1+u}{2}q + (1-u)\varepsilon n\)에 대해서도 \(n \cdot (y - m) = (1-u)\varepsilon\)이므로 \((1-u)\varepsilon = 0\)에서 \(u = 1\) — 즉 점 \(q \ne r\)뿐입니다. 따라서 \(\gamma\)는 \(r\)을 지나지 않습니다.`,
+          en: String.raw`Check that \(r\) is avoided. Points \(x\) on the line \(pq\) satisfy \(n \cdot (x - m) = 0\) (since \(n \perp d\)), and \(r\) lies on it, so \(n \cdot (r - m) = 0\). For a point \((1-u)p + us = (1-\frac{u}{2})p + \frac{u}{2}q + u\varepsilon n\) on \([p,s]\), \(n \cdot (x - m) = u\varepsilon\); equaling \(r\) forces \(u\varepsilon = 0\), i.e. \(u = 0\) — only the point \(p \ne r\).
+
+For a point \((1-u)s + uq = \frac{1-u}{2}p + \frac{1+u}{2}q + (1-u)\varepsilon n\) on \([s,q]\), \(n \cdot (y - m) = (1-u)\varepsilon\), so \((1-u)\varepsilon = 0\) gives \(u = 1\) — only the point \(q \ne r\). Hence \(\gamma\) never passes through \(r\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\varepsilon\)의 명시적 선택 (\(s \in [0,1]^2\) 보장): \(m\)은 꼭짓점이 될 수 없습니다 (\(m\)이 꼭짓점이면 \(p = q = m\)이 되어 \(p \ne q\)에 모순). \(\delta = \min(m_1, 1-m_1, m_2, 1-m_2) \ge 0\)이라 둡니다. \(\delta > 0\)이면 (\(m\)이 내부) \(\varepsilon = \delta/2\)로 둡니다: \(|s - m| = \delta/2 < \delta\)이므로 \(s\)는 내부에 있습니다. \(\delta = 0\)이면 \(m\)은 변 위에 있고 꼭짓점은 아닙니다. 예를 들어 \(m = (m_1, 0)\), \(m_1 \in (0,1)\)인 경우 (나머지 세 변은 \((x,y) \mapsto (x,1-y)\) 등의 대칭으로 동일) \(\eta = \frac12\min(m_1, 1-m_1) > 0\)으로 두고, \(n_2 \ge 0\)이면 \(s = m + \eta n\), \(n_2 < 0\)이면 \(s = m - \eta n\)으로 둡니다. 그러면 \(s_2 = \eta|n_2| \in [0,\eta] \subset [0,1]\), \(|s_1 - m_1| \le \eta \le \frac12\min(m_1, 1-m_1)\)이므로 \(s_1 \in (0,1)\) — 즉 \(s \in [0,1]^2\)입니다. \(s \in [0,1]^2\)이면 볼록성에 의해 두 선분 \([p,s]\), \([s,q]\)도 \([0,1]^2\) 안에 있습니다.`,
-          en: String.raw`Explicit choice of \(\varepsilon\) (forcing \(s \in [0,1]^2\)): \(m\) cannot be a corner (a corner \(m\) would give \(p = q = m\), contradicting \(p \ne q\)). Put \(\delta = \min(m_1, 1-m_1, m_2, 1-m_2) \ge 0\). If \(\delta > 0\) (\(m\) interior), take \(\varepsilon = \delta/2\): \(|s - m| = \delta/2 < \delta\), so \(s\) is interior. If \(\delta = 0\), then \(m\) lies on an edge but is not a corner. For instance with \(m = (m_1, 0)\), \(m_1 \in (0,1)\) (the other three edges are identical via symmetries like \((x,y) \mapsto (x,1-y)\)), put \(\eta = \frac12\min(m_1, 1-m_1) > 0\) and take \(s = m + \eta n\) if \(n_2 \ge 0\), \(s = m - \eta n\) if \(n_2 < 0\). Then \(s_2 = \eta|n_2| \in [0,\eta] \subset [0,1]\) and \(|s_1 - m_1| \le \eta \le \frac12\min(m_1, 1-m_1)\), so \(s_1 \in (0,1)\) — i.e. \(s \in [0,1]^2\). With \(s \in [0,1]^2\), convexity keeps both segments \([p,s]\), \([s,q]\) inside \([0,1]^2\).`,
+          ko: String.raw`\(\varepsilon\)의 명시적 선택 (\(s \in [0,1]^2\) 보장): \(m\)은 꼭짓점이 될 수 없습니다 (\(m\)이 꼭짓점이면 \(p = q = m\)이 되어 \(p \ne q\)에 모순). \(\delta = \min(m_1, 1-m_1, m_2, 1-m_2) \ge 0\)이라 둡니다. \(\delta > 0\)이면 (\(m\)이 내부) \(\varepsilon = \delta/2\)로 둡니다: \(|s - m| = \delta/2 < \delta\)이므로 \(s\)는 내부에 있습니다.
+
+\(\delta = 0\)이면 \(m\)은 변 위에 있고 꼭짓점은 아닙니다. 예를 들어 \(m = (m_1, 0)\), \(m_1 \in (0,1)\)인 경우 (나머지 세 변은 \((x,y) \mapsto (x,1-y)\) 등의 대칭으로 동일) \(\eta = \frac12\min(m_1, 1-m_1) > 0\)으로 두고, \(n_2 \ge 0\)이면 \(s = m + \eta n\), \(n_2 < 0\)이면 \(s = m - \eta n\)으로 둡니다. 그러면 \(s_2 = \eta|n_2| \in [0,\eta] \subset [0,1]\), \(|s_1 - m_1| \le \eta \le \frac12\min(m_1, 1-m_1)\)이므로 \(s_1 \in (0,1)\) — 즉 \(s \in [0,1]^2\)입니다. \(s \in [0,1]^2\)이면 볼록성에 의해 두 선분 \([p,s]\), \([s,q]\)도 \([0,1]^2\) 안에 있습니다.`,
+          en: String.raw`Explicit choice of \(\varepsilon\) (forcing \(s \in [0,1]^2\)): \(m\) cannot be a corner (a corner \(m\) would give \(p = q = m\), contradicting \(p \ne q\)). Put \(\delta = \min(m_1, 1-m_1, m_2, 1-m_2) \ge 0\). If \(\delta > 0\) (\(m\) interior), take \(\varepsilon = \delta/2\): \(|s - m| = \delta/2 < \delta\), so \(s\) is interior.
+
+If \(\delta = 0\), then \(m\) lies on an edge but is not a corner. For instance with \(m = (m_1, 0)\), \(m_1 \in (0,1)\) (the other three edges are identical via symmetries like \((x,y) \mapsto (x,1-y)\)), put \(\eta = \frac12\min(m_1, 1-m_1) > 0\) and take \(s = m + \eta n\) if \(n_2 \ge 0\), \(s = m - \eta n\) if \(n_2 < 0\). Then \(s_2 = \eta|n_2| \in [0,\eta] \subset [0,1]\) and \(|s_1 - m_1| \le \eta \le \frac12\min(m_1, 1-m_1)\), so \(s_1 \in (0,1)\) — i.e. \(s \in [0,1]^2\). With \(s \in [0,1]^2\), convexity keeps both segments \([p,s]\), \([s,q]\) inside \([0,1]^2\).`,
         },
       },
       {

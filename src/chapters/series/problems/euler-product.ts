@@ -13,8 +13,12 @@ export const eulerProductProblems: readonly ProblemMeta[] = [
   {
     id: 'euler-product-sieve',
     statement: {
-      ko: String.raw`\(s > 1\)에 대해 오일러 곱셈식 \(\zeta(s) = \prod_{p\ \text{소수}} \frac{1}{1 - p^{-s}}\)를 체(sieve) 논증으로 증명하세요. 힌트: \(\zeta(s)(1 - 2^{-s})\)는 짝수 항을 모두 제거합니다.`,
-      en: String.raw`Prove the Euler product \(\zeta(s) = \prod_{p\ \text{prime}} \frac{1}{1 - p^{-s}}\) for \(s > 1\) by a sieve argument. Hint: \(\zeta(s)(1 - 2^{-s})\) removes all even terms.`,
+      ko: String.raw`\(s > 1\)에 대해 오일러 곱셈식 \(\zeta(s) = \prod_{p\ \text{소수}} \frac{1}{1 - p^{-s}}\)를 체(sieve) 논증으로 증명하세요.
+
+힌트: \(\zeta(s)(1 - 2^{-s})\)는 짝수 항을 모두 제거합니다.`,
+      en: String.raw`Prove the Euler product \(\zeta(s) = \prod_{p\ \text{prime}} \frac{1}{1 - p^{-s}}\) for \(s > 1\) by a sieve argument.
+
+Hint: \(\zeta(s)(1 - 2^{-s})\) removes all even terms.`,
     },
     display: [
       String.raw`\zeta(s)(1 - 2^{-s}) = \sum_{n \ge 1} \frac{1}{n^s} - \sum_{n \ge 1} \frac{1}{(2n)^s} = \sum_{2 \nmid n} \frac{1}{n^s}`,
@@ -34,7 +38,11 @@ export const eulerProductProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`다음 소수 \(3\)에 대해 같은 일을 합니다: \((1 - 3^{-s})\sum_{2\nmid n} n^{-s} = \sum_{2\nmid n} n^{-s} - \sum_{2\nmid n} (3n)^{-s}\)에서 \(3\)의 배수인 항이 모두 사라집니다. 같은 논증을 \(p_1 = 2, p_2 = 3, \dots, p_k\)에 반복하면 \(\zeta(s)\prod_{i=1}^{k}(1 - p_i^{-s}) = 1 + \sum_{n > 1,\ (n,P_k)=1} n^{-s}\)가 됩니다 (\(P_k = p_1 \cdots p_k\)). 즉 처음 \(k\)개 소수로 나누어지지 않는 \(n\)에 대한 합만 남습니다.`,
+          ko: String.raw`다음 소수 \(3\)에 대해 같은 일을 합니다: \((1 - 3^{-s})\sum_{2\nmid n} n^{-s} = \sum_{2\nmid n} n^{-s} - \sum_{2\nmid n} (3n)^{-s}\)에서 \(3\)의 배수인 항이 모두 사라집니다.
+
+같은 논증을 \(p_1 = 2, p_2 = 3, \dots, p_k\)에 반복하면 \(\zeta(s)\prod_{i=1}^{k}(1 - p_i^{-s}) = 1 + \sum_{n > 1,\ (n,P_k)=1} n^{-s}\)가 됩니다 (\(P_k = p_1 \cdots p_k\)).
+
+즉 처음 \(k\)개 소수로 나누어지지 않는 \(n\)에 대한 합만 남습니다.`,
           en: String.raw`Do the same for the next prime \(3\): \((1 - 3^{-s})\sum_{2\nmid n} n^{-s} = \sum_{2\nmid n} n^{-s} - \sum_{2\nmid n} (3n)^{-s}\), killing every multiple of \(3\). Repeating for \(p_1 = 2, p_2 = 3, \dots, p_k\) gives \(\zeta(s)\prod_{i=1}^{k}(1 - p_i^{-s}) = 1 + \sum_{n > 1,\ (n,P_k)=1} n^{-s}\) (\(P_k = p_1 \cdots p_k\)): only the terms whose \(n\) shares no factor with the first \(k\) primes survive.`,
         },
       },
@@ -82,8 +90,16 @@ export const eulerProductProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`각 인자 \(\frac{1}{1 - p^{-2}} > 1\)이므로 부분곱 \(P_k\)는 단조증가하고 위로 \(\zeta(2)\)에 의해 유계이므로 수렴합니다. 특히 뒤집으면 \(\prod_{p}\left(1 - \frac{1}{p^2}\right) = \frac{6}{\pi^2} \approx 0.6079271\)입니다. 이는 서로소인 정수 쌍의 natural density가 \(\frac{6}{\pi^2}\)라는 뜻으로 해석됩니다 — 정수 전체에 대한 uniform probability distribution은 없으므로, probability space 위의 확률이 아니라 density입니다.`,
-          en: String.raw`Each factor \(\frac{1}{1 - p^{-2}} > 1\), so the partial products \(P_k\) increase monotonically and are bounded above by \(\zeta(2)\), hence converge. Inverted, \(\prod_{p}\left(1 - \frac{1}{p^2}\right) = \frac{6}{\pi^2} \approx 0.6079271\). This is interpreted as a natural density: the density of coprime pairs among integer pairs is \(\frac{6}{\pi^2}\) — a density, not a probability on a probability space, since there is no uniform probability distribution on the integers.`,
+          ko: String.raw`각 인자 \(\frac{1}{1 - p^{-2}} > 1\)이므로 부분곱 \(P_k\)는 단조증가하고 위로 \(\zeta(2)\)에 의해 유계이므로 수렴합니다.
+
+특히 뒤집으면 \(\prod_{p}\left(1 - \frac{1}{p^2}\right) = \frac{6}{\pi^2} \approx 0.6079271\)입니다.
+
+이는 서로소인 정수 쌍의 natural density가 \(\frac{6}{\pi^2}\)라는 뜻으로 해석됩니다 — 정수 전체에 대한 uniform probability distribution은 없으므로, probability space 위의 확률이 아니라 density입니다.`,
+          en: String.raw`Each factor \(\frac{1}{1 - p^{-2}} > 1\), so the partial products \(P_k\) increase monotonically and are bounded above by \(\zeta(2)\), hence converge.
+
+Inverted, \(\prod_{p}\left(1 - \frac{1}{p^2}\right) = \frac{6}{\pi^2} \approx 0.6079271\).
+
+This is interpreted as a natural density: the density of coprime pairs among integer pairs is \(\frac{6}{\pi^2}\) — a density, not a probability on a probability space, since there is no uniform probability distribution on the integers.`,
         },
       },
       {
@@ -112,8 +128,20 @@ export const eulerProductProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(s > 1\)에서 로그를 취하는 것을 정당화합니다: 유한 부분곱에서는 \(\log\)가 곱을 합으로 바꾸고, 부분곱이 \(\zeta(s) > 0\)으로 수렴하므로 \(\log\)의 연속성으로 극한에서도 성립합니다. \(-\log(1 - x) = \sum_{j\ge 1} \frac{x^j}{j}\) (테일러 급수, \(|x| < 1\))에 의해 \(\log \zeta(s) = \sum_{p}\sum_{j\ge 1} \frac{1}{j\,p^{js}}\)가 됩니다. 모든 항 \(\frac{1}{j\,p^{js}} > 0\)이므로 counting measure에 대한 Tonelli 정리로 이중합의 재배열이 허용되고, \(s > 1\)에서는 절대수렴합니다. \(j = 1\) 항을 분리하면 \(\log \zeta(s) = \sum_{p} \frac{1}{p^s} + \sum_{p}\sum_{j\ge 2} \frac{1}{j\,p^{js}}\)입니다.`,
-          en: String.raw`Justify taking logs for \(s > 1\): for a finite partial product, \(\log\) turns the product into a sum of logs; the partial products converge to \(\zeta(s) > 0\), so continuity of \(\log\) passes this to the limit. Using \(-\log(1 - x) = \sum_{j\ge 1} \frac{x^j}{j}\) (Taylor series, \(|x| < 1\)) gives \(\log \zeta(s) = \sum_{p}\sum_{j\ge 1} \frac{1}{j\,p^{js}}\). Every term \(\frac{1}{j\,p^{js}}\) is positive, so Tonelli's theorem for counting measure permits any rearrangement of the double sum, and the double sum converges absolutely for \(s > 1\). Splitting off \(j = 1\) yields \(\log \zeta(s) = \sum_{p} \frac{1}{p^s} + \sum_{p}\sum_{j\ge 2} \frac{1}{j\,p^{js}}\).`,
+          ko: String.raw`\(s > 1\)에서 로그를 취하는 것을 정당화합니다: 유한 부분곱에서는 \(\log\)가 곱을 합으로 바꾸고, 부분곱이 \(\zeta(s) > 0\)으로 수렴하므로 \(\log\)의 연속성으로 극한에서도 성립합니다.
+
+\(-\log(1 - x) = \sum_{j\ge 1} \frac{x^j}{j}\) (테일러 급수, \(|x| < 1\))에 의해 \(\log \zeta(s) = \sum_{p}\sum_{j\ge 1} \frac{1}{j\,p^{js}}\)가 됩니다.
+
+모든 항 \(\frac{1}{j\,p^{js}} > 0\)이므로 counting measure에 대한 Tonelli 정리로 이중합의 재배열이 허용되고, \(s > 1\)에서는 절대수렴합니다.
+
+\(j = 1\) 항을 분리하면 \(\log \zeta(s) = \sum_{p} \frac{1}{p^s} + \sum_{p}\sum_{j\ge 2} \frac{1}{j\,p^{js}}\)입니다.`,
+          en: String.raw`Justify taking logs for \(s > 1\): for a finite partial product, \(\log\) turns the product into a sum of logs; the partial products converge to \(\zeta(s) > 0\), so continuity of \(\log\) passes this to the limit.
+
+Using \(-\log(1 - x) = \sum_{j\ge 1} \frac{x^j}{j}\) (Taylor series, \(|x| < 1\)) gives \(\log \zeta(s) = \sum_{p}\sum_{j\ge 1} \frac{1}{j\,p^{js}}\).
+
+Every term \(\frac{1}{j\,p^{js}}\) is positive, so Tonelli's theorem for counting measure permits any rearrangement of the double sum, and the double sum converges absolutely for \(s > 1\).
+
+Splitting off \(j = 1\) yields \(\log \zeta(s) = \sum_{p} \frac{1}{p^s} + \sum_{p}\sum_{j\ge 2} \frac{1}{j\,p^{js}}\).`,
         },
       },
       {
@@ -130,8 +158,20 @@ export const eulerProductProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(\log \zeta(s) = \sum_{p} p^{-s} + O(1)\)이 무한대로 가므로 \(\sum_{p} p^{-s} \to +\infty\) (\(s \to 1^+\))입니다. 단조수렴정리의 설정을 확인합니다: 각 소수 \(p\)마다 \(s \downarrow 1\)일 때 \(p^{-s}\)는 단조증가하며 \(p^{-1}\)로 수렴하고 모든 항은 \(0\) 이상이므로, counting measure에 대한 단조수렴정리로 \(\sum_{p} p^{-s} \uparrow \sum_{p} p^{-1}\) (\(s \to 1^+\), 극한값이 \(+\infty\)인 경우 포함)입니다. 따라서 \(s = 1\)에서 \(\sum_{p} \frac{1}{p}\)가 유한하게 수렴한다면 \(\sum_{p} p^{-s}\)는 그 합으로 수렴해야 하므로 모순입니다. 따라서 \(\sum_{p} \frac{1}{p} = +\infty\) — 소수의 역수 합은 발산합니다.`,
-          en: String.raw`Since \(\log \zeta(s) = \sum_{p} p^{-s} + O(1) \to +\infty\), we get \(\sum_{p} p^{-s} \to +\infty\) as \(s \to 1^+\). Set up the monotone convergence step: for each prime \(p\), \(p^{-s}\) increases to \(p^{-1}\) as \(s \downarrow 1\), and every term is nonnegative, so the monotone convergence theorem for counting measure gives \(\sum_{p} p^{-s} \uparrow \sum_{p} p^{-1}\) as \(s \to 1^+\) (the limit may be \(+\infty\)). Hence if \(\sum_{p} \frac{1}{p}\) converged to a finite value at \(s = 1\), \(\sum_{p} p^{-s}\) would have to approach that sum as \(s \to 1^+\) — a contradiction. Therefore \(\sum_{p} \frac{1}{p} = +\infty\): the sum of prime reciprocals diverges.`,
+          ko: String.raw`\(\log \zeta(s) = \sum_{p} p^{-s} + O(1)\)이 무한대로 가므로 \(\sum_{p} p^{-s} \to +\infty\) (\(s \to 1^+\))입니다.
+
+단조수렴정리의 설정을 확인합니다: 각 소수 \(p\)마다 \(s \downarrow 1\)일 때 \(p^{-s}\)는 단조증가하며 \(p^{-1}\)로 수렴하고 모든 항은 \(0\) 이상이므로, counting measure에 대한 단조수렴정리로 \(\sum_{p} p^{-s} \uparrow \sum_{p} p^{-1}\) (\(s \to 1^+\), 극한값이 \(+\infty\)인 경우 포함)입니다.
+
+따라서 \(s = 1\)에서 \(\sum_{p} \frac{1}{p}\)가 유한하게 수렴한다면 \(\sum_{p} p^{-s}\)는 그 합으로 수렴해야 하므로 모순입니다.
+
+따라서 \(\sum_{p} \frac{1}{p} = +\infty\) — 소수의 역수 합은 발산합니다.`,
+          en: String.raw`Since \(\log \zeta(s) = \sum_{p} p^{-s} + O(1) \to +\infty\), we get \(\sum_{p} p^{-s} \to +\infty\) as \(s \to 1^+\).
+
+Set up the monotone convergence step: for each prime \(p\), \(p^{-s}\) increases to \(p^{-1}\) as \(s \downarrow 1\), and every term is nonnegative, so the monotone convergence theorem for counting measure gives \(\sum_{p} p^{-s} \uparrow \sum_{p} p^{-1}\) as \(s \to 1^+\) (the limit may be \(+\infty\)).
+
+Hence if \(\sum_{p} \frac{1}{p}\) converged to a finite value at \(s = 1\), \(\sum_{p} p^{-s}\) would have to approach that sum as \(s \to 1^+\) — a contradiction.
+
+Therefore \(\sum_{p} \frac{1}{p} = +\infty\): the sum of prime reciprocals diverges.`,
         },
       },
       {

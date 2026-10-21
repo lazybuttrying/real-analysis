@@ -107,14 +107,30 @@ export const gabrielHornProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`하한의 정당화 — 바깥쪽 법선 방향의 관형 좌표 \((x, \varphi, t)\) (\(0 \le t \le \delta\))를 씁니다. 뿔 표면의 주곡률은 자오선 방향으로 \(\kappa_m = \frac{r''}{(1+(r')^2)^{3/2}} = \frac{2/x^3}{(1+1/x^4)^{3/2}} \ge 0\), 위선 방향으로 \(\kappa_p = \frac{1}{r\sqrt{1+(r')^2}} \ge 0\) (\(r = 1/x\))이며, 부피 원소는 \(dV = (1 + t\kappa_m)(1 + t\kappa_p)\,dA\,dt\)입니다. 법선 조각들은 \(t < 1/\max\kappa_m\) 범위에서 서로 겹치지 않습니다: 볼록한 자오선 곡선의 법선은 초점 거리 \(1/\kappa_m \ge 1\) 이전에는 만나지 않고, \(\varphi\)가 다른 법선은 \(\rho > 0\)을 유지하므로 만날 수 없습니다. \(t \ge 0\)에서 \((1+t\kappa_m)(1+t\kappa_p) \ge 1\)이므로, \(\delta_0 = \min(\delta, \tfrac12)\)에 대해 \(V_{\text{coat}}(\delta) \ge V_{\text{coat}}(\delta_0) = \int_0^{\delta_0}\!\!\int_S (1+t\kappa_m)(1+t\kappa_p)\,dA\,dt \ge \delta_0 \cdot A(R)\)입니다.`,
-          en: String.raw`Justifying the bound — use tubular coordinates \((x, \varphi, t)\) (\(0 \le t \le \delta\)) along the outward normal. The horn's principal curvatures are \(\kappa_m = \frac{r''}{(1+(r')^2)^{3/2}} = \frac{2/x^3}{(1+1/x^4)^{3/2}} \ge 0\) in the meridian direction and \(\kappa_p = \frac{1}{r\sqrt{1+(r')^2}} \ge 0\) in the parallel direction (with \(r = 1/x\)), and the volume element is \(dV = (1 + t\kappa_m)(1 + t\kappa_p)\,dA\,dt\). The normal segments are disjoint for \(t < 1/\max\kappa_m\): normals of the convex meridian curve do not meet before the focal distance \(1/\kappa_m \ge 1\), and normals with different \(\varphi\) keep \(\rho > 0\) so they cannot meet. Since \((1+t\kappa_m)(1+t\kappa_p) \ge 1\) for \(t \ge 0\), with \(\delta_0 = \min(\delta, \tfrac12)\) we get \(V_{\text{coat}}(\delta) \ge V_{\text{coat}}(\delta_0) = \int_0^{\delta_0}\!\!\int_S (1+t\kappa_m)(1+t\kappa_p)\,dA\,dt \ge \delta_0 \cdot A(R)\).`,
+          ko: String.raw`하한의 정당화 — 바깥쪽 법선 방향의 관형 좌표 \((x, \varphi, t)\) (\(0 \le t \le \delta\))를 씁니다.
+
+뿔 표면의 주곡률은 자오선 방향으로 \(\kappa_m = \frac{r''}{(1+(r')^2)^{3/2}} = \frac{2/x^3}{(1+1/x^4)^{3/2}} \ge 0\), 위선 방향으로 \(\kappa_p = \frac{1}{r\sqrt{1+(r')^2}} \ge 0\) (\(r = 1/x\))이며, 부피 원소는 \(dV = (1 + t\kappa_m)(1 + t\kappa_p)\,dA\,dt\)입니다. 법선 조각들은 \(t < 1/\max\kappa_m\) 범위에서 서로 겹치지 않습니다: 볼록한 자오선 곡선의 법선은 초점 거리 \(1/\kappa_m \ge 1\) 이전에는 만나지 않고, \(\varphi\)가 다른 법선은 \(\rho > 0\)을 유지하므로 만날 수 없습니다.
+
+\(t \ge 0\)에서 \((1+t\kappa_m)(1+t\kappa_p) \ge 1\)이므로, \(\delta_0 = \min(\delta, \tfrac12)\)에 대해 \(V_{\text{coat}}(\delta) \ge V_{\text{coat}}(\delta_0) = \int_0^{\delta_0}\!\!\int_S (1+t\kappa_m)(1+t\kappa_p)\,dA\,dt \ge \delta_0 \cdot A(R)\)입니다.`,
+          en: String.raw`Justifying the bound — use tubular coordinates \((x, \varphi, t)\) (\(0 \le t \le \delta\)) along the outward normal.
+
+The horn's principal curvatures are \(\kappa_m = \frac{r''}{(1+(r')^2)^{3/2}} = \frac{2/x^3}{(1+1/x^4)^{3/2}} \ge 0\) in the meridian direction and \(\kappa_p = \frac{1}{r\sqrt{1+(r')^2}} \ge 0\) in the parallel direction (with \(r = 1/x\)), and the volume element is \(dV = (1 + t\kappa_m)(1 + t\kappa_p)\,dA\,dt\). The normal segments are disjoint for \(t < 1/\max\kappa_m\): normals of the convex meridian curve do not meet before the focal distance \(1/\kappa_m \ge 1\), and normals with different \(\varphi\) keep \(\rho > 0\) so they cannot meet.
+
+Since \((1+t\kappa_m)(1+t\kappa_p) \ge 1\) for \(t \ge 0\), with \(\delta_0 = \min(\delta, \tfrac12)\) we get \(V_{\text{coat}}(\delta) \ge V_{\text{coat}}(\delta_0) = \int_0^{\delta_0}\!\!\int_S (1+t\kappa_m)(1+t\kappa_p)\,dA\,dt \ge \delta_0 \cdot A(R)\).`,
         },
       },
       {
         text: {
-          ko: String.raw`역설이 아닌 이유: '채우기'는 부피 \(\pi\)를 쓰는 일이고, '칠하기'는 표면에 두께를 곱한 부피를 쓰는 일입니다. 서로 다른 양을 재는 것이므로, 한쪽이 유한하고 다른 쪽이 무한대여도 모순이 아닙니다. 페인트에 두께가 있다는 물리적 직관이 무너지는 지점이 바로 여기입니다.`,
-          en: String.raw`Why it is not a paradox: 'filling' spends the volume \(\pi\), while 'coating' spends thickness times area — two different quantities. One being finite and the other infinite is no contradiction. This is exactly where the physical intuition that paint has thickness breaks down.`,
+          ko: String.raw`역설이 아닌 이유: '채우기'는 부피 \(\pi\)를 쓰는 일이고, '칠하기'는 표면에 두께를 곱한 부피를 쓰는 일입니다.
+
+서로 다른 양을 재는 것이므로, 한쪽이 유한하고 다른 쪽이 무한대여도 모순이 아닙니다.
+
+페인트에 두께가 있다는 물리적 직관이 무너지는 지점이 바로 여기입니다.`,
+          en: String.raw`Why it is not a paradox: 'filling' spends the volume \(\pi\), while 'coating' spends thickness times area — two different quantities.
+
+One being finite and the other infinite is no contradiction.
+
+This is exactly where the physical intuition that paint has thickness breaks down.`,
         },
       },
     ],

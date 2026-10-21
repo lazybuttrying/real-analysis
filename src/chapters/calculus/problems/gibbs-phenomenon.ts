@@ -18,8 +18,12 @@ export const gibbsPhenomenonProblems: readonly ProblemMeta[] = [
   {
     id: 'derivative-identity',
     statement: {
-      ko: String.raw`\(S_N(x) = \frac{4}{\pi}\sum_{k=1}^{N}\frac{\sin((2k-1)x)}{2k-1}\)을 미분하여 \(S_N'(x) = \frac{2}{\pi}\cdot\frac{\sin(2Nx)}{\sin x}\)임을 증명하세요. \((0, \pi)\)에서의 임계점이 \(x_m = \frac{m\pi}{2N}\)이며, 첫 번째 피크가 \(x_1 = \frac{\pi}{2N}\)에 있음을 보이세요. (완전 증명)`,
-      en: String.raw`Differentiate \(S_N(x) = \frac{4}{\pi}\sum_{k=1}^{N}\frac{\sin((2k-1)x)}{2k-1}\) to prove \(S_N'(x) = \frac{2}{\pi}\cdot\frac{\sin(2Nx)}{\sin x}\). Show the critical points in \((0, \pi)\) are \(x_m = \frac{m\pi}{2N}\), with the first peak at \(x_1 = \frac{\pi}{2N}\). (Complete proof)`,
+      ko: String.raw`\(S_N(x) = \frac{4}{\pi}\sum_{k=1}^{N}\frac{\sin((2k-1)x)}{2k-1}\)을 미분하여 \(S_N'(x) = \frac{2}{\pi}\cdot\frac{\sin(2Nx)}{\sin x}\)임을 증명하세요.
+
+\((0, \pi)\)에서의 임계점이 \(x_m = \frac{m\pi}{2N}\)이며, 첫 번째 피크가 \(x_1 = \frac{\pi}{2N}\)에 있음을 보이세요. (완전 증명)`,
+      en: String.raw`Differentiate \(S_N(x) = \frac{4}{\pi}\sum_{k=1}^{N}\frac{\sin((2k-1)x)}{2k-1}\) to prove \(S_N'(x) = \frac{2}{\pi}\cdot\frac{\sin(2Nx)}{\sin x}\).
+
+Show the critical points in \((0, \pi)\) are \(x_m = \frac{m\pi}{2N}\), with the first peak at \(x_1 = \frac{\pi}{2N}\). (Complete proof)`,
     },
     display: [
       String.raw`\sum_{k=1}^{N}\cos((2k-1)x) = \Re\sum_{k=1}^{N}e^{i(2k-1)x} = \frac{\sin(2Nx)}{2\sin x}`,
@@ -40,8 +44,16 @@ export const gibbsPhenomenonProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`등비급수입니다: \(\sum_{k=1}^{N}e^{i(2k-1)x} = e^{ix}\frac{1 - e^{i2Nx}}{1 - e^{i2x}}\). 분자와 분모를 인수분해하면 \(1 - e^{i2Nx} = -2i\,e^{iNx}\sin(Nx)\), \(1 - e^{i2x} = -2i\,e^{ix}\sin x\)이므로, 비는 \(\frac{e^{iNx}\sin(Nx)}{e^{ix}\sin x} = e^{i(N-1)x}\frac{\sin(Nx)}{\sin x}\)가 됩니다. 앞에 \(e^{ix}\)를 곱하면 \(e^{iNx}\frac{\sin(Nx)}{\sin x}\)이고, 실수부는 \(\frac{\cos(Nx)\sin(Nx)}{\sin x} = \frac{\sin(2Nx)}{2\sin x}\)입니다.`,
-          en: String.raw`It is a geometric series: \(\sum_{k=1}^{N}e^{i(2k-1)x} = e^{ix}\frac{1 - e^{i2Nx}}{1 - e^{i2x}}\). Factoring, \(1 - e^{i2Nx} = -2i\,e^{iNx}\sin(Nx)\) and \(1 - e^{i2x} = -2i\,e^{ix}\sin x\), so the ratio is \(\frac{e^{iNx}\sin(Nx)}{e^{ix}\sin x} = e^{i(N-1)x}\frac{\sin(Nx)}{\sin x}\). Multiplying by the leading \(e^{ix}\) gives \(e^{iNx}\frac{\sin(Nx)}{\sin x}\), whose real part is \(\frac{\cos(Nx)\sin(Nx)}{\sin x} = \frac{\sin(2Nx)}{2\sin x}\).`,
+          ko: String.raw`등비급수입니다: \(\sum_{k=1}^{N}e^{i(2k-1)x} = e^{ix}\frac{1 - e^{i2Nx}}{1 - e^{i2x}}\).
+
+분자와 분모를 인수분해하면 \(1 - e^{i2Nx} = -2i\,e^{iNx}\sin(Nx)\), \(1 - e^{i2x} = -2i\,e^{ix}\sin x\)이므로, 비는 \(\frac{e^{iNx}\sin(Nx)}{e^{ix}\sin x} = e^{i(N-1)x}\frac{\sin(Nx)}{\sin x}\)가 됩니다.
+
+앞에 \(e^{ix}\)를 곱하면 \(e^{iNx}\frac{\sin(Nx)}{\sin x}\)이고, 실수부는 \(\frac{\cos(Nx)\sin(Nx)}{\sin x} = \frac{\sin(2Nx)}{2\sin x}\)입니다.`,
+          en: String.raw`It is a geometric series: \(\sum_{k=1}^{N}e^{i(2k-1)x} = e^{ix}\frac{1 - e^{i2Nx}}{1 - e^{i2x}}\).
+
+Factoring, \(1 - e^{i2Nx} = -2i\,e^{iNx}\sin(Nx)\) and \(1 - e^{i2x} = -2i\,e^{ix}\sin x\), so the ratio is \(\frac{e^{iNx}\sin(Nx)}{e^{ix}\sin x} = e^{i(N-1)x}\frac{\sin(Nx)}{\sin x}\).
+
+Multiplying by the leading \(e^{ix}\) gives \(e^{iNx}\frac{\sin(Nx)}{\sin x}\), whose real part is \(\frac{\cos(Nx)\sin(Nx)}{\sin x} = \frac{\sin(2Nx)}{2\sin x}\).`,
         },
       },
       {
@@ -61,8 +73,14 @@ export const gibbsPhenomenonProblems: readonly ProblemMeta[] = [
   {
     id: 'si-limit',
     statement: {
-      ko: String.raw`첫 피크의 높이가 \(\frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\)로 수렴함을 보이세요. 단, 적분 기호 아래로 \(N \to \infty\) 극한을 통과시키는 단계를 analysis step으로 명시하세요. 또한 \(\mathrm{Si}(t) = \int_0^t \frac{\sin u}{u}\,du\)가 \(t = \pi\)에서 전역 최댓값을 가짐을 증명하세요. (analysis step 표기를 제외하고 완전 증명)`,
-      en: String.raw`Show the first peak's height tends to \(\frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\), marking the step that passes the limit \(N \to \infty\) under the integral as the analysis step. Also prove \(\mathrm{Si}(t) = \int_0^t \frac{\sin u}{u}\,du\) attains its global maximum at \(t = \pi\). (Complete except for the honestly marked analysis step)`,
+      ko: String.raw`첫 피크의 높이가 \(\frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\)로 수렴함을 보이세요.
+
+단, 적분 기호 아래로 \(N \to \infty\) 극한을 통과시키는 단계를 analysis step으로 명시하세요.
+
+또한 \(\mathrm{Si}(t) = \int_0^t \frac{\sin u}{u}\,du\)가 \(t = \pi\)에서 전역 최댓값을 가짐을 증명하세요. (analysis step 표기를 제외하고 완전 증명)`,
+      en: String.raw`Show the first peak's height tends to \(\frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\), marking the step that passes the limit \(N \to \infty\) under the integral as the analysis step.
+
+Also prove \(\mathrm{Si}(t) = \int_0^t \frac{\sin u}{u}\,du\) attains its global maximum at \(t = \pi\). (Complete except for the honestly marked analysis step)`,
     },
     display: [
       String.raw`S_N(x) = \frac{2}{\pi}\int_0^{2Nx}\frac{\sin t}{2N\sin(t/2N)}\,dt`,
@@ -77,7 +95,11 @@ export const gibbsPhenomenonProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(S_N(0) = 0\)이므로 \(S_N(x) = \int_0^x S_N'(u)\,du\)입니다. 앞 문제의 항등식을 대입하면 \(S_N(x) = \frac{2}{\pi}\int_0^x \frac{\sin(2Nu)}{\sin u}\,du\). 치환 \(t = 2Nu\) (\(dt = 2N\,du\))로 \(S_N(x) = \frac{2}{\pi}\int_0^{2Nx}\frac{\sin t}{2N\sin(t/2N)}\,dt\)를 얻습니다 — 여기까지는 순수한 대수입니다.`,
+          ko: String.raw`\(S_N(0) = 0\)이므로 \(S_N(x) = \int_0^x S_N'(u)\,du\)입니다.
+
+앞 문제의 항등식을 대입하면 \(S_N(x) = \frac{2}{\pi}\int_0^x \frac{\sin(2Nu)}{\sin u}\,du\).
+
+치환 \(t = 2Nu\) (\(dt = 2N\,du\))로 \(S_N(x) = \frac{2}{\pi}\int_0^{2Nx}\frac{\sin t}{2N\sin(t/2N)}\,dt\)를 얻습니다 — 여기까지는 순수한 대수입니다.`,
           en: String.raw`Since \(S_N(0) = 0\), we have \(S_N(x) = \int_0^x S_N'(u)\,du\). Substituting the previous problem's identity gives \(S_N(x) = \frac{2}{\pi}\int_0^x \frac{\sin(2Nu)}{\sin u}\,du\); the change of variables \(t = 2Nu\) (\(dt = 2N\,du\)) yields \(S_N(x) = \frac{2}{\pi}\int_0^{2Nx}\frac{\sin t}{2N\sin(t/2N)}\,dt\) — pure algebra so far.`,
         },
       },
@@ -89,14 +111,30 @@ export const gibbsPhenomenonProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`★ 여기서 딱 한 번 analysis를 씁니다 — 고정 구간 \((0, \pi]\)에서 지배수렴정리를 적용합니다: \(t \in (0, \pi]\)에 대해 \(v = \frac{t}{2N} \in [0, \frac{\pi}{2}]\)이고 \(\sin v \ge \frac{2v}{\pi}\)에서 \(2N\sin(t/2N) \ge \frac{2t}{\pi}\), 즉 \(\frac{t}{2N\sin(t/2N)} \le \frac{\pi}{2}\)를 얻습니다. 따라서 \(\left\lvert\frac{\sin t}{2N\sin(t/2N)}\right\rvert = \frac{t}{2N\sin(t/2N)}\cdot\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\)이며, 지배함수 \(\frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert\) (단, \(\left\lvert\frac{\sin t}{t}\right\rvert \le 1\))는 유한 구간 \((0, \pi]\)에서 적분 가능합니다. 지배수렴정리로 \(S_N(x_N) \to \frac{2}{\pi}\int_0^{\pi}\frac{\sin t}{t}\,dt = \frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\)입니다. 수치 교차검증: 푸리에 씬이 관측한 \(\mathrm{GIBBS\_PEAK} = 1.178979744472167\)과 \(10^{-9}\) 이내로 일치합니다.`,
-          en: String.raw`★ Here — exactly once — we use analysis, applying dominated convergence on the fixed domain \((0, \pi]\): for \(t \in (0, \pi]\), \(v = \frac{t}{2N} \in [0, \frac{\pi}{2}]\) and \(\sin v \ge \frac{2v}{\pi}\) yields \(2N\sin(t/2N) \ge \frac{2t}{\pi}\), i.e. \(\frac{t}{2N\sin(t/2N)} \le \frac{\pi}{2}\). Hence \(\left\lvert\frac{\sin t}{2N\sin(t/2N)}\right\rvert = \frac{t}{2N\sin(t/2N)}\cdot\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\), and the dominating function \(\frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert\) (with \(\left\lvert\frac{\sin t}{t}\right\rvert \le 1\)) is integrable on the finite interval \((0, \pi]\). Dominated convergence gives \(S_N(x_N) \to \frac{2}{\pi}\int_0^{\pi}\frac{\sin t}{t}\,dt = \frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\). Numerical cross-check: it agrees with the Fourier scene's observed \(\mathrm{GIBBS\_PEAK} = 1.178979744472167\) to within \(10^{-9}\).`,
+          ko: String.raw`★ 여기서 딱 한 번 analysis를 씁니다 — 고정 구간 \((0, \pi]\)에서 지배수렴정리를 적용합니다: \(t \in (0, \pi]\)에 대해 \(v = \frac{t}{2N} \in [0, \frac{\pi}{2}]\)이고 \(\sin v \ge \frac{2v}{\pi}\)에서 \(2N\sin(t/2N) \ge \frac{2t}{\pi}\), 즉 \(\frac{t}{2N\sin(t/2N)} \le \frac{\pi}{2}\)를 얻습니다.
+
+따라서 \(\left\lvert\frac{\sin t}{2N\sin(t/2N)}\right\rvert = \frac{t}{2N\sin(t/2N)}\cdot\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\)이며, 지배함수 \(\frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert\) (단, \(\left\lvert\frac{\sin t}{t}\right\rvert \le 1\))는 유한 구간 \((0, \pi]\)에서 적분 가능합니다. 지배수렴정리로 \(S_N(x_N) \to \frac{2}{\pi}\int_0^{\pi}\frac{\sin t}{t}\,dt = \frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\)입니다.
+
+수치 교차검증: 푸리에 씬이 관측한 \(\mathrm{GIBBS\_PEAK} = 1.178979744472167\)과 \(10^{-9}\) 이내로 일치합니다.`,
+          en: String.raw`★ Here — exactly once — we use analysis, applying dominated convergence on the fixed domain \((0, \pi]\): for \(t \in (0, \pi]\), \(v = \frac{t}{2N} \in [0, \frac{\pi}{2}]\) and \(\sin v \ge \frac{2v}{\pi}\) yields \(2N\sin(t/2N) \ge \frac{2t}{\pi}\), i.e. \(\frac{t}{2N\sin(t/2N)} \le \frac{\pi}{2}\).
+
+Hence \(\left\lvert\frac{\sin t}{2N\sin(t/2N)}\right\rvert = \frac{t}{2N\sin(t/2N)}\cdot\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert \le \frac{\pi}{2}\), and the dominating function \(\frac{\pi}{2}\left\lvert\frac{\sin t}{t}\right\rvert\) (with \(\left\lvert\frac{\sin t}{t}\right\rvert \le 1\)) is integrable on the finite interval \((0, \pi]\). Dominated convergence gives \(S_N(x_N) \to \frac{2}{\pi}\int_0^{\pi}\frac{\sin t}{t}\,dt = \frac{2}{\pi}\mathrm{Si}(\pi) \approx 1.17898\).
+
+Numerical cross-check: it agrees with the Fourier scene's observed \(\mathrm{GIBBS\_PEAK} = 1.178979744472167\) to within \(10^{-9}\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\mathrm{Si}'(t) = \frac{\sin t}{t} > 0\)이므로 \(\mathrm{Si}\)는 \((0, \pi)\)에서 엄격히 증가합니다. \(t > \pi\)에서는 꼬리 \(\int_{\pi}^{t}\frac{\sin u}{u}\,du\)를 \(L_k = \int_{k\pi}^{(k+1)\pi}\frac{\sin u}{u}\,du\) (\(k \ge 1\)) 로브들의 합으로 봅니다: 부호가 교대하고, \(\lvert L_{k+1}\rvert = \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v+\pi}\,dv < \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v}\,dv = \lvert L_k\rvert\)이므로 크기가 감소하며, 첫 로브 \(L_1 < 0\)입니다. 교대급수의 부분합은 전부 음수이므로 (짝수 개는 음수 쌍들의 합, 홀수 개는 거기에 음수 로브 하나 추가), \(\mathrm{Si}(t) < \mathrm{Si}(\pi)\) (\(t > \pi\)). 따라서 \(\mathrm{Si}\)의 전역 최댓값은 \(t = \pi\)에서, 값은 \(\approx 1.85194\)입니다.`,
-          en: String.raw`Since \(\mathrm{Si}'(t) = \frac{\sin t}{t} > 0\), \(\mathrm{Si}\) is strictly increasing on \((0, \pi)\). For \(t > \pi\), split the tail \(\int_{\pi}^{t}\frac{\sin u}{u}\,du\) into lobes \(L_k = \int_{k\pi}^{(k+1)\pi}\frac{\sin u}{u}\,du\) (\(k \ge 1\)): they alternate in sign, shrink because \(\lvert L_{k+1}\rvert = \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v+\pi}\,dv < \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v}\,dv = \lvert L_k\rvert\), and the first lobe \(L_1 < 0\). Every partial sum of this alternating series is negative (even counts are sums of negative pairs, odd counts add one more negative lobe), so \(\mathrm{Si}(t) < \mathrm{Si}(\pi)\) for \(t > \pi\). Hence \(\mathrm{Si}\) attains its global maximum at \(t = \pi\), with value \(\approx 1.85194\).`,
+          ko: String.raw`\(\mathrm{Si}'(t) = \frac{\sin t}{t} > 0\)이므로 \(\mathrm{Si}\)는 \((0, \pi)\)에서 엄격히 증가합니다.
+
+\(t > \pi\)에서는 꼬리 \(\int_{\pi}^{t}\frac{\sin u}{u}\,du\)를 \(L_k = \int_{k\pi}^{(k+1)\pi}\frac{\sin u}{u}\,du\) (\(k \ge 1\)) 로브들의 합으로 봅니다: 부호가 교대하고, \(\lvert L_{k+1}\rvert = \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v+\pi}\,dv < \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v}\,dv = \lvert L_k\rvert\)이므로 크기가 감소하며, 첫 로브 \(L_1 < 0\)입니다. 교대급수의 부분합은 전부 음수이므로 (짝수 개는 음수 쌍들의 합, 홀수 개는 거기에 음수 로브 하나 추가), \(\mathrm{Si}(t) < \mathrm{Si}(\pi)\) (\(t > \pi\)).
+
+따라서 \(\mathrm{Si}\)의 전역 최댓값은 \(t = \pi\)에서, 값은 \(\approx 1.85194\)입니다.`,
+          en: String.raw`Since \(\mathrm{Si}'(t) = \frac{\sin t}{t} > 0\), \(\mathrm{Si}\) is strictly increasing on \((0, \pi)\).
+
+For \(t > \pi\), split the tail \(\int_{\pi}^{t}\frac{\sin u}{u}\,du\) into lobes \(L_k = \int_{k\pi}^{(k+1)\pi}\frac{\sin u}{u}\,du\) (\(k \ge 1\)): they alternate in sign, shrink because \(\lvert L_{k+1}\rvert = \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v+\pi}\,dv < \int_{k\pi}^{(k+1)\pi}\frac{\lvert\sin v\rvert}{v}\,dv = \lvert L_k\rvert\), and the first lobe \(L_1 < 0\). Every partial sum of this alternating series is negative (even counts are sums of negative pairs, odd counts add one more negative lobe), so \(\mathrm{Si}(t) < \mathrm{Si}(\pi)\) for \(t > \pi\).
+
+Hence \(\mathrm{Si}\) attains its global maximum at \(t = \pi\), with value \(\approx 1.85194\).`,
         },
       },
     ],
