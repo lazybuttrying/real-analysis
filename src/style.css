@@ -567,8 +567,15 @@ main.paths {
   font-variant-numeric: tabular-nums;
 }
 
+.tex {
+  margin: 1.75rem 0;
+}
+
 .tex-block {
   overflow-x: auto;
+  text-align: center;
+  margin: 1.25rem 0;
+  padding: 0.5rem 0;
 }
 
 .scene-error {
