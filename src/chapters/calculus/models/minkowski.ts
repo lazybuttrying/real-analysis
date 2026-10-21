@@ -30,7 +30,7 @@ export const MINKOWSKI_B_MAX = 3;
 export const MINKOWSKI_B_INIT = 1;
 
 /** Subintervals for Simpson's rule (must be even). */
-export const MINKOWSKI_GRID_N = 4096;
+const MINKOWSKI_GRID_N = 4096;
 
 export interface MinkowskiData {
   p: number;

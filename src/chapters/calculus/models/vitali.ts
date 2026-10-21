@@ -62,7 +62,7 @@ export function vitaliRationals(d: number): number[] {
   return rationals;
 }
 
-export interface VitaliMockTranslate {
+interface VitaliMockTranslate {
   /** The rational shift q. */
   q: number;
   /** The mock translate points v + q lying inside [VITALI_DRAW_MIN, VITALI_DRAW_MAX]. */

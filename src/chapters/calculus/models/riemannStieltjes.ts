@@ -23,7 +23,7 @@ export const ALPHA_INIT: AlphaKind = 'identity';
 /** The single jump point of the 'step' integrator. */
 export const STEP_POINT = 0.5;
 
-export function alphaFn(kind: AlphaKind): (x: number) => number {
+function alphaFn(kind: AlphaKind): (x: number) => number {
   switch (kind) {
     case 'square':
       return (x) => x * x;
@@ -45,7 +45,7 @@ export function exactIntegral(kind: AlphaKind): number {
   }
 }
 
-export interface RiemannStieltjesInterval {
+interface RiemannStieltjesInterval {
   /** Uniform partition endpoints. */
   x0: number;
   x1: number;

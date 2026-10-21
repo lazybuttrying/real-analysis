@@ -24,18 +24,16 @@ import type { SceneModel } from '../../../contracts';
 export const DIX_MIN = 0.2;
 export const DIX_MAX = 4;
 export const DIX_INIT = 1;
-export const DIX_STEP = 0.05;
 
 export const DIN_MIN = 8;
 export const DIN_MAX = 2000;
 export const DIN_INIT = 200;
-export const DIN_STEP = 2;
 
 /** Step for the central difference behind numFp. */
-export const DIX_DIFF_H = 1e-4;
+const DIX_DIFF_H = 1e-4;
 
 /** Number of samples for the F curve. */
-export const DIX_CURVE_SAMPLES = 120;
+const DIX_CURVE_SAMPLES = 120;
 
 export interface DifferentiationUnderIntegralData {
   x: number;
@@ -82,13 +80,13 @@ function clampN(n: number): number {
 }
 
 /** t^x on [0,1]; defined as 0 at t = 0 (the limit for x > 0). */
-export function integrandF(t: number, x: number): number {
+function integrandF(t: number, x: number): number {
   if (t <= 0) return 0;
   return Math.pow(t, x);
 }
 
 /** d/dx t^x = t^x ln t; defined as 0 at t = 0 (the limit for x > 0). */
-export function integrandG(t: number, x: number): number {
+function integrandG(t: number, x: number): number {
   if (t <= 0) return 0;
   return Math.pow(t, x) * Math.log(t);
 }

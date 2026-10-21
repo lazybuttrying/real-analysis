@@ -43,10 +43,10 @@ function sinGp(_x: number): number {
 }
 
 /** f(x) = ln x, g(x) = x, x -> +infinity. */
-export function logF(x: number): number {
+function logF(x: number): number {
   return Math.log(x);
 }
-export function logG(x: number): number {
+function logG(x: number): number {
   return x;
 }
 function logFp(x: number): number {

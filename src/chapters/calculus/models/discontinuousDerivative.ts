@@ -37,7 +37,7 @@ export function diffQuotAtZero(h: number): number {
   return h * Math.sin(1 / h);
 }
 
-export interface DdPoint {
+interface DdPoint {
   x: number;
   y: number;
 }

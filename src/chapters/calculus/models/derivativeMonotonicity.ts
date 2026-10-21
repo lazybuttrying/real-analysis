@@ -13,7 +13,7 @@ import type { SceneModel } from '../../../contracts';
  * Pure computation: no DOM, d3, or three.
  */
 
-export type MonotonicityFunctionKey = 'cubic' | 'sine' | 'exp';
+type MonotonicityFunctionKey = 'cubic' | 'sine' | 'exp';
 
 /** Map the meta.ts select option value to the function key. */
 export function monotonicityFunctionKey(option: unknown): MonotonicityFunctionKey {
@@ -66,7 +66,7 @@ export interface MonotonicitySample {
   y: number;
 }
 
-export interface MonotonicityBand {
+interface MonotonicityBand {
   x0: number;
   x1: number;
   sign: -1 | 0 | 1;
@@ -102,9 +102,9 @@ export interface MonotonicityData {
 /** Curve sample count for f and f'. */
 export const CURVE_SAMPLES = 240;
 /** |f'| below this counts as flat (zero). */
-export const ZERO_TOL = 1e-9;
+const ZERO_TOL = 1e-9;
 /** Secant half-width, relative to the interval width. */
-export const SECANT_H_REL = 0.02;
+const SECANT_H_REL = 0.02;
 
 export function signOf(v: number): -1 | 0 | 1 {
   if (v > ZERO_TOL) return 1;

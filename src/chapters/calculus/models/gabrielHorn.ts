@@ -18,12 +18,12 @@ export const GABRIEL_R_MAX = 50;
 export const GABRIEL_R_INIT = 5;
 
 /** Grid points for the Simpson quadrature of the surface area. */
-export const GABRIEL_QUAD_POINTS = 4000;
+const GABRIEL_QUAD_POINTS = 4000;
 
 /** Sample points on the profile curve y = 1/x for drawing. */
-export const GABRIEL_PROFILE_POINTS = 200;
+const GABRIEL_PROFILE_POINTS = 200;
 
-export function clampR(r: number): number {
+function clampR(r: number): number {
   if (!Number.isFinite(r)) return GABRIEL_R_INIT;
   return Math.max(GABRIEL_R_MIN, Math.min(GABRIEL_R_MAX, r));
 }
@@ -44,7 +44,7 @@ export function gabrielAreaLower(r: number): number {
 }
 
 /** Exact surface-area integrand: 2 pi (1/x) sqrt(1 + 1/x^4). */
-export function gabrielAreaIntegrand(x: number): number {
+function gabrielAreaIntegrand(x: number): number {
   return (2 * Math.PI * Math.sqrt(1 + 1 / Math.pow(x, 4))) / x;
 }
 
@@ -66,7 +66,7 @@ export function gabrielAreaNumeric(r: number): number {
   return (sum * h) / 3;
 }
 
-export interface GabrielHornProfilePoint {
+interface GabrielHornProfilePoint {
   x: number;
   y: number;
 }
@@ -87,7 +87,7 @@ export interface GabrielHornData {
   stations: number[];
 }
 
-export function gabrielHornData(r: number): GabrielHornData {
+function gabrielHornData(r: number): GabrielHornData {
   const R = clampR(r);
   const profile: GabrielHornProfilePoint[] = [];
   for (let i = 0; i <= GABRIEL_PROFILE_POINTS; i++) {

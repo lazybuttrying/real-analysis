@@ -31,7 +31,7 @@ export const EXAMPLE_INIT: ExampleKind = 'escape';
 export const VIEW_MIN = 0;
 export const VIEW_MAX = 2;
 
-export interface FnRect {
+interface FnRect {
   x0: number;
   x1: number;
   height: number;

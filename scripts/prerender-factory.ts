@@ -569,15 +569,16 @@ export function createPrerender(deps: PrerenderDeps) {
     // Exercise counts per chapter are uneven by design (the 10-chapter split
     // redistributed the exercises by topic fit).
     const KEBAB_CASE = /^[a-z][a-z0-9-]*$/;
+    /** The shared content-text checks: non-empty, no $ delimiters, balanced \(...\). */
+    const checkTextValue = (tag: string, field: string, value: string, lang: Lang): void => {
+      if (!value.trim()) problems.push(`${tag} has an empty ${field} (${lang})`);
+      if (value.includes('$')) problems.push(`${tag} uses a $ delimiter in ${field} (${lang})`);
+      const opens = (value.match(/\\\(/g) ?? []).length;
+      const closes = (value.match(/\\\)/g) ?? []).length;
+      if (opens !== closes) problems.push(`${tag} has unbalanced \\(...\\) in ${field} (${lang})`);
+    };
     const checkExerciseText = (tag: string, field: string, text: { ko: string; en: string }): void => {
-      for (const lang of LANGS) {
-        const value = localize(text, lang);
-        if (!value.trim()) problems.push(`${tag} has an empty ${field} (${lang})`);
-        if (value.includes('$')) problems.push(`${tag} uses a $ delimiter in ${field} (${lang})`);
-        const opens = (value.match(/\\\(/g) ?? []).length;
-        const closes = (value.match(/\\\)/g) ?? []).length;
-        if (opens !== closes) problems.push(`${tag} has unbalanced \\(...\\) in ${field} (${lang})`);
-      }
+      for (const lang of LANGS) checkTextValue(tag, field, localize(text, lang), lang);
     };
     const checkNoDollar = (tag: string, field: string, formula: string): void => {
       if (formula.includes('$')) problems.push(`${tag} uses a $ delimiter in ${field}`);
@@ -650,11 +651,7 @@ export function createPrerender(deps: PrerenderDeps) {
           ['term', localize(entry.term, lang)],
           ['definition', localize(entry.definition, lang)],
         ] as const) {
-          if (!text.trim()) problems.push(`glossary term '${entry.id}' has an empty ${field} (${lang})`);
-          if (text.includes('$')) problems.push(`glossary term '${entry.id}' uses a $ delimiter in ${field} (${lang})`);
-          const opens = (text.match(/\\\(/g) ?? []).length;
-          const closes = (text.match(/\\\)/g) ?? []).length;
-          if (opens !== closes) problems.push(`glossary term '${entry.id}' has unbalanced \\(...\\) in ${field} (${lang})`);
+          checkTextValue(`glossary term '${entry.id}'`, field, text, lang);
         }
       }
     }
@@ -664,7 +661,7 @@ export function createPrerender(deps: PrerenderDeps) {
     for (const path of learningPaths) {
       if (seenPathIds.has(path.id)) problems.push(`learning path has a duplicate id '${path.id}'`);
       seenPathIds.add(path.id);
-      if (!/^[a-z][a-z0-9-]*$/.test(path.id)) problems.push(`learning path id '${path.id}' is not kebab-case`);
+      if (!KEBAB_CASE.test(path.id)) problems.push(`learning path id '${path.id}' is not kebab-case`);
       if (path.scenes.length === 0) problems.push(`learning path '${path.id}' has no scenes`);
       const seenSteps = new Set<string>();
       for (const step of path.scenes) {
@@ -678,11 +675,7 @@ export function createPrerender(deps: PrerenderDeps) {
           ['title', localize(path.title, lang)],
           ['description', localize(path.description, lang)],
         ] as const) {
-          if (!text.trim()) problems.push(`learning path '${path.id}' has an empty ${field} (${lang})`);
-          if (text.includes('$')) problems.push(`learning path '${path.id}' uses a $ delimiter in ${field} (${lang})`);
-          const opens = (text.match(/\\\(/g) ?? []).length;
-          const closes = (text.match(/\\\)/g) ?? []).length;
-          if (opens !== closes) problems.push(`learning path '${path.id}' has unbalanced \\(...\\) in ${field} (${lang})`);
+          checkTextValue(`learning path '${path.id}'`, field, text, lang);
         }
       }
     }

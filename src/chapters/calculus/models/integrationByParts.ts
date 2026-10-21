@@ -1,4 +1,7 @@
 import type { SceneModel } from '../../../contracts';
+import { simpson } from './simpson';
+
+export { simpson };
 
 /**
  * Integration by parts, live: LHS = int_0^b u v' dx against
@@ -23,28 +26,12 @@ import type { SceneModel } from '../../../contracts';
  *   polynomials of degree <= 3.
  */
 
-export const IBP_PAIR_OPTIONS = ['x·e^x', 'x·sin x'] as const;
+const IBP_PAIR_OPTIONS = ['x·e^x', 'x·sin x'] as const;
 export const DEFAULT_PAIR = 'x·e^x';
 export const DEFAULT_B = 2;
 export const B_MIN = 0.5;
 export const B_MAX = 3;
 const SIMPSON_PANELS = 2000;
-
-/** Composite Simpson's rule; forces an even panel count. */
-export function simpson(
-  f: (x: number) => number,
-  a: number,
-  b: number,
-  panels: number,
-): number {
-  const n = panels % 2 === 0 ? panels : panels + 1;
-  const h = (b - a) / n;
-  let sum = f(a) + f(b);
-  for (let i = 1; i < n; i++) {
-    sum += (i % 2 === 0 ? 2 : 4) * f(a + i * h);
-  }
-  return (sum * h) / 3;
-}
 
 /** The integrand u * v'. */
 export function integrand(pair: string, x: number): number {

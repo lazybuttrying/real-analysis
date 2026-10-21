@@ -25,7 +25,6 @@ export const N_INIT = 6;
 
 export const DELTA_MIN = 0.1;
 export const DELTA_MAX = 1;
-export const DELTA_STEP = 0.05;
 export const DELTA_INIT = 0.5;
 
 /** The n-th bump: f_n(x) = 1 on [1/(n+1), 1/n], 0 elsewhere. */

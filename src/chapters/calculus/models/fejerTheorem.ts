@@ -60,7 +60,7 @@ export const MIN_N = 1;
 export const MAX_N = 40;
 export const DEFAULT_N = 8;
 /** Samples on [-pi, pi]: 1441 points, well above the 720-point minimum. */
-export const GRID_POINTS = 1441;
+const GRID_POINTS = 1441;
 
 /** The 2pi-periodic triangle wave, on [-pi, pi]: f(x) = 1 - |x|/pi. */
 export function triWave(x: number): number {

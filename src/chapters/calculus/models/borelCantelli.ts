@@ -26,7 +26,7 @@ export const N_MAX = 60;
 export const N_INIT = 20;
 
 export const MODE_OPTIONS = ['summable', 'nonsummable'] as const;
-export type BorelCantelliMode = (typeof MODE_OPTIONS)[number];
+type BorelCantelliMode = (typeof MODE_OPTIONS)[number];
 export const MODE_INIT: BorelCantelliMode = 'summable';
 
 /** sum_{n>=1} 1/n^2: the total length in summable mode. */
@@ -35,7 +35,7 @@ export const SUM_LIMIT = (Math.PI * Math.PI) / 6;
 /** Samples of [0,1] used for the coverage heatmap and limsup approximation. */
 export const SAMPLE_COUNT = 200;
 
-export interface BorelCantelliInterval {
+interface BorelCantelliInterval {
   l: number;
   r: number;
 }

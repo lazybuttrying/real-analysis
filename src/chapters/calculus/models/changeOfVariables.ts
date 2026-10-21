@@ -1,4 +1,7 @@
 import type { SceneModel } from '../../../contracts';
+import { simpson } from './simpson';
+
+export { simpson };
 
 /**
  * Change of variables (substitution rule), live: two different original
@@ -24,36 +27,15 @@ import type { SceneModel } from '../../../contracts';
  *     for x^2 and toward the right end for sin x.
  */
 
-export const COV_SUB_OPTIONS = ['u=x^2', 'u=sin x'] as const;
+const COV_SUB_OPTIONS = ['u=x^2', 'u=sin x'] as const;
 export const DEFAULT_SUB = 'u=x^2';
 export const DEFAULT_N = 50;
 export const N_MIN = 4;
 export const N_MAX = 200;
 
-/** Composite Simpson's rule; forces an even panel count. */
-export function simpson(
-  f: (x: number) => number,
-  a: number,
-  b: number,
-  panels: number,
-): number {
-  const n = panels % 2 === 0 ? panels : panels + 1;
-  const h = (b - a) / n;
-  let sum = f(a) + f(b);
-  for (let i = 1; i < n; i++) {
-    sum += (i % 2 === 0 ? 2 : 4) * f(a + i * h);
-  }
-  return (sum * h) / 3;
-}
-
 /** The substitution map phi: x |-> u. */
 export function phi(sub: string, x: number): number {
   return sub === 'u=sin x' ? Math.sin(x) : x * x;
-}
-
-/** Left endpoint of the x-domain: 0 for both maps. */
-export function xMin(): number {
-  return 0;
 }
 
 /** Right endpoint of the x-domain: 1 for x^2, pi/2 for sin x. */

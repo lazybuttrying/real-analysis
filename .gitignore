@@ -4,6 +4,7 @@ dist
 .DS_Store
 
 # >>> generated chapter entries (scripts/gen-entries.ts) >>>
+/proofs/
 /numbers/
 /sequences/
 /continuity/

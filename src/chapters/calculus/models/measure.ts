@@ -68,7 +68,7 @@ export function singletonCover(eps: number): MeasureCover {
   return { c: 0.5, w: eps };
 }
 
-export function targetKey(value: unknown): TargetKey {
+function targetKey(value: unknown): TargetKey {
   return value === 'rationals' || value === 'interval' ? value : 'singleton';
 }
 

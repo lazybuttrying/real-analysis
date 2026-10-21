@@ -14,13 +14,13 @@ export const N_INIT = 8;
 /** Rationals p/q with 0 <= p <= q and q <= MAX_DENOM are exported as dots. */
 export const MAX_DENOM = 12;
 
-export interface DirichletDot {
+interface DirichletDot {
   x: number;
   p: number;
   q: number;
 }
 
-export interface DirichletInterval {
+interface DirichletInterval {
   x0: number;
   x1: number;
 }

@@ -20,7 +20,7 @@ import type { SceneModel } from '../../../contracts';
  *   gCurve is the pointwise reflection of fCurve across y = x.
  */
 
-export const IFT_FN_OPTIONS = ['x^3+x', 'e^x'] as const;
+const IFT_FN_OPTIONS = ['x^3+x', 'e^x'] as const;
 export const DEFAULT_FN = 'x^3+x';
 export const DEFAULT_A = 1;
 export const A_MIN = -1;
