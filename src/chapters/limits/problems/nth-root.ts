@@ -13,8 +13,12 @@ export const nthRootProblems: readonly ProblemMeta[] = [
   {
     id: 'nth-root-proof',
     statement: {
-      ko: String.raw`\(a > 0\)와 자연수 \(n\)에 대해 \(E = \{x \ge 0 : x^n < a\}\)라 두세요. \(E\)가 비어 있지 않고 위로 유계임을 보이고, \(s = \sup E\)라 두었을 때 삼단논법으로 \(s^n = a\)임을 완전히 증명하세요.`,
-      en: String.raw`For \(a > 0\) and a natural number \(n\), let \(E = \{x \ge 0 : x^n < a\}\). Show \(E\) is nonempty and bounded above, and with \(s = \sup E\) prove completely by trichotomy that \(s^n = a\).`,
+      ko: String.raw`\(a > 0\)와 자연수 \(n\)에 대해 \(E = \{x \ge 0 : x^n < a\}\)라 두세요.
+
+\(E\)가 비어 있지 않고 위로 유계임을 보이고, \(s = \sup E\)라 두었을 때 삼단논법으로 \(s^n = a\)임을 완전히 증명하세요.`,
+      en: String.raw`For \(a > 0\) and a natural number \(n\), let \(E = \{x \ge 0 : x^n < a\}\).
+
+Show \(E\) is nonempty and bounded above, and with \(s = \sup E\) prove completely by trichotomy that \(s^n = a\).`,
     },
     display: [
       String.raw`E = \{x \ge 0 : x^n < a\}, \qquad s = \sup E, \qquad s^n = a`,
@@ -33,20 +37,32 @@ export const nthRootProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`단조성 사실 하나를 직접 증명해 둡니다 (1단계와 4단계에서 쓰이며, 독립된 증명은 다음 문제입니다): \(0 \le u < v\)이면 \(v^n - u^n = (v - u)(v^{n-1} + v^{n-2}u + \cdots + u^{n-1}) > 0\)인데, \(v - u > 0\)이고 두 번째 인자는 \(v^{n-1} > 0\)을 포함하는 음이 아닌 항들의 합이기 때문입니다. 따라서 \(t \mapsto t^n\)은 \([0, \infty)\)에서 엄격히 증가하고, \(x \ge y \ge 0\)이면 \(x^n \ge y^n\)입니다. 실수의 완비성(상한 공리)에 의해 \(s = \sup E\)가 존재합니다. \(s \ge 0\)이며, \(s^n = a\)임을 삼단논법으로 보입니다: \(s^n < a\)와 \(s^n > a\)가 모두 불가능함을 보이면 \(s^n = a\)가 남습니다.`,
-          en: String.raw`One monotonicity fact, proved directly (used in steps 1 and 4; the standalone proof is the next problem): for \(0 \le u < v\), \(v^n - u^n = (v - u)(v^{n-1} + v^{n-2}u + \cdots + u^{n-1}) > 0\), because \(v - u > 0\) and the second factor is a sum of nonnegative terms including \(v^{n-1} > 0\). Hence \(t \mapsto t^n\) is strictly increasing on \([0, \infty)\), and \(x \ge y \ge 0\) implies \(x^n \ge y^n\). By completeness of the reals (the least-upper-bound axiom), \(s = \sup E\) exists. We have \(s \ge 0\); we show \(s^n = a\) by trichotomy: ruling out \(s^n < a\) and \(s^n > a\) leaves \(s^n = a\).`,
+          ko: String.raw`단조성 사실 하나를 직접 증명해 둡니다 (1단계와 4단계에서 쓰이며, 독립된 증명은 다음 문제입니다): \(0 \le u < v\)이면 \(v^n - u^n = (v - u)(v^{n-1} + v^{n-2}u + \cdots + u^{n-1}) > 0\)인데, \(v - u > 0\)이고 두 번째 인자는 \(v^{n-1} > 0\)을 포함하는 음이 아닌 항들의 합이기 때문입니다. 따라서 \(t \mapsto t^n\)은 \([0, \infty)\)에서 엄격히 증가하고, \(x \ge y \ge 0\)이면 \(x^n \ge y^n\)입니다.
+
+실수의 완비성(상한 공리)에 의해 \(s = \sup E\)가 존재합니다. \(s \ge 0\)이며, \(s^n = a\)임을 삼단논법으로 보입니다: \(s^n < a\)와 \(s^n > a\)가 모두 불가능함을 보이면 \(s^n = a\)가 남습니다.`,
+          en: String.raw`One monotonicity fact, proved directly (used in steps 1 and 4; the standalone proof is the next problem): for \(0 \le u < v\), \(v^n - u^n = (v - u)(v^{n-1} + v^{n-2}u + \cdots + u^{n-1}) > 0\), because \(v - u > 0\) and the second factor is a sum of nonnegative terms including \(v^{n-1} > 0\). Hence \(t \mapsto t^n\) is strictly increasing on \([0, \infty)\), and \(x \ge y \ge 0\) implies \(x^n \ge y^n\).
+
+By completeness of the reals (the least-upper-bound axiom), \(s = \sup E\) exists. We have \(s \ge 0\); we show \(s^n = a\) by trichotomy: ruling out \(s^n < a\) and \(s^n > a\) leaves \(s^n = a\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(s^n < a\)라 가정합니다. \(\delta > 0\)에 대해 이항정리로 \((s+\delta)^n - s^n = \sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^k = \delta\sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^{k-1}\)입니다. \(0 < \delta < 1\)이면 \(\delta^{k-1} \le 1\)이므로 이 차이는 \(\delta M\) 이하입니다. 여기서 \(M = \sum_{k=1}^{n}\binom{n}{k}(s+1)^{n-k}\)는 \(s\)에만 의존하는 상수입니다. \(0 < \delta < \min(1, (a - s^n)/M)\)을 잡으면 \((s+\delta)^n < s^n + (a - s^n) = a\)이고 \(s + \delta \ge 0\)이므로 \(s + \delta \in E\) — \(s\)가 상한이라는 데 모순입니다.`,
-          en: String.raw`Suppose \(s^n < a\). For \(\delta > 0\), the binomial theorem gives \((s+\delta)^n - s^n = \sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^k = \delta\sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^{k-1}\). For \(0 < \delta < 1\), \(\delta^{k-1} \le 1\), so this difference is at most \(\delta M\), where \(M = \sum_{k=1}^{n}\binom{n}{k}(s+1)^{n-k}\) depends only on \(s\). Picking \(0 < \delta < \min(1, (a - s^n)/M)\) gives \((s+\delta)^n < s^n + (a - s^n) = a\), and \(s + \delta \ge 0\), so \(s + \delta \in E\) — contradicting \(s\) being an upper bound.`,
+          ko: String.raw`\(s^n < a\)라 가정합니다. \(\delta > 0\)에 대해 이항정리로 \((s+\delta)^n - s^n = \sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^k = \delta\sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^{k-1}\)입니다. \(0 < \delta < 1\)이면 \(\delta^{k-1} \le 1\)이므로 이 차이는 \(\delta M\) 이하입니다.
+
+여기서 \(M = \sum_{k=1}^{n}\binom{n}{k}(s+1)^{n-k}\)는 \(s\)에만 의존하는 상수입니다. \(0 < \delta < \min(1, (a - s^n)/M)\)을 잡으면 \((s+\delta)^n < s^n + (a - s^n) = a\)이고 \(s + \delta \ge 0\)이므로 \(s + \delta \in E\) — \(s\)가 상한이라는 데 모순입니다.`,
+          en: String.raw`Suppose \(s^n < a\). For \(\delta > 0\), the binomial theorem gives \((s+\delta)^n - s^n = \sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^k = \delta\sum_{k=1}^{n}\binom{n}{k}s^{n-k}\delta^{k-1}\). For \(0 < \delta < 1\), \(\delta^{k-1} \le 1\), so this difference is at most \(\delta M\), where \(M = \sum_{k=1}^{n}\binom{n}{k}(s+1)^{n-k}\) depends only on \(s\).
+
+Picking \(0 < \delta < \min(1, (a - s^n)/M)\) gives \((s+\delta)^n < s^n + (a - s^n) = a\), and \(s + \delta \ge 0\), so \(s + \delta \in E\) — contradicting \(s\) being an upper bound.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(s^n > a\)라 가정합니다. \(a \ge 0\)이므로 \(s > 0\)입니다. \(0 < \delta < s\)에 대해 \(t = s - \delta\)라 두면 인수분해 \(s^n - t^n = (s-t)(s^{n-1} + s^{n-2}t + \cdots + t^{n-1})\)에 의해 \(s^n - (s-\delta)^n = \delta\sum_{j=0}^{n-1}s^{n-1-j}t^j \le n\,\delta\,s^{n-1}\)입니다 (\(t \le s\)이므로 각 항이 \(s^{n-1}\) 이하). \(0 < \delta < \min(s, (s^n - a)/(n s^{n-1}))\)을 잡으면 \((s-\delta)^n > a\)입니다. 그런데 \(x \ge s - \delta\)인 모든 \(x\)는 \(x^n \ge (s-\delta)^n > a\)를 만족하므로 \(x \notin E\) — 즉 \(s - \delta\)도 \(E\)의 상계가 되어, \(s\)가 최소상한이라는 데 모순입니다.`,
-          en: String.raw`Suppose \(s^n > a\). Since \(a \ge 0\), \(s > 0\). For \(0 < \delta < s\), put \(t = s - \delta\); the factorization \(s^n - t^n = (s-t)(s^{n-1} + s^{n-2}t + \cdots + t^{n-1})\) gives \(s^n - (s-\delta)^n = \delta\sum_{j=0}^{n-1}s^{n-1-j}t^j \le n\,\delta\,s^{n-1}\) (each term is at most \(s^{n-1}\) since \(t \le s\)). Picking \(0 < \delta < \min(s, (s^n - a)/(n s^{n-1}))\) yields \((s-\delta)^n > a\). But every \(x \ge s - \delta\) satisfies \(x^n \ge (s-\delta)^n > a\), so \(x \notin E\) — i.e. \(s - \delta\) is also an upper bound of \(E\), contradicting \(s\) being the least upper bound.`,
+          ko: String.raw`\(s^n > a\)라 가정합니다. \(a \ge 0\)이므로 \(s > 0\)입니다. \(0 < \delta < s\)에 대해 \(t = s - \delta\)라 두면 인수분해 \(s^n - t^n = (s-t)(s^{n-1} + s^{n-2}t + \cdots + t^{n-1})\)에 의해 \(s^n - (s-\delta)^n = \delta\sum_{j=0}^{n-1}s^{n-1-j}t^j \le n\,\delta\,s^{n-1}\)입니다 (\(t \le s\)이므로 각 항이 \(s^{n-1}\) 이하).
+
+\(0 < \delta < \min(s, (s^n - a)/(n s^{n-1}))\)을 잡으면 \((s-\delta)^n > a\)입니다. 그런데 \(x \ge s - \delta\)인 모든 \(x\)는 \(x^n \ge (s-\delta)^n > a\)를 만족하므로 \(x \notin E\) — 즉 \(s - \delta\)도 \(E\)의 상계가 되어, \(s\)가 최소상한이라는 데 모순입니다.`,
+          en: String.raw`Suppose \(s^n > a\). Since \(a \ge 0\), \(s > 0\). For \(0 < \delta < s\), put \(t = s - \delta\); the factorization \(s^n - t^n = (s-t)(s^{n-1} + s^{n-2}t + \cdots + t^{n-1})\) gives \(s^n - (s-\delta)^n = \delta\sum_{j=0}^{n-1}s^{n-1-j}t^j \le n\,\delta\,s^{n-1}\) (each term is at most \(s^{n-1}\) since \(t \le s\)).
+
+Picking \(0 < \delta < \min(s, (s^n - a)/(n s^{n-1}))\) yields \((s-\delta)^n > a\). But every \(x \ge s - \delta\) satisfies \(x^n \ge (s-\delta)^n > a\), so \(x \notin E\) — i.e. \(s - \delta\) is also an upper bound of \(E\), contradicting \(s\) being the least upper bound.`,
         },
       },
       {
@@ -74,8 +90,12 @@ export const nthRootProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(0 \le s < t\)라 가정합니다. 인수분해 \(t^n - s^n = (t-s)(t^{n-1} + t^{n-2}s + \cdots + s^{n-1})\)에서 첫 인자 \(t - s > 0\)이고, 두 번째 인자의 각 항은 \(t > 0\)이므로 \(0\)이 아니며 음이 아닙니다 (특히 \(t^{n-1} > 0\)). 따라서 \(t^n - s^n > 0\), 즉 \(s^n < t^n\)입니다. \(x^n\)은 \([0, \infty)\)에서 엄격히 증가합니다.`,
-          en: String.raw`Suppose \(0 \le s < t\). In the factorization \(t^n - s^n = (t-s)(t^{n-1} + t^{n-2}s + \cdots + s^{n-1})\), the first factor \(t - s > 0\), and each term of the second factor is nonnegative and not all zero (in particular \(t^{n-1} > 0\), since \(t > 0\)). Hence \(t^n - s^n > 0\), i.e. \(s^n < t^n\): \(x^n\) is strictly increasing on \([0, \infty)\).`,
+          ko: String.raw`\(0 \le s < t\)라 가정합니다. 인수분해 \(t^n - s^n = (t-s)(t^{n-1} + t^{n-2}s + \cdots + s^{n-1})\)에서 첫 인자 \(t - s > 0\)이고, 두 번째 인자의 각 항은 \(t > 0\)이므로 \(0\)이 아니며 음이 아닙니다 (특히 \(t^{n-1} > 0\)).
+
+따라서 \(t^n - s^n > 0\), 즉 \(s^n < t^n\)입니다. \(x^n\)은 \([0, \infty)\)에서 엄격히 증가합니다.`,
+          en: String.raw`Suppose \(0 \le s < t\). In the factorization \(t^n - s^n = (t-s)(t^{n-1} + t^{n-2}s + \cdots + s^{n-1})\), the first factor \(t - s > 0\), and each term of the second factor is nonnegative and not all zero (in particular \(t^{n-1} > 0\), since \(t > 0\)).
+
+Hence \(t^n - s^n > 0\), i.e. \(s^n < t^n\): \(x^n\) is strictly increasing on \([0, \infty)\).`,
         },
       },
       {
@@ -110,14 +130,22 @@ export const nthRootProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x_k = \frac{a_k + b_k}{2}\)는 구간의 중점이므로, \(s\)가 같은 구간 안에 있으면 \(|x_k - s| \le \frac{b_k - a_k}{2} = \frac{b_0 - a_0}{2^{k+1}} \le \frac{b_0 - a_0}{2^k}\)입니다. (인덱스를 1부터 세면 정확히 \(\frac{b_0-a_0}{2^k}\)가 됩니다.) 오차는 매 단계 최소 절반씩 줄어듭니다.`,
-          en: String.raw`Since \(x_k = \frac{a_k + b_k}{2}\) is the midpoint and \(s\) lies in the same interval, \(|x_k - s| \le \frac{b_k - a_k}{2} = \frac{b_0 - a_0}{2^{k+1}} \le \frac{b_0 - a_0}{2^k}\). (Counting steps from 1 gives exactly \(\frac{b_0-a_0}{2^k}\).) The error at least halves every step.`,
+          ko: String.raw`\(x_k = \frac{a_k + b_k}{2}\)는 구간의 중점이므로, \(s\)가 같은 구간 안에 있으면 \(|x_k - s| \le \frac{b_k - a_k}{2} = \frac{b_0 - a_0}{2^{k+1}} \le \frac{b_0 - a_0}{2^k}\)입니다.
+
+(인덱스를 1부터 세면 정확히 \(\frac{b_0-a_0}{2^k}\)가 됩니다.) 오차는 매 단계 최소 절반씩 줄어듭니다.`,
+          en: String.raw`Since \(x_k = \frac{a_k + b_k}{2}\) is the midpoint and \(s\) lies in the same interval, \(|x_k - s| \le \frac{b_k - a_k}{2} = \frac{b_0 - a_0}{2^{k+1}} \le \frac{b_0 - a_0}{2^k}\).
+
+(Counting steps from 1 gives exactly \(\frac{b_0-a_0}{2^k}\).) The error at least halves every step.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(a = 2\), \(n = 2\)에서 \([a_0, b_0] = [0, 2]\)이므로 상한은 \(\frac{2}{2^k}\)입니다. 10단계를 직접 돌리면 \(x_{10} = 1.416015625\)이고, \(|x_{10} - \sqrt{2}| \approx 0.0018021\) — 상한 \(\frac{2}{2^{10}} = \frac{1}{512} \approx 0.0019531\) 안에 들어갑니다. 모델의 60회 반복값 \(1.414213562373095\)는 \(\sqrt{2}\)와 \(2.3\times 10^{-16}\) 이내로 일치합니다.`,
-          en: String.raw`For \(a = 2\), \(n = 2\), \([a_0, b_0] = [0, 2]\), so the bound is \(\frac{2}{2^k}\). Running 10 steps by hand gives \(x_{10} = 1.416015625\) and \(|x_{10} - \sqrt{2}| \approx 0.0018021\) — inside the bound \(\frac{2}{2^{10}} = \frac{1}{512} \approx 0.0019531\). The model's 60-iteration value \(1.414213562373095\) agrees with \(\sqrt{2}\) to within \(2.3\times 10^{-16}\).`,
+          ko: String.raw`\(a = 2\), \(n = 2\)에서 \([a_0, b_0] = [0, 2]\)이므로 상한은 \(\frac{2}{2^k}\)입니다. 10단계를 직접 돌리면 \(x_{10} = 1.416015625\)이고, \(|x_{10} - \sqrt{2}| \approx 0.0018021\) — 상한 \(\frac{2}{2^{10}} = \frac{1}{512} \approx 0.0019531\) 안에 들어갑니다.
+
+모델의 60회 반복값 \(1.414213562373095\)는 \(\sqrt{2}\)와 \(2.3\times 10^{-16}\) 이내로 일치합니다.`,
+          en: String.raw`For \(a = 2\), \(n = 2\), \([a_0, b_0] = [0, 2]\), so the bound is \(\frac{2}{2^k}\). Running 10 steps by hand gives \(x_{10} = 1.416015625\) and \(|x_{10} - \sqrt{2}| \approx 0.0018021\) — inside the bound \(\frac{2}{2^{10}} = \frac{1}{512} \approx 0.0019531\).
+
+The model's 60-iteration value \(1.414213562373095\) agrees with \(\sqrt{2}\) to within \(2.3\times 10^{-16}\).`,
         },
       },
     ],

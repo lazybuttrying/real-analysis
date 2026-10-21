@@ -53,8 +53,20 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`앞부분: \(\left|(1-x)\sum_{n=0}^{N_0}(S_n - S)x^n\right| \le (1-x)\sum_{n=0}^{N_0}|S_n - S| = (1-x)M\) (\(x^n \le 1\)). \(M\)은 고정된 상수이므로 \(x \to 1^{-}\)에서 \(0\)으로 갑니다. \(x\)가 \(1\)에 충분히 가까우면 합이 \(\varepsilon\)보다 작아집니다. 따라서 \(\lim_{x \to 1^{-}} \sum a_n x^n = S\). ∎`,
-          en: String.raw`Head: \(\left|(1-x)\sum_{n=0}^{N_0}(S_n - S)x^n\right| \le (1-x)\sum_{n=0}^{N_0}|S_n - S| = (1-x)M\) (using \(x^n \le 1\)). \(M\) is a fixed constant, so this tends to \(0\) as \(x \to 1^{-}\). For \(x\) close enough to \(1\) the total is below \(\varepsilon\). Hence \(\lim_{x \to 1^{-}} \sum a_n x^n = S\). ∎`,
+          ko: String.raw`앞부분: \(\left|(1-x)\sum_{n=0}^{N_0}(S_n - S)x^n\right| \le (1-x)\sum_{n=0}^{N_0}|S_n - S| = (1-x)M\) (\(x^n \le 1\)).
+
+\(M\)은 고정된 상수이므로 \(x \to 1^{-}\)에서 \(0\)으로 갑니다.
+
+\(x\)가 \(1\)에 충분히 가까우면 합이 \(\varepsilon\)보다 작아집니다.
+
+따라서 \(\lim_{x \to 1^{-}} \sum a_n x^n = S\). ∎`,
+          en: String.raw`Head: \(\left|(1-x)\sum_{n=0}^{N_0}(S_n - S)x^n\right| \le (1-x)\sum_{n=0}^{N_0}|S_n - S| = (1-x)M\) (using \(x^n \le 1\)).
+
+\(M\) is a fixed constant, so this tends to \(0\) as \(x \to 1^{-}\).
+
+For \(x\) close enough to \(1\) the total is below \(\varepsilon\).
+
+Hence \(\lim_{x \to 1^{-}} \sum a_n x^n = S\). ∎`,
         },
       },
     ],
@@ -62,8 +74,12 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'grandi-abel-sum',
     statement: {
-      ko: String.raw`그란디 급수 \(\sum_{n=0}^{\infty} (-1)^n\)의 Abel 합이 \(\frac{1}{2}\)임을 증명하세요. 급수 자체는 발산한다는 점을 분명히 하세요.`,
-      en: String.raw`Prove the Abel sum of Grandi's series \(\sum_{n=0}^{\infty} (-1)^n\) is \(\frac{1}{2}\). Be explicit that the series itself diverges.`,
+      ko: String.raw`그란디 급수 \(\sum_{n=0}^{\infty} (-1)^n\)의 Abel 합이 \(\frac{1}{2}\)임을 증명하세요.
+
+급수 자체는 발산한다는 점을 분명히 하세요.`,
+      en: String.raw`Prove the Abel sum of Grandi's series \(\sum_{n=0}^{\infty} (-1)^n\) is \(\frac{1}{2}\).
+
+Be explicit that the series itself diverges.`,
     },
     display: [
       String.raw`\sum_{n=0}^{N}(-x)^n = \frac{1-(-x)^{N+1}}{1+x} \xrightarrow[N\to\infty]{} \frac{1}{1+x} \quad (|x|<1)`,
@@ -77,8 +93,16 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 정직하게: \(\sum_{n=0}^{\infty} (-1)^n\)은 발산합니다. 부분합 \(S_k = 1\) (\(k\) 짝수), \(0\) (\(k\) 홀수)이 영원히 오가며 극한이 없습니다 (그란디 장면). 지금 구하는 것은 급수의 "합"이 아니라 Abel 합입니다.`,
-          en: String.raw`First, honestly: \(\sum_{n=0}^{\infty} (-1)^n\) diverges. The partial sums \(S_k = 1\) (\(k\) even), \(0\) (\(k\) odd) bounce forever with no limit (see the Grandi scene). What we compute now is not "the sum" of the series, but its Abel sum.`,
+          ko: String.raw`먼저 정직하게: \(\sum_{n=0}^{\infty} (-1)^n\)은 발산합니다.
+
+부분합 \(S_k = 1\) (\(k\) 짝수), \(0\) (\(k\) 홀수)이 영원히 오가며 극한이 없습니다 (그란디 장면).
+
+지금 구하는 것은 급수의 "합"이 아니라 Abel 합입니다.`,
+          en: String.raw`First, honestly: \(\sum_{n=0}^{\infty} (-1)^n\) diverges.
+
+The partial sums \(S_k = 1\) (\(k\) even), \(0\) (\(k\) odd) bounce forever with no limit (see the Grandi scene).
+
+What we compute now is not "the sum" of the series, but its Abel sum.`,
         },
       },
       {
@@ -95,8 +119,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이제 \(x \to 1^{-}\): \(\frac{1}{1+x} \to \frac{1}{2}\). 따라서 Abel 합 \(\lim_{x \to 1^{-}} \sum_{n=0}^{\infty} (-1)^n x^n = \frac{1}{2}\)입니다. 체사로 합 \(\frac{1}{2}\)와 같은 값이지만, 어느 쪽도 발산급수의 "합"은 아닙니다. ∎`,
-          en: String.raw`Now let \(x \to 1^{-}\): \(\frac{1}{1+x} \to \frac{1}{2}\). Hence the Abel sum \(\lim_{x \to 1^{-}} \sum_{n=0}^{\infty} (-1)^n x^n = \frac{1}{2}\). It coincides with the Cesàro sum \(\frac{1}{2}\), but neither is "the sum" of a divergent series. ∎`,
+          ko: String.raw`이제 \(x \to 1^{-}\): \(\frac{1}{1+x} \to \frac{1}{2}\).
+
+따라서 Abel 합 \(\lim_{x \to 1^{-}} \sum_{n=0}^{\infty} (-1)^n x^n = \frac{1}{2}\)입니다.
+
+체사로 합 \(\frac{1}{2}\)와 같은 값이지만, 어느 쪽도 발산급수의 "합"은 아닙니다. ∎`,
+          en: String.raw`Now let \(x \to 1^{-}\): \(\frac{1}{1+x} \to \frac{1}{2}\).
+
+Hence the Abel sum \(\lim_{x \to 1^{-}} \sum_{n=0}^{\infty} (-1)^n x^n = \frac{1}{2}\).
+
+It coincides with the Cesàro sum \(\frac{1}{2}\), but neither is "the sum" of a divergent series. ∎`,
         },
       },
     ],
@@ -131,8 +163,24 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`직접 확인도 됩니다: \(0 \le x < 1\)로 제한합니다. 이 범위에서는 적분 구간 \([0, x]\) 위의 \(t\)가 \(0 \le t \le x < 1\)을 만족하고 \(1 + t \ge 1\)입니다. \(|t| < 1\)에서 \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\)를 \(0\)부터 \(x\)까지 적분하면 \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\)이며 \(|R_N(x)| \le \int_0^x \frac{t^{N+1}}{1+t}\,dt \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\))입니다(\(1 + t \ge 1\) 사용). 따라서 \(0 \le x < 1\)에서 멱급수의 합은 정확히 \(\ln(1+x)\)입니다. \(x = 1\)인 경우는 이 적분 단계가 아니라 Abel 정리의 연속성으로 따릅니다.`,
-          en: String.raw`A direct check agrees: restrict to \(0 \le x < 1\). Then \(t\) on the integration interval \([0, x]\) satisfies \(0 \le t \le x < 1\) and \(1 + t \ge 1\). Integrating \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\) (for \(|t| < 1\)) from \(0\) to \(x\) gives \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\) with \(|R_N(x)| \le \int_0^x \frac{t^{N+1}}{1+t}\,dt \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\)), using \(1 + t \ge 1\). So for \(0 \le x < 1\) the power series sums to exactly \(\ln(1+x)\). The case \(x = 1\) then follows by Abel's theorem (continuity), not by this integration step.`,
+          ko: String.raw`직접 확인도 됩니다: \(0 \le x < 1\)로 제한합니다.
+
+이 범위에서는 적분 구간 \([0, x]\) 위의 \(t\)가 \(0 \le t \le x < 1\)을 만족하고 \(1 + t \ge 1\)입니다.
+
+\(|t| < 1\)에서 \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\)를 \(0\)부터 \(x\)까지 적분하면 \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\)이며 \(|R_N(x)| \le \int_0^x \frac{t^{N+1}}{1+t}\,dt \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\))입니다(\(1 + t \ge 1\) 사용).
+
+따라서 \(0 \le x < 1\)에서 멱급수의 합은 정확히 \(\ln(1+x)\)입니다.
+
+\(x = 1\)인 경우는 이 적분 단계가 아니라 Abel 정리의 연속성으로 따릅니다.`,
+          en: String.raw`A direct check agrees: restrict to \(0 \le x < 1\).
+
+Then \(t\) on the integration interval \([0, x]\) satisfies \(0 \le t \le x < 1\) and \(1 + t \ge 1\).
+
+Integrating \(\sum_{n=0}^{N} (-t)^n = \frac{1-(-t)^{N+1}}{1+t}\) (for \(|t| < 1\)) from \(0\) to \(x\) gives \(\sum_{n=0}^{N} \frac{(-1)^n x^{n+1}}{n+1} = \ln(1+x) - R_N(x)\) with \(|R_N(x)| \le \int_0^x \frac{t^{N+1}}{1+t}\,dt \le \int_0^x t^{N+1}\,dt = \frac{x^{N+2}}{N+2} \to 0\) (\(N \to \infty\)), using \(1 + t \ge 1\).
+
+So for \(0 \le x < 1\) the power series sums to exactly \(\ln(1+x)\).
+
+The case \(x = 1\) then follows by Abel's theorem (continuity), not by this integration step.`,
         },
       },
       {
