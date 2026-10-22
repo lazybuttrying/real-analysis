@@ -9,9 +9,9 @@ import type { ProblemMeta } from '../../../contracts.ts';
  * (tests/minkowski.test.ts): at (p, a, b) = (2, 1, 1),
  * ||f||_2 = ||g||_2 = 1/sqrt(3) ≈ 0.5773502692 and ||f+g||_2 = 1
  * (since f + g is identically 1); at (2, 0, 0) all norms are 1
- * and ||f+g||_2 = 2 (equality case); at (1/2, 1, 1),
- * ||f||_{1/2} = ||g||_{1/2} = 4/9 and ||f+g||_{1/2} = 1,
- * so the inequality reverses.
+ * and ||f+g||_2 = 2 (equality case). The third problem
+ * (Riesz-Fischer completeness of L^p) has no scene numbers of
+ * its own; it reuses the default preset (p, a, b) = (2, 1, 1).
  */
 export const minkowskiProblems: readonly ProblemMeta[] = [
   {
@@ -122,55 +122,57 @@ Hence \(\|f\|_2 = \left(\int_0^1 1\,dt\right)^{1/2} = 1\), \(\|g\|_2 = 1\), \(\|
     ],
   },
   {
-    id: 'minkowski-below-one',
+    id: 'riesz-fischer',
     statement: {
-      ko: String.raw`\(0 < p < 1\)에서는 민코프스키 부등식이 성립하지 않음을 보이세요.
-
-먼저 \(f, g \ge 0\)일 때 부등식이 뒤집혀 \(\|f+g\|_p \ge \|f\|_p + \|g\|_p\)가 됨을 증명한 뒤, 구체적인 반례 \(p = \frac12\), \(f(t) = t\), \(g(t) = 1-t\)를 직접 계산하여 \(\|f+g\|_{1/2} = 1 > \frac89 = \|f\|_{1/2} + \|g\|_{1/2}\)임을 수치까지 검증하세요.`,
-      en: String.raw`Show that Minkowski's inequality fails for \(0 < p < 1\).
-
-First prove that for \(f, g \ge 0\) the inequality reverses to \(\|f+g\|_p \ge \|f\|_p + \|g\|_p\), then compute the concrete counterexample \(p = \frac12\), \(f(t) = t\), \(g(t) = 1-t\) directly and verify numerically that \(\|f+g\|_{1/2} = 1 > \frac89 = \|f\|_{1/2} + \|g\|_{1/2}\).`,
+      ko: String.raw`\(1 \le p < \infty\)일 때 \(L^p[a,b]\)가 완전함을 증명하세요: \(L^p[a,b]\) 안의 모든 코시수열은 \(L^p[a,b]\) 안에서 수렴합니다 (리스–피셔 정리). 절대수렴 급수를 이용한 완전한 증명을 쓰세요.`,
+      en: String.raw`Prove that \(L^p[a,b]\) is complete for \(1 \le p < \infty\): every Cauchy sequence in \(L^p[a,b]\) converges in \(L^p[a,b]\) (the Riesz–Fischer theorem). Give the full proof via absolutely convergent series.`,
     },
     display: [
-      String.raw`0 < p < 1:\quad (f+g)^p \ge f^p + g^p \;\Rightarrow\; \|f+g\|_p \ge \|f\|_p + \|g\|_p`,
-      String.raw`p = \tfrac12:\quad \|f\|_{1/2} = \|g\|_{1/2} = \tfrac49,\quad \|f+g\|_{1/2} = 1 > \tfrac89`,
+      String.raw`(h_k) \text{ Cauchy in } L^p[a,b] \Rightarrow \exists\, h \in L^p[a,b]:\ \|h_k - h\|_p \to 0 \quad (1 \le p < \infty)`,
+      String.raw`\sum_{n=1}^{\infty} \|f_n\|_p < \infty \ \Rightarrow\ \sum_{n=1}^{\infty} f_n \text{ converges in } L^p[a,b]`,
     ],
     preset: { p: 2, a: 1, b: 1 },
     presetCaption: {
-      ko: String.raw`이 문제는 씬의 슬라이더 범위(\(1 \le p \le 4\)) 밖에 있는 \(p = \frac12\)에서의 별도 계산에 대한 것입니다 — 프리셋은 씬 기본값 \(p = 2\), \(a = b = 1\).`,
-      en: String.raw`This problem is about a separate computation at \(p = \frac12\), outside the scene's slider range (\(1 \le p \le 4\)) — the preset is the scene default \(p = 2\), \(a = b = 1\).`,
+      ko: String.raw`완전성은 모든 \(L^p\) (\(1 \le p < \infty\))에 대한 정리입니다 — 프리셋은 씬 기본값 \(p = 2\), \(a = b = 1\)이며, 증명의 엔진인 민코프스키 노름 \(\|f+g\|_p \le \|f\|_p + \|g\|_p\)의 그림입니다.`,
+      en: String.raw`Completeness is a theorem about every \(L^p\) (\(1 \le p < \infty\)) — the preset is the scene default \(p = 2\), \(a = b = 1\), picturing the Minkowski norm \(\|f+g\|_p \le \|f\|_p + \|g\|_p\) that drives the proof.`,
     },
     proof: [
       {
         text: {
-          ko: String.raw`\(0 < p < 1\)이고 \(f, g \ge 0\)이라 하세요. 각 점에서 \((f+g)^p \ge f^p + g^p\)임을 정규화로 증명합니다: \(f+g = 0\)인 점은 자명하므로 \(f+g > 0\)인 점에서 \((f+g)^p\)로 나누고 \(t = \frac{f}{f+g} \in [0,1]\)이라 두면, \(0 < p < 1\)일 때 \(t^p \ge t\)이고 \((1-t)^p \ge 1-t\)이므로 \(\frac{f^p + g^p}{(f+g)^p} = t^p + (1-t)^p \ge t + (1-t) = 1\)입니다. 따라서 \((f+g)^p \ge f^p + g^p\)이고, 적분하면 \(\|f+g\|_p^p \ge \|f\|_p^p + \|g\|_p^p\)입니다. 이제 \(r = \frac1p > 1\)이라 두면 \(A, B \ge 0\)에 대해 \((A+B)^r \ge A^r + B^r\)이므로 (예: \(t \ge 0\)에서 \((1+t)^r \ge 1 + t^r\)), \(\|f+g\|_p \ge \big(\|f\|_p^p + \|g\|_p^p\big)^{1/p} \ge \|f\|_p + \|g\|_p\) — 부등식이 뒤집힙니다.`,
-          en: String.raw`Let \(0 < p < 1\) and \(f, g \ge 0\). Prove \((f+g)^p \ge f^p + g^p\) pointwise by normalization: at points with \(f+g = 0\) it is trivial, and at points with \(f+g > 0\) divide by \((f+g)^p\) and set \(t = \frac{f}{f+g} \in [0,1]\); since \(0 < p < 1\), \(t^p \ge t\) and \((1-t)^p \ge 1-t\), so \(\frac{f^p + g^p}{(f+g)^p} = t^p + (1-t)^p \ge t + (1-t) = 1\).
-
-Hence \((f+g)^p \ge f^p + g^p\), and integrating gives \(\|f+g\|_p^p \ge \|f\|_p^p + \|g\|_p^p\).
-
-With \(r = \frac1p > 1\) we have \((A+B)^r \ge A^r + B^r\) for \(A, B \ge 0\) (e.g. \((1+t)^r \ge 1 + t^r\) for \(t \ge 0\)), hence \(\|f+g\|_p \ge \big(\|f\|_p^p + \|g\|_p^p\big)^{1/p} \ge \|f\|_p + \|g\|_p\) — the inequality reverses.`,
+          ko: String.raw`1단계 (축소): \(\sum_n \|f_n\|_p < \infty\)이면 \(\sum_n f_n\)이 \(L^p\)에서 수렴함을 보이는 것으로 충분하다. 그 이유는 이렇다: 극한 \(h\)로 수렴하는 부분수열을 가진 코시수열은 \(h\) 자체로 수렴하며 (4단계 끝의 \(\varepsilon/2\) 추정으로 보인다), 4단계에서는 임의의 코시수열에서 정확히 \(\sum_k \|d_k\|_p < \infty\)를 만족하는 차이들 \(d_k\)의 합으로 이루어진 부분수열을 만든다. 따라서 2–3단계에서 이 급수 주장을 증명하고, 4단계에서 이를 적용한다.`,
+          en: String.raw`Step 1 (reduction): it suffices to show that if \(\sum_n \|f_n\|_p < \infty\) then \(\sum_n f_n\) converges in \(L^p\). The reason: a Cauchy sequence with a subsequence converging to \(h\) converges to \(h\) itself (shown by the \(\varepsilon/2\) estimate at the end of Step 4), and Step 4 builds a subsequence of an arbitrary Cauchy sequence exactly as a sum of differences \(d_k\) with \(\sum_k \|d_k\|_p < \infty\). So Steps 2–3 prove the series claim, and Step 4 applies it.`,
         },
       },
       {
         text: {
-          ko: String.raw`구체적으로 \(p = \frac12\), \(f(t) = t\), \(g(t) = 1-t\)로 계산합니다. \(\int_0^1 \sqrt{t}\,dt = \frac23\)이므로 \(\|f\|_{1/2} = \left(\frac23\right)^2 = \frac49 \approx 0.444444\)이고, 대칭성에 의해 \(\|g\|_{1/2} = \frac49\)도 같습니다.
-
-따라서 우변은 \(\frac49 + \frac49 = \frac89 \approx 0.888889\)입니다. 반면 \(f + g \equiv 1\)이므로 \(\|f+g\|_{1/2} = \left(\int_0^1 1\,dt\right)^2 = 1\)입니다.
-
-즉 \(1 > \frac89\) — 민코프스키 부등식이 깨지고, 틈새는 \(-\frac19 \approx -0.111111\)로 음수가 됩니다 (수치적분으로도 확인됨).`,
-          en: String.raw`Concretely, take \(p = \frac12\), \(f(t) = t\), \(g(t) = 1-t\). Since \(\int_0^1 \sqrt{t}\,dt = \frac23\), we get \(\|f\|_{1/2} = \left(\frac23\right)^2 = \frac49 \approx 0.444444\), and by symmetry \(\|g\|_{1/2} = \frac49\).
-
-So the right side is \(\frac49 + \frac49 = \frac89 \approx 0.888889\). But \(f + g \equiv 1\), so \(\|f+g\|_{1/2} = \left(\int_0^1 1\,dt\right)^2 = 1\).
-
-Hence \(1 > \frac89\) — Minkowski's inequality breaks, and the gap is \(-\frac19 \approx -0.111111\), negative (also confirmed by numerical integration).`,
+          ko: String.raw`2단계: \(M = \sum_n \|f_n\|_p < \infty\)라 두고, \(S_N = \sum_{n \le N} |f_n|\), \(F_N = \sum_{n \le N} f_n\)이라 두자. \(S_N\)에 민코프스키 부등식 (이 씬의 1번 문제, 유한 귀납으로 적용)을 적용하면 \(\|S_N\|_p \le \sum_{n \le N} \|f_n\|_p \le M\)이다. \(S_N\)은 점별로 \(g := \sum_n |f_n| \in [0, \infty]\)로 증가하므로, 단조수렴정리에 의해 \(\int g^p = \lim_N \int S_N^p = \lim_N \|S_N\|_p^p \le M^p\)이다. 따라서 \(g \in L^p\)이고 \(g < \infty\)가 거의 모든 점에서 성립하므로, \(\sum_n f_n(x)\)는 거의 모든 \(x\)에서 절대수렴한다. 그 합을 \(f(x)\)라 부르자 (예외인 영집합 위에서는 \(f(x) = 0\)으로 둔다). 그러면 \(|f| \le g\)이므로 \(f \in L^p\)이다.`,
+          en: String.raw`Step 2: let \(M = \sum_n \|f_n\|_p < \infty\), \(S_N = \sum_{n \le N} |f_n|\), and \(F_N = \sum_{n \le N} f_n\). Applying Minkowski's inequality (problem 1 of this scene, by finite induction) to \(S_N\) gives \(\|S_N\|_p \le \sum_{n \le N} \|f_n\|_p \le M\). The sequence \(S_N\) increases pointwise to \(g := \sum_n |f_n| \in [0, \infty]\), so by the monotone convergence theorem \(\int g^p = \lim_N \int S_N^p = \lim_N \|S_N\|_p^p \le M^p\). Hence \(g \in L^p\) and \(g < \infty\) almost everywhere, so \(\sum_n f_n(x)\) converges absolutely for almost every \(x\). Call its sum \(f(x)\) (and set \(f(x) = 0\) on the exceptional null set). Then \(|f| \le g\), so \(f \in L^p\).`,
+        },
+        display: [
+          String.raw`\|S_N\|_p \le \sum_{n \le N} \|f_n\|_p \le M, \qquad \int g^p = \lim_N \|S_N\|_p^p \le M^p, \qquad |f| \le g`,
+        ],
+      },
+      {
+        text: {
+          ko: String.raw`3단계 (꼬리 추정): 꼬리 급수 \(\sum_{n > N} |f_n|\)에 같은 논증을 적용한다: 그 점별 합 \(g_N := \sum_{n > N} |f_n|\)은, 유한 꼬리합에 민코프스키를 적용한 뒤 2단계처럼 단조수렴정리로 극한을 취하면, \(\|g_N\|_p \le \sum_{n > N} \|f_n\|_p\)를 만족한다. 거의 모든 점에서 \(|f - F_N| = \left|\sum_{n > N} f_n\right| \le g_N\)이므로, \(\|f - F_N\|_p \le \|g_N\|_p \le \sum_{n > N} \|f_n\|_p \to 0\) (\(N \to \infty\)) — 오른쪽은 수렴 급수 \(\sum_n \|f_n\|_p\)의 꼬리이기 때문이다. 따라서 \(\sum_n f_n \to f\)가 \(L^p\)에서 성립한다.`,
+          en: String.raw`Step 3 (tail estimate): apply the same argument to the tail series \(\sum_{n > N} |f_n|\): its pointwise sum \(g_N := \sum_{n > N} |f_n|\) satisfies \(\|g_N\|_p \le \sum_{n > N} \|f_n\|_p\), by applying Minkowski to finite tail sums and passing to the limit with the monotone convergence theorem as in Step 2. Pointwise almost everywhere, \(|f - F_N| = \left|\sum_{n > N} f_n\right| \le g_N\). Therefore \(\|f - F_N\|_p \le \|g_N\|_p \le \sum_{n > N} \|f_n\|_p \to 0\) as \(N \to \infty\), since this is the tail of the convergent series \(\sum_n \|f_n\|_p\). Hence \(\sum_n f_n \to f\) in \(L^p\).`,
         },
       },
       {
         text: {
-          ko: String.raw`표준 증명이 무너지는 지점도 명확합니다: 횔더 부등식은 켤레지수 \(q = \frac{p}{p-1} > 1\)을 필요로 하는데, \(p < 1\)에서는 \(q < 0\)이 되어 횔더 단계 자체가 성립하지 않습니다. 그래서 민코프스키 부등식은 \(p \ge 1\)이라는 조건이 필수적입니다.`,
-          en: String.raw`The exact failure point of the standard proof is also clear: Hölder's inequality needs the conjugate exponent \(q = \frac{p}{p-1} > 1\), but for \(p < 1\) we get \(q < 0\), so the Hölder step itself is unavailable. That is why Minkowski's inequality essentially requires \(p \ge 1\).`,
+          ko: String.raw`4단계 (부분수열): \((h_k)\)가 \(L^p\)에서 코시수열이라 하자. 모든 \(k\)에 대해 \(\|h_{n_{k+1}} - h_{n_k}\|_p < 2^{-k}\)를 만족하는 첨수 \(n_1 < n_2 < \cdots\)를 고를 수 있다: \((h_k)\)가 코시수열이므로 귀납적으로 고르면 된다. \(d_k = h_{n_{k+1}} - h_{n_k}\)라 두면 \(\sum_k \|d_k\|_p < \sum_k 2^{-k} < \infty\)이고, 망원 항등식 \(h_{n_1} + \sum_{k=1}^{K} d_k = h_{n_{K+1}}\)가 성립한다. 따라서 첫째 항이 \(h_{n_1}\)이고 뒤에 \(d_k\)들이 이어지는 급수에 1–3단계를 적용하면, 어떤 \(h \in L^p\)에 대해 \(h_{n_k} \to h\)가 \(L^p\)에서 성립한다.`,
+          en: String.raw`Step 4 (subsequence): let \((h_k)\) be Cauchy in \(L^p\). Choose indices \(n_1 < n_2 < \cdots\) with \(\|h_{n_{k+1}} - h_{n_k}\|_p < 2^{-k}\) for every \(k\): this is possible inductively because \((h_k)\) is Cauchy. Put \(d_k = h_{n_{k+1}} - h_{n_k}\). Then \(\sum_k \|d_k\|_p < \sum_k 2^{-k} < \infty\), and the telescoping identity \(h_{n_1} + \sum_{k=1}^{K} d_k = h_{n_{K+1}}\) holds. So Steps 1–3, applied to the series with first term \(h_{n_1}\) followed by the \(d_k\), give \(h_{n_k} \to h\) in \(L^p\) for some \(h \in L^p\).`,
+        },
+        display: [
+          String.raw`h_{n_1} + \sum_{k=1}^{K} d_k = h_{n_{K+1}}, \qquad \sum_{k=1}^{\infty} \|d_k\|_p < \sum_{k=1}^{\infty} 2^{-k} = 1 < \infty`,
+        ],
+      },
+      {
+        text: {
+          ko: String.raw`4단계 (결론): 마지막으로 \(\varepsilon > 0\)이라 하자. \(N_0\)를 \(k, l \ge N_0\)이면 \(\|h_k - h_l\|_p < \varepsilon/2\)가 되도록 잡고 (코시 조건), \(j\)를 \(n_j \ge N_0\)이고 \(\|h_{n_j} - h\|_p < \varepsilon/2\)가 되도록 잡는다. 그러면 \(k \ge N_0\)인 모든 \(k\)에 대해 \(\|h_k - h\|_p \le \|h_k - h_{n_j}\|_p + \|h_{n_j} - h\|_p < \varepsilon/2 + \varepsilon/2 = \varepsilon\)이다. 따라서 \(h_k \to h\)가 \(L^p\)에서 성립한다. 그러므로 \(L^p[a,b]\)는 완전하다. ∎`,
+          en: String.raw`Step 4 (conclusion): finally, let \(\varepsilon > 0\). Choose \(N_0\) so that \(k, l \ge N_0\) implies \(\|h_k - h_l\|_p < \varepsilon/2\) (the Cauchy condition), and choose \(j\) with \(n_j \ge N_0\) and \(\|h_{n_j} - h\|_p < \varepsilon/2\). Then for every \(k \ge N_0\), \(\|h_k - h\|_p \le \|h_k - h_{n_j}\|_p + \|h_{n_j} - h\|_p < \varepsilon/2 + \varepsilon/2 = \varepsilon\). Hence \(h_k \to h\) in \(L^p\). Therefore \(L^p[a,b]\) is complete. ∎`,
         },
       },
     ],
-  },
+  }
 ];

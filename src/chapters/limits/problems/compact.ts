@@ -11,43 +11,52 @@ import type { ProblemMeta } from '../../../contracts.ts';
  */
 export const problems: readonly ProblemMeta[] = [
   {
-    id: 'compact-closed-seq',
+    id: 'compact-sequential-equivalence',
     statement: {
-      ko: String.raw`\([0,1]\)이 순차 컴팩트임을 보이세요: \([0,1]\) 안의 모든 수열은 극한이 \([0,1]\) 안에 있는 수렴 부분수열을 갖습니다 (볼차노–바이어슈트라스).`,
-      en: String.raw`Show that \([0,1]\) is sequentially compact: every sequence in \([0,1]\) has a convergent subsequence whose limit stays in \([0,1]\) (Bolzano–Weierstrass).`,
+      ko: String.raw`거리공간 \((X, d)\)와 \(K \subseteq X\)에 대해, \(K\)가 컴팩트인 것과 \(K\) 안의 모든 수열이 \(K\) 안의 점으로 수렴하는 부분수열을 갖는 것(순차 컴팩트)이 동치임을 증명하세요. 양방향을 모두 증명하세요.`,
+      en: String.raw`For a metric space \((X, d)\) and \(K \subseteq X\), prove that \(K\) is compact if and only if every sequence in \(K\) has a subsequence converging to a point of \(K\) (sequentially compact). Prove both directions.`,
     },
     display: [
-      String.raw`(a_n) \subset [0,1] \Rightarrow \exists\,(a_{n_k}) \to L \in [0,1]`,
-      String.raw`K \text{ compact } \iff K \text{ closed and bounded} \quad \text{(Heine--Borel)}`,
+      String.raw`K \text{ compact} \iff \forall\,(x_n) \subset K\ \exists\,(x_{n_k}) \to x \in K`,
+      String.raw`(\Rightarrow)\ \text{finite subcover of } B(x, r_x); \qquad (\Leftarrow)\ \text{Lebesgue number } \delta + \text{ finite } \delta\text{-net}`,
     ],
     preset: { set: 'closed', step: 6 },
     presetCaption: {
-      ko: String.raw`\(k = 6\): 처음 6개 열린구간의 합집합 \([-0.18, 1.18]\)이 \([0,1]\)을 덮습니다 — 유한 부분커버가 존재합니다.`,
-      en: String.raw`\(k = 6\): the union \([-0.18, 1.18]\) of the first 6 open intervals covers \([0,1]\) — a finite subcover exists.`,
+      ko: String.raw`\(k = 6\): 처음 6개 열린구간의 합집합 \([-0.18, 1.18]\)이 \([0,1]\)을 덮습니다 — \((\Rightarrow)\) 방향에서 뽑는 유한 부분커버의 그림입니다.`,
+      en: String.raw`\(k = 6\): the union \([-0.18, 1.18]\) of the first 6 open intervals covers \([0,1]\) — the finite subcover extracted in the \((\Rightarrow)\) direction.`,
     },
     proof: [
       {
         text: {
-          ko: String.raw`\((a_n)\)을 \([0,1]\) 안의 임의의 수열이라 하자. 이 수열은 유계이므로 볼차노–바이어슈트라스 정리에 따라 수렴하는 부분수열 \((a_{n_k}) \to L\)이 존재한다.`,
-          en: String.raw`Let \((a_n)\) be any sequence in \([0,1]\). It is bounded, so the Bolzano–Weierstrass theorem gives a convergent subsequence \((a_{n_k}) \to L\).`,
+          ko: String.raw`\((\Rightarrow)\) \(K\)가 컴팩트라고 하고, \((x_n)\)은 \(K\) 안의 수열인데 \(K\) 안의 점으로 수렴하는 부분수열이 없다고 가정하자. 그러면 모든 \(x \in K\)에 대해 \(r_x > 0\)가 존재하여 열린공 \(B(x, r_x)\)가 \(x_n\)을 유한 개만 포함한다: 만약 어떤 \(x\)에서는 모든 \(r > 0\)에 대해 \(B(x, r)\)가 \(x_n\)을 무한히 많이 포함한다면, \(n_k\)를 증가하게 골라 \(d(x_{n_k}, x) < 1/k\)로 만들 수 있어 \((x_{n_k})\)가 \(x\)로 수렴하기 때문이다.`,
+          en: String.raw`\((\Rightarrow)\) Suppose \(K\) is compact, and \((x_n)\) is a sequence in \(K\) with no subsequence converging to a point of \(K\). Then for every \(x \in K\) there is \(r_x > 0\) such that the open ball \(B(x, r_x)\) contains \(x_n\) for only finitely many \(n\): if instead some \(x\) had \(B(x, r)\) containing \(x_n\) for infinitely many \(n\) for every \(r > 0\), we could choose \(n_k\) increasing with \(d(x_{n_k}, x) < 1/k\), and then \((x_{n_k})\) would converge to \(x\).`,
         },
       },
       {
         text: {
-          ko: String.raw`모든 \(k\)에 대해 \(0 \le a_{n_k} \le 1\)이므로, 극한을 취하면 부등식이 보존되어 \(0 \le L \le 1\)이다. 즉 \(L \in [0,1]\) — 닫힌 구간은 극한점을 놓치지 않는다.`,
-          en: String.raw`Since \(0 \le a_{n_k} \le 1\) for every \(k\), passing to the limit preserves the inequalities, giving \(0 \le L \le 1\). Hence \(L \in [0,1]\) — a closed interval never loses a limit point.`,
+          ko: String.raw`\((\Rightarrow)\) 공들 \(\{B(x, r_x)\}_{x \in K}\)는 \(K\)를 덮으므로, 컴팩트성에 의해 유한 부분커버 \(B(x_1, r_{x_1}), \dots, B(x_m, r_{x_m})\)가 존재한다. 각 공은 \(x_n\)을 유한 개만 포함하므로 그 유한 합집합도 첨수 \(n\)을 유한 개만 포함하는데, 이는 수열이 무한히 많은 첨수를 갖는다는 사실과 모순이다. 따라서 \(K\) 안의 모든 수열은 \(K\) 안의 점으로 수렴하는 부분수열을 갖는다.`,
+          en: String.raw`\((\Rightarrow)\) The balls \(\{B(x, r_x)\}_{x \in K}\) cover \(K\), so compactness gives a finite subcover \(B(x_1, r_{x_1}), \dots, B(x_m, r_{x_m})\). Each ball contains \(x_n\) for only finitely many \(n\), so their finite union contains only finitely many indices \(n\) — a contradiction, since a sequence has infinitely many indices. Hence every sequence in \(K\) has a subsequence converging to a point of \(K\).`,
         },
       },
       {
         text: {
-          ko: String.raw`따라서 \([0,1]\) 안의 모든 수열은 극한이 \([0,1]\) 안에 있는 수렴 부분수열을 갖는다: \([0,1]\)은 순차 컴팩트이다.`,
-          en: String.raw`Every sequence in \([0,1]\) therefore has a convergent subsequence with its limit in \([0,1]\): \([0,1]\) is sequentially compact.`,
+          ko: String.raw`\((\Leftarrow)\) \(K\)가 순차 컴팩트라고 하자 (\(K\)가 빈집합이면 양쪽 모두 자명하므로 비어 있지 않다고 둔다). 1단계 (르베그 수): \(K\)의 모든 열린 커버 \(\mathcal{U}\)에 대해 \(\delta > 0\)가 존재하여, 모든 \(x \in K\)에 대해 \(B(x, \delta)\)가 \(\mathcal{U}\)의 어느 한 원소 안에 들어간다. 모순으로 증명한다: 그렇지 않다면 각 \(n\)마다 \(B(x_n, 1/n)\)이 \(\mathcal{U}\)의 어떤 원소 안에도 들어가지 않는 \(x_n \in K\)를 고를 수 있다. 순차 컴팩트성으로 부분수열 \((x_{n_k})\)가 \(x \in K\)로 수렴한다. \(x \in U_0\)인 \(U_0 \in \mathcal{U}\)가 있고, \(U_0\)가 열려 있어 \(B(x, \rho) \subseteq U_0\)인 \(\rho > 0\)가 있다. \(k\)가 충분히 크면 \(d(x_{n_k}, x) < \rho/2\)이고 \(1/n_k < \rho/2\)이므로, 아래 삼각부등식 사슬이 \(B(x_{n_k}, 1/n_k) \subseteq U_0\)를 주어 \(x_{n_k}\)의 선택과 모순이다.`,
+          en: String.raw`\((\Leftarrow)\) Suppose \(K\) is sequentially compact (if \(K\) is empty both sides are trivial, so assume \(K\) is nonempty). Step 1 (Lebesgue number): for every open cover \(\mathcal{U}\) of \(K\) there is \(\delta > 0\) such that every ball \(B(x, \delta)\), \(x \in K\), lies inside some member of \(\mathcal{U}\). Prove it by contradiction: otherwise, for each \(n\) pick \(x_n \in K\) with \(B(x_n, 1/n)\) inside no member of \(\mathcal{U}\). By sequential compactness a subsequence \((x_{n_k})\) converges to \(x \in K\). There is \(U_0 \in \mathcal{U}\) with \(x \in U_0\), and \(U_0\) open gives \(\rho > 0\) with \(B(x, \rho) \subseteq U_0\). For all large \(k\), \(d(x_{n_k}, x) < \rho/2\) and \(1/n_k < \rho/2\), so the triangle inequality chain below gives \(B(x_{n_k}, 1/n_k) \subseteq U_0\) — contradicting the choice of \(x_{n_k}\).`,
+        },
+        display: [
+          String.raw`y \in B(x_{n_k}, 1/n_k) \Rightarrow d(y, x) \le d(y, x_{n_k}) + d(x_{n_k}, x) < \frac{1}{n_k} + \frac{\rho}{2} < \rho \Rightarrow B(x_{n_k}, 1/n_k) \subseteq B(x, \rho) \subseteq U_0`,
+        ],
+      },
+      {
+        text: {
+          ko: String.raw`\((\Leftarrow)\) 2단계 (전유계성): \(\varepsilon > 0\)를 고정하자. 유한한 \(\varepsilon\)-그물이 존재하지 않는다고 가정하면, 귀납적으로 수열을 만들 수 있다: \(x_1 \in K\)를 고르고, \(x_{n+1} \in K\)를 모든 \(j \le n\)에 대해 \(d(x_{n+1}, x_j) \ge \varepsilon\)를 만족하게 고른다 — 유한 집합 \(\{x_1, \dots, x_n\}\)을 중심으로 한 \(\varepsilon\)-공들이 \(K\)를 덮지 못하므로 그 밖의 점을 고를 수 있기 때문이다. 이렇게 얻은 수열은 서로 다른 두 항 사이의 거리가 항상 \(\varepsilon\) 이상이라 코시 부분수열을 가질 수 없고, 따라서 수렴 부분수열도 가질 수 없어 순차 컴팩트성과 모순이다. 그러므로 유한히 많은 \(\varepsilon\)-공이 \(K\)를 덮는다.`,
+          en: String.raw`\((\Leftarrow)\) Step 2 (total boundedness): fix \(\varepsilon > 0\). If no finite \(\varepsilon\)-net existed, we could pick a sequence inductively: pick \(x_1 \in K\), and pick \(x_{n+1} \in K\) with \(d(x_{n+1}, x_j) \ge \varepsilon\) for all \(j \le n\) — possible because the \(\varepsilon\)-balls around the finite set \(\{x_1, \dots, x_n\}\) do not cover \(K\), so a point outside them can be chosen. The resulting sequence has \(d(x_m, x_n) \ge \varepsilon\) for all \(m \ne n\), so it has no Cauchy subsequence, hence no convergent subsequence — contradicting sequential compactness. Therefore finitely many \(\varepsilon\)-balls cover \(K\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\mathbb{R}\)에서는 순차 컴팩트 ⟺ 컴팩트 (하이네–보렐: 닫힘 + 유계)이다. 열린 커버 쪽 그림도 같은 이야기이다: 위 장면처럼 처음 6개 구간 \(U_1, \dots, U_6\)의 합집합 \([-0.18, 1.18]\)이 \([0,1]\) 전체를 덮는다 — 커버 전체를 다 쓸 필요가 없다. (열린 커버 정의의 동치성 증명은 아이디어 수준에서만 본다.)`,
-          en: String.raw`In \(\mathbb{R}\), sequential compactness ⟺ compactness (Heine–Borel: closed + bounded). The open-cover picture tells the same story: the union \([-0.18, 1.18]\) of the first 6 intervals \(U_1, \dots, U_6\) already covers all of \([0,1]\) — the whole cover is never needed. (The proof that the open-cover definition is equivalent is shown at the idea level only.)`,
+          ko: String.raw`\((\Leftarrow)\) 3단계: 열린 커버 \(\mathcal{U}\)가 주어지면 1단계의 르베그 수 \(\delta > 0\)를 잡고, 2단계를 \(\varepsilon = \delta\)로 적용해 \(K\)를 유한히 많은 \(\delta\)-공으로 덮는다. 각 \(\delta\)-공은 1단계에 의해 \(\mathcal{U}\)의 어느 한 원소 안에 들어가므로, 그 유한히 많은 원소들이 \(K\)를 덮는다. 따라서 \(\mathcal{U}\)는 유한 부분커버를 가지며, \(\mathcal{U}\)가 임의였으므로 \(K\)는 컴팩트이다.`,
+          en: String.raw`\((\Leftarrow)\) Step 3: given an open cover \(\mathcal{U}\), take its Lebesgue number \(\delta > 0\) from Step 1, and cover \(K\) by finitely many \(\delta\)-balls using Step 2 with \(\varepsilon = \delta\). By Step 1 each \(\delta\)-ball lies inside some member of \(\mathcal{U}\), so those finitely many members cover \(K\). Hence \(\mathcal{U}\) has a finite subcover, and since \(\mathcal{U}\) was arbitrary, \(K\) is compact.`,
         },
       },
     ],
