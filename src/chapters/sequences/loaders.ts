@@ -18,4 +18,5 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'monotone-cauchy': () => import('../limits/scenes/monotoneCauchy').then((module) => module.default),
   'limsup-liminf': () => import('../limits/scenes/limsupLiminf').then((module) => module.default),
   'stolz-cesaro': () => import('../limits/scenes/stolzCesaro').then((module) => module.default),
+  'double-sequences': () => import('../limits/scenes/doubleSequences').then((module) => module.default),
 };

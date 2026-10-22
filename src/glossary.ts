@@ -473,6 +473,36 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'sequences',
     sceneId: 'stolz-cesaro',
   },
+  {
+    id: 'double-sequence',
+    term: { ko: '이중수열', en: 'double sequence' },
+    definition: {
+      ko: String.raw`두 인덱스 \(m, n\)으로 번호가 매겨진 수들의 배열 \(a_{m,n}\).`,
+      en: String.raw`An array \(a_{m,n}\) of numbers indexed by two indices \(m, n\).`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'double-sequences',
+  },
+  {
+    id: 'double-limit',
+    term: { ko: '이중극한', en: 'double limit' },
+    definition: {
+      ko: String.raw`모든 \(\varepsilon > 0\)에 대해 \(m, n > N\)이면 \(|a_{m,n} - L| < \varepsilon\)이도록 \(N\)이 있을 때 \(a_{m,n} \to L\)이라는 Pringsheim 극한. 두 인덱스가 함께 커진다.`,
+      en: String.raw`The Pringsheim limit: \(a_{m,n} \to L\) when for every \(\varepsilon > 0\) there is \(N\) with \(|a_{m,n} - L| < \varepsilon\) whenever \(m, n > N\). Both indices grow together.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'double-sequences',
+  },
+  {
+    id: 'iterated-limit',
+    term: { ko: '반복극한', en: 'iterated limit' },
+    definition: {
+      ko: String.raw`한 인덱스를 먼저 극한 보내고 다른 인덱스를 나중에 보내는 극한 \(\lim_m \lim_n a_{m,n}\) 또는 \(\lim_n \lim_m a_{m,n}\). 순서를 바꾸면 값이 달라지거나 한쪽이 존재하지 않을 수 있다.`,
+      en: String.raw`A limit taken in one index first and the other second, \(\lim_m \lim_n a_{m,n}\) or \(\lim_n \lim_m a_{m,n}\). Swapping the order can change the value, or one side may fail to exist.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'double-sequences',
+  },
   // ---------------------------------------------------------------- continuity
   {
     id: 'epsilon-delta',
@@ -1308,6 +1338,36 @@ export const glossary: readonly GlossaryEntry[] = [
     },
     chapterId: 'function-series',
     sceneId: 'gibbs-phenomenon',
+  },
+  {
+    id: 'cb-space',
+    term: { ko: String.raw`\(C_b(X)\) 공간`, en: String.raw`\(C_b(X)\) space` },
+    definition: {
+      ko: String.raw`\(X\) 위의 유계 연속함수 전체에 sup 노름 \(\|f\|_\infty = \sup_X |f|\)를 준 공간. 완비하다.`,
+      en: String.raw`The bounded continuous functions on \(X\) with the sup norm \(\|f\|_\infty = \sup_X |f|\). It is complete.`,
+    },
+    chapterId: 'function-series',
+    sceneId: 'function-spaces',
+  },
+  {
+    id: 'c0-space',
+    term: { ko: String.raw`\(C_0(X)\) 공간`, en: String.raw`\(C_0(X)\) space` },
+    definition: {
+      ko: String.raw`무한원에서 사라지는 연속함수들의 공간: 모든 \(\varepsilon > 0\)에 대해 compact 집합 밖에서 \(|f| < \varepsilon\)이다. \(C_b\)의 닫힌 부분공간이라 완비하다.`,
+      en: String.raw`The continuous functions vanishing at infinity: for every \(\varepsilon > 0\), \(|f| < \varepsilon\) outside some compact set. A closed subspace of \(C_b\), hence complete.`,
+    },
+    chapterId: 'function-series',
+    sceneId: 'function-spaces',
+  },
+  {
+    id: 'cc-space',
+    term: { ko: String.raw`\(C_c(X)\) 공간`, en: String.raw`\(C_c(X)\) space` },
+    definition: {
+      ko: String.raw`지지집합이 compact인 연속함수들의 공간. \(C_0\) 안에서 dense이지만 완비가 아니고 닫혀 있지도 않다: \(\overline{C_c} = C_0\).`,
+      en: String.raw`The continuous functions with compact support. Dense in \(C_0\) but neither complete nor closed: \(\overline{C_c} = C_0\).`,
+    },
+    chapterId: 'function-series',
+    sceneId: 'function-spaces',
   },
   {
     id: 'wilbraham-gibbs-constant',

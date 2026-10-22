@@ -1,5 +1,6 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { fejerTheoremProblems } from '../calculus/problems/fejer-theorem';
+import { functionSpacesProblems } from '../series/problems/function-spaces';
 import { gibbsPhenomenonProblems } from '../calculus/problems/gibbs-phenomenon';
 import { problems as diniProblems } from '../series/problems/dini';
 import { problems as fourierProblems } from '../calculus/problems/fourier';
@@ -201,6 +202,33 @@ For example, zoom into the corner of a 📷 photo. The jagged part gets narrower
       prerequisites: ['fourier'],
       controls: [{ kind: 'slider', key: 'N', label: { ko: '항의 수 N', en: 'Terms N' }, min: 2, max: 60, step: 1, init: 12 }],
 problems: gibbsPhenomenonProblems,
+    },
+    {
+      id: 'function-spaces',
+      title: { ko: '함수공간: C_c, C_0, C_b', en: 'Function Spaces: Cc, C0, Cb' },
+      order: 8,
+      summary: {
+        ko: String.raw`함수공간을 보는 씬입니다. 연속함수들의 세 집합 \(C_c\), \(C_0\), \(C_b\)가 어떻게 겹치고 갈리는지 확인합니다.
+
+유계인 연속함수 전체가 \(C_b\)입니다. 멀리 가면 0으로 사라지는 함수가 \(C_0\), 유한 구간 밖에서는 완전히 0인 함수가 \(C_c\)입니다. \(C_c \subset C_0 \subset C_b\)이고, 두 포함 모두 진짜입니다.
+
+예를 들면, ⛺ 텐트는 유한한 땅에만 서 있습니다. 안개는 멀어질수록 옅어지지만 어디에나 깔려 있습니다. 끝없이 펼쳐진 평야는 사라지지 않습니다.`,
+        en: String.raw`This scene is about function spaces. See how the three families of continuous functions \(C_c\), \(C_0\), and \(C_b\) nest and split.
+
+\(C_b\) is all bounded continuous functions. \(C_0\) holds the ones that fade to \(0\) far away, and \(C_c\) the ones that are exactly \(0\) outside a finite interval. Both inclusions \(C_c \subset C_0 \subset C_b\) are strict.
+
+For example, a ⛺ tent stands on a finite patch of ground. Fog thins out with distance but lies everywhere. An endless plain never fades away at all.`,
+      },
+      tex: [
+        String.raw`C_c(\mathbb{R}) \subsetneq C_0(\mathbb{R}) \subsetneq C_b(\mathbb{R}), \qquad \|f\|_\infty = \sup_{x \in \mathbb{R}} |f(x)|`,
+        String.raw`\overline{C_c(\mathbb{R})} = C_0(\mathbb{R}), \qquad C_0(\mathbb{R}) \text{ closed in } C_b(\mathbb{R}), \qquad C_c(\mathbb{R}) \text{ not complete}`,
+      ],
+      prerequisites: ['m-test', 'dini'],
+      controls: [
+        { kind: 'select', key: 'mode', label: { ko: '보기', en: 'View' }, options: ['spaces', 'cutoff'], init: 'spaces' },
+        { kind: 'slider', key: 'k', label: { ko: '절단 위치 k', en: 'Cutoff k' }, min: 0.5, max: 3, step: 0.25, init: 1 },
+      ],
+      problems: functionSpacesProblems,
     },
   ],
 };
