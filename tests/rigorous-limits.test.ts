@@ -303,6 +303,7 @@ describe('split chapters: the five ex-limits chapters', () => {
       'monotone-cauchy',
       'limsup-liminf',
       'stolz-cesaro',
+      'double-sequences',
     ]);
     expect(idsOf('continuity')).toEqual([
       'epsdelta',

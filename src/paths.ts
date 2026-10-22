@@ -105,6 +105,10 @@ const POST_SPLIT_SCENES = new Set([
   'parallelogram-law',
   'arc-length',
   'convolution',
+  // 2026-10-22: the last two gap-fill scenes (function spaces, double
+  // sequences) — post-split additions, no legacy canonical pages.
+  'double-sequences',
+  'function-spaces',
   // 2026-10-20: the proofs chapter's 10 scenes — post-split additions, no
   // legacy canonical pages (they never had pre-split URLs).
   'logic-propositions',

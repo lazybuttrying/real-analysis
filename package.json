@@ -45,7 +45,7 @@
       "path": [
         "dist/assets/preload-helper-*.js"
       ],
-      "limit": "350 kB"
+      "limit": "450 kB"
     },
     {
       "name": "chapter: proofs (entry + 10 scenes)",
@@ -65,12 +65,13 @@
       "limit": "35 kB"
     },
     {
-      "name": "chapter: numbers (entry + 15 scenes)",
+      "name": "chapter: numbers (entry + 16 scenes)",
       "path": [
         "dist/assets/numbers-*.js",
         "dist/assets/naturalNumbers-*.js",
         "dist/assets/binomial-*.js",
         "dist/assets/integersRationals-*.js",
+        "dist/assets/complexNumbers-*.js",
         "dist/assets/sqrt2Irrational-*.js",
         "dist/assets/densityOfRationals-*.js",
         "dist/assets/sets-*.js",
@@ -84,10 +85,10 @@
         "dist/assets/vectorSpaces-*.js",
         "dist/assets/dimensionRank-*.js"
       ],
-      "limit": "30 kB"
+      "limit": "35 kB"
     },
     {
-      "name": "chapter: sequences (entry + 11 scenes)",
+      "name": "chapter: sequences (entry + 13 scenes)",
       "path": [
         "dist/assets/sequences-*.js",
         "dist/assets/epsilonN-*.js",
@@ -95,14 +96,16 @@
         "dist/assets/sequenceSpaces-*.js",
         "dist/assets/cauchySchwarz-*.js",
         "dist/assets/holder-*.js",
+        "dist/assets/parallelogramLaw-*.js",
         "dist/assets/holes-*.js",
         "dist/assets/construction-*.js",
         "dist/assets/bolzanoWeierstrass-*.js",
         "dist/assets/monotoneCauchy-*.js",
         "dist/assets/limsupLiminf-*.js",
-        "dist/assets/stolzCesaro-*.js"
+        "dist/assets/stolzCesaro-*.js",
+        "dist/assets/doubleSequences-*.js"
       ],
-      "limit": "25 kB"
+      "limit": "30 kB"
     },
     {
       "name": "chapter: continuity (entry + 9 scenes)",
@@ -121,11 +124,12 @@
       "limit": "25 kB"
     },
     {
-      "name": "chapter: topology (entry + 13 scenes)",
+      "name": "chapter: topology (entry + 14 scenes)",
       "path": [
         "dist/assets/topology-*.js",
         "dist/assets/opensets-*.js",
         "dist/assets/clopen-*.js",
+        "dist/assets/connected-*.js",
         "dist/assets/closure-*.js",
         "dist/assets/compact-*.js",
         "dist/assets/topologistSine-*.js",
@@ -138,7 +142,7 @@
         "dist/assets/fatCantor-*.js",
         "dist/assets/cantorFunction-*.js"
       ],
-      "limit": "35 kB"
+      "limit": "40 kB"
     },
     {
       "name": "chapter: approximation (entry + 4 scenes)",
@@ -194,7 +198,7 @@
       "limit": "30 kB"
     },
     {
-      "name": "chapter: function-series (entry + 7 scenes)",
+      "name": "chapter: function-series (entry + 8 scenes)",
       "path": [
         "dist/assets/function-series-*.js",
         "dist/assets/mTest-*.js",
@@ -203,9 +207,10 @@
         "dist/assets/riemannLebesgue-*.js",
         "dist/assets/fejerTheorem-*.js",
         "dist/assets/parseval-*.js",
-        "dist/assets/gibbsPhenomenon-*.js"
+        "dist/assets/gibbsPhenomenon-*.js",
+        "dist/assets/functionSpaces-*.js"
       ],
-      "limit": "19 kB"
+      "limit": "25 kB"
     },
     {
       "name": "chapter: differentiation (entry + 14 scenes)",
@@ -229,7 +234,7 @@
       "limit": "30 kB"
     },
     {
-      "name": "chapter: integration (entry + 24 scenes)",
+      "name": "chapter: integration (entry + 26 scenes)",
       "path": [
         "dist/assets/integration-*.js",
         "dist/assets/gamma-*.js",
@@ -244,6 +249,7 @@
         "dist/assets/integrationByParts-*.js",
         "dist/assets/changeOfVariables-*.js",
         "dist/assets/boundedVariation-*.js",
+        "dist/assets/arcLength-*.js",
         "dist/assets/riemannStieltjes-*.js",
         "dist/assets/jordanDecomposition-*.js",
         "dist/assets/measure-*.js",
@@ -252,12 +258,13 @@
         "dist/assets/lebesgue-*.js",
         "dist/assets/lebesgueConvergence-*.js",
         "dist/assets/fubiniTonelli-*.js",
+        "dist/assets/convolution-*.js",
         "dist/assets/egorov-*.js",
         "dist/assets/absoluteContinuity-*.js",
         "dist/assets/differentiationUnderIntegral-*.js",
         "dist/assets/minkowski-*.js"
       ],
-      "limit": "60 kB"
+      "limit": "65 kB"
     },
     {
       "name": "exercises (all chapters, 11 chunks)",
@@ -272,7 +279,7 @@
         "dist/assets/map-page-*.js",
         "dist/assets/paths-page-*.js"
       ],
-      "limit": "35 kB"
+      "limit": "40 kB"
     },
     {
       "name": "vendor: d3",

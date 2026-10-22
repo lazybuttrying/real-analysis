@@ -1,4 +1,5 @@
 import type { ChapterMeta } from '../../contracts.ts';
+import { doubleSequencesProblems } from '../limits/problems/double-sequences';
 import { problems as bolzanoWeierstrassProblems } from '../limits/problems/bolzano-weierstrass';
 import { problems as cauchySchwarzProblems } from '../limits/problems/cauchy-schwarz';
 import { problems as constructionProblems } from '../limits/problems/construction';
@@ -349,6 +350,33 @@ For example, on a 🚗 car trip the speed over the last minute settles at 60 km/
         { kind: 'slider', key: 'n', label: { ko: '항 개수', en: 'Terms shown' }, min: 10, max: 300, step: 1, init: 60 },
       ],
       problems: stolzCesaroProblems,
+    },
+    {
+      id: 'double-sequences',
+      title: { ko: '이중수열과 반복극한', en: 'Double Sequences and Iterated Limits' },
+      order: 13,
+      summary: {
+        ko: String.raw`이중수열을 보는 씬입니다. 격자에 찍힌 값 \(a_{m,n}\)을 보며, 행 방향 극한과 열 방향 극한이 어떻게 갈리는지 확인합니다.
+
+이중극한은 두 인덱스가 함께 커질 때의 극한입니다. 반복극한은 한쪽을 먼저 보내고 나머지를 보냅니다. 순서를 바꾸면 답이 달라질 수 있습니다. 두 반복극한이 같아도 이중극한이 없을 수 있습니다.
+
+예를 들면, 📋 표를 가로줄부터 읽는 것과 세로줄부터 읽는 것은 다릅니다. 읽는 순서를 바꾸면, 전혀 다른 결론에 닿을 수 있습니다.`,
+        en: String.raw`This scene is about double sequences. Watch the values \(a_{m,n}\) on a grid, and see how the row-wise and column-wise limits split apart.
+
+The double limit lets both indices grow together. An iterated limit sends one index first, then the other. Swapping the order can change the answer. And even when both iterated limits agree, the double limit may not exist.
+
+For example, reading a 📋 table row by row is not the same as reading it column by column. Change the reading order, and you can land on a completely different conclusion.`,
+      },
+      tex: [
+        String.raw`a_{m,n} \to L \iff \forall \varepsilon > 0\ \exists N : m, n > N \implies |a_{m,n} - L| < \varepsilon`,
+        String.raw`\lim_m \lim_n a_{m,n} \quad \text{vs} \quad \lim_n \lim_m a_{m,n}`,
+      ],
+      prerequisites: ['limsup-liminf'],
+      controls: [
+        { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['ratio', 'difference', 'product', 'vanishing'], init: 'ratio' },
+        { kind: 'slider', key: 'k', label: { ko: '격자 크기 K', en: 'Grid size K' }, min: 4, max: 24, step: 1, init: 12 },
+      ],
+      problems: doubleSequencesProblems,
     },
   ],
 };
