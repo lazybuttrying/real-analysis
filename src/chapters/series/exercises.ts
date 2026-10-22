@@ -27,8 +27,16 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(\frac{a_n}{b_n} = \frac{\ln n}{\sqrt{n}}\)입니다. 로피탈 정리의 가설을 확인합니다: \(x \to \infty\)일 때 \(\ln x \to \infty\)이고 \(x^{1/2} \to \infty\)이므로 \(\frac{\infty}{\infty}\) 꼴입니다. 따라서 로피탈 정리를 적용하면 \(\frac{\ln x}{x^{1/2}} \to \frac{1/x}{\frac{1}{2}x^{-1/2}} = \frac{2}{\sqrt{x}} \to 0\)이므로, \(\frac{a_n}{b_n} \to 0\)입니다.`,
-          en: String.raw`\(\frac{a_n}{b_n} = \frac{\ln n}{\sqrt{n}}\). Verify L'Hôpital's hypotheses: as \(x \to \infty\), \(\ln x \to \infty\) and \(x^{1/2} \to \infty\), so this is an \(\frac{\infty}{\infty}\) form. L'Hôpital's rule then gives \(\frac{\ln x}{x^{1/2}} \to \frac{1/x}{\frac{1}{2}x^{-1/2}} = \frac{2}{\sqrt{x}} \to 0\), so \(\frac{a_n}{b_n} \to 0\).`,
+          ko: String.raw`\(\frac{a_n}{b_n} = \frac{\ln n}{\sqrt{n}}\)입니다.
+
+로피탈 정리의 가설을 확인합니다: \(x \to \infty\)일 때 \(\ln x \to \infty\)이고 \(x^{1/2} \to \infty\)이므로 \(\frac{\infty}{\infty}\) 꼴입니다.
+
+따라서 로피탈 정리를 적용하면 \(\frac{\ln x}{x^{1/2}} \to \frac{1/x}{\frac{1}{2}x^{-1/2}} = \frac{2}{\sqrt{x}} \to 0\)이므로, \(\frac{a_n}{b_n} \to 0\)입니다.`,
+          en: String.raw`\(\frac{a_n}{b_n} = \frac{\ln n}{\sqrt{n}}\).
+
+Verify L'Hôpital's hypotheses: as \(x \to \infty\), \(\ln x \to \infty\) and \(x^{1/2} \to \infty\), so this is an \(\frac{\infty}{\infty}\) form.
+
+L'Hôpital's rule then gives \(\frac{\ln x}{x^{1/2}} \to \frac{1/x}{\frac{1}{2}x^{-1/2}} = \frac{2}{\sqrt{x}} \to 0\), so \(\frac{a_n}{b_n} \to 0\).`,
         },
       },
       {
@@ -126,8 +134,16 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이 장의 라베 판정법은 \(n\left(\frac{a_n}{a_{n+1}} - 1\right)\) 꼴인데, 두 꼴의 극한이 같음을 확인합니다: \(\frac{a_{n+1}}{a_n} \to 1\)이므로 \(n\left(\frac{a_n}{a_{n+1}} - 1\right) = n\left(1 - \frac{a_{n+1}}{a_n}\right)\cdot\frac{a_n}{a_{n+1}}\)이고 추가 인자 \(\frac{a_n}{a_{n+1}} \to 1\)이라 두 극한이 일치합니다. 극한 \(\frac{3}{2} > 1\)이므로 라베 판정법으로 \(\sum a_n\)은 수렴합니다. (참고로 중심이항계수 \(\binom{2n}{n} \sim \frac{4^n}{\sqrt{\pi n}}\)이므로 \(a_n \sim \frac{1}{\sqrt{\pi}\,n^{3/2}}\)입니다.)`,
-          en: String.raw`The chapter's Raabe form is \(n\left(\frac{a_n}{a_{n+1}} - 1\right)\); the two limits agree: since \(\frac{a_{n+1}}{a_n} \to 1\), \(n\left(\frac{a_n}{a_{n+1}} - 1\right) = n\left(1 - \frac{a_{n+1}}{a_n}\right)\cdot\frac{a_n}{a_{n+1}}\) and the extra factor \(\frac{a_n}{a_{n+1}} \to 1\), so both limits are the same. Since the limit \(\frac{3}{2} > 1\), Raabe's test gives convergence of \(\sum a_n\). (Indeed \(\binom{2n}{n} \sim \frac{4^n}{\sqrt{\pi n}}\), so \(a_n \sim \frac{1}{\sqrt{\pi}\,n^{3/2}}\).)`,
+          ko: String.raw`이 장의 라베 판정법은 \(n\left(\frac{a_n}{a_{n+1}} - 1\right)\) 꼴인데, 두 꼴의 극한이 같음을 확인합니다: \(\frac{a_{n+1}}{a_n} \to 1\)이므로 \(n\left(\frac{a_n}{a_{n+1}} - 1\right) = n\left(1 - \frac{a_{n+1}}{a_n}\right)\cdot\frac{a_n}{a_{n+1}}\)이고 추가 인자 \(\frac{a_n}{a_{n+1}} \to 1\)이라 두 극한이 일치합니다.
+
+극한 \(\frac{3}{2} > 1\)이므로 라베 판정법으로 \(\sum a_n\)은 수렴합니다.
+
+(참고로 중심이항계수 \(\binom{2n}{n} \sim \frac{4^n}{\sqrt{\pi n}}\)이므로 \(a_n \sim \frac{1}{\sqrt{\pi}\,n^{3/2}}\)입니다.)`,
+          en: String.raw`The chapter's Raabe form is \(n\left(\frac{a_n}{a_{n+1}} - 1\right)\); the two limits agree: since \(\frac{a_{n+1}}{a_n} \to 1\), \(n\left(\frac{a_n}{a_{n+1}} - 1\right) = n\left(1 - \frac{a_{n+1}}{a_n}\right)\cdot\frac{a_n}{a_{n+1}}\) and the extra factor \(\frac{a_n}{a_{n+1}} \to 1\), so both limits are the same.
+
+Since the limit \(\frac{3}{2} > 1\), Raabe's test gives convergence of \(\sum a_n\).
+
+(Indeed \(\binom{2n}{n} \sim \frac{4^n}{\sqrt{\pi n}}\), so \(a_n \sim \frac{1}{\sqrt{\pi}\,n^{3/2}}\).)`,
         },
       },
     ],
@@ -137,15 +153,31 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 2,
     topics: ['leibniz', 'tests'],
     statement: {
-      ko: String.raw`급수 \(\sum_{n=2}^{\infty}\frac{(-1)^n}{\,n+(-1)^n\sqrt{n}\,}\)가 조건수렴함을 증명하세요. (힌트: \(\frac{1}{1+u} = 1-u+\frac{u^2}{1+u}\)를 이용하세요.)`,
-      en: String.raw`Prove that \(\sum_{n=2}^{\infty}\frac{(-1)^n}{\,n+(-1)^n\sqrt{n}\,}\) converges conditionally. (Hint: use \(\frac{1}{1+u} = 1-u+\frac{u^2}{1+u}\).)`,
+      ko: String.raw`급수 \(\sum_{n=2}^{\infty}\frac{(-1)^n}{\,n+(-1)^n\sqrt{n}\,}\)가 조건수렴함을 증명하세요.
+
+(힌트: \(\frac{1}{1+u} = 1-u+\frac{u^2}{1+u}\)를 이용하세요.)`,
+      en: String.raw`Prove that \(\sum_{n=2}^{\infty}\frac{(-1)^n}{\,n+(-1)^n\sqrt{n}\,}\) converges conditionally.
+
+(Hint: use \(\frac{1}{1+u} = 1-u+\frac{u^2}{1+u}\).)`,
     },
     display: [String.raw`\frac{(-1)^n}{n+(-1)^n\sqrt{n}} = \frac{(-1)^n}{n}-\frac{1}{n^{3/2}}+\sigma_n, \quad |\sigma_n| \le \frac{C}{n^2}`],
     solution: [
       {
         text: {
-          ko: String.raw`\(b_n = \frac{1}{n+(-1)^n\sqrt{n}} > 0\) (\(n \ge 2\))이라 둡니다. 분모에서 \(n\)을 묶으면 \(b_n = \frac{1}{n}\cdot\frac{1}{1+u_n}\) (\(u_n = \frac{(-1)^n}{\sqrt{n}}\), \(|u_n| \le \frac{1}{\sqrt{2}}\))입니다. 이 bound로 \(u_n \ge -\frac{1}{\sqrt{2}} > -1\)이라 \(1 + u_n \ge 1 - \frac{1}{\sqrt{2}} > 0\)이므로 \(u_n \ne -1\)이고 힌트의 항등식 \(\frac{1}{1+u_n} = 1-u_n+\frac{u_n^2}{1+u_n}\)이 정당합니다. 따라서 \(\frac{1}{1+u_n} = 1-u_n+\rho_n\) (\(|\rho_n| = \frac{u_n^2}{|1+u_n|} \le \frac{C}{n}\), \(C = \frac{1}{1-1/\sqrt{2}}\))를 얻습니다.`,
-          en: String.raw`Put \(b_n = \frac{1}{n+(-1)^n\sqrt{n}} > 0\) (\(n \ge 2\)). Factoring \(n\) from the denominator, \(b_n = \frac{1}{n}\cdot\frac{1}{1+u_n}\) with \(u_n = \frac{(-1)^n}{\sqrt{n}}\), \(|u_n| \le \frac{1}{\sqrt{2}}\). The bound gives \(u_n \ge -\frac{1}{\sqrt{2}} > -1\), so \(1 + u_n \ge 1 - \frac{1}{\sqrt{2}} > 0\); hence \(u_n \ne -1\) and the hint's identity \(\frac{1}{1+u_n} = 1-u_n+\frac{u_n^2}{1+u_n}\) is valid. The identity therefore gives \(\frac{1}{1+u_n} = 1-u_n+\rho_n\) where \(|\rho_n| = \frac{u_n^2}{|1+u_n|} \le \frac{C}{n}\) with \(C = \frac{1}{1-1/\sqrt{2}}\).`,
+          ko: String.raw`\(b_n = \frac{1}{n+(-1)^n\sqrt{n}} > 0\) (\(n \ge 2\))이라 둡니다.
+
+분모에서 \(n\)을 묶으면 \(b_n = \frac{1}{n}\cdot\frac{1}{1+u_n}\) (\(u_n = \frac{(-1)^n}{\sqrt{n}}\), \(|u_n| \le \frac{1}{\sqrt{2}}\))입니다.
+
+이 bound로 \(u_n \ge -\frac{1}{\sqrt{2}} > -1\)이라 \(1 + u_n \ge 1 - \frac{1}{\sqrt{2}} > 0\)이므로 \(u_n \ne -1\)이고 힌트의 항등식 \(\frac{1}{1+u_n} = 1-u_n+\frac{u_n^2}{1+u_n}\)이 정당합니다.
+
+따라서 \(\frac{1}{1+u_n} = 1-u_n+\rho_n\) (\(|\rho_n| = \frac{u_n^2}{|1+u_n|} \le \frac{C}{n}\), \(C = \frac{1}{1-1/\sqrt{2}}\))를 얻습니다.`,
+          en: String.raw`Put \(b_n = \frac{1}{n+(-1)^n\sqrt{n}} > 0\) (\(n \ge 2\)).
+
+Factoring \(n\) from the denominator, \(b_n = \frac{1}{n}\cdot\frac{1}{1+u_n}\) with \(u_n = \frac{(-1)^n}{\sqrt{n}}\), \(|u_n| \le \frac{1}{\sqrt{2}}\).
+
+The bound gives \(u_n \ge -\frac{1}{\sqrt{2}} > -1\), so \(1 + u_n \ge 1 - \frac{1}{\sqrt{2}} > 0\); hence \(u_n \ne -1\) and the hint's identity \(\frac{1}{1+u_n} = 1-u_n+\frac{u_n^2}{1+u_n}\) is valid.
+
+The identity therefore gives \(\frac{1}{1+u_n} = 1-u_n+\rho_n\) where \(|\rho_n| = \frac{u_n^2}{|1+u_n|} \le \frac{C}{n}\) with \(C = \frac{1}{1-1/\sqrt{2}}\).`,
         },
       },
       {
@@ -177,8 +209,20 @@ export const exercises: readonly ExerciseMeta[] = [
     solution: [
       {
         text: {
-          ko: String.raw`\(a_n = \frac{1}{n\,\ln n\,(\ln\ln n)^p}\) (\(n \ge 3\))이라 둡니다. 먼저 \(p \ge 0\)인 경우만 응축으로 다룹니다: \(n \ge 3\)에서 \(\ln\ln n > 0\)이고 \(n\), \(\ln n\)이 양의 증가함수이며, \(p \ge 0\)이면 \((\ln\ln n)^p\)도 양의 증가함수이므로, \(a_n\)은 \(0\)으로 단조감소합니다. 응축 판정법을 적용할 수 있습니다. (\(p < 0\)이면 \((\ln\ln n)^p\)는 감소하므로 이 단조성 주장은 거짓입니다 — 예: \(p = -1\)이면 \(a_3 \approx 0.0285 < a_4 \approx 0.0589\). \(p < 0\)인 경우는 마지막 단계에서 응축 없이 비교로 처리합니다.)`,
-          en: String.raw`Put \(a_n = \frac{1}{n\,\ln n\,(\ln\ln n)^p}\) (\(n \ge 3\)). Treat only \(p \ge 0\) by condensation first: for \(n \ge 3\), \(\ln\ln n > 0\), \(n\) and \(\ln n\) are positive and increasing, and for \(p \ge 0\) so is \((\ln\ln n)^p\); hence \(a_n\) decreases monotonically to \(0\). The condensation test applies. (For \(p < 0\), \((\ln\ln n)^p\) is decreasing and the monotonicity claim is false — e.g. for \(p = -1\), \(a_3 \approx 0.0285 < a_4 \approx 0.0589\). The case \(p < 0\) is handled in the last step by comparison alone, with no condensation.)`,
+          ko: String.raw`\(a_n = \frac{1}{n\,\ln n\,(\ln\ln n)^p}\) (\(n \ge 3\))이라 둡니다.
+
+먼저 \(p \ge 0\)인 경우만 응축으로 다룹니다: \(n \ge 3\)에서 \(\ln\ln n > 0\)이고 \(n\), \(\ln n\)이 양의 증가함수이며, \(p \ge 0\)이면 \((\ln\ln n)^p\)도 양의 증가함수이므로, \(a_n\)은 \(0\)으로 단조감소합니다.
+
+응축 판정법을 적용할 수 있습니다.
+
+(\(p < 0\)이면 \((\ln\ln n)^p\)는 감소하므로 이 단조성 주장은 거짓입니다 — 예: \(p = -1\)이면 \(a_3 \approx 0.0285 < a_4 \approx 0.0589\). \(p < 0\)인 경우는 마지막 단계에서 응축 없이 비교로 처리합니다.)`,
+          en: String.raw`Put \(a_n = \frac{1}{n\,\ln n\,(\ln\ln n)^p}\) (\(n \ge 3\)).
+
+Treat only \(p \ge 0\) by condensation first: for \(n \ge 3\), \(\ln\ln n > 0\), \(n\) and \(\ln n\) are positive and increasing, and for \(p \ge 0\) so is \((\ln\ln n)^p\); hence \(a_n\) decreases monotonically to \(0\).
+
+The condensation test applies.
+
+(For \(p < 0\), \((\ln\ln n)^p\) is decreasing and the monotonicity claim is false — e.g. for \(p = -1\), \(a_3 \approx 0.0285 < a_4 \approx 0.0589\). The case \(p < 0\) is handled in the last step by comparison alone, with no condensation.)`,
         },
       },
       {
@@ -189,14 +233,34 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(p > 0\)인 경우 이 양쪽 부등식으로 응축된 급수는 \(\sum_{n\ge 3}\frac{1}{n(\ln n)^p}\)와 상수배 범위에서 동등합니다 (비교 판정법). 두 번째 응축의 가설을 다시 확인합니다: \(p > 0\)이면 \(b_n = \frac{1}{n(\ln n)^p}\)는 양이고, \(n\)과 \((\ln n)^p\)가 모두 양의 증가함수이므로 \(0\)으로 단조감소합니다 — 응축 판정법을 다시 적용할 수 있습니다. 두 번째 응축을 적용하면 \(\sum 2^n\cdot\frac{1}{2^n(n\ln 2)^p} = \frac{1}{(\ln 2)^p}\sum\frac{1}{n^p}\)가 되며, 이는 \(p > 1\)일 때만 수렴합니다. 따라서 \(p > 0\)에서는 \(p > 1\)일 때 수렴, \(0 < p \le 1\)일 때 발산합니다.`,
-          en: String.raw`For \(p > 0\) these two-sided bounds make the condensed series comparable, up to constants, to \(\sum_{n\ge 3}\frac{1}{n(\ln n)^p}\) (comparison test). Re-verify the condensation hypotheses for the second application: for \(p > 0\), \(b_n = \frac{1}{n(\ln n)^p}\) is positive, and since \(n\) and \((\ln n)^p\) are both positive and increasing, \(b_n\) decreases monotonically to \(0\) — so condensation applies again. Condensing again gives \(\sum 2^n\cdot\frac{1}{2^n(n\ln 2)^p} = \frac{1}{(\ln 2)^p}\sum\frac{1}{n^p}\), which converges only for \(p > 1\). Hence for \(p > 0\) we get convergence when \(p > 1\) and divergence when \(0 < p \le 1\).`,
+          ko: String.raw`\(p > 0\)인 경우 이 양쪽 부등식으로 응축된 급수는 \(\sum_{n\ge 3}\frac{1}{n(\ln n)^p}\)와 상수배 범위에서 동등합니다 (비교 판정법).
+
+두 번째 응축의 가설을 다시 확인합니다: \(p > 0\)이면 \(b_n = \frac{1}{n(\ln n)^p}\)는 양이고, \(n\)과 \((\ln n)^p\)가 모두 양의 증가함수이므로 \(0\)으로 단조감소합니다 — 응축 판정법을 다시 적용할 수 있습니다.
+
+두 번째 응축을 적용하면 \(\sum 2^n\cdot\frac{1}{2^n(n\ln 2)^p} = \frac{1}{(\ln 2)^p}\sum\frac{1}{n^p}\)가 되며, 이는 \(p > 1\)일 때만 수렴합니다.
+
+따라서 \(p > 0\)에서는 \(p > 1\)일 때 수렴, \(0 < p \le 1\)일 때 발산합니다.`,
+          en: String.raw`For \(p > 0\) these two-sided bounds make the condensed series comparable, up to constants, to \(\sum_{n\ge 3}\frac{1}{n(\ln n)^p}\) (comparison test).
+
+Re-verify the condensation hypotheses for the second application: for \(p > 0\), \(b_n = \frac{1}{n(\ln n)^p}\) is positive, and since \(n\) and \((\ln n)^p\) are both positive and increasing, \(b_n\) decreases monotonically to \(0\) — so condensation applies again.
+
+Condensing again gives \(\sum 2^n\cdot\frac{1}{2^n(n\ln 2)^p} = \frac{1}{(\ln 2)^p}\sum\frac{1}{n^p}\), which converges only for \(p > 1\).
+
+Hence for \(p > 0\) we get convergence when \(p > 1\) and divergence when \(0 < p \le 1\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(p < 0\)인 경우(및 \(p = 0\))는 비교만으로 처리합니다 — 원래 급수의 단조성은 필요 없습니다: \(n \ge 16\)이면 \(\ln\ln n \ge 1\) (\(n \ge e^e \approx 15.15\))이므로 \((\ln\ln n)^p \le 1\)이고, 따라서 \(a_n \ge \frac{1}{n\ln n}\)입니다. \(\sum\frac{1}{n\ln n}\)은 발산하므로(한 번 응축하면 조화급수의 상수배), 비교 판정법으로 원래 급수도 발산합니다. 이상으로 수렴의 필요충분조건은 \(p > 1\)입니다.`,
-          en: String.raw`The case \(p < 0\) (and \(p = 0\)) is handled by comparison alone — no monotonicity of the original series is needed: if \(n \ge 16\) then \(\ln\ln n \ge 1\) (since \(n \ge e^e \approx 15.15\)), so \((\ln\ln n)^p \le 1\) and \(a_n \ge \frac{1}{n\ln n}\). Since \(\sum\frac{1}{n\ln n}\) diverges (one condensation turns it into a constant multiple of the harmonic series), comparison gives divergence of the original series too. Thus convergence holds if and only if \(p > 1\).`,
+          ko: String.raw`\(p < 0\)인 경우(및 \(p = 0\))는 비교만으로 처리합니다 — 원래 급수의 단조성은 필요 없습니다: \(n \ge 16\)이면 \(\ln\ln n \ge 1\) (\(n \ge e^e \approx 15.15\))이므로 \((\ln\ln n)^p \le 1\)이고, 따라서 \(a_n \ge \frac{1}{n\ln n}\)입니다.
+
+\(\sum\frac{1}{n\ln n}\)은 발산하므로(한 번 응축하면 조화급수의 상수배), 비교 판정법으로 원래 급수도 발산합니다.
+
+이상으로 수렴의 필요충분조건은 \(p > 1\)입니다.`,
+          en: String.raw`The case \(p < 0\) (and \(p = 0\)) is handled by comparison alone — no monotonicity of the original series is needed: if \(n \ge 16\) then \(\ln\ln n \ge 1\) (since \(n \ge e^e \approx 15.15\)), so \((\ln\ln n)^p \le 1\) and \(a_n \ge \frac{1}{n\ln n}\).
+
+Since \(\sum\frac{1}{n\ln n}\) diverges (one condensation turns it into a constant multiple of the harmonic series), comparison gives divergence of the original series too.
+
+Thus convergence holds if and only if \(p > 1\).`,
         },
       },
     ],
@@ -206,8 +270,12 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 3,
     topics: ['euler-product', 'basel'],
     statement: {
-      ko: String.raw`오일러 곱셈식을 이용해 무한곱 \(\prod_{p\ \text{소수}}\left(1+\frac{1}{p^2}\right)\)가 수렴하고 그 값이 \(\frac{15}{\pi^2}\)임을 증명하세요. (\(\zeta(2) = \frac{\pi^2}{6}\), \(\zeta(4) = \frac{\pi^4}{90}\)은 알려진 사실로 사용해도 됩니다.)`,
-      en: String.raw`Using the Euler product, prove that the infinite product \(\prod_{p\ \text{prime}}\left(1+\frac{1}{p^2}\right)\) converges and equals \(\frac{15}{\pi^2}\). (You may use \(\zeta(2) = \frac{\pi^2}{6}\) and \(\zeta(4) = \frac{\pi^4}{90}\) as known.)`,
+      ko: String.raw`오일러 곱셈식을 이용해 무한곱 \(\prod_{p\ \text{소수}}\left(1+\frac{1}{p^2}\right)\)가 수렴하고 그 값이 \(\frac{15}{\pi^2}\)임을 증명하세요.
+
+(\(\zeta(2) = \frac{\pi^2}{6}\), \(\zeta(4) = \frac{\pi^4}{90}\)은 알려진 사실로 사용해도 됩니다.)`,
+      en: String.raw`Using the Euler product, prove that the infinite product \(\prod_{p\ \text{prime}}\left(1+\frac{1}{p^2}\right)\) converges and equals \(\frac{15}{\pi^2}\).
+
+(You may use \(\zeta(2) = \frac{\pi^2}{6}\) and \(\zeta(4) = \frac{\pi^4}{90}\) as known.)`,
     },
     display: [String.raw`\prod_{p\le x}\left(1+\frac{1}{p^2}\right) = \frac{\prod_{p\le x}(1-p^{-2})^{-1}}{\prod_{p\le x}(1-p^{-4})^{-1}} \to \frac{\zeta(2)}{\zeta(4)} = \frac{15}{\pi^2}`],
     solution: [
@@ -225,8 +293,16 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x \to \infty\)일 때 분자는 \(\zeta(2) = \frac{\pi^2}{6}\)로, 분모는 \(\zeta(4) = \frac{\pi^4}{90}\)으로 수렴합니다 (오일러 곱셈식). 분모의 극한 \(\zeta(4) \ne 0\)입니다 — 수렴하는 오일러 곱의 어느 인자도 \(0\)이 아닙니다. 따라서 몫의 극한 법칙을 적용할 수 있어, 무한곱은 수렴하고 그 값은 \(\frac{\pi^2/6}{\pi^4/90} = \frac{90}{6\pi^2} = \frac{15}{\pi^2}\)입니다.`,
-          en: String.raw`As \(x \to \infty\), the numerator tends to \(\zeta(2) = \frac{\pi^2}{6}\) and the denominator to \(\zeta(4) = \frac{\pi^4}{90}\) (Euler product). The denominator's limit \(\zeta(4) \ne 0\) — no factor of the convergent Euler product is zero — so the quotient limit law applies. Hence the infinite product converges to \(\frac{\pi^2/6}{\pi^4/90} = \frac{90}{6\pi^2} = \frac{15}{\pi^2}\).`,
+          ko: String.raw`\(x \to \infty\)일 때 분자는 \(\zeta(2) = \frac{\pi^2}{6}\)로, 분모는 \(\zeta(4) = \frac{\pi^4}{90}\)으로 수렴합니다 (오일러 곱셈식).
+
+분모의 극한 \(\zeta(4) \ne 0\)입니다 — 수렴하는 오일러 곱의 어느 인자도 \(0\)이 아닙니다.
+
+따라서 몫의 극한 법칙을 적용할 수 있어, 무한곱은 수렴하고 그 값은 \(\frac{\pi^2/6}{\pi^4/90} = \frac{90}{6\pi^2} = \frac{15}{\pi^2}\)입니다.`,
+          en: String.raw`As \(x \to \infty\), the numerator tends to \(\zeta(2) = \frac{\pi^2}{6}\) and the denominator to \(\zeta(4) = \frac{\pi^4}{90}\) (Euler product).
+
+The denominator's limit \(\zeta(4) \ne 0\) — no factor of the convergent Euler product is zero — so the quotient limit law applies.
+
+Hence the infinite product converges to \(\frac{\pi^2/6}{\pi^4/90} = \frac{90}{6\pi^2} = \frac{15}{\pi^2}\).`,
         },
       },
     ],

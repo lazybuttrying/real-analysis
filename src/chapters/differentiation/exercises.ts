@@ -14,9 +14,14 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 1,
     topics: ['mvt', 'diffcont'],
     statement: {
-      ko: String.raw`함수 \(f\)가 \([a,b]\)에서 연속이고 \((a,b)\)에서 미분가능하며, 어떤 상수 \(M \ge 0\)에 대해 모든 \(x \in (a,b)\)에서 \(\lvert f'(x) \rvert \le M\)을 만족한다고 하자. 이때 모든 \(x, y \in [a,b]\)에 대해 \(\lvert f(x) - f(y) \rvert \le M\lvert x - y \rvert\)임을 보이세요. (따라서 \(f\)는 \([a,b]\)에서 균일연속입니다.)`,
-      en: String.raw`Let \(f\) be continuous on \([a,b]\) and differentiable on \((a,b)\), with \(\lvert f'(x) \rvert \le M\) for all \(x \in (a,b)\) and some constant \(M \ge 0\). Prove that \(\lvert f(x) - f(y) \rvert \le M\lvert x - y \rvert\) for all \(x, y \in [a,b]\). (Hence \(f\) is uniformly continuous on \([a,b]\).)`,
+      ko: String.raw`함수 \(f\)가 \([a,b]\)에서 연속이고 \((a,b)\)에서 미분가능하며, 어떤 상수 \(M \ge 0\)에 대해 모든 \(x \in (a,b)\)에서 \(\lvert f'(x) \rvert \le M\)을 만족한다고 하자.
+
+이때 모든 \(x, y \in [a,b]\)에 대해 아래 부등식이 성립함을 보이세요. (따라서 \(f\)는 \([a,b]\)에서 균일연속입니다.)`,
+      en: String.raw`Let \(f\) be continuous on \([a,b]\) and differentiable on \((a,b)\), with \(\lvert f'(x) \rvert \le M\) for all \(x \in (a,b)\) and some constant \(M \ge 0\).
+
+Prove the inequality below for all \(x, y \in [a,b]\). (Hence \(f\) is uniformly continuous on \([a,b]\).)`,
     },
+    display: [String.raw`\lvert f(x) - f(y) \rvert \le M\lvert x - y \rvert`],
     solution: [
       {
         text: {
@@ -26,8 +31,12 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`절댓값을 취하면 \(\lvert f(y) - f(x) \rvert = \lvert f'(c) \rvert \cdot \lvert y - x \rvert \le M\lvert y - x \rvert\)이다. \(x > y\)인 경우도 \(x\)와 \(y\)를 바꾸면 같고, 따라서 모든 \(x, y \in [a,b]\)에 대해 부등식이 성립한다. 이는 립시츠 조건이므로, \(\delta = \varepsilon / M\) (단 \(M = 0\)이면 임의의 \(\delta > 0\))로 두면 균일연속성이 따라온다.`,
-          en: String.raw`Taking absolute values, \(\lvert f(y) - f(x) \rvert = \lvert f'(c) \rvert \cdot \lvert y - x \rvert \le M\lvert y - x \rvert\). The case \(x > y\) is the same with the roles swapped, so the inequality holds for all \(x, y \in [a,b]\). This is the Lipschitz condition, and uniform continuity follows with \(\delta = \varepsilon / M\) (any \(\delta > 0\) if \(M = 0\)).`,
+          ko: String.raw`절댓값을 취하면 \(\lvert f(y) - f(x) \rvert = \lvert f'(c) \rvert \cdot \lvert y - x \rvert \le M\lvert y - x \rvert\)이다. \(x > y\)인 경우도 \(x\)와 \(y\)를 바꾸면 같고, 따라서 모든 \(x, y \in [a,b]\)에 대해 부등식이 성립한다.
+
+이는 립시츠 조건이므로, \(\delta = \varepsilon / M\) (단 \(M = 0\)이면 임의의 \(\delta > 0\))로 두면 균일연속성이 따라온다.`,
+          en: String.raw`Taking absolute values, \(\lvert f(y) - f(x) \rvert = \lvert f'(c) \rvert \cdot \lvert y - x \rvert \le M\lvert y - x \rvert\). The case \(x > y\) is the same with the roles swapped, so the inequality holds for all \(x, y \in [a,b]\).
+
+This is the Lipschitz condition, and uniform continuity follows with \(\delta = \varepsilon / M\) (any \(\delta > 0\) if \(M = 0\)).`,
         },
       },
     ],
@@ -37,8 +46,12 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 1,
     topics: ['newton'],
     statement: {
-      ko: String.raw`\(x^2 - 2 = 0\)에 대한 뉴턴 반복 \(x_{n+1} = x_n - \dfrac{x_n^2 - 2}{2x_n} = \dfrac{x_n + 2/x_n}{2}\)을 \(x_0 = 1\)에서 시작하자. (a) 모든 \(n\)에 대해 \(x_n > 0\)임을 보이세요. (b) 산술-기하 평균 부등식으로 모든 \(n\)에 대해 \(x_{n+1} \ge \sqrt{2}\)임을 보이세요. (c) \(x_1 > \sqrt{2}\)이고 수열 \((x_n)_{n \ge 1}\)이 감소함을 보이세요. (d) \(x_n \to \sqrt{2}\)임을 결론지으세요.`,
-      en: String.raw`Start Newton's iteration for \(x^2 - 2 = 0\), \(x_{n+1} = x_n - \dfrac{x_n^2 - 2}{2x_n} = \dfrac{x_n + 2/x_n}{2}\), at \(x_0 = 1\). (a) Show \(x_n > 0\) for all \(n\). (b) Use AM-GM to show \(x_{n+1} \ge \sqrt{2}\) for all \(n\). (c) Show \(x_1 > \sqrt{2}\) and that \((x_n)_{n \ge 1}\) is decreasing. (d) Conclude \(x_n \to \sqrt{2}\).`,
+      ko: String.raw`\(x^2 - 2 = 0\)에 대한 뉴턴 반복 \(x_{n+1} = x_n - \dfrac{x_n^2 - 2}{2x_n} = \dfrac{x_n + 2/x_n}{2}\)을 \(x_0 = 1\)에서 시작하자.
+
+(a) 모든 \(n\)에 대해 \(x_n > 0\)임을 보이세요. (b) 산술-기하 평균 부등식으로 모든 \(n\)에 대해 \(x_{n+1} \ge \sqrt{2}\)임을 보이세요. (c) \(x_1 > \sqrt{2}\)이고 수열 \((x_n)_{n \ge 1}\)이 감소함을 보이세요. (d) \(x_n \to \sqrt{2}\)임을 결론지으세요.`,
+      en: String.raw`Start Newton's iteration for \(x^2 - 2 = 0\), \(x_{n+1} = x_n - \dfrac{x_n^2 - 2}{2x_n} = \dfrac{x_n + 2/x_n}{2}\), at \(x_0 = 1\).
+
+(a) Show \(x_n > 0\) for all \(n\). (b) Use AM-GM to show \(x_{n+1} \ge \sqrt{2}\) for all \(n\). (c) Show \(x_1 > \sqrt{2}\) and that \((x_n)_{n \ge 1}\) is decreasing. (d) Conclude \(x_n \to \sqrt{2}\).`,
     },
     display: [String.raw`x_{n+1} = \frac{x_n + 2/x_n}{2}, \qquad x_0 = 1, \quad x_1 = \frac32`],
     solution: [
@@ -50,14 +63,22 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`(c) \(x_1 = \dfrac{1 + 2}{2} = \dfrac32\)이고 \(\left(\dfrac32\right)^2 = \dfrac94 > 2\)이므로 \(x_1 > \sqrt{2}\)이다 — 첫 단계에서 근을 지나친다. \(n \ge 1\)에 대해 \(x_{n+1} - x_n = \dfrac{2/x_n - x_n}{2} = \dfrac{2 - x_n^2}{2x_n}\)인데, (b)에 의해 \(x_n \ge \sqrt{2}\)이므로 분자가 \(0\) 이하이다. 따라서 \((x_n)_{n \ge 1}\)은 감소수열이다.`,
-          en: String.raw`(c) \(x_1 = \dfrac{1 + 2}{2} = \dfrac32\), and \(\left(\dfrac32\right)^2 = \dfrac94 > 2\), so \(x_1 > \sqrt{2}\) — the first step overshoots the root. For \(n \ge 1\), \(x_{n+1} - x_n = \dfrac{2/x_n - x_n}{2} = \dfrac{2 - x_n^2}{2x_n}\); by (b), \(x_n \ge \sqrt{2}\), so the numerator is \(\le 0\). Hence \((x_n)_{n \ge 1}\) is decreasing.`,
+          ko: String.raw`(c) \(x_1 = \dfrac{1 + 2}{2} = \dfrac32\)이고 \(\left(\dfrac32\right)^2 = \dfrac94 > 2\)이므로 \(x_1 > \sqrt{2}\)이다 — 첫 단계에서 근을 지나친다.
+
+\(n \ge 1\)에 대해 \(x_{n+1} - x_n = \dfrac{2/x_n - x_n}{2} = \dfrac{2 - x_n^2}{2x_n}\)인데, (b)에 의해 \(x_n \ge \sqrt{2}\)이므로 분자가 \(0\) 이하이다. 따라서 \((x_n)_{n \ge 1}\)은 감소수열이다.`,
+          en: String.raw`(c) \(x_1 = \dfrac{1 + 2}{2} = \dfrac32\), and \(\left(\dfrac32\right)^2 = \dfrac94 > 2\), so \(x_1 > \sqrt{2}\) — the first step overshoots the root.
+
+For \(n \ge 1\), \(x_{n+1} - x_n = \dfrac{2/x_n - x_n}{2} = \dfrac{2 - x_n^2}{2x_n}\); by (b), \(x_n \ge \sqrt{2}\), so the numerator is \(\le 0\). Hence \((x_n)_{n \ge 1}\) is decreasing.`,
         },
       },
       {
         text: {
-          ko: String.raw`(d) \((x_n)_{n \ge 1}\)은 감소하고 아래로 \(\sqrt{2}\)에 의해 유계이므로 극한 \(L \ge \sqrt{2}\)에 수렴한다. 점화식에 극한을 취하면 \(L = \dfrac{L + 2/L}{2}\)이므로 \(2L = L + 2/L\), 즉 \(L = 2/L\)이다. \(L > 0\)이므로 \(L^2 = 2\), 곧 \(L = \sqrt{2}\)이다.`,
-          en: String.raw`(d) \((x_n)_{n \ge 1}\) is decreasing and bounded below by \(\sqrt{2}\), so it converges to some \(L \ge \sqrt{2}\). Passing to the limit in the recurrence gives \(L = \dfrac{L + 2/L}{2}\), i.e. \(2L = L + 2/L\), so \(L = 2/L\). Since \(L > 0\), \(L^2 = 2\), i.e. \(L = \sqrt{2}\).`,
+          ko: String.raw`(d) \((x_n)_{n \ge 1}\)은 감소하고 아래로 \(\sqrt{2}\)에 의해 유계이므로 극한 \(L \ge \sqrt{2}\)에 수렴한다.
+
+점화식에 극한을 취하면 \(L = \dfrac{L + 2/L}{2}\)이므로 \(2L = L + 2/L\), 즉 \(L = 2/L\)이다. \(L > 0\)이므로 \(L^2 = 2\), 곧 \(L = \sqrt{2}\)이다.`,
+          en: String.raw`(d) \((x_n)_{n \ge 1}\) is decreasing and bounded below by \(\sqrt{2}\), so it converges to some \(L \ge \sqrt{2}\).
+
+Passing to the limit in the recurrence gives \(L = \dfrac{L + 2/L}{2}\), i.e. \(2L = L + 2/L\), so \(L = 2/L\). Since \(L > 0\), \(L^2 = 2\), i.e. \(L = \sqrt{2}\).`,
         },
       },
     ],
@@ -75,22 +96,31 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 1,
     topics: ['convex'],
     statement: {
-      ko: String.raw`\(f(x) = \lvert x \rvert\)가 \(\mathbb{R}\)에서 볼록함수임을 삼각부등식으로 증명하고, 볼록함수의 연속성 정리를 인용하여 \(f\)가 연속임을 결론지으세요. \(f\)가 \(0\)에서 미분가능하지 않음을 보여, 볼록성이 미분가능성을 함의하지 않음을 확인하세요.`,
-      en: String.raw`Prove via the triangle inequality that \(f(x) = \lvert x \rvert\) is convex on \(\mathbb{R}\), and cite the continuity theorem for convex functions to conclude \(f\) is continuous. Show \(f\) is not differentiable at \(0\), confirming that convexity does not imply differentiability.`,
+      ko: String.raw`\(f(x) = \lvert x \rvert\)가 \(\mathbb{R}\)에서 볼록함수임을 삼각부등식으로 증명하고, 볼록함수의 연속성 정리를 인용하여 \(f\)가 연속임을 결론지으세요.
+
+\(f\)가 \(0\)에서 미분가능하지 않음을 보여, 볼록성이 미분가능성을 함의하지 않음을 확인하세요.`,
+      en: String.raw`Prove via the triangle inequality that \(f(x) = \lvert x \rvert\) is convex on \(\mathbb{R}\), and cite the continuity theorem for convex functions to conclude \(f\) is continuous.
+
+Show \(f\) is not differentiable at \(0\), confirming that convexity does not imply differentiability.`,
     },
     display: [String.raw`\lvert tx + (1-t)y \rvert \le t\lvert x \rvert + (1-t)\lvert y \rvert \qquad (0 \le t \le 1)`],
     solution: [
       {
         text: {
-          ko: String.raw`\(0 \le t \le 1\)과 \(x, y \in \mathbb{R}\)에 대해 삼각부등식과 절댓값의 동차성으로 \(\lvert tx + (1-t)y \rvert \le \lvert tx \rvert + \lvert (1-t)y \rvert = t\lvert x \rvert + (1-t)\lvert y \rvert\)이다. 이는 정확히 볼록성의 정의이므로 \(f\)는 \(\mathbb{R}\)에서 볼록하다. 볼록함수는 열린 구간에서 연속이므로 (볼록 장면의 정리), \(f\)는 모든 점에서 연속이다.`,
-          en: String.raw`For \(0 \le t \le 1\) and \(x, y \in \mathbb{R}\), the triangle inequality and homogeneity of the absolute value give \(\lvert tx + (1-t)y \rvert \le \lvert tx \rvert + \lvert (1-t)y \rvert = t\lvert x \rvert + (1-t)\lvert y \rvert\). This is exactly the definition of convexity, so \(f\) is convex on \(\mathbb{R}\). A convex function is continuous on every open interval (the theorem of the convex scene), so \(f\) is continuous everywhere.`,
+          ko: String.raw`\(0 \le t \le 1\)과 \(x, y \in \mathbb{R}\)에 대해 삼각부등식과 절댓값의 동차성으로 \(\lvert tx + (1-t)y \rvert \le \lvert tx \rvert + \lvert (1-t)y \rvert = t\lvert x \rvert + (1-t)\lvert y \rvert\)이다. 이는 정확히 볼록성의 정의이므로 \(f\)는 \(\mathbb{R}\)에서 볼록하다.
+
+볼록함수는 열린 구간에서 연속이므로 (볼록 장면의 정리), \(f\)는 모든 점에서 연속이다.`,
+          en: String.raw`For \(0 \le t \le 1\) and \(x, y \in \mathbb{R}\), the triangle inequality and homogeneity of the absolute value give \(\lvert tx + (1-t)y \rvert \le \lvert tx \rvert + \lvert (1-t)y \rvert = t\lvert x \rvert + (1-t)\lvert y \rvert\). This is exactly the definition of convexity, so \(f\) is convex on \(\mathbb{R}\).
+
+A convex function is continuous on every open interval (the theorem of the convex scene), so \(f\) is continuous everywhere.`,
         },
       },
       {
         text: {
-          ko: String.raw`그러나 \(0\)에서의 차분몫은 \(\dfrac{f(h) - f(0)}{h} = \dfrac{\lvert h \rvert}{h} = \begin{cases} 1 & h > 0 \\ -1 & h < 0 \end{cases}\)이므로 극한이 존재하지 않는다. 따라서 \(f\)는 \(0\)에서 미분가능하지 않다 — 볼록하고 연속이지만 미분가능하지 않은 함수의 가장 간단한 예이다.`,
-          en: String.raw`But the difference quotient at \(0\) is \(\dfrac{f(h) - f(0)}{h} = \dfrac{\lvert h \rvert}{h} = \begin{cases} 1 & h > 0 \\ -1 & h < 0 \end{cases}\), which has no limit. Hence \(f\) is not differentiable at \(0\) — the simplest example of a function that is convex and continuous but not differentiable.`,
+          ko: String.raw`그러나 \(0\)에서의 차분몫은 아래 식과 같으므로 극한이 존재하지 않는다. 따라서 \(f\)는 \(0\)에서 미분가능하지 않다 — 볼록하고 연속이지만 미분가능하지 않은 함수의 가장 간단한 예이다.`,
+          en: String.raw`But the difference quotient at \(0\) is given by the formula below, which has no limit. Hence \(f\) is not differentiable at \(0\) — the simplest example of a function that is convex and continuous but not differentiable.`,
         },
+        display: [String.raw`\dfrac{f(h) - f(0)}{h} = \dfrac{\lvert h \rvert}{h} = \begin{cases} 1 & h > 0 \\ -1 & h < 0 \end{cases}`],
       },
     ],
   },
@@ -102,20 +132,32 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 2,
     topics: ['darboux', 'mvt'],
     statement: {
-      ko: String.raw`\(f\)가 \([a,b]\)에서 미분가능하고 모든 \(x \in [a,b]\)에 대해 \(f'(x) \ne 0\)이라고 하자. 다르부 정리와 평균값 정리를 결합하여 \(f\)가 \([a,b]\)에서 엄격히 단조임을 증명하세요.`,
-      en: String.raw`Let \(f\) be differentiable on \([a,b]\) with \(f'(x) \ne 0\) for every \(x \in [a,b]\). Combining Darboux's theorem with the Mean Value Theorem, prove that \(f\) is strictly monotone on \([a,b]\).`,
+      ko: String.raw`\(f\)가 \([a,b]\)에서 미분가능하고 모든 \(x \in [a,b]\)에 대해 \(f'(x) \ne 0\)이라고 하자.
+
+다르부 정리와 평균값 정리를 결합하여 \(f\)가 \([a,b]\)에서 엄격히 단조임을 증명하세요.`,
+      en: String.raw`Let \(f\) be differentiable on \([a,b]\) with \(f'(x) \ne 0\) for every \(x \in [a,b]\).
+
+Combining Darboux's theorem with the Mean Value Theorem, prove that \(f\) is strictly monotone on \([a,b]\).`,
     },
     solution: [
       {
         text: {
-          ko: String.raw`다르부 정리에 의해 \(f'\)은 중간값 성질을 갖는다. \(f'\)이 부호를 바꾼다고 하자: \(f'(u) > 0 > f'(v)\)인 \(u, v \in [a,b]\)가 존재한다고 가정하자. \(u\)와 \(v\) 사이의 구간에 다르부 정리를 적용하면 \(f'(c) = 0\)인 점 \(c\)가 존재해야 하는데, 이는 가정에 모순이다. 따라서 \(f'\)은 부호를 바꿀 수 없고, \(0\)이 되는 일도 없으므로, \([a,b]\) 전체에서 항상 양수이거나 항상 음수이다.`,
-          en: String.raw`By Darboux's theorem, \(f'\) has the intermediate value property. Suppose \(f'\) changed sign: there exist \(u, v \in [a,b]\) with \(f'(u) > 0 > f'(v)\). Applying Darboux's theorem on the interval between \(u\) and \(v\) would produce a point \(c\) with \(f'(c) = 0\), contradicting the hypothesis. Hence \(f'\) cannot change sign, and since it never vanishes, it is either everywhere positive or everywhere negative on \([a,b]\).`,
+          ko: String.raw`다르부 정리에 의해 \(f'\)은 중간값 성질을 갖는다. \(f'\)이 부호를 바꾼다고 하자: \(f'(u) > 0 > f'(v)\)인 \(u, v \in [a,b]\)가 존재한다고 가정하자.
+
+\(u\)와 \(v\) 사이의 구간에 다르부 정리를 적용하면 \(f'(c) = 0\)인 점 \(c\)가 존재해야 하는데, 이는 가정에 모순이다. 따라서 \(f'\)은 부호를 바꿀 수 없고, \(0\)이 되는 일도 없으므로, \([a,b]\) 전체에서 항상 양수이거나 항상 음수이다.`,
+          en: String.raw`By Darboux's theorem, \(f'\) has the intermediate value property. Suppose \(f'\) changed sign: there exist \(u, v \in [a,b]\) with \(f'(u) > 0 > f'(v)\).
+
+Applying Darboux's theorem on the interval between \(u\) and \(v\) would produce a point \(c\) with \(f'(c) = 0\), contradicting the hypothesis. Hence \(f'\) cannot change sign, and since it never vanishes, it is either everywhere positive or everywhere negative on \([a,b]\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(f' > 0\)인 경우를 보자 (음수인 경우도 부호만 반대이다). \(x < y\)인 두 점에 평균값 정리를 적용하면 \(f(y) - f(x) = f'(c)(y - x)\)인 \(c \in (x,y)\)가 존재하고, \(f'(c) > 0\)이므로 \(f(y) > f(x)\)이다. 즉 \(f\)는 엄격히 증가한다. 마찬가지로 \(f' < 0\)이면 \(f\)는 엄격히 감소한다.`,
-          en: String.raw`Consider the case \(f' > 0\) (the negative case differs only in sign). For \(x < y\), the Mean Value Theorem gives \(c \in (x,y)\) with \(f(y) - f(x) = f'(c)(y - x)\); since \(f'(c) > 0\), we get \(f(y) > f(x)\). So \(f\) is strictly increasing. Likewise \(f' < 0\) makes \(f\) strictly decreasing.`,
+          ko: String.raw`\(f' > 0\)인 경우를 보자 (음수인 경우도 부호만 반대이다). \(x < y\)인 두 점에 평균값 정리를 적용하면 \(f(y) - f(x) = f'(c)(y - x)\)인 \(c \in (x,y)\)가 존재하고, \(f'(c) > 0\)이므로 \(f(y) > f(x)\)이다.
+
+즉 \(f\)는 엄격히 증가한다. 마찬가지로 \(f' < 0\)이면 \(f\)는 엄격히 감소한다.`,
+          en: String.raw`Consider the case \(f' > 0\) (the negative case differs only in sign). For \(x < y\), the Mean Value Theorem gives \(c \in (x,y)\) with \(f(y) - f(x) = f'(c)(y - x)\); since \(f'(c) > 0\), we get \(f(y) > f(x)\).
+
+So \(f\) is strictly increasing. Likewise \(f' < 0\) makes \(f\) strictly decreasing.`,
         },
       },
     ],
@@ -125,34 +167,53 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 2,
     topics: ['taylor-thm', 'taylor'],
     statement: {
-      ko: String.raw`\(f\)가 \([a,b]\)에서 \(n+1\)번 연속 미분가능하다고 하자 (\(n \ge 0\)). \(a \le x \le b\)에 대해 적분형 나머지를 갖는 테일러 공식
+      ko: String.raw`\(f\)가 \([a,b]\)에서 \(n+1\)번 연속 미분가능하다고 하자 (\(n \ge 0\)).
+
+\(a \le x \le b\)에 대해 적분형 나머지를 갖는 테일러 공식
       \[f(x) = \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!}(x-a)^k + R_n(x), \qquad R_n(x) = \frac{1}{n!}\int_a^x (x-t)^n f^{(n+1)}(t)\,dt\]
-      를 보이세요. \(n = 0\)인 경우는 미적분학 기본정리이고, 귀납 단계에서는 부분적분을 한 번 적용하세요.`,
-      en: String.raw`Let \(f\) be \(n+1\) times continuously differentiable on \([a,b]\) (\(n \ge 0\)). For \(a \le x \le b\), prove Taylor's formula with integral remainder
+      를 보이세요.
+
+\(n = 0\)인 경우는 미적분학 기본정리이고, 귀납 단계에서는 부분적분을 한 번 적용하세요.`,
+      en: String.raw`Let \(f\) be \(n+1\) times continuously differentiable on \([a,b]\) (\(n \ge 0\)).
+
+For \(a \le x \le b\), prove Taylor's formula with integral remainder
       \[f(x) = \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!}(x-a)^k + R_n(x), \qquad R_n(x) = \frac{1}{n!}\int_a^x (x-t)^n f^{(n+1)}(t)\,dt.\]
+
       The case \(n = 0\) is the Fundamental Theorem of Calculus; for the induction step apply integration by parts once.`,
     },
     solution: [
       {
         text: {
-          ko: String.raw`\(n = 0\)일 때 공식은 \(f(x) = f(a) + \int_a^x f'(t)\,dt\)이며, 이는 미적분학 기본정리이다. 귀납 가설로, \(n\)에 대한 공식이 \(C^{n+1}\) 함수에 대해 성립한다고 하자. \(g \in C^{n+2}\)에 대해 \(g\)에 가설을 적용하면 \(g(x) = T_n(x) + \frac{1}{n!}\int_a^x (x-t)^n g^{(n+1)}(t)\,dt\)이다. 여기서 \(T_n\)은 \(n\)차 테일러 다항식이다.`,
-          en: String.raw`For \(n = 0\) the formula is \(f(x) = f(a) + \int_a^x f'(t)\,dt\), the Fundamental Theorem of Calculus. As the induction hypothesis, assume the formula for \(n\) holds for \(C^{n+1}\) functions. For \(g \in C^{n+2}\), applying it to \(g\) gives \(g(x) = T_n(x) + \frac{1}{n!}\int_a^x (x-t)^n g^{(n+1)}(t)\,dt\), where \(T_n\) is the degree-\(n\) Taylor polynomial.`,
+          ko: String.raw`\(n = 0\)일 때 공식은 \(f(x) = f(a) + \int_a^x f'(t)\,dt\)이며, 이는 미적분학 기본정리이다. 귀납 가설로, \(n\)에 대한 공식이 \(C^{n+1}\) 함수에 대해 성립한다고 하자.
+
+\(g \in C^{n+2}\)에 대해 \(g\)에 가설을 적용하면 \(g(x) = T_n(x) + \frac{1}{n!}\int_a^x (x-t)^n g^{(n+1)}(t)\,dt\)이다. 여기서 \(T_n\)은 \(n\)차 테일러 다항식이다.`,
+          en: String.raw`For \(n = 0\) the formula is \(f(x) = f(a) + \int_a^x f'(t)\,dt\), the Fundamental Theorem of Calculus. As the induction hypothesis, assume the formula for \(n\) holds for \(C^{n+1}\) functions.
+
+For \(g \in C^{n+2}\), applying it to \(g\) gives \(g(x) = T_n(x) + \frac{1}{n!}\int_a^x (x-t)^n g^{(n+1)}(t)\,dt\), where \(T_n\) is the degree-\(n\) Taylor polynomial.`,
         },
       },
       {
         text: {
-          ko: String.raw`나머지 적분에 부분적분을 적용하자: \(u = g^{(n+1)}(t)\), \(dv = (x-t)^n\,dt\)라 두면 \(du = g^{(n+2)}(t)\,dt\), \(v = -\dfrac{(x-t)^{n+1}}{n+1}\)이다. \(g^{(n+1)}\)과 \((x-t)^{n+1}\)이 연속이므로 부분적분이 정당하고,
+          ko: String.raw`나머지 적분에 부분적분을 적용하자: \(u = g^{(n+1)}(t)\), \(dv = (x-t)^n\,dt\)라 두면 \(du = g^{(n+2)}(t)\,dt\), \(v = -\dfrac{(x-t)^{n+1}}{n+1}\)이다.
+
+\(g^{(n+1)}\)과 \((x-t)^{n+1}\)이 연속이므로 부분적분이 정당하고,
           \[\int_a^x (x-t)^n g^{(n+1)}(t)\,dt = \left[-\frac{(x-t)^{n+1}}{n+1}\,g^{(n+1)}(t)\right]_a^x + \frac{1}{n+1}\int_a^x (x-t)^{n+1} g^{(n+2)}(t)\,dt\]
           를 얻는다. 경계항은 \(t = x\)에서 \(0\)이고 \(t = a\)에서 \(\dfrac{(x-a)^{n+1}}{n+1}\,g^{(n+1)}(a)\)를 준다 (마이너스 부호가 뒤집힌다).`,
-          en: String.raw`Apply integration by parts to the remainder integral: with \(u = g^{(n+1)}(t)\) and \(dv = (x-t)^n\,dt\), we have \(du = g^{(n+2)}(t)\,dt\) and \(v = -\dfrac{(x-t)^{n+1}}{n+1}\). Since \(g^{(n+1)}\) and \((x-t)^{n+1}\) are continuous, parts is legitimate and
+          en: String.raw`Apply integration by parts to the remainder integral: with \(u = g^{(n+1)}(t)\) and \(dv = (x-t)^n\,dt\), we have \(du = g^{(n+2)}(t)\,dt\) and \(v = -\dfrac{(x-t)^{n+1}}{n+1}\).
+
+Since \(g^{(n+1)}\) and \((x-t)^{n+1}\) are continuous, parts is legitimate and
           \[\int_a^x (x-t)^n g^{(n+1)}(t)\,dt = \left[-\frac{(x-t)^{n+1}}{n+1}\,g^{(n+1)}(t)\right]_a^x + \frac{1}{n+1}\int_a^x (x-t)^{n+1} g^{(n+2)}(t)\,dt.\]
           The boundary term is \(0\) at \(t = x\) and gives \(\dfrac{(x-a)^{n+1}}{n+1}\,g^{(n+1)}(a)\) at \(t = a\) (the minus sign flips).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\frac{1}{n!}\)을 곱하면 나머지 적분은 \(\dfrac{g^{(n+1)}(a)}{(n+1)!}(x-a)^{n+1} + \dfrac{1}{(n+1)!}\int_a^x (x-t)^{n+1} g^{(n+2)}(t)\,dt\)가 된다. 첫 항은 정확히 \(n+1\)차 테일러 항이고, 둘째 항은 \(R_{n+1}(x)\)이다. 따라서 \(g(x) = T_{n+1}(x) + R_{n+1}(x)\)이며, 이는 \(n+1\)에 대한 공식이다. 귀납법으로 모든 \(n \ge 0\)에 대해 증명이 끝난다.`,
-          en: String.raw`Multiplying by \(\frac{1}{n!}\), the remainder integral becomes \(\dfrac{g^{(n+1)}(a)}{(n+1)!}(x-a)^{n+1} + \dfrac{1}{(n+1)!}\int_a^x (x-t)^{n+1} g^{(n+2)}(t)\,dt\). The first term is exactly the degree-\((n+1)\) Taylor term, and the second is \(R_{n+1}(x)\). Hence \(g(x) = T_{n+1}(x) + R_{n+1}(x)\), which is the formula for \(n+1\). By induction the proof is complete for all \(n \ge 0\).`,
+          ko: String.raw`\(\frac{1}{n!}\)을 곱하면 나머지 적분은 \(\dfrac{g^{(n+1)}(a)}{(n+1)!}(x-a)^{n+1} + \dfrac{1}{(n+1)!}\int_a^x (x-t)^{n+1} g^{(n+2)}(t)\,dt\)가 된다. 첫 항은 정확히 \(n+1\)차 테일러 항이고, 둘째 항은 \(R_{n+1}(x)\)이다.
+
+따라서 \(g(x) = T_{n+1}(x) + R_{n+1}(x)\)이며, 이는 \(n+1\)에 대한 공식이다. 귀납법으로 모든 \(n \ge 0\)에 대해 증명이 끝난다.`,
+          en: String.raw`Multiplying by \(\frac{1}{n!}\), the remainder integral becomes \(\dfrac{g^{(n+1)}(a)}{(n+1)!}(x-a)^{n+1} + \dfrac{1}{(n+1)!}\int_a^x (x-t)^{n+1} g^{(n+2)}(t)\,dt\). The first term is exactly the degree-\((n+1)\) Taylor term, and the second is \(R_{n+1}(x)\).
+
+Hence \(g(x) = T_{n+1}(x) + R_{n+1}(x)\), which is the formula for \(n+1\). By induction the proof is complete for all \(n \ge 0\).`,
         },
       },
     ],
@@ -170,8 +231,12 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 2,
     topics: ['banach'],
     statement: {
-      ko: String.raw`\([0,1]\) 위의 사상 \(T(x) = \dfrac{1}{2+x}\)를 생각하자. (a) \(T\)가 \([0,1]\)을 자기 자신으로 보내고, 상수 \(c = 1/4\)인 축소사상임을 보이세요. (b) 바나흐 고정점 정리를 인용하여 \(T\)의 유일한 고정점을 구하고 (이차방정식을 풀어), 임의의 시작점에서의 반복이 그 점으로 수렴함을 설명하세요.`,
-      en: String.raw`Consider the map \(T(x) = \dfrac{1}{2+x}\) on \([0,1]\). (a) Show \(T\) maps \([0,1]\) into itself and is a contraction with constant \(c = 1/4\). (b) Cite the Banach fixed point theorem to find the unique fixed point of \(T\) (solve the quadratic), and explain why iteration from any starting point converges to it.`,
+      ko: String.raw`\([0,1]\) 위의 사상 \(T(x) = \dfrac{1}{2+x}\)를 생각하자.
+
+(a) \(T\)가 \([0,1]\)을 자기 자신으로 보내고, 상수 \(c = 1/4\)인 축소사상임을 보이세요. (b) 바나흐 고정점 정리를 인용하여 \(T\)의 유일한 고정점을 구하고 (이차방정식을 풀어), 임의의 시작점에서의 반복이 그 점으로 수렴함을 설명하세요.`,
+      en: String.raw`Consider the map \(T(x) = \dfrac{1}{2+x}\) on \([0,1]\).
+
+(a) Show \(T\) maps \([0,1]\) into itself and is a contraction with constant \(c = 1/4\). (b) Cite the Banach fixed point theorem to find the unique fixed point of \(T\) (solve the quadratic), and explain why iteration from any starting point converges to it.`,
     },
     display: [
       String.raw`\lvert T(x) - T(y) \rvert = \frac{\lvert x - y \rvert}{(2+x)(2+y)} \le \frac14\,\lvert x - y \rvert`,
@@ -180,14 +245,22 @@ export const exercises: readonly ExerciseMeta[] = [
     solution: [
       {
         text: {
-          ko: String.raw`(a) \(T\)는 \([0,1]\)에서 감소하고 \(T(0) = 1/2\), \(T(1) = 1/3\)이므로 \(T([0,1]) = [1/3, 1/2] \subset [0,1]\)이다. \(x, y \in [0,1]\)에 대해 \(\lvert T(x) - T(y) \rvert = \left\lvert \dfrac{2+y-(2+x)}{(2+x)(2+y)} \right\rvert = \dfrac{\lvert x - y \rvert}{(2+x)(2+y)}\)이다. \((2+x)(2+y) \ge 2 \cdot 2 = 4\)이므로 \(\lvert T(x) - T(y) \rvert \le \dfrac14\lvert x - y \rvert\)이다 — 상수 \(1/4\)인 축소사상이다.`,
-          en: String.raw`(a) \(T\) is decreasing on \([0,1]\) with \(T(0) = 1/2\) and \(T(1) = 1/3\), so \(T([0,1]) = [1/3, 1/2] \subset [0,1]\). For \(x, y \in [0,1]\), \(\lvert T(x) - T(y) \rvert = \left\lvert \dfrac{2+y-(2+x)}{(2+x)(2+y)} \right\rvert = \dfrac{\lvert x - y \rvert}{(2+x)(2+y)}\). Since \((2+x)(2+y) \ge 2 \cdot 2 = 4\), we get \(\lvert T(x) - T(y) \rvert \le \dfrac14\lvert x - y \rvert\) — a contraction with constant \(1/4\).`,
+          ko: String.raw`(a) \(T\)는 \([0,1]\)에서 감소하고 \(T(0) = 1/2\), \(T(1) = 1/3\)이므로 \(T([0,1]) = [1/3, 1/2] \subset [0,1]\)이다.
+
+\(x, y \in [0,1]\)에 대해 \(\lvert T(x) - T(y) \rvert = \left\lvert \dfrac{2+y-(2+x)}{(2+x)(2+y)} \right\rvert = \dfrac{\lvert x - y \rvert}{(2+x)(2+y)}\)이다. \((2+x)(2+y) \ge 2 \cdot 2 = 4\)이므로 \(\lvert T(x) - T(y) \rvert \le \dfrac14\lvert x - y \rvert\)이다 — 상수 \(1/4\)인 축소사상이다.`,
+          en: String.raw`(a) \(T\) is decreasing on \([0,1]\) with \(T(0) = 1/2\) and \(T(1) = 1/3\), so \(T([0,1]) = [1/3, 1/2] \subset [0,1]\).
+
+For \(x, y \in [0,1]\), \(\lvert T(x) - T(y) \rvert = \left\lvert \dfrac{2+y-(2+x)}{(2+x)(2+y)} \right\rvert = \dfrac{\lvert x - y \rvert}{(2+x)(2+y)}\). Since \((2+x)(2+y) \ge 2 \cdot 2 = 4\), we get \(\lvert T(x) - T(y) \rvert \le \dfrac14\lvert x - y \rvert\) — a contraction with constant \(1/4\).`,
         },
       },
       {
         text: {
-          ko: String.raw`(b) \([0,1]\)은 완비이므로 바나흐 고정점 정리(바나흐 장면)에 의해 \(T\)는 유일한 고정점 \(x^\ast \in [0,1]\)을 갖는다. \(x = \dfrac{1}{2+x}\)는 \(x^2 + 2x - 1 = 0\)과 동치이고, 근은 \(x = -1 \pm \sqrt{2}\)이다. \([0,1]\) 안에 있는 것은 \(x^\ast = \sqrt{2} - 1 \approx 0.4142\)뿐이다. 같은 정리에 의해 임의의 \(x_0 \in [0,1]\)에서 시작한 반복 \(x_{n+1} = T(x_n)\)은 \(x^\ast\)로 수렴한다 — 오차는 매 단계 최소 \(1/4\)씩 줄어든다.`,
-          en: String.raw`(b) \([0,1]\) is complete, so the Banach fixed point theorem (the Banach scene) gives \(T\) a unique fixed point \(x^\ast \in [0,1]\). The equation \(x = \dfrac{1}{2+x}\) is equivalent to \(x^2 + 2x - 1 = 0\), with roots \(x = -1 \pm \sqrt{2}\). The only one in \([0,1]\) is \(x^\ast = \sqrt{2} - 1 \approx 0.4142\). By the same theorem, the iteration \(x_{n+1} = T(x_n)\) from any \(x_0 \in [0,1]\) converges to \(x^\ast\) — the error shrinks by at least a factor of \(1/4\) each step.`,
+          ko: String.raw`(b) \([0,1]\)은 완비이므로 바나흐 고정점 정리(바나흐 장면)에 의해 \(T\)는 유일한 고정점 \(x^\ast \in [0,1]\)을 갖는다. \(x = \dfrac{1}{2+x}\)는 \(x^2 + 2x - 1 = 0\)과 동치이고, 근은 \(x = -1 \pm \sqrt{2}\)이다. \([0,1]\) 안에 있는 것은 \(x^\ast = \sqrt{2} - 1 \approx 0.4142\)뿐이다.
+
+같은 정리에 의해 임의의 \(x_0 \in [0,1]\)에서 시작한 반복 \(x_{n+1} = T(x_n)\)은 \(x^\ast\)로 수렴한다 — 오차는 매 단계 최소 \(1/4\)씩 줄어든다.`,
+          en: String.raw`(b) \([0,1]\) is complete, so the Banach fixed point theorem (the Banach scene) gives \(T\) a unique fixed point \(x^\ast \in [0,1]\). The equation \(x = \dfrac{1}{2+x}\) is equivalent to \(x^2 + 2x - 1 = 0\), with roots \(x = -1 \pm \sqrt{2}\). The only one in \([0,1]\) is \(x^\ast = \sqrt{2} - 1 \approx 0.4142\).
+
+By the same theorem, the iteration \(x_{n+1} = T(x_n)\) from any \(x_0 \in [0,1]\) converges to \(x^\ast\) — the error shrinks by at least a factor of \(1/4\) each step.`,
         },
       },
     ],
@@ -200,8 +273,12 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 3,
     topics: ['taylor', 'taylor-thm'],
     statement: {
-      ko: String.raw`\(f(x) = e^{-1/x^2}\) (\(x \ne 0\)), \(f(0) = 0\)이라 하자. \(f\)가 \(\mathbb{R}\)에서 무한히 미분가능하고 모든 \(n \ge 0\)에 대해 \(f^{(n)}(0) = 0\)임을 증명하세요. 이를 이용해 \(f\)의 매클로린 급수가 모든 \(x\)에서 수렴하지만 \(x = 0\)에서만 \(f(x)\)와 일치함을 보이세요 — 테일러 급수가 함수를 복원하지 않을 수 있습니다.`,
-      en: String.raw`Let \(f(x) = e^{-1/x^2}\) for \(x \ne 0\) and \(f(0) = 0\). Prove \(f\) is infinitely differentiable on \(\mathbb{R}\) with \(f^{(n)}(0) = 0\) for every \(n \ge 0\). Deduce that the Maclaurin series of \(f\) converges for every \(x\) but equals \(f(x)\) only at \(x = 0\) — a Taylor series need not recover the function.`,
+      ko: String.raw`\(f(x) = e^{-1/x^2}\) (\(x \ne 0\)), \(f(0) = 0\)이라 하자.
+
+\(f\)가 \(\mathbb{R}\)에서 무한히 미분가능하고 모든 \(n \ge 0\)에 대해 \(f^{(n)}(0) = 0\)임을 증명하세요. 이를 이용해 \(f\)의 매클로린 급수가 모든 \(x\)에서 수렴하지만 \(x = 0\)에서만 \(f(x)\)와 일치함을 보이세요 — 테일러 급수가 함수를 복원하지 않을 수 있습니다.`,
+      en: String.raw`Let \(f(x) = e^{-1/x^2}\) for \(x \ne 0\) and \(f(0) = 0\).
+
+Prove \(f\) is infinitely differentiable on \(\mathbb{R}\) with \(f^{(n)}(0) = 0\) for every \(n \ge 0\). Deduce that the Maclaurin series of \(f\) converges for every \(x\) but equals \(f(x)\) only at \(x = 0\) — a Taylor series need not recover the function.`,
     },
     display: [
       String.raw`f^{(n)}(x) = P_n(1/x)\,e^{-1/x^2} \quad (x \ne 0),\qquad \lim_{\lvert u \rvert \to \infty} P(u)e^{-u^2} = 0`,
@@ -216,28 +293,40 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x \ne 0\)에서 \(f^{(n)}(x) = P_n(1/x)e^{-1/x^2}\)인 다항식 \(P_n\)이 존재함을 귀납법으로 보이자. \(n = 0\)일 때 \(P_0 \equiv 1\)이다. \(u = 1/x\)라 두면
+          ko: String.raw`\(x \ne 0\)에서 \(f^{(n)}(x) = P_n(1/x)e^{-1/x^2}\)인 다항식 \(P_n\)이 존재함을 귀납법으로 보이자. \(n = 0\)일 때 \(P_0 \equiv 1\)이다.
+
+\(u = 1/x\)라 두면
           \[\frac{d}{dx}\Bigl[P(u)e^{-1/x^2}\Bigr] = P'(u)\!\left(-\frac{1}{x^2}\right)e^{-1/x^2} + P(u)e^{-1/x^2}\!\left(\frac{2}{x^3}\right) = \bigl[-u^2P'(u) + 2u^3P(u)\bigr]e^{-u^2},\]
           괄호 안은 \(u\)의 다항식이므로 귀납 단계가 성립한다. 따라서 \(f\)는 \(x \ne 0\)에서 무한히 미분가능하다.`,
-          en: String.raw`We claim \(f^{(n)}(x) = P_n(1/x)e^{-1/x^2}\) for \(x \ne 0\), for some polynomial \(P_n\), by induction. For \(n = 0\), \(P_0 \equiv 1\). With \(u = 1/x\),
+          en: String.raw`We claim \(f^{(n)}(x) = P_n(1/x)e^{-1/x^2}\) for \(x \ne 0\), for some polynomial \(P_n\), by induction. For \(n = 0\), \(P_0 \equiv 1\).
+
+With \(u = 1/x\),
           \[\frac{d}{dx}\Bigl[P(u)e^{-1/x^2}\Bigr] = P'(u)\!\left(-\frac{1}{x^2}\right)e^{-1/x^2} + P(u)e^{-1/x^2}\!\left(\frac{2}{x^3}\right) = \bigl[-u^2P'(u) + 2u^3P(u)\bigr]e^{-u^2},\]
           and the bracket is a polynomial in \(u\), completing the induction step. Hence \(f\) is infinitely differentiable at \(x \ne 0\).`,
         },
       },
       {
         text: {
-          ko: String.raw`이제 \(f^{(n)}(0) = 0\)을 귀납법으로 보인다. \(n = 0\)은 정의이다. \(f'(0) = \lim_{h \to 0} \dfrac{e^{-1/h^2}}{h} = \lim_{\lvert u \rvert \to \infty} u e^{-u^2} = 0\) (보조정리, \(u = 1/h\)). 귀납 가설로 \(f^{(n)}(0) = 0\)이라 하자. 그러면
+          ko: String.raw`이제 \(f^{(n)}(0) = 0\)을 귀납법으로 보인다. \(n = 0\)은 정의이다. \(f'(0) = \lim_{h \to 0} \dfrac{e^{-1/h^2}}{h} = \lim_{\lvert u \rvert \to \infty} u e^{-u^2} = 0\) (보조정리, \(u = 1/h\)).
+
+귀납 가설로 \(f^{(n)}(0) = 0\)이라 하자. 그러면
           \[f^{(n+1)}(0) = \lim_{h \to 0}\frac{f^{(n)}(h) - f^{(n)}(0)}{h} = \lim_{h \to 0}\frac{P_n(1/h)e^{-1/h^2}}{h} = \lim_{\lvert u \rvert \to \infty} uP_n(u)e^{-u^2} = 0\]
           이다 (보조정리를 \(uP_n(u)\)에 적용). 따라서 모든 \(n\)에 대해 \(f^{(n)}(0) = 0\)이고, \(f\)는 \(0\)에서도 무한히 미분가능하다.`,
-          en: String.raw`Now \(f^{(n)}(0) = 0\) by induction. The case \(n = 0\) is the definition. \(f'(0) = \lim_{h \to 0} \dfrac{e^{-1/h^2}}{h} = \lim_{\lvert u \rvert \to \infty} u e^{-u^2} = 0\) (lemma, with \(u = 1/h\)). Assuming \(f^{(n)}(0) = 0\),
+          en: String.raw`Now \(f^{(n)}(0) = 0\) by induction. The case \(n = 0\) is the definition. \(f'(0) = \lim_{h \to 0} \dfrac{e^{-1/h^2}}{h} = \lim_{\lvert u \rvert \to \infty} u e^{-u^2} = 0\) (lemma, with \(u = 1/h\)).
+
+Assuming \(f^{(n)}(0) = 0\),
           \[f^{(n+1)}(0) = \lim_{h \to 0}\frac{f^{(n)}(h) - f^{(n)}(0)}{h} = \lim_{h \to 0}\frac{P_n(1/h)e^{-1/h^2}}{h} = \lim_{\lvert u \rvert \to \infty} uP_n(u)e^{-u^2} = 0\]
           (lemma applied to \(uP_n(u)\)). Thus \(f^{(n)}(0) = 0\) for all \(n\), and \(f\) is infinitely differentiable at \(0\) too.`,
         },
       },
       {
         text: {
-          ko: String.raw`매클로린 급수는 \(T(x) = \sum_{n=0}^{\infty} \dfrac{f^{(n)}(0)}{n!}x^n \equiv 0\) — 모든 \(x\)에서 \(0\)으로 수렴한다. 그러나 \(x \ne 0\)에서는 \(f(x) = e^{-1/x^2} > 0\)이다. 즉 테일러 급수는 모든 점에서 수렴하지만 \(x = 0\)에서만 \(f\)와 일치한다: 매끄러운 함수라도 그 테일러 급수가 함수를 복원한다는 보장은 없다.`,
-          en: String.raw`The Maclaurin series is \(T(x) = \sum_{n=0}^{\infty} \dfrac{f^{(n)}(0)}{n!}x^n \equiv 0\) — it converges (to \(0\)) at every \(x\). But for \(x \ne 0\), \(f(x) = e^{-1/x^2} > 0\). So the Taylor series converges everywhere yet matches \(f\) only at \(x = 0\): even a smooth function need not be recovered by its Taylor series.`,
+          ko: String.raw`매클로린 급수는 \(T(x) = \sum_{n=0}^{\infty} \dfrac{f^{(n)}(0)}{n!}x^n \equiv 0\) — 모든 \(x\)에서 \(0\)으로 수렴한다.
+
+그러나 \(x \ne 0\)에서는 \(f(x) = e^{-1/x^2} > 0\)이다. 즉 테일러 급수는 모든 점에서 수렴하지만 \(x = 0\)에서만 \(f\)와 일치한다: 매끄러운 함수라도 그 테일러 급수가 함수를 복원한다는 보장은 없다.`,
+          en: String.raw`The Maclaurin series is \(T(x) = \sum_{n=0}^{\infty} \dfrac{f^{(n)}(0)}{n!}x^n \equiv 0\) — it converges (to \(0\)) at every \(x\).
+
+But for \(x \ne 0\), \(f(x) = e^{-1/x^2} > 0\). So the Taylor series converges everywhere yet matches \(f\) only at \(x = 0\): even a smooth function need not be recovered by its Taylor series.`,
         },
       },
     ],

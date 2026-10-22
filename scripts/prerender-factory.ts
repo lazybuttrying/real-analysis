@@ -105,6 +105,24 @@ export function createPrerender(deps: PrerenderDeps) {
       )
       .join('');
 
+  /** Splits a prose field into paragraphs on blank lines (single newlines stay). */
+  const splitParas = (text: string): string[] => {
+    const parts = text.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
+    return parts.length > 0 ? parts : [text];
+  };
+
+  /** Static body form of a prose field as one <p> per paragraph. */
+  const renderParasHtml = (text: string, cls?: string): string =>
+    splitParas(text)
+      .map((p) => (cls ? `<p class="${cls}">${renderSummaryHtml(p)}</p>` : `<p>${renderSummaryHtml(p)}</p>`))
+      .join('\n');
+
+  /** Static body form of a proof/solution step: paragraphs inside the <li>. */
+  const renderStepParasHtml = (text: string): string =>
+    splitParas(text)
+      .map((p) => `<p>${renderSummaryHtml(p)}</p>`)
+      .join('');
+
   /** True when any language's form of the text embeds inline math (the page then needs the KaTeX stylesheet). */
   const hasInlineMath = (text: { ko: string; en: string }): boolean => LANGS.some((lang) => localize(text, lang).includes('\\('));
 
@@ -123,10 +141,10 @@ export function createPrerender(deps: PrerenderDeps) {
     const cards = problems
       .map((problem) => {
         const steps = problem.proof
-          .map((step) => `<li>${renderSummaryHtml(localize(step.text, lang))}${(step.display ?? []).map(renderDisplayHtml).join('\n')}</li>`)
+          .map((step) => `<li>${renderStepParasHtml(localize(step.text, lang))}${(step.display ?? []).map(renderDisplayHtml).join('\n')}</li>`)
           .join('\n');
         return `<article class="problem" id="problem-${scene.id}-${problem.id}">
-  <p class="problem-statement">${renderSummaryHtml(localize(problem.statement, lang))}</p>
+  ${renderParasHtml(localize(problem.statement, lang), 'problem-statement')}
   ${(problem.display ?? []).map(renderDisplayHtml).join('\n')}
   <figure class="problem-viz"><figcaption>${renderSummaryHtml(localize(problem.presetCaption, lang))}</figcaption></figure>
   <details class="problem-proof"><summary>${escapeHtml(localize(problem.isHint ? STRINGS.showHint : STRINGS.showProof, lang))}</summary>
@@ -167,7 +185,7 @@ export function createPrerender(deps: PrerenderDeps) {
             const steps = exercise.solution
               .map(
                 (step) =>
-                  `<li>${renderSummaryHtml(localize(step.text, lang))}${(step.display ?? []).map(renderDisplayHtml).join('\n')}</li>`,
+                  `<li>${renderStepParasHtml(localize(step.text, lang))}${(step.display ?? []).map(renderDisplayHtml).join('\n')}</li>`,
               )
               .join('\n');
             const topics = exercise.topics
@@ -181,7 +199,7 @@ export function createPrerender(deps: PrerenderDeps) {
               : '';
             return `<article class="exercise problem" id="exercise-${exercise.id}">
   <div class="exercise-badges"><span class="exercise-number">${index + 1}</span><span class="difficulty-badge difficulty-${difficulty}">${difficultyHeading(difficulty, lang)}</span></div>
-  <p class="exercise-statement">${renderSummaryHtml(localize(exercise.statement, lang))}</p>
+  ${renderParasHtml(localize(exercise.statement, lang), 'exercise-statement')}
   ${(exercise.display ?? []).map(renderDisplayHtml).join('\n')}
   <ul class="exercise-topics">
   ${topics}
@@ -423,7 +441,7 @@ export function createPrerender(deps: PrerenderDeps) {
       body: (lang) =>
         [
           `<h1>${escapeHtml(localize(scene.title, lang))}</h1>`,
-          `<p>${renderSummaryHtml(localize(scene.summary, lang))}</p>`,
+          renderParasHtml(localize(scene.summary, lang)),
           ...(scene.tex ?? []).map((formula) => renderDisplayHtml(formula)),
           renderPathChipsHtml(chapter.id, scene.id, lang),
           renderProblemsHtml(scene, lang),
