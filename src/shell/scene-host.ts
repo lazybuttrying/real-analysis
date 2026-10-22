@@ -213,12 +213,28 @@ export function mountMiniViz(
     console.error(error);
     return;
   }
-  registerDispose(() => mini.dispose());
+  // A mini scene has no SceneHost, so without this nothing would ever call
+  // resize(): the chart would keep the viewBox measured at mount time —
+  // when the scene's text strips were still empty — and once render()
+  // fills the strips they squeeze the chart area, leaving the browser to
+  // shrink that stale viewBox into a tiny thumbnail. Re-fit right after
+  // the first render (strip text is set synchronously, so the sizes read
+  // here are final) and again whenever the host box itself changes.
+  const observer = new ResizeObserver(() => {
+    if (host.isConnected) mini.resize?.(host.clientWidth, host.clientHeight);
+  });
+  observer.observe(host);
+  registerDispose(() => {
+    observer.disconnect();
+    mini.dispose();
+  });
   Promise.resolve()
     .then(() => module.model.compute(preset))
     .then(
       (data: unknown) => {
-        if (host.isConnected) mini.render(data, preset);
+        if (!host.isConnected) return;
+        mini.render(data, preset);
+        mini.resize?.(host.clientWidth, host.clientHeight);
       },
       (error: unknown) => console.error(error),
     );

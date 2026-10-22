@@ -609,8 +609,78 @@ main.paths {
   font-variant-numeric: tabular-nums;
 }
 
+.control:has(.option-group) {
+  flex-wrap: wrap;
+}
+
+/* Select controls: every option visible as a pill, exactly one selected.
+   The native radio input overlays its pill (invisible but focusable and
+   clickable); the span is the visible pill face. */
+.option-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.option {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.option input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.option > span {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.875rem;
+}
+
+.option:hover > span {
+  border-color: var(--accent);
+}
+
+.option input:checked + span {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.option input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tex {
+  margin: 1.75rem 0;
+}
+
 .tex-block {
   overflow-x: auto;
+  text-align: center;
+  margin: 1.25rem 0;
+  padding: 0.5rem 0;
+}
+
+.problem-proof li > p {
+  margin: 0.3rem 0;
+}
+
+.problem-proof li > p:first-child {
+  margin-top: 0;
+}
+
+.problem-proof li > p:last-child {
+  margin-bottom: 0;
 }
 
 .scene-error {
@@ -669,7 +739,8 @@ main.paths {
 }
 
 .problem-viz-host {
-  height: 240px;
+  /* Same box as the main scene host: full card width, viewport-scaled height. */
+  height: min(60vh, 480px);
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
@@ -762,7 +833,8 @@ main.paths {
 }
 
 .exercise-viz-host {
-  height: 240px;
+  /* Same box as the main scene host: full card width, viewport-scaled height. */
+  height: min(60vh, 480px);
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;

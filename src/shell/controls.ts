@@ -18,7 +18,9 @@ export function buildControls(
   container.replaceChildren();
 
   for (const spec of specs) {
-    const row = h('label', { class: 'control' });
+    // Select rows are a div, not a label: the option pills below carry their
+    // own labels, and a wrapping label would forward stray clicks to them.
+    const row = spec.kind === 'select' ? h('div', { class: 'control' }) : h('label', { class: 'control' });
     const name = h('span', {}, localize(spec.label, lang));
 
     switch (spec.kind) {
@@ -48,10 +50,22 @@ export function buildControls(
         break;
       }
       case 'select': {
-        const select = h('select', {}, ...spec.options.map((option) => h('option', { value: option }, option)));
-        select.value = String(current[spec.key] ?? spec.init);
-        select.addEventListener('change', () => update(spec.key, select.value));
-        row.append(name, select);
+        // All options stay visible as a single-select pill group (native
+        // radios, so grouping, arrow keys, and change events come for free).
+        // The value written to state is the option string, exactly as the
+        // old <select> wrote it.
+        name.id = `control-label-${spec.key}`;
+        const group = h('div', { class: 'option-group', role: 'radiogroup', 'aria-labelledby': name.id });
+        const selected = String(current[spec.key] ?? spec.init);
+        for (const option of spec.options) {
+          const input = h('input', { type: 'radio', name: spec.key, value: option });
+          input.checked = option === selected;
+          input.addEventListener('change', () => {
+            if (input.checked) update(spec.key, input.value);
+          });
+          group.append(h('label', { class: 'option' }, input, h('span', {}, option)));
+        }
+        row.append(name, group);
         break;
       }
     }
