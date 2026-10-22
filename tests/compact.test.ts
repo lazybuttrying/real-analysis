@@ -147,7 +147,7 @@ describe('compact: problems data', () => {
   it('has exactly 3 problems with non-empty bilingual proofs', () => {
     expect(problems).toHaveLength(3);
     expect(problems.map((p) => p.id)).toEqual([
-      'compact-closed-seq',
+      'compact-sequential-equivalence',
       'compact-halfopen-fails',
       'compact-continuous-image',
     ]);
@@ -199,7 +199,7 @@ describe('compact: problems data', () => {
 
   it('matches each preset against the model end to end', () => {
     const expected: Record<string, { kind: string; shown: number }> = {
-      'compact-closed-seq': { kind: 'closed', shown: 6 },
+      'compact-sequential-equivalence': { kind: 'closed', shown: 6 },
       'compact-halfopen-fails': { kind: 'halfopen', shown: 8 },
       'compact-continuous-image': { kind: 'closed', shown: 6 },
     };

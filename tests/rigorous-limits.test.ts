@@ -276,6 +276,7 @@ describe('split chapters: the five ex-limits chapters', () => {
       'natural-numbers',
       'binomial',
       'integers-rationals',
+      'complex-numbers',
       'sqrt2-irrational',
       'density-of-rationals',
       'sets',
@@ -295,6 +296,7 @@ describe('split chapters: the five ex-limits chapters', () => {
       'sequence-spaces',
       'cauchy-schwarz',
       'holder',
+      'parallelogram-law',
       'holes',
       'construction',
       'bolzano-weierstrass',
@@ -316,6 +318,7 @@ describe('split chapters: the five ex-limits chapters', () => {
     expect(idsOf('topology')).toEqual([
       'opensets',
       'clopen',
+      'connected',
       'closure',
       'compact',
       'topologist-sine',

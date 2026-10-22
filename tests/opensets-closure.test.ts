@@ -223,6 +223,7 @@ describe('split chapters: topology chapter scenes', () => {
     expect(ids).toEqual([
       'opensets',
       'clopen',
+      'connected',
       'closure',
       'compact',
       'topologist-sine',
