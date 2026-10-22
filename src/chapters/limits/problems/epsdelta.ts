@@ -20,8 +20,16 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(\delta = \frac{\varepsilon}{3}\)이라 둡니다. \(0 < \lvert x - 2\rvert < \delta\)이면 \(\lvert 3x - 6\rvert = \lvert 3(x - 2)\rvert = 3\lvert x - 2\rvert < 3\delta = \varepsilon\)입니다. 따라서 정의에 의해 \(\lim_{x \to 2} 3x = 6\)입니다.`,
-                en: String.raw`Given \(\varepsilon > 0\), put \(\delta = \frac{\varepsilon}{3}\). If \(0 < \lvert x - 2\rvert < \delta\), then \(\lvert 3x - 6\rvert = \lvert 3(x-2)\rvert = 3\lvert x - 2\rvert < 3\delta = \varepsilon\). Hence \(\lim_{x \to 2} 3x = 6\) by the definition.`,
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(\delta = \frac{\varepsilon}{3}\)이라 둡니다.
+
+\(0 < \lvert x - 2\rvert < \delta\)이면 \(\lvert 3x - 6\rvert = \lvert 3(x - 2)\rvert = 3\lvert x - 2\rvert < 3\delta = \varepsilon\)입니다.
+
+따라서 정의에 의해 \(\lim_{x \to 2} 3x = 6\)입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), put \(\delta = \frac{\varepsilon}{3}\).
+
+If \(0 < \lvert x - 2\rvert < \delta\), then \(\lvert 3x - 6\rvert = \lvert 3(x-2)\rvert = 3\lvert x - 2\rvert < 3\delta = \varepsilon\).
+
+Hence \(\lim_{x \to 2} 3x = 6\) by the definition.`,
               },
             },
             {
@@ -65,8 +73,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\)이라 둡니다. \(\lvert x - 1\rvert < \delta\)이면 두 조건 \(\lvert x - 1\rvert < 1\)과 \(\lvert x - 1\rvert < \frac{\varepsilon}{3}\)이 모두 성립하므로, \(\lvert x^2 - 1\rvert < 3 \cdot \frac{\varepsilon}{3} = \varepsilon\)입니다. 따라서 \(\lim_{x \to 1} x^2 = 1\)입니다.`,
-                en: String.raw`Given \(\varepsilon > 0\), put \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\). If \(\lvert x - 1\rvert < \delta\), both \(\lvert x - 1\rvert < 1\) and \(\lvert x - 1\rvert < \frac{\varepsilon}{3}\) hold, so \(\lvert x^2 - 1\rvert < 3 \cdot \frac{\varepsilon}{3} = \varepsilon\). Hence \(\lim_{x \to 1} x^2 = 1\).`,
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\)이라 둡니다.
+
+\(\lvert x - 1\rvert < \delta\)이면 두 조건 \(\lvert x - 1\rvert < 1\)과 \(\lvert x - 1\rvert < \frac{\varepsilon}{3}\)이 모두 성립하므로, \(\lvert x^2 - 1\rvert < 3 \cdot \frac{\varepsilon}{3} = \varepsilon\)입니다.
+
+따라서 \(\lim_{x \to 1} x^2 = 1\)입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), put \(\delta = \min\left(1, \frac{\varepsilon}{3}\right)\).
+
+If \(\lvert x - 1\rvert < \delta\), both \(\lvert x - 1\rvert < 1\) and \(\lvert x - 1\rvert < \frac{\varepsilon}{3}\) hold, so \(\lvert x^2 - 1\rvert < 3 \cdot \frac{\varepsilon}{3} = \varepsilon\).
+
+Hence \(\lim_{x \to 1} x^2 = 1\).`,
               },
             },
             {
@@ -94,8 +110,16 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(\varepsilon > 0\)을 잡습니다. 정의에 의해, \(0 < \lvert x - a\rvert < \delta_1\)이면 \(\lvert f(x) - L_1\rvert < \frac{\varepsilon}{2}\)인 \(\delta_1 > 0\)과, \(0 < \lvert x - a\rvert < \delta_2\)이면 \(\lvert f(x) - L_2\rvert < \frac{\varepsilon}{2}\)인 \(\delta_2 > 0\)이 존재합니다. \(\delta = \min(\delta_1, \delta_2) > 0\)이라 둡니다.`,
-                en: String.raw`Let \(\varepsilon > 0\). By the definition there are \(\delta_1 > 0\) with \(\lvert f(x) - L_1\rvert < \frac{\varepsilon}{2}\) when \(0 < \lvert x - a\rvert < \delta_1\), and \(\delta_2 > 0\) with \(\lvert f(x) - L_2\rvert < \frac{\varepsilon}{2}\) when \(0 < \lvert x - a\rvert < \delta_2\). Put \(\delta = \min(\delta_1, \delta_2) > 0\).`,
+                ko: String.raw`\(\varepsilon > 0\)을 잡습니다.
+
+정의에 의해, \(0 < \lvert x - a\rvert < \delta_1\)이면 \(\lvert f(x) - L_1\rvert < \frac{\varepsilon}{2}\)인 \(\delta_1 > 0\)과, \(0 < \lvert x - a\rvert < \delta_2\)이면 \(\lvert f(x) - L_2\rvert < \frac{\varepsilon}{2}\)인 \(\delta_2 > 0\)이 존재합니다.
+
+\(\delta = \min(\delta_1, \delta_2) > 0\)이라 둡니다.`,
+                en: String.raw`Let \(\varepsilon > 0\).
+
+By the definition there are \(\delta_1 > 0\) with \(\lvert f(x) - L_1\rvert < \frac{\varepsilon}{2}\) when \(0 < \lvert x - a\rvert < \delta_1\), and \(\delta_2 > 0\) with \(\lvert f(x) - L_2\rvert < \frac{\varepsilon}{2}\) when \(0 < \lvert x - a\rvert < \delta_2\).
+
+Put \(\delta = \min(\delta_1, \delta_2) > 0\).`,
               },
             },
             {

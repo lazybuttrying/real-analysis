@@ -32,14 +32,42 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`꼬리 상한을 직접 계산합니다. \(\sup_{n \ge N} a_n = \max\left(\sup_{\substack{n \ge N \\ n \text{ 짝수}}} a_n,\; \sup_{\substack{n \ge N \\ n \text{ 홀수}}} a_n\right)\)입니다. 짝수 꼬리에서는 \(a_{2k} = 1 + \frac{1}{2k} \downarrow 1\)이므로 \(\sup_{\text{짝수 } \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\)입니다. 홀수 꼬리에서는 모든 항이 \(-1\) 이하이므로 \(\sup_{\text{홀수 } \ge N} a_n \le -1 < 1\)입니다. 따라서 \(\max\)는 짝수 쪽이 결정하고 \(\sup_{n \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\)입니다. \(\varepsilon > 0\)에 대해 \(N > \frac{1}{\varepsilon}\)이면 \(0 \le \sup_{n \ge N} a_n - 1 = \frac{1}{2\lceil N/2 \rceil} \le \frac{1}{N} < \varepsilon\) — 즉 \(\sup_{n \ge N} a_n \to 1\)이므로 \(\limsup a_n = 1\)입니다.`,
-          en: String.raw`Compute the tail suprema directly. \(\sup_{n \ge N} a_n = \max\left(\sup_{\substack{n \ge N \\ n \text{ even}}} a_n,\; \sup_{\substack{n \ge N \\ n \text{ odd}}} a_n\right)\). On the even tail, \(a_{2k} = 1 + \frac{1}{2k} \downarrow 1\), so \(\sup_{\text{even } \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\). On the odd tail every term is at most \(-1\), so \(\sup_{\text{odd } \ge N} a_n \le -1 < 1\). Hence the \(\max\) is decided by the even side: \(\sup_{n \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\). Given \(\varepsilon > 0\), \(N > \frac{1}{\varepsilon}\) gives \(0 \le \sup_{n \ge N} a_n - 1 = \frac{1}{2\lceil N/2 \rceil} \le \frac{1}{N} < \varepsilon\) — so \(\sup_{n \ge N} a_n \to 1\) and \(\limsup a_n = 1\).`,
+          ko: String.raw`꼬리 상한을 직접 계산합니다.
+
+\(\sup_{n \ge N} a_n = \max\left(\sup_{\substack{n \ge N \\ n \text{ 짝수}}} a_n,\; \sup_{\substack{n \ge N \\ n \text{ 홀수}}} a_n\right)\)입니다.
+
+짝수 꼬리에서는 \(a_{2k} = 1 + \frac{1}{2k} \downarrow 1\)이므로 \(\sup_{\text{짝수 } \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\)입니다.
+
+홀수 꼬리에서는 모든 항이 \(-1\) 이하이므로 \(\sup_{\text{홀수 } \ge N} a_n \le -1 < 1\)입니다.
+
+따라서 \(\max\)는 짝수 쪽이 결정하고 \(\sup_{n \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\)입니다.
+
+\(\varepsilon > 0\)에 대해 \(N > \frac{1}{\varepsilon}\)이면 \(0 \le \sup_{n \ge N} a_n - 1 = \frac{1}{2\lceil N/2 \rceil} \le \frac{1}{N} < \varepsilon\) — 즉 \(\sup_{n \ge N} a_n \to 1\)이므로 \(\limsup a_n = 1\)입니다.`,
+          en: String.raw`Compute the tail suprema directly.
+
+\(\sup_{n \ge N} a_n = \max\left(\sup_{\substack{n \ge N \\ n \text{ even}}} a_n,\; \sup_{\substack{n \ge N \\ n \text{ odd}}} a_n\right)\).
+
+On the even tail, \(a_{2k} = 1 + \frac{1}{2k} \downarrow 1\), so \(\sup_{\text{even } \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\).
+
+On the odd tail every term is at most \(-1\), so \(\sup_{\text{odd } \ge N} a_n \le -1 < 1\).
+
+Hence the \(\max\) is decided by the even side: \(\sup_{n \ge N} a_n = 1 + \frac{1}{2\lceil N/2 \rceil}\).
+
+Given \(\varepsilon > 0\), \(N > \frac{1}{\varepsilon}\) gives \(0 \le \sup_{n \ge N} a_n - 1 = \frac{1}{2\lceil N/2 \rceil} \le \frac{1}{N} < \varepsilon\) — so \(\sup_{n \ge N} a_n \to 1\) and \(\limsup a_n = 1\).`,
         },
       },
       {
         text: {
-          ko: String.raw`하한도 대칭적입니다. \(\inf_{n \ge N} a_n = \min\left(\inf_{\text{짝수 } \ge N} a_n,\; \inf_{\text{홀수 } \ge N} a_n\right)\)에서 짝수 쪽은 \(\inf \ge 1 > -1\)이고, 홀수 쪽은 \(a_{2k+1} = -\left(1 + \frac{1}{2k+1}\right) \uparrow -1\)이므로 \(\inf_{\text{홀수 } \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right)\)입니다. 따라서 \(\inf_{n \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right) \to -1\)이고 \(\liminf a_n = -1\)입니다.`,
-          en: String.raw`The infimum is symmetric. In \(\inf_{n \ge N} a_n = \min\left(\inf_{\text{even } \ge N} a_n,\; \inf_{\text{odd } \ge N} a_n\right)\) the even side has \(\inf \ge 1 > -1\), while on the odd side \(a_{2k+1} = -\left(1 + \frac{1}{2k+1}\right) \uparrow -1\), so \(\inf_{\text{odd } \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right)\). Hence \(\inf_{n \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right) \to -1\) and \(\liminf a_n = -1\).`,
+          ko: String.raw`하한도 대칭적입니다.
+
+\(\inf_{n \ge N} a_n = \min\left(\inf_{\text{짝수 } \ge N} a_n,\; \inf_{\text{홀수 } \ge N} a_n\right)\)에서 짝수 쪽은 \(\inf \ge 1 > -1\)이고, 홀수 쪽은 \(a_{2k+1} = -\left(1 + \frac{1}{2k+1}\right) \uparrow -1\)이므로 \(\inf_{\text{홀수 } \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right)\)입니다.
+
+따라서 \(\inf_{n \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right) \to -1\)이고 \(\liminf a_n = -1\)입니다.`,
+          en: String.raw`The infimum is symmetric.
+
+In \(\inf_{n \ge N} a_n = \min\left(\inf_{\text{even } \ge N} a_n,\; \inf_{\text{odd } \ge N} a_n\right)\) the even side has \(\inf \ge 1 > -1\), while on the odd side \(a_{2k+1} = -\left(1 + \frac{1}{2k+1}\right) \uparrow -1\), so \(\inf_{\text{odd } \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right)\).
+
+Hence \(\inf_{n \ge N} a_n = -\left(1 + \frac{1}{2\lfloor N/2 \rfloor + 1}\right) \to -1\) and \(\liminf a_n = -1\).`,
         },
       },
     ],
@@ -59,8 +87,20 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 유계성: 수렴수열은 유계입니다 — \(\varepsilon = 1\)로 두면 \(n \ge N_0\)일 때 \(|a_n - L| < 1\)인 \(N_0\)이 있어 꼬리에서는 \(|a_n| \le |L| + 1\)이고, 앞의 유한 개 항은 그 최댓값으로 묶입니다. 따라서 어떤 \(M\)에 대해 모든 \(n\)에서 \(|a_n| \le M\)이며, 모든 꼬리 상한 \(\sup_{n\ge N} a_n\)과 꼬리 하한 \(\inf_{n\ge N} a_n\)은 유한하고 \(\limsup a_n, \liminf a_n\)이 실수로서 잘 정의됩니다. 이제 \(\varepsilon > 0\)이라 합시다. \(\lim a_n = L\)이므로 \(n \ge N\)일 때 \(|a_n - L| < \varepsilon\)인 \(N\)이 존재하고, 즉 \(L - \varepsilon < a_n < L + \varepsilon\)입니다.`,
-          en: String.raw`Boundedness first: a convergent sequence is bounded — with \(\varepsilon = 1\) there is \(N_0\) with \(|a_n - L| < 1\) for \(n \ge N_0\), so \(|a_n| \le |L| + 1\) on the tail, and the finitely many earlier terms are bounded by their maximum; hence \(|a_n| \le M\) for all \(n\) and some \(M\). Therefore every tail supremum \(\sup_{n\ge N} a_n\) and tail infimum \(\inf_{n\ge N} a_n\) is finite, and \(\limsup a_n, \liminf a_n\) are well-defined real numbers. Now let \(\varepsilon > 0\). Since \(\lim a_n = L\), there is \(N\) with \(|a_n - L| < \varepsilon\), i.e. \(L - \varepsilon < a_n < L + \varepsilon\), for all \(n \ge N\).`,
+          ko: String.raw`먼저 유계성: 수렴수열은 유계입니다 — \(\varepsilon = 1\)로 두면 \(n \ge N_0\)일 때 \(|a_n - L| < 1\)인 \(N_0\)이 있어 꼬리에서는 \(|a_n| \le |L| + 1\)이고, 앞의 유한 개 항은 그 최댓값으로 묶입니다.
+
+따라서 어떤 \(M\)에 대해 모든 \(n\)에서 \(|a_n| \le M\)이며, 모든 꼬리 상한 \(\sup_{n\ge N} a_n\)과 꼬리 하한 \(\inf_{n\ge N} a_n\)은 유한하고 \(\limsup a_n, \liminf a_n\)이 실수로서 잘 정의됩니다.
+
+이제 \(\varepsilon > 0\)이라 합시다.
+
+\(\lim a_n = L\)이므로 \(n \ge N\)일 때 \(|a_n - L| < \varepsilon\)인 \(N\)이 존재하고, 즉 \(L - \varepsilon < a_n < L + \varepsilon\)입니다.`,
+          en: String.raw`Boundedness first: a convergent sequence is bounded — with \(\varepsilon = 1\) there is \(N_0\) with \(|a_n - L| < 1\) for \(n \ge N_0\), so \(|a_n| \le |L| + 1\) on the tail, and the finitely many earlier terms are bounded by their maximum; hence \(|a_n| \le M\) for all \(n\) and some \(M\).
+
+Therefore every tail supremum \(\sup_{n\ge N} a_n\) and tail infimum \(\inf_{n\ge N} a_n\) is finite, and \(\limsup a_n, \liminf a_n\) are well-defined real numbers.
+
+Now let \(\varepsilon > 0\).
+
+Since \(\lim a_n = L\), there is \(N\) with \(|a_n - L| < \varepsilon\), i.e. \(L - \varepsilon < a_n < L + \varepsilon\), for all \(n \ge N\).`,
         },
       },
       {
@@ -98,7 +138,11 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`모든 \(n\)에 대해 \(|a_n|^{1/n} \ge 0\)이므로 \(\rho = \limsup |a_n|^{1/n} \ge 0\)입니다. 따라서 택한 \(r\)은 \(0 \le \rho < r < 1\)을 만족하고 특히 \(0 \le r < 1\)이므로, 등비급수 \(\sum r^n\)은 수렴합니다. 비교판정법으로 \(\sum |a_n|\)이 수렴하므로 \(\sum a_n\)은 절대수렴합니다.`,
+          ko: String.raw`모든 \(n\)에 대해 \(|a_n|^{1/n} \ge 0\)이므로 \(\rho = \limsup |a_n|^{1/n} \ge 0\)입니다.
+
+따라서 택한 \(r\)은 \(0 \le \rho < r < 1\)을 만족하고 특히 \(0 \le r < 1\)이므로, 등비급수 \(\sum r^n\)은 수렴합니다.
+
+비교판정법으로 \(\sum |a_n|\)이 수렴하므로 \(\sum a_n\)은 절대수렴합니다.`,
           en: String.raw`Since \(|a_n|^{1/n} \ge 0\) for every \(n\), \(\rho = \limsup |a_n|^{1/n} \ge 0\); hence the chosen \(r\) satisfies \(0 \le \rho < r < 1\), in particular \(0 \le r < 1\), so the geometric series \(\sum r^n\) converges. By comparison, \(\sum |a_n|\) converges, so \(\sum a_n\) converges absolutely.`,
         },
       },

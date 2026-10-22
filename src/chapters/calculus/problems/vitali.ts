@@ -12,8 +12,12 @@ export const vitaliProblems: readonly ProblemMeta[] = [
   {
     id: 'vitali-disjoint',
     statement: {
-      ko: String.raw`\(x \sim y \iff x - y \in \mathbb{Q}\)로 \([0, 1]\) 위에 동치관계를 정의하고, 선택공리로 각 동치류에서 대표원 하나씩을 골라 \(V \subset [0, 1]\)을 만드세요. 유리수 \(q_1 \ne q_2\)에 대해 평행이동 \(V + q_1\)과 \(V + q_2\)가 서로소임을 완전히 증명하세요.`,
-      en: String.raw`Put the equivalence relation \(x \sim y \iff x - y \in \mathbb{Q}\) on \([0, 1]\) and, by the axiom of choice, build \(V \subset [0, 1]\) by picking one representative from each class. Prove completely that the translates \(V + q_1\) and \(V + q_2\) are disjoint for distinct rationals \(q_1 \ne q_2\).`,
+      ko: String.raw`\(x \sim y \iff x - y \in \mathbb{Q}\)로 \([0, 1]\) 위에 동치관계를 정의하고, 선택공리로 각 동치류에서 대표원 하나씩을 골라 \(V \subset [0, 1]\)을 만드세요.
+
+유리수 \(q_1 \ne q_2\)에 대해 평행이동 \(V + q_1\)과 \(V + q_2\)가 서로소임을 완전히 증명하세요.`,
+      en: String.raw`Put the equivalence relation \(x \sim y \iff x - y \in \mathbb{Q}\) on \([0, 1]\) and, by the axiom of choice, build \(V \subset [0, 1]\) by picking one representative from each class.
+
+Prove completely that the translates \(V + q_1\) and \(V + q_2\) are disjoint for distinct rationals \(q_1 \ne q_2\).`,
     },
     display: [
       String.raw`x \in (V + q_1) \cap (V + q_2) \;\Longrightarrow\; q_1 = q_2`,
@@ -27,7 +31,11 @@ export const vitaliProblems: readonly ProblemMeta[] = [
       {
         text: {
           ko: String.raw`[선택공리의 사용 — 유일한 사용처] \(x \sim y \iff x - y \in \mathbb{Q}\)는 \([0, 1]\) 위의 동치관계입니다 (반사·대칭·추이는 유리수 집합이 덧셈군이기 때문입니다). 선택공리를 정확히 한 번 써서, \([0, 1]\)과 만나는 각 동치류에서 대표원 하나씩을 고릅니다. 그 모음이 \(V\)입니다 — 따라서 \(V \subset [0, 1]\)이며, \(V\)는 각 동치류마다 정확히 하나의 원소를 가집니다.`,
-          en: String.raw`[Use of AC — the only one] \(x \sim y \iff x - y \in \mathbb{Q}\) is an equivalence relation on \([0, 1]\) (reflexive, symmetric, transitive because \(\mathbb{Q}\) is an additive group). Invoke the axiom of choice exactly once to pick one representative from each class meeting \([0, 1]\). The collection of picks is \(V\) — so \(V \subset [0, 1]\) and \(V\) holds exactly one element from each class.`,
+          en: String.raw`[Use of AC — the only one] \(x \sim y \iff x - y \in \mathbb{Q}\) is an equivalence relation on \([0, 1]\) (reflexive, symmetric, transitive because \(\mathbb{Q}\) is an additive group).
+
+Invoke the axiom of choice exactly once to pick one representative from each class meeting \([0, 1]\).
+
+The collection of picks is \(V\) — so \(V \subset [0, 1]\) and \(V\) holds exactly one element from each class.`,
         },
       },
       {
@@ -38,8 +46,16 @@ export const vitaliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(V\)는 각 동치류에서 원소를 하나씩만 가지므로, \(v_1 \sim v_2\)이면 \(v_1 = v_2\)입니다. 그러면 \(q_1 = x - v_1 = x - v_2 = q_2\) — 모순. 따라서 서로 다른 유리수에 대한 평행이동은 겹치지 않습니다.`,
-          en: String.raw`Since \(V\) holds only one element per class, \(v_1 \sim v_2\) forces \(v_1 = v_2\). Then \(q_1 = x - v_1 = x - v_2 = q_2\) — contradiction. Hence translates by distinct rationals are disjoint.`,
+          ko: String.raw`\(V\)는 각 동치류에서 원소를 하나씩만 가지므로, \(v_1 \sim v_2\)이면 \(v_1 = v_2\)입니다.
+
+그러면 \(q_1 = x - v_1 = x - v_2 = q_2\) — 모순.
+
+따라서 서로 다른 유리수에 대한 평행이동은 겹치지 않습니다.`,
+          en: String.raw`Since \(V\) holds only one element per class, \(v_1 \sim v_2\) forces \(v_1 = v_2\).
+
+Then \(q_1 = x - v_1 = x - v_2 = q_2\) — contradiction.
+
+Hence translates by distinct rationals are disjoint.`,
         },
       },
     ],
@@ -67,14 +83,30 @@ export const vitaliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`왼쪽 포함: \(x \in [0, 1]\)이라 두면, \(x\)가 속한 동치류의 대표원 \(v \in V\)가 존재합니다. \(q = x - v \in \mathbb{Q}\)이고, \(x, v \in [0, 1]\)이므로 \(q \in [-1, 1]\)입니다. 따라서 \(x = v + q \in V + q\) — 즉 \([0, 1] \subset \bigcup_q (V + q)\)입니다.`,
-          en: String.raw`Left inclusion: let \(x \in [0, 1]\). Its class has a representative \(v \in V\). Then \(q = x - v \in \mathbb{Q}\), and since \(x, v \in [0, 1]\), \(q \in [-1, 1]\). So \(x = v + q \in V + q\) — i.e. \([0, 1] \subset \bigcup_q (V + q)\).`,
+          ko: String.raw`왼쪽 포함: \(x \in [0, 1]\)이라 두면, \(x\)가 속한 동치류의 대표원 \(v \in V\)가 존재합니다.
+
+\(q = x - v \in \mathbb{Q}\)이고, \(x, v \in [0, 1]\)이므로 \(q \in [-1, 1]\)입니다.
+
+따라서 \(x = v + q \in V + q\) — 즉 \([0, 1] \subset \bigcup_q (V + q)\)입니다.`,
+          en: String.raw`Left inclusion: let \(x \in [0, 1]\). Its class has a representative \(v \in V\).
+
+Then \(q = x - v \in \mathbb{Q}\), and since \(x, v \in [0, 1]\), \(q \in [-1, 1]\).
+
+So \(x = v + q \in V + q\) — i.e. \([0, 1] \subset \bigcup_q (V + q)\).`,
         },
       },
       {
         text: {
-          ko: String.raw`오른쪽 포함: \(V \subset [0, 1]\)이고 \(q \in [-1, 1]\)이므로, \(V + q \subset [0, 1] + [-1, 1] = [-1, 2]\)입니다. 모든 \(q\)에 대해 합집합을 취해도 마찬가지입니다. 씬의 \([-1, 2]\) 상자와 \([0, 1]\) 띠가 바로 이 샌드위치입니다.`,
-          en: String.raw`Right inclusion: \(V \subset [0, 1]\) and \(q \in [-1, 1]\), so \(V + q \subset [0, 1] + [-1, 1] = [-1, 2]\). The same holds for the union over all \(q\). The scene's \([-1, 2]\) box and \([0, 1]\) band are exactly this sandwich.`,
+          ko: String.raw`오른쪽 포함: \(V \subset [0, 1]\)이고 \(q \in [-1, 1]\)이므로, \(V + q \subset [0, 1] + [-1, 1] = [-1, 2]\)입니다.
+
+모든 \(q\)에 대해 합집합을 취해도 마찬가지입니다.
+
+씬의 \([-1, 2]\) 상자와 \([0, 1]\) 띠가 바로 이 샌드위치입니다.`,
+          en: String.raw`Right inclusion: \(V \subset [0, 1]\) and \(q \in [-1, 1]\), so \(V + q \subset [0, 1] + [-1, 1] = [-1, 2]\).
+
+The same holds for the union over all \(q\).
+
+The scene's \([-1, 2]\) box and \([0, 1]\) band are exactly this sandwich.`,
         },
       },
     ],
@@ -96,8 +128,16 @@ export const vitaliProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`[선택공리의 사용 — 문제 1과 동일] \(V\)는 선택공리로 만든 대표원 집합입니다. \(V\)가 가측이라 가정하고 \(m = m(V)\)라 둡니다. 평행이동 불변성에 의해 모든 유리수 \(q\)에 대해 \(m(V + q) = m\)입니다.`,
-          en: String.raw`[The axiom of choice — used as in problem 1] \(V\) is the representative set built with the axiom of choice. Suppose \(V\) is measurable and put \(m = m(V)\). By translation invariance, \(m(V + q) = m\) for every rational \(q\).`,
+          ko: String.raw`[선택공리의 사용 — 문제 1과 동일] \(V\)는 선택공리로 만든 대표원 집합입니다.
+
+\(V\)가 가측이라 가정하고 \(m = m(V)\)라 둡니다.
+
+평행이동 불변성에 의해 모든 유리수 \(q\)에 대해 \(m(V + q) = m\)입니다.`,
+          en: String.raw`[The axiom of choice — used as in problem 1] \(V\) is the representative set built with the axiom of choice.
+
+Suppose \(V\) is measurable and put \(m = m(V)\).
+
+By translation invariance, \(m(V + q) = m\) for every rational \(q\).`,
         },
       },
       {
@@ -108,8 +148,16 @@ export const vitaliProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(m > 0\)이면 \(\sum_q m = \infty\)인데 \(\le 3\)이어야 하므로 모순입니다. \(m = 0\)이면 \(\sum_q m = 0\)인데 \(\ge 1\)이어야 하므로 모순입니다. 어떤 \(m\)도 성립하지 않으므로, 가정(가측성)이 틀렸습니다 — \(V\)는 르베그 가측이 아닙니다. 선택공리는 대표원을 고르는 데 정확히 한 번 쓰였을 뿐인데, 가측이 아닌 집합의 존재가 따라나옵니다.`,
-          en: String.raw`If \(m > 0\) then \(\sum_q m = \infty\), contradicting \(\le 3\). If \(m = 0\) then \(\sum_q m = 0\), contradicting \(\ge 1\). No \(m\) works, so the assumption (measurability) is false — \(V\) is not Lebesgue measurable. AC was used exactly once, to choose the representatives, yet out comes a non-measurable set.`,
+          ko: String.raw`\(m > 0\)이면 \(\sum_q m = \infty\)인데 \(\le 3\)이어야 하므로 모순입니다. \(m = 0\)이면 \(\sum_q m = 0\)인데 \(\ge 1\)이어야 하므로 모순입니다.
+
+어떤 \(m\)도 성립하지 않으므로, 가정(가측성)이 틀렸습니다 — \(V\)는 르베그 가측이 아닙니다.
+
+선택공리는 대표원을 고르는 데 정확히 한 번 쓰였을 뿐인데, 가측이 아닌 집합의 존재가 따라나옵니다.`,
+          en: String.raw`If \(m > 0\) then \(\sum_q m = \infty\), contradicting \(\le 3\). If \(m = 0\) then \(\sum_q m = 0\), contradicting \(\ge 1\).
+
+No \(m\) works, so the assumption (measurability) is false — \(V\) is not Lebesgue measurable.
+
+AC was used exactly once, to choose the representatives, yet out comes a non-measurable set.`,
         },
       },
     ],

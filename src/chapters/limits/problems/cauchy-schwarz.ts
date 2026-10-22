@@ -41,8 +41,20 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이 판별식 논증은 실수 내적공간에서는 그대로 성립합니다 (위에서는 \(\mathbb{R}^n\)). 복소 경우에는 \(\langle x,y\rangle\) 자체가 아니라 \(\mathrm{Re}\,\langle x,y\rangle\)만 통제되므로 위상 회전이 필요합니다: \(|\alpha| = 1\)이고 \(\langle \alpha x, y\rangle = |\langle x,y\rangle|\) (음이 아닌 실수)인 \(\alpha\)를 고르면 (\(|\langle x,y\rangle| = 0\)이면 자명), \(\alpha x\)에 실수 논증을 적용해 \(|\langle x,y\rangle| = \mathrm{Re}\,\langle \alpha x, y\rangle \le \|\alpha x\|\,\|y\| = \|x\|\,\|y\|\)를 얻습니다. \(\ell^2\)에서는 유한 코시-슈바르츠를 절댓값 수열 \((|x_n|)\), \((|y_n|)\)에 적용합니다: \(\sum_{n\le N} |x_n y_n| \le \left(\sum_{n\le N} |x_n|^2\right)^{1/2}\left(\sum_{n\le N} |y_n|^2\right)^{1/2} \le \|x\|\,\|y\|\)입니다. 음이 아닌 항들의 부분합이 유계이므로 \(\sum_n |x_n y_n|\)이 수렴합니다 — 즉 \(\sum x_n y_n\)이 절대수렴하므로 내적 \(\langle x,y\rangle = \sum_{n=1}^{\infty} x_n y_n\)이 잘 정의됩니다.`,
-          en: String.raw`The discriminant argument works verbatim in real inner product spaces (above, \(\mathbb{R}^n\)). In the complex case it controls only \(\mathrm{Re}\,\langle x,y\rangle\), not \(\langle x,y\rangle\) itself, so a phase rotation is needed: choose \(\alpha\) with \(|\alpha| = 1\) and \(\langle \alpha x, y\rangle = |\langle x,y\rangle|\) (a nonnegative real; trivial if \(|\langle x,y\rangle| = 0\)) and apply the real argument to \(\alpha x\), giving \(|\langle x,y\rangle| = \mathrm{Re}\,\langle \alpha x, y\rangle \le \|\alpha x\|\,\|y\| = \|x\|\,\|y\|\). In \(\ell^2\), apply the finite Cauchy–Schwarz to the absolute-value sequences \((|x_n|)\), \((|y_n|)\): \(\sum_{n\le N} |x_n y_n| \le \left(\sum_{n\le N} |x_n|^2\right)^{1/2}\left(\sum_{n\le N} |y_n|^2\right)^{1/2} \le \|x\|\,\|y\|\). The partial sums of nonnegative terms are bounded, so \(\sum_n |x_n y_n|\) converges — i.e. \(\sum x_n y_n\) converges absolutely, and the inner product \(\langle x,y\rangle = \sum_{n=1}^{\infty} x_n y_n\) is well defined.`,
+          ko: String.raw`이 판별식 논증은 실수 내적공간에서는 그대로 성립합니다 (위에서는 \(\mathbb{R}^n\)).
+
+복소 경우에는 \(\langle x,y\rangle\) 자체가 아니라 \(\mathrm{Re}\,\langle x,y\rangle\)만 통제되므로 위상 회전이 필요합니다: \(|\alpha| = 1\)이고 \(\langle \alpha x, y\rangle = |\langle x,y\rangle|\) (음이 아닌 실수)인 \(\alpha\)를 고르면 (\(|\langle x,y\rangle| = 0\)이면 자명), \(\alpha x\)에 실수 논증을 적용해 \(|\langle x,y\rangle| = \mathrm{Re}\,\langle \alpha x, y\rangle \le \|\alpha x\|\,\|y\| = \|x\|\,\|y\|\)를 얻습니다.
+
+\(\ell^2\)에서는 유한 코시-슈바르츠를 절댓값 수열 \((|x_n|)\), \((|y_n|)\)에 적용합니다: \(\sum_{n\le N} |x_n y_n| \le \left(\sum_{n\le N} |x_n|^2\right)^{1/2}\left(\sum_{n\le N} |y_n|^2\right)^{1/2} \le \|x\|\,\|y\|\)입니다.
+
+음이 아닌 항들의 부분합이 유계이므로 \(\sum_n |x_n y_n|\)이 수렴합니다 — 즉 \(\sum x_n y_n\)이 절대수렴하므로 내적 \(\langle x,y\rangle = \sum_{n=1}^{\infty} x_n y_n\)이 잘 정의됩니다.`,
+          en: String.raw`The discriminant argument works verbatim in real inner product spaces (above, \(\mathbb{R}^n\)).
+
+In the complex case it controls only \(\mathrm{Re}\,\langle x,y\rangle\), not \(\langle x,y\rangle\) itself, so a phase rotation is needed: choose \(\alpha\) with \(|\alpha| = 1\) and \(\langle \alpha x, y\rangle = |\langle x,y\rangle|\) (a nonnegative real; trivial if \(|\langle x,y\rangle| = 0\)) and apply the real argument to \(\alpha x\), giving \(|\langle x,y\rangle| = \mathrm{Re}\,\langle \alpha x, y\rangle \le \|\alpha x\|\,\|y\| = \|x\|\,\|y\|\).
+
+In \(\ell^2\), apply the finite Cauchy–Schwarz to the absolute-value sequences \((|x_n|)\), \((|y_n|)\): \(\sum_{n\le N} |x_n y_n| \le \left(\sum_{n\le N} |x_n|^2\right)^{1/2}\left(\sum_{n\le N} |y_n|^2\right)^{1/2} \le \|x\|\,\|y\|\).
+
+The partial sums of nonnegative terms are bounded, so \(\sum_n |x_n y_n|\) converges — i.e. \(\sum x_n y_n\) converges absolutely, and the inner product \(\langle x,y\rangle = \sum_{n=1}^{\infty} x_n y_n\) is well defined.`,
         },
       },
     ],

@@ -77,8 +77,14 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`조임 정리로 \(|x_n - x_0| < 1/n \to 0\)이므로 \(x_n \to x_0\)입니다. 그러나 모든 \(n\)에 대해 \(|f(x_n) - f(x_0)| \ge \varepsilon_0\)이므로 \(f(x_n) \not\to f(x_0)\)입니다 — \(f(x_n) \to f(x_0)\)라면 \(|f(x_n) - f(x_0)| < \varepsilon_0/2\)인 \(n\)이 있어야 하는데 모순입니다. 따라서 수열 연속이 깨집니다.`,
-          en: String.raw`By the squeeze theorem, \(|x_n - x_0| < 1/n \to 0\), so \(x_n \to x_0\). But \(|f(x_n) - f(x_0)| \ge \varepsilon_0\) for every \(n\), so \(f(x_n) \not\to f(x_0)\) — if \(f(x_n) \to f(x_0)\) there would have to be \(n\) with \(|f(x_n) - f(x_0)| < \varepsilon_0/2\), a contradiction. Hence sequential continuity fails.`,
+          ko: String.raw`조임 정리로 \(|x_n - x_0| < 1/n \to 0\)이므로 \(x_n \to x_0\)입니다.
+
+그러나 모든 \(n\)에 대해 \(|f(x_n) - f(x_0)| \ge \varepsilon_0\)이므로 \(f(x_n) \not\to f(x_0)\)입니다 — \(f(x_n) \to f(x_0)\)라면 \(|f(x_n) - f(x_0)| < \varepsilon_0/2\)인 \(n\)이 있어야 하는데 모순입니다.
+
+따라서 수열 연속이 깨집니다.`,
+          en: String.raw`By the squeeze theorem, \(|x_n - x_0| < 1/n \to 0\), so \(x_n \to x_0\).
+
+But \(|f(x_n) - f(x_0)| \ge \varepsilon_0\) for every \(n\), so \(f(x_n) \not\to f(x_0)\) — if \(f(x_n) \to f(x_0)\) there would have to be \(n\) with \(|f(x_n) - f(x_0)| < \varepsilon_0/2\), a contradiction. Hence sequential continuity fails.`,
         },
       },
     ],
@@ -107,14 +113,34 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x_0\)에서의 연속성에 의해 \(|x - x_0| < \delta \Rightarrow |f(x) - f(x_0)| < \varepsilon\)인 \(\delta > 0\)이 존재합니다. 그러면 \((x_0-\delta, x_0+\delta)\)의 모든 \(x\)는 \(f(x) \in (f(x_0)-\varepsilon, f(x_0)+\varepsilon) \subset V\)를 만족하므로 \(x \in f^{-1}(V)\)입니다. 즉 \(x_0\)은 \(f^{-1}(V)\)의 내점이고, \(x_0\)이 임의였으므로 \(f^{-1}(V)\)는 열려 있습니다.`,
-          en: String.raw`Continuity at \(x_0\) gives \(\delta > 0\) with \(|x - x_0| < \delta \Rightarrow |f(x) - f(x_0)| < \varepsilon\). Then every \(x\) in \((x_0-\delta, x_0+\delta)\) satisfies \(f(x) \in (f(x_0)-\varepsilon, f(x_0)+\varepsilon) \subset V\), so \(x \in f^{-1}(V)\). Thus \(x_0\) is an interior point of \(f^{-1}(V)\); \(x_0\) was arbitrary, so \(f^{-1}(V)\) is open.`,
+          ko: String.raw`\(x_0\)에서의 연속성에 의해 \(|x - x_0| < \delta \Rightarrow |f(x) - f(x_0)| < \varepsilon\)인 \(\delta > 0\)이 존재합니다.
+
+그러면 \((x_0-\delta, x_0+\delta)\)의 모든 \(x\)는 \(f(x) \in (f(x_0)-\varepsilon, f(x_0)+\varepsilon) \subset V\)를 만족하므로 \(x \in f^{-1}(V)\)입니다.
+
+즉 \(x_0\)은 \(f^{-1}(V)\)의 내점이고, \(x_0\)이 임의였으므로 \(f^{-1}(V)\)는 열려 있습니다.`,
+          en: String.raw`Continuity at \(x_0\) gives \(\delta > 0\) with \(|x - x_0| < \delta \Rightarrow |f(x) - f(x_0)| < \varepsilon\).
+
+Then every \(x\) in \((x_0-\delta, x_0+\delta)\) satisfies \(f(x) \in (f(x_0)-\varepsilon, f(x_0)+\varepsilon) \subset V\), so \(x \in f^{-1}(V)\).
+
+Thus \(x_0\) is an interior point of \(f^{-1}(V)\); \(x_0\) was arbitrary, so \(f^{-1}(V)\) is open.`,
         },
       },
       {
         text: {
-          ko: String.raw`(\(\Leftarrow\)) 모든 열린 집합의 역상이 열려 있다고 둡니다. \(x_0\)와 \(\varepsilon > 0\)에 대해 \(V = (f(x_0)-\varepsilon, f(x_0)+\varepsilon)\)은 열린 집합이므로 \(U = f^{-1}(V)\)는 열려 있고 \(x_0 \in U\)입니다. 따라서 \((x_0-\delta, x_0+\delta) \subset U\)인 \(\delta > 0\)이 존재하고, \(|x - x_0| < \delta\)이면 \(f(x) \in V\), 즉 \(|f(x) - f(x_0)| < \varepsilon\)입니다. \(x_0\)가 임의였으므로 \(f\)는 연속입니다.`,
-          en: String.raw`(\(\Leftarrow\)) Assume the preimage of every open set is open. For \(x_0\) and \(\varepsilon > 0\), \(V = (f(x_0)-\varepsilon, f(x_0)+\varepsilon)\) is open, so \(U = f^{-1}(V)\) is open with \(x_0 \in U\). Hence some \(\delta > 0\) has \((x_0-\delta, x_0+\delta) \subset U\), and \(|x - x_0| < \delta\) gives \(f(x) \in V\), i.e. \(|f(x) - f(x_0)| < \varepsilon\). Since \(x_0\) was arbitrary, \(f\) is continuous.`,
+          ko: String.raw`(\(\Leftarrow\)) 모든 열린 집합의 역상이 열려 있다고 둡니다.
+
+\(x_0\)와 \(\varepsilon > 0\)에 대해 \(V = (f(x_0)-\varepsilon, f(x_0)+\varepsilon)\)은 열린 집합이므로 \(U = f^{-1}(V)\)는 열려 있고 \(x_0 \in U\)입니다.
+
+따라서 \((x_0-\delta, x_0+\delta) \subset U\)인 \(\delta > 0\)이 존재하고, \(|x - x_0| < \delta\)이면 \(f(x) \in V\), 즉 \(|f(x) - f(x_0)| < \varepsilon\)입니다.
+
+\(x_0\)가 임의였으므로 \(f\)는 연속입니다.`,
+          en: String.raw`(\(\Leftarrow\)) Assume the preimage of every open set is open.
+
+For \(x_0\) and \(\varepsilon > 0\), \(V = (f(x_0)-\varepsilon, f(x_0)+\varepsilon)\) is open, so \(U = f^{-1}(V)\) is open with \(x_0 \in U\).
+
+Hence some \(\delta > 0\) has \((x_0-\delta, x_0+\delta) \subset U\), and \(|x - x_0| < \delta\) gives \(f(x) \in V\), i.e. \(|f(x) - f(x_0)| < \varepsilon\).
+
+Since \(x_0\) was arbitrary, \(f\) is continuous.`,
         },
       },
     ],

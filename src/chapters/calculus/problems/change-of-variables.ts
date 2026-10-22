@@ -15,8 +15,12 @@ export const changeOfVariablesProblems: readonly ProblemMeta[] = [
   {
     id: 'cov-proof',
     statement: {
-      ko: String.raw`치환 법칙을 완전히 증명하세요: \(\varphi\)가 \([a,b]\)에서 \(C^1\) 단조이고 \(f\)가 연속이면 \(\int_a^b f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(u)\,du\)입니다. \(F' = f\)인 원시함수 \(F\)를 잡고 합성함수 \((F \circ \varphi)\)에 연쇄법칙과 미적분학 기본정리를 적용하세요.`,
-      en: String.raw`Prove the substitution rule completely: if \(\varphi\) is \(C^1\) and monotone on \([a,b]\) and \(f\) is continuous, then \(\int_a^b f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(u)\,du\). Take an antiderivative \(F\) with \(F' = f\) and apply the chain rule plus the fundamental theorem to \(F \circ \varphi\).`,
+      ko: String.raw`치환 법칙을 완전히 증명하세요: \(\varphi\)가 \([a,b]\)에서 \(C^1\) 단조이고 \(f\)가 연속이면 \(\int_a^b f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(u)\,du\)입니다.
+
+\(F' = f\)인 원시함수 \(F\)를 잡고 합성함수 \((F \circ \varphi)\)에 연쇄법칙과 미적분학 기본정리를 적용하세요.`,
+      en: String.raw`Prove the substitution rule completely: if \(\varphi\) is \(C^1\) and monotone on \([a,b]\) and \(f\) is continuous, then \(\int_a^b f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(u)\,du\).
+
+Take an antiderivative \(F\) with \(F' = f\) and apply the chain rule plus the fundamental theorem to \(F \circ \varphi\).`,
     },
     display: [
       String.raw`\int_a^b f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(a)}^{\varphi(b)} f(u)\,du`,
@@ -42,8 +46,16 @@ export const changeOfVariablesProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`한편 같은 FTC를 \(f\)에 직접 적용하면 \(\int_{\varphi(a)}^{\varphi(b)} f(u)\,du = F(\varphi(b)) - F(\varphi(a))\)입니다 (\(\varphi\)의 단조성은 \(\varphi(a) \le \varphi(b)\) 또는 그 역을 보장해 적분 구간이 정상적으로 정의됩니다). 양변이 같으므로 치환 법칙이 성립합니다. 증명 완료. (Tao 11.10.5–11.10.7.)`,
-          en: String.raw`Meanwhile the same FTC applied directly to \(f\) gives \(\int_{\varphi(a)}^{\varphi(b)} f(u)\,du = F(\varphi(b)) - F(\varphi(a))\) (monotonicity of \(\varphi\) guarantees \(\varphi(a) \le \varphi(b)\) or the reverse, so the interval is well-defined). Both sides agree, proving the substitution rule. Complete. (Tao 11.10.5–11.10.7.)`,
+          ko: String.raw`한편 같은 FTC를 \(f\)에 직접 적용하면 \(\int_{\varphi(a)}^{\varphi(b)} f(u)\,du = F(\varphi(b)) - F(\varphi(a))\)입니다 (\(\varphi\)의 단조성은 \(\varphi(a) \le \varphi(b)\) 또는 그 역을 보장해 적분 구간이 정상적으로 정의됩니다).
+
+양변이 같으므로 치환 법칙이 성립합니다.
+
+증명 완료. (Tao 11.10.5–11.10.7.)`,
+          en: String.raw`Meanwhile the same FTC applied directly to \(f\) gives \(\int_{\varphi(a)}^{\varphi(b)} f(u)\,du = F(\varphi(b)) - F(\varphi(a))\) (monotonicity of \(\varphi\) guarantees \(\varphi(a) \le \varphi(b)\) or the reverse, so the interval is well-defined).
+
+Both sides agree, proving the substitution rule.
+
+Complete. (Tao 11.10.5–11.10.7.)`,
         },
       },
     ],
@@ -101,8 +113,16 @@ export const changeOfVariablesProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(\varphi(x) = -x\)는 \([-1, 0]\)에서 \(C^1\) 단조감소이고 \(\varphi'(x) = -1\)입니다. 치환 법칙의 다른 가정도 확인합니다: \(f(u) = e^u\)는 모든 구간에서 연속입니다. 치환 법칙에 의해 \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\)이며, \(\varphi(-1) = 1\), \(\varphi(0) = 0\)이므로 우변은 \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\)입니다 — 구간 방향이 뒤집혔습니다.`,
-          en: String.raw`\(\varphi(x) = -x\) is \(C^1\) and decreasing on \([-1, 0]\) with \(\varphi'(x) = -1\). Check the substitution rule's other hypothesis as well: \(f(u) = e^u\) is continuous on every interval. The substitution rule gives \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\); with \(\varphi(-1) = 1\) and \(\varphi(0) = 0\) the right side is \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\) — the orientation flipped.`,
+          ko: String.raw`\(\varphi(x) = -x\)는 \([-1, 0]\)에서 \(C^1\) 단조감소이고 \(\varphi'(x) = -1\)입니다.
+
+치환 법칙의 다른 가정도 확인합니다: \(f(u) = e^u\)는 모든 구간에서 연속입니다.
+
+치환 법칙에 의해 \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\)이며, \(\varphi(-1) = 1\), \(\varphi(0) = 0\)이므로 우변은 \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\)입니다 — 구간 방향이 뒤집혔습니다.`,
+          en: String.raw`\(\varphi(x) = -x\) is \(C^1\) and decreasing on \([-1, 0]\) with \(\varphi'(x) = -1\).
+
+Check the substitution rule's other hypothesis as well: \(f(u) = e^u\) is continuous on every interval.
+
+The substitution rule gives \(\int_{-1}^{0} f(\varphi(x))\,\varphi'(x)\,dx = \int_{\varphi(-1)}^{\varphi(0)} f(u)\,du\); with \(\varphi(-1) = 1\) and \(\varphi(0) = 0\) the right side is \(\int_{1}^{0} e^u\,du = -\int_0^1 e^u\,du = -(e - 1) = 1 - e\) — the orientation flipped.`,
         },
       },
       {
