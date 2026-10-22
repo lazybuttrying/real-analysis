@@ -98,8 +98,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`망원합이라고 항상 수렴하는 것은 아닙니다: 일반 망원합 \(S_N = b_{N+1} - b_1\)은 \((b_n)\)이 유한 극한으로 수렴할 때 그때만 수렴합니다. 여기서는 \(b_n = \sqrt{n} \to \infty\)이므로 발산합니다. (앞 문제의 \(S_N = 1 - \frac{1}{N+1} \to 1 \ne 0\)이 수렴하는 예가 보여주듯, "남는 항이 \(0\)으로 간다"는 기준은 거짓입니다.)`,
-                en: String.raw`Telescoping does not always converge: a general telescoping sum \(S_N = b_{N+1} - b_1\) converges if and only if \((b_n)\) converges to a finite limit. Here \(b_n = \sqrt{n} \to \infty\), so it diverges. (The criterion "the surviving term must tend to \(0\)" is false — the previous problem's \(S_N = 1 - \frac{1}{N+1} \to 1 \ne 0\) is a convergent counterexample.)`,
+                ko: String.raw`망원합이라고 항상 수렴하는 것은 아닙니다: 일반 망원합 \(S_N = b_{N+1} - b_1\)은 \((b_n)\)이 유한 극한으로 수렴할 때 그때만 수렴합니다.
+
+여기서는 \(b_n = \sqrt{n} \to \infty\)이므로 발산합니다.
+
+(앞 문제의 \(S_N = 1 - \frac{1}{N+1} \to 1 \ne 0\)이 수렴하는 예가 보여주듯, "남는 항이 \(0\)으로 간다"는 기준은 거짓입니다.)`,
+                en: String.raw`Telescoping does not always converge: a general telescoping sum \(S_N = b_{N+1} - b_1\) converges if and only if \((b_n)\) converges to a finite limit.
+
+Here \(b_n = \sqrt{n} \to \infty\), so it diverges.
+
+(The criterion "the surviving term must tend to \(0\)" is false — the previous problem's \(S_N = 1 - \frac{1}{N+1} \to 1 \ne 0\) is a convergent counterexample.)`,
               },
             },
           ],

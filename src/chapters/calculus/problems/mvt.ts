@@ -35,8 +35,12 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'rolle',
           statement: {
-            ko: String.raw`\(f(a) = f(b)\)이면 평균값 정리는 롤의 정리가 됩니다. \(f(x) = x^3 - 3x\), \([-1, 2]\)에서 확인하세요.`,
-            en: String.raw`When \(f(a) = f(b)\), the Mean Value Theorem becomes Rolle's theorem. Check it for \(f(x) = x^3 - 3x\) on \([-1, 2]\).`,
+            ko: String.raw`\(f(a) = f(b)\)이면 평균값 정리는 롤의 정리가 됩니다.
+
+\(f(x) = x^3 - 3x\), \([-1, 2]\)에서 확인하세요.`,
+            en: String.raw`When \(f(a) = f(b)\), the Mean Value Theorem becomes Rolle's theorem.
+
+Check it for \(f(x) = x^3 - 3x\) on \([-1, 2]\).`,
           },
           display: [String.raw`f(-1) = f(2) = 2 \;\Rightarrow\; \exists\,\xi \in (-1,2): f'(\xi) = 0`],
           preset: { fn: 'x^3-3x', xi: 67 },
