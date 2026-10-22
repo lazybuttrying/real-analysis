@@ -1,5 +1,7 @@
 import type { ChapterMeta } from '../../contracts.ts';
 import { absoluteContinuityProblems } from '../calculus/problems/absolute-continuity';
+import { arcLengthProblems } from '../calculus/problems/arc-length';
+import { convolutionProblems } from '../calculus/problems/convolution';
 import { bohrMollerupProblems } from '../series/problems/bohr-mollerup';
 import { borelCantelliProblems } from '../calculus/problems/borel-cantelli';
 import { boundedVariationProblems } from '../calculus/problems/bounded-variation';
@@ -379,9 +381,36 @@ For example, a 🚗 car driving up and down has bounded variation while its tota
 problems: boundedVariationProblems,
     },
     {
+      id: 'arc-length',
+      title: { ko: '곡선의 길이', en: 'Arc Length' },
+      order: 13,
+      summary: {
+        ko: String.raw`곡선을 곧은 조각들로 나눠 길이를 재는 씬입니다. 조각 길이들의 합이 꺾은선 길이입니다.
+
+분할을 잘게 할수록 그 합은 커지기만 하고 진짜 길이에 아래에서 다가갑니다. 모든 분할에 대한 상한이 곡선의 길이입니다. 그 상한이 무한해지면 길이를 잴 수 없습니다.
+
+예를 들면, 🧵 실을 굽은 길에 따라 깔고 조각조각 곧게 펴서 재는 것과 같아요. 잘게 나눌수록 실의 진짜 길이에 가까워져요.`,
+        en: String.raw`This scene measures a curve by cutting it into straight pieces. The sum of the piece lengths is the polygonal length.
+
+Finer partitions only make that sum grow, approaching the true length from below. The supremum over all partitions is the length of the curve. If that supremum is infinite, the curve cannot be measured.
+
+For example, lay a 🧵 string along a winding path and measure it piece by piece, straightening each bit. The finer the pieces, the closer you get to the string's true length.`,
+      },
+      tex: [
+        String.raw`L = \sup_P \sum_{i=1}^{n} |\gamma(t_i) - \gamma(t_{i-1})|`,
+        String.raw`L = \int_a^b |\gamma'(t)|\,dt`,
+      ],
+      prerequisites: ['riemann', 'bounded-variation'],
+      controls: [
+        { kind: 'select', key: 'curve', label: { ko: '곡선', en: 'Curve' }, options: ['circle', 'parabola'], init: 'circle' },
+        { kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Partition count n' }, min: 1, max: 64, step: 1, init: 8 },
+      ],
+      problems: arcLengthProblems,
+    },
+    {
       id: 'riemann-stieltjes',
       title: { ko: '리만-스틸체스 적분', en: 'The Riemann–Stieltjes Integral' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`구간의 길이가 아니라 적분자의 증가분으로 무게를 재는 적분입니다. 적분자를 바꾸면 같은 구간도 다르게 셉니다.
 
@@ -408,7 +437,7 @@ For example, total cargo by weight, not by count, when each 📦 box weighs diff
     {
       id: 'jordan-decomposition',
       title: { ko: '조르당 분해', en: 'Jordan Decomposition' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`유계변동 함수를 두 증가함수의 차이로 나누는 씬입니다. 점을 움직이며 분해가 지점마다 성립하는 것을 확인합니다.
 
@@ -434,7 +463,7 @@ For example, money now in a 🐷 piggy bank is the total 💰 money put in minus
     {
       id: 'measure',
       title: { ko: '르베그 측도', en: 'Lebesgue Measure' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`집합의 크기를 재는 가장 싼 덮개 값을 봅니다. 한 점은 물론 유리수 전체도 비용이 0으로 떨어집니다.
 
@@ -459,7 +488,7 @@ For example, cover a set with pieces of 🧵 string; the shortest total string l
     {
       id: 'vitali',
       title: { ko: '비탈리 집합', en: 'The Vitali Set' },
-      order: 16,
+      order: 17,
       summary: {
         ko: String.raw`선택공리로 각 무리에서 대표 하나씩을 뽑아 만든 집합입니다. 그 결과, 크기를 잴 수 없는 집합이 탄생합니다.
 
@@ -485,7 +514,7 @@ For example, copies of one 📦 box can fill a room, yet if the box's size were 
     {
       id: 'borel-cantelli',
       title: { ko: '보렐-칸텔리 보조정리', en: 'Borel–Cantelli Lemmas' },
-      order: 17,
+      order: 18,
       summary: {
         ko: String.raw`길이의 총합이 유한하면, 무한히 자주 일어나는 일은 거의 일어나지 않습니다. 그 경계를 수치로 확인하는 씬입니다.
 
@@ -512,7 +541,7 @@ For example, in rain whose 💧 water drops keep shrinking, a finite total volum
     {
       id: 'lebesgue',
       title: { ko: '디리클레 vs 르벡', en: 'Covering the Rationals with Nothing' },
-      order: 18,
+      order: 19,
       summary: {
         ko: String.raw`유리수를 하나씩 덮개로 덮으면 총 길이가 얼마든지 작아집니다. 리만 적분이 꼼짝 못하는 장면입니다.
 
@@ -535,7 +564,7 @@ problems: lebesgueProblems,
     {
       id: 'lebesgue-convergence',
       title: { ko: '르벡 수렴 정리', en: 'Lebesgue Convergence Theorems' },
-      order: 19,
+      order: 20,
       summary: {
         ko: String.raw`극한과 적분의 순서를 바꾸는 세 가지 정리를 봅니다. 질량이 도망가는 예에서 각 조건이 왜 필요한지 확인합니다.
 
@@ -563,7 +592,7 @@ For example, pour 💧 water from cup to cup with no spill and the total stays t
     {
       id: 'fubini-tonelli',
       title: { ko: '푸비니-토넬리 정리', en: 'Fubini–Tonelli Theorem' },
-      order: 20,
+      order: 21,
       summary: {
         ko: String.raw`이중적분에서 적분 순서를 바꿔도 같은 값이 나옵니다. 행부터 더하나 열부터 더하나 같습니다.
 
@@ -587,9 +616,37 @@ For example, count 🍎 apples packed in a grid inside a 📦 box: counting by r
       problems: fubiniTonelliProblems,
     },
     {
+      id: 'convolution',
+      title: { ko: '합성곱', en: 'Convolution' },
+      order: 22,
+      summary: {
+        ko: String.raw`한 함수를 뒤집어 밀면서 다른 함수와 겹치는 양을 재는 연산입니다. 지시함수 두 개를 겹치면 겹침의 길이가 텐트 모양 곡선이 됩니다.
+
+매끄러운 핵과 합성곱하면 계단처럼 각진 함수도 부드러워집니다. 핵이 좁아질수록 부드러워진 함수는 원래 함수에 가까워집니다.
+
+예를 들면, 📷 사진의 한 픽셀을 주변 픽셀들의 가중 평균으로 바꾸는 흐림 효과와 같아요. 가운데 픽셀에 가장 큰 가중치를 주는 거예요.`,
+        en: String.raw`Flip one function, slide it, and measure how it overlaps the other. Overlapping two indicator blocks gives an overlap length that traces a tent curve.
+
+Convolving with a smooth kernel softens even a sharp step function. The narrower the kernel, the closer the softened function sits to the original.
+
+For example, it is the blur effect in a 📷 photo, replacing each pixel by a weighted average of its neighbors. The center pixel gets the largest weight.`,
+      },
+      tex: [
+        String.raw`(f * g)(x) = \int_{-\infty}^{\infty} f(t)\, g(x - t)\, dt`,
+        String.raw`(f * \varphi_{\varepsilon})(x) \to f(x) \text{ as } \varepsilon \to 0^+ \text{ at continuity points } x`,
+      ],
+      prerequisites: ['fubini-tonelli', 'lebesgue'],
+      controls: [
+        { kind: 'select', key: 'mode', label: { ko: '모드', en: 'Mode' }, options: ['tent', 'smooth'], init: 'tent' },
+        { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -0.5, max: 2.5, step: 0.01, init: 0.7 },
+        { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.05, max: 1, step: 0.05, init: 0.3 },
+      ],
+      problems: convolutionProblems,
+    },
+    {
       id: 'egorov',
       title: { ko: '에고로프 정리', en: "Egorov's Theorem" },
-      order: 21,
+      order: 23,
       summary: {
         ko: String.raw`유한한 구간에서 점별 수렴은 거의 균등수렴입니다. 나쁜 집합을 작게 누르면 나머지는 고르게 수렴합니다.
 
@@ -615,7 +672,7 @@ For example, of 30 🧑 friends racing to a finish line, one or two may lag; set
     {
       id: 'absolute-continuity',
       title: { ko: '절대연속성', en: 'Absolute Continuity' },
-      order: 22,
+      order: 24,
       summary: {
         ko: String.raw`구간들의 총 길이가 0으로 가면 함수값 변화의 합도 0으로 가는 성질입니다. 칸토어 함수는 이 성질이 없는 연속함수입니다.
 
@@ -642,7 +699,7 @@ problems: absoluteContinuityProblems,
     {
       id: 'differentiation-under-integral',
       title: { ko: '적분기호 아래에서의 미분', en: 'Differentiation Under the Integral Sign' },
-      order: 23,
+      order: 25,
       summary: {
         ko: String.raw`적분기호 안에서 미분한 값이 곡선의 접선 기울기와 일치하는지 수치로 확인합니다. 곡선 위의 점과 접선을 직접 움직여 봅니다.
 
@@ -668,7 +725,7 @@ For example, measure how fast a room's average 🌡️ thermometer reading rises
     {
       id: 'minkowski',
       title: { ko: '민코프스키 부등식', en: "Minkowski's Inequality" },
-      order: 24,
+      order: 26,
       summary: {
         ko: String.raw`두 함수의 합의 크기가 각 크기의 합을 넘지 않는다는 부등식입니다. 지수 p를 움직이면 두 막대 사이 틈새가 벌어졌다 좁아집니다.
 

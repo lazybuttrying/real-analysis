@@ -2,6 +2,7 @@ import type { ChapterMeta } from '../../contracts.ts';
 import { baireCategoryProblems } from '../limits/problems/baire-category';
 import { baireOneProblems } from '../limits/problems/baire-1';
 import { clopenProblems } from '../limits/problems/clopen';
+import { connectedProblems } from '../limits/problems/connected';
 import { fatCantorProblems } from '../limits/problems/fat-cantor';
 import { peanoCurveProblems } from '../limits/problems/peano-curve';
 import { topologistSineProblems } from '../limits/problems/topologist-sine';
@@ -90,9 +91,36 @@ For example, take one of two far-apart 🏠 houses. In a world made of that hous
       problems: clopenProblems,
     },
     {
+      id: 'connected',
+      title: { ko: '연결집합', en: 'Connected Sets' },
+      order: 3,
+      summary: {
+        ko: String.raw`연결집합을 보는 씬입니다. 집합을 서로 닿지 않는 두 열린 조각으로 가를 수 있는지, 절단점을 움직이며 확인합니다.
+
+갈라지지 않는 집합이 연결집합입니다. 구간은 어디를 잘라도 잘린 점이 어느 쪽에도 붙지 않아 갈라지지 않습니다. 멀리 떨어진 두 조각이나, 유리수처럼 틈이 촘촘한 집합은 그 틈에 절단을 넣으면 깔끔하게 갈라집니다.
+
+예를 들면, 🧩 퍼즐 한 판을 보세요. 조각들이 서로 맞물려 있으면 한 판 그대로입니다. 두 무더기로 완전히 떨어져 있으면, 이미 갈라진 것입니다.`,
+        en: String.raw`This scene is about connected sets. Move the cut point and check whether the set splits into two open pieces that never touch.
+
+A set that cannot be split is connected. An interval never splits: wherever you cut, the cut point itself belongs to neither side. Two far-apart pieces, or the rationals with their dense gaps, split cleanly when the cut lands in a gap.
+
+For example, look at one 🧩 jigsaw puzzle. While the pieces interlock, it is a single board. Lying in two completely separate piles, it is already split apart.`,
+      },
+      tex: [
+        String.raw`X = U \cup V,\ U \cap V = \emptyset,\ U, V \text{ open in } X,\ U, V \neq \emptyset \implies X \text{ disconnected}`,
+        String.raw`\mathbb{Q} \cap [0,1] = \{q \in \mathbb{Q} : q < \sqrt{2}/2\} \cup \{q \in \mathbb{Q} : q > \sqrt{2}/2\}`,
+      ],
+      prerequisites: ['clopen'],
+      controls: [
+        { kind: 'select', key: 'case', label: { ko: '경우', en: 'Case' }, options: ['interval', 'two-pieces', 'rationals'], init: 'interval' },
+        { kind: 'slider', key: 't', label: { ko: '절단점 t', en: 'Cut point t' }, min: -0.2, max: 3.2, step: 0.01, init: 1.5 },
+      ],
+      problems: connectedProblems,
+    },
+    {
       id: 'closure',
       title: { ko: '폐포와 유계', en: 'Closure and Boundedness' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`집합의 폐포를 보는 씬입니다. 빠져나간 극한점을 모두 붙이면 어떻게 닫히는지 확인합니다.
 
@@ -119,7 +147,7 @@ problems: closureProblems,
     {
       id: 'compact',
       title: { ko: '컴팩트 집합', en: 'Compact Sets' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`컴팩트 집합을 열린 커버로 확인하는 씬입니다. 구간을 덮는 조각들 중 유한 개만으로 충분한지 봅니다.
 
@@ -147,7 +175,7 @@ For example, cover a desk completely with 📚 books. A finite desk needs only a
     {
       id: 'topologist-sine',
       title: { ko: '위상수학자의 사인 곡선', en: "Topologist's Sine Curve" },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`위상수학자의 사인 곡선을 보는 씬입니다. 0 근처에서 끝없이 진동하는 곡선과, 거기에 붙는 극한 선분을 확인합니다.
 
@@ -175,7 +203,7 @@ For example, shake one end of a 🧵 string faster and faster. The shaking end b
     {
       id: 'peano-curve',
       title: { ko: '페아노 곡선', en: 'Peano Curve' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`선 하나로 정사각형을 채우는 페아노 곡선을 보는 씬입니다. 근사 곡선이 단계마다 더 촘촘해지는 모습을 확인합니다.
 
@@ -203,7 +231,7 @@ For example, color a whole sheet with a ✏️ pencil, never lifting it. Zigzag 
     {
       id: 'metric-spaces',
       title: { ko: '거리공간', en: 'Metric Spaces' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`거리공간의 씬입니다. 거리를 공리로 세우면 공의 모양이 거리에 따라 어떻게 달라지는지 비교합니다.
 
@@ -231,7 +259,7 @@ For example, change how a 📏 ruler measures between two points. Measure straig
     {
       id: 'contraction',
       title: { ko: '축소사상 원리', en: 'Contraction Mapping Principle' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`축소사상 원리를 확인하는 씬입니다. 반복할수록 점들이 하나의 고정점으로 조여드는 모습을 봅니다.
 
@@ -260,7 +288,7 @@ For example, fold a 🗺️ map in half, then in half again. Each fold shrinks t
     {
       id: 'baire-category',
       title: { ko: '베어 카테고리 정리', en: 'Baire Category Theorem' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`베어 범주 정리를 중첩 구간으로 따라가는 씬입니다. 유리수를 하나씩 피해 가면서도 남는 점이 있음을 확인합니다.
 
@@ -286,7 +314,7 @@ problems: baireCategoryProblems,
     {
       id: 'baire-1',
       title: { ko: '베어 1급 함수', en: 'Baire Class 1 Functions' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`베어 1급 함수를 보는 씬입니다. 연속함수들의 점별 극한으로 토매 함수를 쌓아 올립니다.
 
@@ -312,7 +340,7 @@ For example, bend a 🧵 string into ever sharper mountain shapes. At every stag
     {
       id: 'cantor',
       title: { ko: '칸토어 집합', en: 'Length Zero, Points Uncountable' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`칸토어 집합을 만드는 씬입니다. 가운데 3분의 1을 계속 지우면, 길이는 0이 되지만 점은 셀 수 없이 많이 남습니다.
 
@@ -332,7 +360,7 @@ problems: cantorProblems,
     {
       id: 'fat-cantor',
       title: { ko: '팻 칸토어 집합', en: 'The Fat Cantor Set' },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`팻 칸토어 집합을 보는 씬입니다. 가운데를 조금씩만 파내면, 길이가 절반이나 남는 집합이 됩니다.
 
@@ -356,7 +384,7 @@ problems: fatCantorProblems,
     {
       id: 'cantor-function',
       title: { ko: '칸토어 함수', en: 'The Cantor Function' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`칸토어 함수, 악마의 계단을 보는 씬입니다. 연속이고 계속 오르는데, 거의 모든 구간에서 평평합니다.
 

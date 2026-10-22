@@ -8,6 +8,7 @@ import type { SceneLoader } from '../../contracts';
 export const loaders: Readonly<Record<string, SceneLoader>> = {
   'opensets': () => import('../limits/scenes/opensets').then((module) => module.default),
   'clopen': () => import('../limits/scenes/clopen').then((module) => module.default),
+  'connected': () => import('../limits/scenes/connected').then((module) => module.default),
   'closure': () => import('../limits/scenes/closure').then((module) => module.default),
   'compact': () => import('../limits/scenes/compact').then((module) => module.default),
   'topologist-sine': () => import('../limits/scenes/topologistSine').then((module) => module.default),

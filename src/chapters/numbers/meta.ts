@@ -2,6 +2,7 @@ import type { ChapterMeta } from '../../contracts.ts';
 import { axiomOfChoiceProblems } from '../limits/problems/axiom-of-choice';
 import { problems as binomialProblems } from '../limits/problems/binomial';
 import { cantorTheoremProblems } from '../limits/problems/cantor-theorem';
+import { complexNumbersProblems } from '../limits/problems/complex-numbers';
 import { problems as countableProblems } from '../limits/problems/countable';
 import { densityOfRationalsProblems } from '../limits/problems/density-of-rationals';
 import { problems as dimensionRankProblems } from '../limits/problems/dimension-rank';
@@ -123,9 +124,38 @@ For example, think of 💰 money and debt. Five coins in hand and three owed is 
       problems: integersRationalsProblems,
     },
     {
+      id: 'complex-numbers',
+      title: { ko: '복소수', en: 'Complex Numbers' },
+      order: 4,
+      summary: {
+        ko: String.raw`복소수를 평면 위의 점으로 봅니다. 실수 부분은 가로축, 허수 부분은 세로축입니다.
+
+절댓값은 원점에서 그 점까지의 거리입니다. 두 복소수를 더하면 평행사변형의 대각선이 됩니다. 그 대각선은 두 변의 길이 합보다 길어지지 않습니다. 이것이 삼각부등식입니다.
+
+예를 들면, 🧭 동쪽으로 3보, 북동쪽으로 꺾어 4보를 더 걸어도 직선거리는 꺾인 길보다 짧습니다. 절댓값이 재는 것이 바로 그 직선거리입니다.`,
+        en: String.raw`See a complex number as a point in the plane. The real part runs sideways, the imaginary part runs up.
+
+The modulus is the distance from the origin to that point. Adding two complex numbers draws the diagonal of a parallelogram. That diagonal is never longer than the two sides added together. This is the triangle inequality.
+
+For example, walk 3 steps east with a 🧭 compass, then turn and walk 4 more. The straight-line distance back is shorter than the bent path. The modulus measures exactly that straight line.`,
+      },
+      tex: [
+        String.raw`|z| = \sqrt{a^2 + b^2} \quad (z = a + bi)`,
+        String.raw`|z + w| \le |z| + |w|`,
+      ],
+      prerequisites: ['integers-rationals'],
+      controls: [
+        { kind: 'slider', key: 'zre', label: { ko: 'z 실수 부분', en: 'z real part' }, min: -2, max: 2, step: 0.1, init: 1.2 },
+        { kind: 'slider', key: 'zim', label: { ko: 'z 허수 부분', en: 'z imaginary part' }, min: -2, max: 2, step: 0.1, init: 0.8 },
+        { kind: 'slider', key: 'wre', label: { ko: 'w 실수 부분', en: 'w real part' }, min: -2, max: 2, step: 0.1, init: -0.6 },
+        { kind: 'slider', key: 'wim', label: { ko: 'w 허수 부분', en: 'w imaginary part' }, min: -2, max: 2, step: 0.1, init: 1.1 },
+      ],
+      problems: complexNumbersProblems,
+    },
+    {
       id: 'sqrt2-irrational',
       title: { ko: '√2는 무리수', en: '√2 is Irrational' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`분수를 촘촘히 찍어도 끝내 메워지지 않는 구멍을 봅니다. 그 자리가 바로 루트 2입니다.
 
@@ -151,7 +181,7 @@ For example, measure a length with a 📏 ruler. However fine the marks, some le
     {
       id: 'density-of-rationals',
       title: { ko: '유리수의 조밀성', en: 'Density of the Rationals' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`아무리 좁은 구간에도 유리수가 숨어 있음을 봅니다. 분모를 키울수록 눈금이 촘촘해집니다.
 
@@ -185,7 +215,7 @@ For example, keep cutting a 🍰 cake in half, again and again. The pieces shrin
     {
       id: 'sets',
       title: { ko: '집합과 함수', en: 'Sets and Functions' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`집합의 합집합과 교집합을 그림으로 겹쳐 봅니다. 함수가 단사인지 전사인지도 눈으로 가립니다.
 
@@ -223,7 +253,7 @@ problems: setsProblems,
     {
       id: 'axiom-of-choice',
       title: { ko: '선택 공리', en: 'The Axiom of Choice' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`줄마다 점이 하나씩 들어 있는 표에서 하나씩 골라 봅니다. 유한할 때와 무한할 때가 왜 다른지 봅니다.
 
@@ -250,7 +280,7 @@ For example, every 📦 box holds some 🍬 candies. With three boxes, just reac
     {
       id: 'zorn-lemma',
       title: { ko: '초른 보조정리', en: "Zorn's Lemma" },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`약수들을 나누어떨어지는 순서로 세워 봅니다. 사슬을 따라 올라가면 끝에 무엇이 남는지 봅니다.
 
@@ -276,7 +306,7 @@ For example, the top of a 🪜 staircase has no next step. Every way up ends som
     {
       id: 'supremum',
       title: { ko: '상한과 완비성', en: 'The Supremum Axiom' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`위로 막힌 집합에서 가장 작은 천장을 찾습니다. 유리수에 없는 그 천장이 실수를 완성합니다.
 
@@ -313,7 +343,7 @@ problems: supremumProblems,
     {
       id: 'nth-root',
       title: { ko: 'n제곱근의 존재', en: 'Existence of n-th Roots' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`제곱해서 원하는 수가 되는 점을 상한으로 찾아냅니다. 빈틈을 메우는 공리가 근을 만들어내는 순간입니다.
 
@@ -340,7 +370,7 @@ For example, find the side of a square with area two. Side one gives too little 
     {
       id: 'countable',
       title: { ko: '가산과 비가산', en: 'Countable vs Uncountable' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`유리수는 한 줄로 번호를 매길 수 있음을 봅니다. 실수는 그 시도가 무너지는 것도 봅니다.
 
@@ -369,7 +399,7 @@ problems: countableProblems,
     {
       id: 'cantor-theorem',
       title: { ko: '칸토어 정리', en: "Cantor's Theorem" },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`어떤 집합도 그 부분집합 전체의 모임보다는 작음을 봅니다. 목록의 대각선을 뒤집어 새 원소를 만듭니다.
 
@@ -395,7 +425,7 @@ For example, three 🧑 classmates have eight subsets. Subsets already outnumber
     {
       id: 'groups-fields',
       title: { ko: '군과 체', en: 'Groups vs Fields' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`되돌릴 수 있는 움직임들의 규칙을 표로 확인합니다. 사칙연산이 전부 되는 세계와 비교합니다.
 
@@ -426,7 +456,7 @@ problems: groupsFieldsProblems,
     {
       id: 'vector-spaces',
       title: { ko: '벡터공간과 동형', en: 'Vector Spaces and Isomorphism' },
-      order: 14,
+      order: 15,
       summary: {
         ko: String.raw`계수를 움직이면 직선과 점이 함께 움직이는 모습을 봅니다. 겉모습이 다른 공간들이 같은 구조임을 확인합니다.
 
@@ -453,7 +483,7 @@ problems: vectorSpacesProblems,
     {
       id: 'dimension-rank',
       title: { ko: '차원과 랭크', en: 'Dimension and Rank' },
-      order: 15,
+      order: 16,
       summary: {
         ko: String.raw`격자가 행렬에 눌려 펴지는 모습을 봅니다. 사라지는 차원과 남는 차원을 셉니다.
 

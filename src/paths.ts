@@ -98,6 +98,13 @@ const POST_SPLIT_SCENES = new Set([
   'discontinuous-derivative',
   'gabriel-horn',
   'vitali',
+  // 2026-10-22: gap-fill scenes against the Essence of Undergraduate Real
+  // Analysis TOC — post-split additions, no legacy canonical pages.
+  'connected',
+  'complex-numbers',
+  'parallelogram-law',
+  'arc-length',
+  'convolution',
   // 2026-10-20: the proofs chapter's 10 scenes — post-split additions, no
   // legacy canonical pages (they never had pre-split URLs).
   'logic-propositions',
