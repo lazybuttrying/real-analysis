@@ -34,14 +34,38 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`(곱) 항등식 \(\lvert f(x)g(x) - f(a)g(a)\rvert \leq \lvert f(x)\rvert\cdot\lvert g(x) - g(a)\rvert + \lvert g(a)\rvert\cdot\lvert f(x) - f(a)\rvert\)를 씁니다. 먼저 \(f\)를 \(a\) 근처에서 가둡니다: \(f\)의 연속성에 의해 \(\lvert x - a\rvert < \delta_0\)이면 \(\lvert f(x) - f(a)\rvert < 1\)인 \(\delta_0\)가 존재하고, 그 안에서는 \(\lvert f(x)\rvert \leq \lvert f(a)\rvert + 1 =: M\)입니다(국소 유계성). 이제 \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2M}\)인 \(\delta_1\)과 \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2(\lvert g(a)\rvert + 1)}\)인 \(\delta_2\)를 잡고 \(\delta = \min(\delta_0, \delta_1, \delta_2)\)라 두면, \(\lvert f(x)g(x) - f(a)g(a)\rvert < M \cdot \frac{\varepsilon}{2M} + \lvert g(a)\rvert \cdot \frac{\varepsilon}{2(\lvert g(a)\rvert+1)} < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\)입니다.`,
-                en: String.raw`(Product) Use the identity \(\lvert f(x)g(x) - f(a)g(a)\rvert \leq \lvert f(x)\rvert\cdot\lvert g(x) - g(a)\rvert + \lvert g(a)\rvert\cdot\lvert f(x) - f(a)\rvert\). First bound \(f\) near \(a\): by continuity of \(f\) there is \(\delta_0\) with \(\lvert f(x) - f(a)\rvert < 1\) for \(\lvert x - a\rvert < \delta_0\), hence \(\lvert f(x)\rvert \leq \lvert f(a)\rvert + 1 =: M\) there (local boundedness). Now take \(\delta_1\) with \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2M}\) and \(\delta_2\) with \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2(\lvert g(a)\rvert + 1)}\); with \(\delta = \min(\delta_0, \delta_1, \delta_2)\) we get \(\lvert f(x)g(x) - f(a)g(a)\rvert < M \cdot \frac{\varepsilon}{2M} + \lvert g(a)\rvert \cdot \frac{\varepsilon}{2(\lvert g(a)\rvert+1)} < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\).`,
+                ko: String.raw`(곱) 항등식 \(\lvert f(x)g(x) - f(a)g(a)\rvert \leq \lvert f(x)\rvert\cdot\lvert g(x) - g(a)\rvert + \lvert g(a)\rvert\cdot\lvert f(x) - f(a)\rvert\)를 씁니다.
+
+먼저 \(f\)를 \(a\) 근처에서 가둡니다: \(f\)의 연속성에 의해 \(\lvert x - a\rvert < \delta_0\)이면 \(\lvert f(x) - f(a)\rvert < 1\)인 \(\delta_0\)가 존재하고, 그 안에서는 \(\lvert f(x)\rvert \leq \lvert f(a)\rvert + 1 =: M\)입니다(국소 유계성).
+
+이제 \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2M}\)인 \(\delta_1\)과 \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2(\lvert g(a)\rvert + 1)}\)인 \(\delta_2\)를 잡고 \(\delta = \min(\delta_0, \delta_1, \delta_2)\)라 두면, \(\lvert f(x)g(x) - f(a)g(a)\rvert < M \cdot \frac{\varepsilon}{2M} + \lvert g(a)\rvert \cdot \frac{\varepsilon}{2(\lvert g(a)\rvert+1)} < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\)입니다.`,
+                en: String.raw`(Product) Use the identity \(\lvert f(x)g(x) - f(a)g(a)\rvert \leq \lvert f(x)\rvert\cdot\lvert g(x) - g(a)\rvert + \lvert g(a)\rvert\cdot\lvert f(x) - f(a)\rvert\).
+
+First bound \(f\) near \(a\): by continuity of \(f\) there is \(\delta_0\) with \(\lvert f(x) - f(a)\rvert < 1\) for \(\lvert x - a\rvert < \delta_0\), hence \(\lvert f(x)\rvert \leq \lvert f(a)\rvert + 1 =: M\) there (local boundedness).
+
+Now take \(\delta_1\) with \(\lvert g(x) - g(a)\rvert < \frac{\varepsilon}{2M}\) and \(\delta_2\) with \(\lvert f(x) - f(a)\rvert < \frac{\varepsilon}{2(\lvert g(a)\rvert + 1)}\); with \(\delta = \min(\delta_0, \delta_1, \delta_2)\) we get \(\lvert f(x)g(x) - f(a)g(a)\rvert < M \cdot \frac{\varepsilon}{2M} + \lvert g(a)\rvert \cdot \frac{\varepsilon}{2(\lvert g(a)\rvert+1)} < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\).`,
               },
             },
             {
               text: {
-                ko: String.raw`귀납법으로 \(x^n\)이 연속임을 보입니다. Base case: \(n = 0\)이면 \(x^0 = 1\)은 위에서 보인 상수함수라 연속이고, \(n = 1\)이면 \(x^1 = x\)는 위에서 보인 항등함수라 연속입니다. Inductive step: \(x^n\)이 연속이라 가정하면 \(x^{n+1} = x^n \cdot x\)는 연속함수들의 곱이라 곱 규칙으로 연속입니다. 따라서 모든 \(n \ge 0\)에 대해 \(x^n\)이 연속입니다. 이어서 \(c x^n\)도 연속이며(상수 \(\times\) 연속, 곱 규칙), 유한개의 항 \(c_k x^k\)들의 합인 임의의 다항식도 연속입니다(합 규칙을 유한 번 반복).`,
-                en: String.raw`We show \(x^n\) is continuous by induction. Base cases: for \(n = 0\), \(x^0 = 1\) is the constant function proved continuous above; for \(n = 1\), \(x^1 = x\) is the identity proved continuous above. Inductive step: if \(x^n\) is continuous, then \(x^{n+1} = x^n \cdot x\) is a product of continuous functions, hence continuous by the product rule. So \(x^n\) is continuous for every \(n \ge 0\). Then \(c x^n\) is continuous (constant times continuous, by the product rule), and any polynomial — a finite sum of such terms \(c_k x^k\) — is continuous (the sum rule, applied finitely many times).`,
+                ko: String.raw`귀납법으로 \(x^n\)이 연속임을 보입니다.
+
+Base case: \(n = 0\)이면 \(x^0 = 1\)은 위에서 보인 상수함수라 연속이고, \(n = 1\)이면 \(x^1 = x\)는 위에서 보인 항등함수라 연속입니다.
+
+Inductive step: \(x^n\)이 연속이라 가정하면 \(x^{n+1} = x^n \cdot x\)는 연속함수들의 곱이라 곱 규칙으로 연속입니다.
+
+따라서 모든 \(n \ge 0\)에 대해 \(x^n\)이 연속입니다.
+
+이어서 \(c x^n\)도 연속이며(상수 \(\times\) 연속, 곱 규칙), 유한개의 항 \(c_k x^k\)들의 합인 임의의 다항식도 연속입니다(합 규칙을 유한 번 반복).`,
+                en: String.raw`We show \(x^n\) is continuous by induction.
+
+Base cases: for \(n = 0\), \(x^0 = 1\) is the constant function proved continuous above; for \(n = 1\), \(x^1 = x\) is the identity proved continuous above.
+
+Inductive step: if \(x^n\) is continuous, then \(x^{n+1} = x^n \cdot x\) is a product of continuous functions, hence continuous by the product rule.
+
+So \(x^n\) is continuous for every \(n \ge 0\).
+
+Then \(c x^n\) is continuous (constant times continuous, by the product rule), and any polynomial — a finite sum of such terms \(c_k x^k\) — is continuous (the sum rule, applied finitely many times).`,
               },
             },
           ],

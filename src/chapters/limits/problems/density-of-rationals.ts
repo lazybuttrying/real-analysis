@@ -39,8 +39,16 @@ export const densityOfRationalsProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(n \in S\)이므로 \(n \le x\)입니다. 또한 \(n + 1 > x\)입니다: 그렇지 않으면 \(n + 1 \le x\)라서 \(n + 1 \in S\)가 되어 \(n\)의 최대성에 모순이기 때문입니다. 따라서 \(n \le x < n+1\) — 모든 실수는 정수 눈금 두 칸 사이에 정확히 들어갑니다.`,
-          en: String.raw`Since \(n \in S\), \(n \le x\). Also \(n + 1 > x\): otherwise \(n + 1 \le x\) would put \(n + 1 \in S\), contradicting the maximality of \(n\). Hence \(n \le x < n+1\) — every real sits exactly between two consecutive integer marks.`,
+          ko: String.raw`\(n \in S\)이므로 \(n \le x\)입니다.
+
+또한 \(n + 1 > x\)입니다: 그렇지 않으면 \(n + 1 \le x\)라서 \(n + 1 \in S\)가 되어 \(n\)의 최대성에 모순이기 때문입니다.
+
+따라서 \(n \le x < n+1\) — 모든 실수는 정수 눈금 두 칸 사이에 정확히 들어갑니다.`,
+          en: String.raw`Since \(n \in S\), \(n \le x\).
+
+Also \(n + 1 > x\): otherwise \(n + 1 \le x\) would put \(n + 1 \in S\), contradicting the maximality of \(n\).
+
+Hence \(n \le x < n+1\) — every real sits exactly between two consecutive integer marks.`,
         },
       },
     ],
@@ -75,8 +83,16 @@ export const densityOfRationalsProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`또한 \(m < nx + 1\)이고, \(\frac{1}{n} < y - x\)는 \(1 < n(y - x)\)와 동치이므로 \(nx + 1 < nx + n(y - x) = ny\)입니다. 따라서 \(m < ny\), 즉 \(\frac{m}{n} < y\)입니다. 두 부등식을 합치면 \(x < \frac{m}{n} < y\) — 원하는 유리수 \(q = m/n\)을 찾았습니다.`,
-          en: String.raw`Also \(m < nx + 1\), and \(\frac{1}{n} < y - x\) is equivalent to \(1 < n(y - x)\), so \(nx + 1 < nx + n(y - x) = ny\). Hence \(m < ny\), i.e. \(\frac{m}{n} < y\). Together: \(x < \frac{m}{n} < y\) — the desired rational \(q = m/n\) is found.`,
+          ko: String.raw`또한 \(m < nx + 1\)이고, \(\frac{1}{n} < y - x\)는 \(1 < n(y - x)\)와 동치이므로 \(nx + 1 < nx + n(y - x) = ny\)입니다.
+
+따라서 \(m < ny\), 즉 \(\frac{m}{n} < y\)입니다.
+
+두 부등식을 합치면 \(x < \frac{m}{n} < y\) — 원하는 유리수 \(q = m/n\)을 찾았습니다.`,
+          en: String.raw`Also \(m < nx + 1\), and \(\frac{1}{n} < y - x\) is equivalent to \(1 < n(y - x)\), so \(nx + 1 < nx + n(y - x) = ny\).
+
+Hence \(m < ny\), i.e. \(\frac{m}{n} < y\).
+
+Together: \(x < \frac{m}{n} < y\) — the desired rational \(q = m/n\) is found.`,
         },
       },
       {
@@ -104,8 +120,16 @@ export const densityOfRationalsProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`위 문제 2는 유리수 하나만 주므로 두 번 적용합니다: 중간점 \(m = (x + y)/2\)에 대해 문제 2를 \((x, m)\)에 적용해 유리수 \(r\) (\(x < r < m\))을 얻고, \((m, y)\)에 적용해 유리수 \(s\) (\(m < s < y\))를 얻으면 \(r < m < s\)라서 \((x, y)\) 안에 유리수 \(r < s\)가 존재합니다. \(z = r + (s - r)\frac{\sqrt{2}}{2}\)라 둡니다. \(1 < 2 < 4\)이고 제곱은 \([0, \infty)\)에서 엄격히 증가하므로(위 sqrt2-irrational 장면의 문제 1과 n제곱근 장면), \(1 < \sqrt{2} < 2\) — 따라서 \(0 < \frac{\sqrt{2}}{2} < 1\)입니다.`,
-          en: String.raw`Problem 2 alone gives only one rational, so apply it twice: with the midpoint \(m = (x + y)/2\), applying problem 2 in \((x, m)\) gives a rational \(r\) with \(x < r < m\), and applying it in \((m, y)\) gives a rational \(s\) with \(m < s < y\); since \(r < m < s\), there are rationals \(r < s\) inside \((x, y)\). Put \(z = r + (s - r)\frac{\sqrt{2}}{2}\). Since \(1 < 2 < 4\) and squaring is strictly increasing on \([0, \infty)\) (problem 1 of the sqrt2-irrational scene, plus the n-th root scene), \(1 < \sqrt{2} < 2\) — hence \(0 < \frac{\sqrt{2}}{2} < 1\).`,
+          ko: String.raw`위 문제 2는 유리수 하나만 주므로 두 번 적용합니다: 중간점 \(m = (x + y)/2\)에 대해 문제 2를 \((x, m)\)에 적용해 유리수 \(r\) (\(x < r < m\))을 얻고, \((m, y)\)에 적용해 유리수 \(s\) (\(m < s < y\))를 얻으면 \(r < m < s\)라서 \((x, y)\) 안에 유리수 \(r < s\)가 존재합니다.
+
+\(z = r + (s - r)\frac{\sqrt{2}}{2}\)라 둡니다.
+
+\(1 < 2 < 4\)이고 제곱은 \([0, \infty)\)에서 엄격히 증가하므로(위 sqrt2-irrational 장면의 문제 1과 n제곱근 장면), \(1 < \sqrt{2} < 2\) — 따라서 \(0 < \frac{\sqrt{2}}{2} < 1\)입니다.`,
+          en: String.raw`Problem 2 alone gives only one rational, so apply it twice: with the midpoint \(m = (x + y)/2\), applying problem 2 in \((x, m)\) gives a rational \(r\) with \(x < r < m\), and applying it in \((m, y)\) gives a rational \(s\) with \(m < s < y\); since \(r < m < s\), there are rationals \(r < s\) inside \((x, y)\).
+
+Put \(z = r + (s - r)\frac{\sqrt{2}}{2}\).
+
+Since \(1 < 2 < 4\) and squaring is strictly increasing on \([0, \infty)\) (problem 1 of the sqrt2-irrational scene, plus the n-th root scene), \(1 < \sqrt{2} < 2\) — hence \(0 < \frac{\sqrt{2}}{2} < 1\).`,
         },
       },
       {
@@ -116,7 +140,11 @@ export const densityOfRationalsProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(z\)가 무리수임을 보입니다. 만약 \(z\)가 유리수라면 \(\sqrt{2} = \frac{2(z - r)}{s - r}\)인데, 우변은 분모가 \(0\)이 아닌 유리수들의 사칙연산이므로 유리수 — \(\sqrt{2}\)가 무리수라는 명제 4.4.4(sqrt2-irrational 장면 문제 1)에 모순입니다. 따라서 \(z\)는 무리수이며, \(x < z < y\)를 만족합니다.`,
+          ko: String.raw`\(z\)가 무리수임을 보입니다.
+
+만약 \(z\)가 유리수라면 \(\sqrt{2} = \frac{2(z - r)}{s - r}\)인데, 우변은 분모가 \(0\)이 아닌 유리수들의 사칙연산이므로 유리수 — \(\sqrt{2}\)가 무리수라는 명제 4.4.4(sqrt2-irrational 장면 문제 1)에 모순입니다.
+
+따라서 \(z\)는 무리수이며, \(x < z < y\)를 만족합니다.`,
           en: String.raw`Now \(z\) is irrational: if it were rational, \(\sqrt{2} = \frac{2(z - r)}{s - r}\) would be rational too (the right side is arithmetic on rationals with nonzero denominator) — contradicting Proposition 4.4.4 that \(\sqrt{2}\) is irrational (problem 1 of the sqrt2-irrational scene). Hence \(z\) is irrational with \(x < z < y\).`,
         },
       },

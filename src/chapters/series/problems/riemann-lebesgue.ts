@@ -32,8 +32,16 @@ export const riemannLebesgueProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(|1 - (-1)^n| \le 2\)이므로 \(|b_n| \le \frac{2}{n\pi} \to 0\) (\(n \to \infty\))입니다. 한편 \(a_n = \frac{1}{\pi}\int_0^{\pi} \cos(nx)\,dx = \frac{\sin(n\pi)}{n\pi} = 0\) — 모든 \(n \ge 1\)에서 정확히 0입니다. 따라서 \(a_n \to 0\), \(b_n \to 0\)이 모두 증명되었습니다.`,
-          en: String.raw`Since \(|1 - (-1)^n| \le 2\), \(|b_n| \le \frac{2}{n\pi} \to 0\) as \(n \to \infty\). Meanwhile \(a_n = \frac{1}{\pi}\int_0^{\pi} \cos(nx)\,dx = \frac{\sin(n\pi)}{n\pi} = 0\) — exactly 0 for every \(n \ge 1\). Hence \(a_n \to 0\) and \(b_n \to 0\) are both proved.`,
+          ko: String.raw`\(|1 - (-1)^n| \le 2\)이므로 \(|b_n| \le \frac{2}{n\pi} \to 0\) (\(n \to \infty\))입니다.
+
+한편 \(a_n = \frac{1}{\pi}\int_0^{\pi} \cos(nx)\,dx = \frac{\sin(n\pi)}{n\pi} = 0\) — 모든 \(n \ge 1\)에서 정확히 0입니다.
+
+따라서 \(a_n \to 0\), \(b_n \to 0\)이 모두 증명되었습니다.`,
+          en: String.raw`Since \(|1 - (-1)^n| \le 2\), \(|b_n| \le \frac{2}{n\pi} \to 0\) as \(n \to \infty\).
+
+Meanwhile \(a_n = \frac{1}{\pi}\int_0^{\pi} \cos(nx)\,dx = \frac{\sin(n\pi)}{n\pi} = 0\) — exactly 0 for every \(n \ge 1\).
+
+Hence \(a_n \to 0\) and \(b_n \to 0\) are both proved.`,
         },
       },
       {
@@ -67,8 +75,16 @@ export const riemannLebesgueProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(|\cos(nx_{k-1}) - \cos(nx_k)| \le 2\)이므로 \(\left|b_n(1_{[x_{k-1}, x_k)})\right| \le \frac{2}{n\pi}\) — 구간 위치와 무관한 uniform bound입니다. 따라서 \(|b_n(s)| \le \sum_{k=1}^{m} |c_k|\,\frac{2}{n\pi} = \frac{C}{n}\) (여기서 \(C = \frac{2}{\pi}\sum |c_k|\)는 \(n\)과 무관한 상수)이고, \(n \to \infty\)에서 0으로 갑니다. \(a_n(s)\)도 \(\cos\)를 \(\sin\)으로 바꾼 똑같은 계산으로 0으로 갑니다.`,
-          en: String.raw`Since \(|\cos(nx_{k-1}) - \cos(nx_k)| \le 2\), \(\left|b_n(1_{[x_{k-1}, x_k)})\right| \le \frac{2}{n\pi}\) — a uniform bound independent of the interval's position. Hence \(|b_n(s)| \le \sum_{k=1}^{m} |c_k|\,\frac{2}{n\pi} = \frac{C}{n}\) (with \(C = \frac{2}{\pi}\sum |c_k|\) independent of \(n\)), which goes to 0 as \(n \to \infty\). The same computation with \(\cos\) in place of \(\sin\) sends \(a_n(s) \to 0\).`,
+          ko: String.raw`\(|\cos(nx_{k-1}) - \cos(nx_k)| \le 2\)이므로 \(\left|b_n(1_{[x_{k-1}, x_k)})\right| \le \frac{2}{n\pi}\) — 구간 위치와 무관한 uniform bound입니다.
+
+따라서 \(|b_n(s)| \le \sum_{k=1}^{m} |c_k|\,\frac{2}{n\pi} = \frac{C}{n}\) (여기서 \(C = \frac{2}{\pi}\sum |c_k|\)는 \(n\)과 무관한 상수)이고, \(n \to \infty\)에서 0으로 갑니다.
+
+\(a_n(s)\)도 \(\cos\)를 \(\sin\)으로 바꾼 똑같은 계산으로 0으로 갑니다.`,
+          en: String.raw`Since \(|\cos(nx_{k-1}) - \cos(nx_k)| \le 2\), \(\left|b_n(1_{[x_{k-1}, x_k)})\right| \le \frac{2}{n\pi}\) — a uniform bound independent of the interval's position.
+
+Hence \(|b_n(s)| \le \sum_{k=1}^{m} |c_k|\,\frac{2}{n\pi} = \frac{C}{n}\) (with \(C = \frac{2}{\pi}\sum |c_k|\) independent of \(n\)), which goes to 0 as \(n \to \infty\).
+
+The same computation with \(\cos\) in place of \(\sin\) sends \(a_n(s) \to 0\).`,
         },
       },
       {
@@ -96,20 +112,60 @@ export const riemannLebesgueProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`보조정리 (계단함수 균등 근사): \(f\)가 \([0, 2\pi]\)에서 연속이면 균등연속이므로, \(\varepsilon > 0\)마다 \(\delta > 0\)가 있어 \(|x - y| < \delta\)이면 \(|f(x) - f(y)| < \varepsilon\)입니다. 분할 \(0 = x_0 < x_1 < \cdots < x_m = 2\pi\) (각 너비 \({} < \delta\))로 \([0, 2\pi]\)를 나누되, 구간은 \(I_k = [x_{k-1}, x_k)\) (\(k < m\))와 마지막 구간 \(I_m = [x_{m-1}, 2\pi]\) (오른쪽 끝점에서 닫힘)로 두어 분할이 끝점 \(x = 2\pi\)까지 \([0, 2\pi]\) 전체를 덮게 합니다. 각 \(I_k\)에서 상수값 \(f(x_{k-1})\) (왼쪽 끝점 값)을 취하는 계단함수 \(s\)를 정의합니다(\(x = 2\pi\)에서도 \(s(2\pi) = f(x_{m-1})\)). \(x \in I_k\)이면 \(|x - x_{k-1}| < \delta\)이므로 \(|f(x) - s(x)| < \varepsilon\) — \([0, 2\pi]\)의 모든 점에서 성립하므로 \(\|f - s\|_\infty < \varepsilon\)입니다. 보조정리 증명 완료.`,
-          en: String.raw`Lemma (uniform approximation by step functions): if \(f\) is continuous on \([0, 2\pi]\) it is uniformly continuous, so for every \(\varepsilon > 0\) there is \(\delta > 0\) with \(|x - y| < \delta \Rightarrow |f(x) - f(y)| < \varepsilon\). Split \([0, 2\pi]\) by a partition \(0 = x_0 < x_1 < \cdots < x_m = 2\pi\) (each width \({} < \delta\)), with intervals \(I_k = [x_{k-1}, x_k)\) for \(k < m\) and the last interval \(I_m = [x_{m-1}, 2\pi]\) closed at the right endpoint, so the partition covers all of \([0, 2\pi]\) including \(x = 2\pi\). Define the step function \(s\) taking the constant value \(f(x_{k-1})\) (left endpoint) on each \(I_k\) (with \(s(2\pi) = f(x_{m-1})\) as well). For \(x \in I_k\), \(|x - x_{k-1}| < \delta\), so \(|f(x) - s(x)| < \varepsilon\) — this holds at every point of \([0, 2\pi]\), i.e. \(\|f - s\|_\infty < \varepsilon\). Lemma proved.`,
+          ko: String.raw`보조정리 (계단함수 균등 근사): \(f\)가 \([0, 2\pi]\)에서 연속이면 균등연속이므로, \(\varepsilon > 0\)마다 \(\delta > 0\)가 있어 \(|x - y| < \delta\)이면 \(|f(x) - f(y)| < \varepsilon\)입니다.
+
+분할 \(0 = x_0 < x_1 < \cdots < x_m = 2\pi\) (각 너비 \({} < \delta\))로 \([0, 2\pi]\)를 나누되, 구간은 \(I_k = [x_{k-1}, x_k)\) (\(k < m\))와 마지막 구간 \(I_m = [x_{m-1}, 2\pi]\) (오른쪽 끝점에서 닫힘)로 두어 분할이 끝점 \(x = 2\pi\)까지 \([0, 2\pi]\) 전체를 덮게 합니다.
+
+각 \(I_k\)에서 상수값 \(f(x_{k-1})\) (왼쪽 끝점 값)을 취하는 계단함수 \(s\)를 정의합니다(\(x = 2\pi\)에서도 \(s(2\pi) = f(x_{m-1})\)).
+
+\(x \in I_k\)이면 \(|x - x_{k-1}| < \delta\)이므로 \(|f(x) - s(x)| < \varepsilon\) — \([0, 2\pi]\)의 모든 점에서 성립하므로 \(\|f - s\|_\infty < \varepsilon\)입니다.
+
+보조정리 증명 완료.`,
+          en: String.raw`Lemma (uniform approximation by step functions): if \(f\) is continuous on \([0, 2\pi]\) it is uniformly continuous, so for every \(\varepsilon > 0\) there is \(\delta > 0\) with \(|x - y| < \delta \Rightarrow |f(x) - f(y)| < \varepsilon\).
+
+Split \([0, 2\pi]\) by a partition \(0 = x_0 < x_1 < \cdots < x_m = 2\pi\) (each width \({} < \delta\)), with intervals \(I_k = [x_{k-1}, x_k)\) for \(k < m\) and the last interval \(I_m = [x_{m-1}, 2\pi]\) closed at the right endpoint, so the partition covers all of \([0, 2\pi]\) including \(x = 2\pi\).
+
+Define the step function \(s\) taking the constant value \(f(x_{k-1})\) (left endpoint) on each \(I_k\) (with \(s(2\pi) = f(x_{m-1})\) as well).
+
+For \(x \in I_k\), \(|x - x_{k-1}| < \delta\), so \(|f(x) - s(x)| < \varepsilon\) — this holds at every point of \([0, 2\pi]\), i.e. \(\|f - s\|_\infty < \varepsilon\).
+
+Lemma proved.`,
         },
       },
       {
         text: {
-          ko: String.raw`이제 \(\varepsilon > 0\)을 고정하고, 위 보조정리로 \(\|f - s\|_\infty < \varepsilon\)인 계단함수 \(s\)를 택합니다. 삼각부등식으로 \(|b_n(f)| \le |b_n(f - s)| + |b_n(s)|\)입니다. 첫 항은 \(|b_n(f - s)| \le \frac{1}{\pi}\int_0^{2\pi} |f - s|\,|\sin(nx)|\,dx \le \frac{1}{\pi}\,\varepsilon \cdot 2\pi = 2\varepsilon\) — \(n\)과 무관합니다.`,
-          en: String.raw`Fix \(\varepsilon > 0\) and pick a step function \(s\) with \(\|f - s\|_\infty < \varepsilon\) by the lemma. By the triangle inequality \(|b_n(f)| \le |b_n(f - s)| + |b_n(s)|\). The first term satisfies \(|b_n(f - s)| \le \frac{1}{\pi}\int_0^{2\pi} |f - s|\,|\sin(nx)|\,dx \le \frac{1}{\pi}\,\varepsilon \cdot 2\pi = 2\varepsilon\) — independent of \(n\).`,
+          ko: String.raw`이제 \(\varepsilon > 0\)을 고정하고, 위 보조정리로 \(\|f - s\|_\infty < \varepsilon\)인 계단함수 \(s\)를 택합니다.
+
+삼각부등식으로 \(|b_n(f)| \le |b_n(f - s)| + |b_n(s)|\)입니다.
+
+첫 항은 \(|b_n(f - s)| \le \frac{1}{\pi}\int_0^{2\pi} |f - s|\,|\sin(nx)|\,dx \le \frac{1}{\pi}\,\varepsilon \cdot 2\pi = 2\varepsilon\) — \(n\)과 무관합니다.`,
+          en: String.raw`Fix \(\varepsilon > 0\) and pick a step function \(s\) with \(\|f - s\|_\infty < \varepsilon\) by the lemma.
+
+By the triangle inequality \(|b_n(f)| \le |b_n(f - s)| + |b_n(s)|\).
+
+The first term satisfies \(|b_n(f - s)| \le \frac{1}{\pi}\int_0^{2\pi} |f - s|\,|\sin(nx)|\,dx \le \frac{1}{\pi}\,\varepsilon \cdot 2\pi = 2\varepsilon\) — independent of \(n\).`,
         },
       },
       {
         text: {
-          ko: String.raw`둘째 항 \(|b_n(s)|\)는 문제 2에서 \(n \to \infty\)일 때 0으로 갑니다. 따라서 \(N\)을 크게 잡아 \(n \ge N\)이면 \(|b_n(s)| < \varepsilon\)이 되게 할 수 있고, 그 \(n\)들에 대해 \(|b_n(f)| < 2\varepsilon + \varepsilon = 3\varepsilon\)입니다. \(\varepsilon\)이 임의이므로 \(b_n(f) \to 0\)입니다. \(a_n(f)\)도 \(|\cos(nx)| \le 1\)을 이용한 동일한 논증으로 0으로 갑니다. 모든 단계가 완성되었습니다 — 아이디어 수준 표기는 없습니다.`,
-          en: String.raw`The second term \(|b_n(s)| \to 0\) as \(n \to \infty\) by problem 2. So choose \(N\) large enough that \(|b_n(s)| < \varepsilon\) for \(n \ge N\); for those \(n\), \(|b_n(f)| < 2\varepsilon + \varepsilon = 3\varepsilon\). Since \(\varepsilon\) is arbitrary, \(b_n(f) \to 0\). The same argument with \(|\cos(nx)| \le 1\) gives \(a_n(f) \to 0\). Every step is complete — nothing is left at idea level.`,
+          ko: String.raw`둘째 항 \(|b_n(s)|\)는 문제 2에서 \(n \to \infty\)일 때 0으로 갑니다.
+
+따라서 \(N\)을 크게 잡아 \(n \ge N\)이면 \(|b_n(s)| < \varepsilon\)이 되게 할 수 있고, 그 \(n\)들에 대해 \(|b_n(f)| < 2\varepsilon + \varepsilon = 3\varepsilon\)입니다.
+
+\(\varepsilon\)이 임의이므로 \(b_n(f) \to 0\)입니다.
+
+\(a_n(f)\)도 \(|\cos(nx)| \le 1\)을 이용한 동일한 논증으로 0으로 갑니다.
+
+모든 단계가 완성되었습니다 — 아이디어 수준 표기는 없습니다.`,
+          en: String.raw`The second term \(|b_n(s)| \to 0\) as \(n \to \infty\) by problem 2.
+
+So choose \(N\) large enough that \(|b_n(s)| < \varepsilon\) for \(n \ge N\); for those \(n\), \(|b_n(f)| < 2\varepsilon + \varepsilon = 3\varepsilon\).
+
+Since \(\varepsilon\) is arbitrary, \(b_n(f) \to 0\).
+
+The same argument with \(|\cos(nx)| \le 1\) gives \(a_n(f) \to 0\).
+
+Every step is complete — nothing is left at idea level.`,
         },
       },
     ],

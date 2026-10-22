@@ -12,8 +12,16 @@ export const absoluteContinuityProblems: readonly ProblemMeta[] = [
   {
     id: 'integral-ac',
     statement: {
-      ko: String.raw`\(f \in L^1[a, b]\)이고 \(F(x) = F(a) + \int_a^x f\)라 하자. \(F\)가 절대연속임을 증명하세요. 먼저 다음 보조정리를 증명하세요: 모든 \(\varepsilon > 0\)에 대해, \(m(E) < \delta\)이면 \(\int_E |f| < \varepsilon\)이 되는 \(\delta > 0\)이 존재합니다.`,
-      en: String.raw`Let \(f \in L^1[a, b]\) and \(F(x) = F(a) + \int_a^x f\). Prove \(F\) is absolutely continuous. First prove the lemma: for every \(\varepsilon > 0\) there is \(\delta > 0\) such that \(m(E) < \delta\) implies \(\int_E |f| < \varepsilon\).`,
+      ko: String.raw`\(f \in L^1[a, b]\)이고 \(F(x) = F(a) + \int_a^x f\)라 하자.
+
+\(F\)가 절대연속임을 증명하세요.
+
+먼저 다음 보조정리를 증명하세요: 모든 \(\varepsilon > 0\)에 대해, \(m(E) < \delta\)이면 \(\int_E |f| < \varepsilon\)이 되는 \(\delta > 0\)이 존재합니다.`,
+      en: String.raw`Let \(f \in L^1[a, b]\) and \(F(x) = F(a) + \int_a^x f\).
+
+Prove \(F\) is absolutely continuous.
+
+First prove the lemma: for every \(\varepsilon > 0\) there is \(\delta > 0\) such that \(m(E) < \delta\) implies \(\int_E |f| < \varepsilon\).`,
     },
     display: [
       String.raw`\int_E |f| \le \frac{\varepsilon}{2} + M \cdot m(E) < \varepsilon, \qquad \sum_{i} |F(b_i) - F(a_i)| \le \int_{\bigcup_i [a_i,b_i]} |f| < \varepsilon`,
@@ -26,8 +34,16 @@ export const absoluteContinuityProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`보조정리 (절대연속적분): 잘린 함수 \(|f| \cdot \mathbf{1}_{\{|f| \le M\}}\)에 지배수렴정리를 적용합니다. 이 함수들은 \(M \to \infty\)일 때 \(|f|\)로 점별 수렴하고, 지배함수는 \(|f| \in L^1\)입니다 (가정). 따라서 \(\int |f| \cdot \mathbf{1}_{\{|f| \le M\}} \to \int |f|\), 즉 꼬리 \(\int_{|f| > M} |f| \to 0\) (\(M \to \infty\))입니다. 그러므로 \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\)인 \(M\)이 존재하고, \(M\)을 키우면 꼬리는 더 작아지므로 \(M \ge 1\)로 잡을 수 있습니다.`,
-          en: String.raw`Lemma (absolutely continuous integral): apply dominated convergence to the truncations \(|f| \cdot \mathbf{1}_{\{|f| \le M\}}\). They converge pointwise to \(|f|\) as \(M \to \infty\), with dominating function \(|f| \in L^1\) (the hypothesis). Hence \(\int |f| \cdot \mathbf{1}_{\{|f| \le M\}} \to \int |f|\), i.e. the tail \(\int_{|f| > M} |f| \to 0\) as \(M \to \infty\). So some \(M\) has \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\), and enlarging \(M\) only shrinks the tail, so take \(M \ge 1\).`,
+          ko: String.raw`보조정리 (절대연속적분): 잘린 함수 \(|f| \cdot \mathbf{1}_{\{|f| \le M\}}\)에 지배수렴정리를 적용합니다. 이 함수들은 \(M \to \infty\)일 때 \(|f|\)로 점별 수렴하고, 지배함수는 \(|f| \in L^1\)입니다 (가정).
+
+따라서 \(\int |f| \cdot \mathbf{1}_{\{|f| \le M\}} \to \int |f|\), 즉 꼬리 \(\int_{|f| > M} |f| \to 0\) (\(M \to \infty\))입니다.
+
+그러므로 \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\)인 \(M\)이 존재하고, \(M\)을 키우면 꼬리는 더 작아지므로 \(M \ge 1\)로 잡을 수 있습니다.`,
+          en: String.raw`Lemma (absolutely continuous integral): apply dominated convergence to the truncations \(|f| \cdot \mathbf{1}_{\{|f| \le M\}}\). They converge pointwise to \(|f|\) as \(M \to \infty\), with dominating function \(|f| \in L^1\) (the hypothesis).
+
+Hence \(\int |f| \cdot \mathbf{1}_{\{|f| \le M\}} \to \int |f|\), i.e. the tail \(\int_{|f| > M} |f| \to 0\) as \(M \to \infty\).
+
+So some \(M\) has \(\int_{|f| > M} |f| < \frac{\varepsilon}{2}\), and enlarging \(M\) only shrinks the tail, so take \(M \ge 1\).`,
         },
       },
       {
@@ -79,8 +95,16 @@ export const absoluteContinuityProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`따라서 \(\sum |\Delta c| = 2^n \cdot 2^{-n} = 1 \not< \frac12 = \varepsilon\) — 총 길이가 임의로 작아져도 \(\sum |\Delta c|\)는 1에 고정됩니다. 이는 절대연속성 정의에 정면으로 위배되므로 \(c\)는 절대연속이 아닙니다. 한편 \(c\)는 균등연속이므로, 균등연속은 절대연속을 함의하지 않습니다.`,
-          en: String.raw`Hence \(\sum |\Delta c| = 2^n \cdot 2^{-n} = 1 \not< \frac12 = \varepsilon\) — the sum stays frozen at 1 no matter how small the total length gets. This directly violates the definition of absolute continuity, so \(c\) is not absolutely continuous. Since \(c\) is uniformly continuous, uniform continuity does not imply absolute continuity.`,
+          ko: String.raw`따라서 \(\sum |\Delta c| = 2^n \cdot 2^{-n} = 1 \not< \frac12 = \varepsilon\) — 총 길이가 임의로 작아져도 \(\sum |\Delta c|\)는 1에 고정됩니다.
+
+이는 절대연속성 정의에 정면으로 위배되므로 \(c\)는 절대연속이 아닙니다.
+
+한편 \(c\)는 균등연속이므로, 균등연속은 절대연속을 함의하지 않습니다.`,
+          en: String.raw`Hence \(\sum |\Delta c| = 2^n \cdot 2^{-n} = 1 \not< \frac12 = \varepsilon\) — the sum stays frozen at 1 no matter how small the total length gets.
+
+This directly violates the definition of absolute continuity, so \(c\) is not absolutely continuous.
+
+Since \(c\) is uniformly continuous, uniform continuity does not imply absolute continuity.`,
         },
       },
       {

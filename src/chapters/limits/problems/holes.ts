@@ -33,7 +33,11 @@ export const problems: readonly ProblemMeta[] = [
             {
               text: {
                 ko: String.raw`\(e_n = x_n^2 - 2\)라 두면 직접 전개로 \(e_{n+1} = \frac{e_n^2}{4x_n^2}\)을 얻습니다. \(x_1 = \frac32 > \sqrt2\)이고 \(x_{n+1}-\sqrt2 = \frac{(x_n-\sqrt2)^2}{2x_n} \geq 0\)이므로 모든 \(n \geq 1\)에 대해 \(x_n \geq \sqrt2\)이고, 따라서 \(e_{n+1} \leq \frac{e_n^2}{8}\)입니다.`,
-                en: String.raw`Put \(e_n = x_n^2 - 2\). Expanding gives \(e_{n+1} = \frac{e_n^2}{4x_n^2}\). Since \(x_1 = \frac32 > \sqrt2\) and \(x_{n+1}-\sqrt2 = \frac{(x_n-\sqrt2)^2}{2x_n} \geq 0\), we have \(x_n \geq \sqrt2\) for all \(n \geq 1\), hence \(e_{n+1} \leq \frac{e_n^2}{8}\).`,
+                en: String.raw`Put \(e_n = x_n^2 - 2\).
+
+Expanding gives \(e_{n+1} = \frac{e_n^2}{4x_n^2}\).
+
+Since \(x_1 = \frac32 > \sqrt2\) and \(x_{n+1}-\sqrt2 = \frac{(x_n-\sqrt2)^2}{2x_n} \geq 0\), we have \(x_n \geq \sqrt2\) for all \(n \geq 1\), hence \(e_{n+1} \leq \frac{e_n^2}{8}\).`,
               },
             },
             {
@@ -71,8 +75,32 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`먼저 두 \(e\)가 같은 수임을 확인합니다. \(S = \sum_{k=0}^{\infty} \frac{1}{k!}\)라 두고, eseries 씬(compound 문제)에서처럼 이항정리로 전개하면 \(b_n = \sum_{k=0}^{n} a_{n,k}\) (단 \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}(1 - \frac{j}{n}) \le \frac{1}{k!}\))입니다. \(K \le n\)을 고정하면 \(b_n \ge \sum_{k=0}^{K} a_{n,k}\)이고, 고정된 \(k\)에 대해 \(n \to \infty\)일 때 \(a_{n,k} \to \frac{1}{k!}\)이므로 \(\liminf b_n \ge \sum_{k=0}^{K} \frac{1}{k!}\)입니다. 또한 \(b_n \le \sum_{k=0}^{n} \frac{1}{k!} \le S\)이므로 \(\limsup b_n \le S\)입니다. \(K \to \infty\)로 보내면 \(\lim b_n = S\) — 여기서 \(\lim b_n\)으로 정의한 \(e\)는 급수 \(S\)와 같은 수입니다. 두 정의가 일치하므로 \(e \notin \mathbb{Q}\)는 정식 정리입니다(예: \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)의 나머지 항 평가로 증명됩니다). 따라서 유리수 수열 \((b_n)\)은 어떤 유리수에도 수렴하지 않습니다 — \(\sqrt2\)와는 다른, \(\mathbb{Q}\)의 또 하나의 구멍입니다.`,
-                en: String.raw`Identification of the two \(e\)'s first. Write \(S = \sum_{k=0}^{\infty} \frac{1}{k!}\) and expand \(b_n\) by the binomial theorem as in the eseries scene (compound problem): \(b_n = \sum_{k=0}^{n} a_{n,k}\) with \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}(1 - \frac{j}{n}) \le \frac{1}{k!}\). Fix \(K \le n\): then \(b_n \ge \sum_{k=0}^{K} a_{n,k}\), and \(a_{n,k} \to \frac{1}{k!}\) as \(n \to \infty\) for each fixed \(k\), so \(\liminf b_n \ge \sum_{k=0}^{K} \frac{1}{k!}\). Also \(b_n \le \sum_{k=0}^{n} \frac{1}{k!} \le S\), so \(\limsup b_n \le S\). Letting \(K \to \infty\) forces \(\lim b_n = S\): the \(e\) defined here as \(\lim b_n\) is the series number \(S\). With the two definitions identified, that \(e \notin \mathbb{Q}\) is an established theorem (proved, for instance, by estimating the remainder of \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)). So the rational sequence \((b_n)\) converges to no rational number — another hole in \(\mathbb{Q}\), distinct from the one at \(\sqrt2\).`,
+                ko: String.raw`먼저 두 \(e\)가 같은 수임을 확인합니다.
+
+\(S = \sum_{k=0}^{\infty} \frac{1}{k!}\)라 두고, eseries 씬(compound 문제)에서처럼 이항정리로 전개하면 \(b_n = \sum_{k=0}^{n} a_{n,k}\) (단 \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}(1 - \frac{j}{n}) \le \frac{1}{k!}\))입니다.
+
+\(K \le n\)을 고정하면 \(b_n \ge \sum_{k=0}^{K} a_{n,k}\)이고, 고정된 \(k\)에 대해 \(n \to \infty\)일 때 \(a_{n,k} \to \frac{1}{k!}\)이므로 \(\liminf b_n \ge \sum_{k=0}^{K} \frac{1}{k!}\)입니다.
+
+또한 \(b_n \le \sum_{k=0}^{n} \frac{1}{k!} \le S\)이므로 \(\limsup b_n \le S\)입니다.
+
+\(K \to \infty\)로 보내면 \(\lim b_n = S\) — 여기서 \(\lim b_n\)으로 정의한 \(e\)는 급수 \(S\)와 같은 수입니다.
+
+두 정의가 일치하므로 \(e \notin \mathbb{Q}\)는 정식 정리입니다(예: \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)의 나머지 항 평가로 증명됩니다).
+
+따라서 유리수 수열 \((b_n)\)은 어떤 유리수에도 수렴하지 않습니다 — \(\sqrt2\)와는 다른, \(\mathbb{Q}\)의 또 하나의 구멍입니다.`,
+                en: String.raw`Identification of the two \(e\)'s first.
+
+Write \(S = \sum_{k=0}^{\infty} \frac{1}{k!}\) and expand \(b_n\) by the binomial theorem as in the eseries scene (compound problem): \(b_n = \sum_{k=0}^{n} a_{n,k}\) with \(a_{n,k} = \frac{1}{k!}\prod_{j=0}^{k-1}(1 - \frac{j}{n}) \le \frac{1}{k!}\).
+
+Fix \(K \le n\): then \(b_n \ge \sum_{k=0}^{K} a_{n,k}\), and \(a_{n,k} \to \frac{1}{k!}\) as \(n \to \infty\) for each fixed \(k\), so \(\liminf b_n \ge \sum_{k=0}^{K} \frac{1}{k!}\).
+
+Also \(b_n \le \sum_{k=0}^{n} \frac{1}{k!} \le S\), so \(\limsup b_n \le S\).
+
+Letting \(K \to \infty\) forces \(\lim b_n = S\): the \(e\) defined here as \(\lim b_n\) is the series number \(S\).
+
+With the two definitions identified, that \(e \notin \mathbb{Q}\) is an established theorem (proved, for instance, by estimating the remainder of \(e = \sum_{k=0}^{\infty}\frac{1}{k!}\)).
+
+So the rational sequence \((b_n)\) converges to no rational number — another hole in \(\mathbb{Q}\), distinct from the one at \(\sqrt2\).`,
               },
             },
           ],
@@ -80,7 +108,9 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'cauchy-no-rational-limit',
           statement: {
-            ko: String.raw`바빌로니아 수열 \((x_n)\)이 코시수열이지만 \(\mathbb{Q}\) 안에는 극한이 없음을 증명하세요. 이것이 '완비성'이 말하는 바입니다.`,
+            ko: String.raw`바빌로니아 수열 \((x_n)\)이 코시수열이지만 \(\mathbb{Q}\) 안에는 극한이 없음을 증명하세요.
+
+이것이 '완비성'이 말하는 바입니다.`,
             en: String.raw`Prove that the Babylonian sequence \((x_n)\) is Cauchy but has no limit in \(\mathbb{Q}\) — this is what completeness is about.`,
           },
           display: [String.raw`|x_m - x_n| \to 0 \ \ (m,n \to \infty), \qquad \nexists\, r \in \mathbb{Q} : x_n \to r`],
@@ -92,20 +122,48 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`문제 1의 오차 분석에서 \(e_{n+1} \leq \frac{e_n^2}{8}\), \(e_1 = \frac14\)을 얻었습니다. \(e_n \leq 2^{-n}\)임을 귀납법으로 보이면(\(n=1\)일 때 성립하고, \(e_{n+1} \leq \frac{2^{-2n}}{8} = 2^{-(2n+3)} \leq 2^{-(n+1)}\)), \(e_n \to 0\)입니다. \(|x_n-\sqrt2| = \frac{e_n}{x_n+\sqrt2} \leq \frac{e_n}{2}\)이므로, 실수로서 \(x_n \to \sqrt2\)입니다.`,
-                en: String.raw`From the error analysis, \(e_{n+1} \leq \frac{e_n^2}{8}\) with \(e_1 = \frac14\). Since \(e_n \leq 2^{-n}\) by induction (true at \(n=1\), and \(e_{n+1} \leq \frac{2^{-2n}}{8} = 2^{-(2n+3)} \leq 2^{-(n+1)}\)), we get \(e_n \to 0\). With \(|x_n-\sqrt2| = \frac{e_n}{x_n+\sqrt2} \leq \frac{e_n}{2}\), we have \(x_n \to \sqrt2\) as real numbers.`,
+                ko: String.raw`문제 1의 오차 분석에서 \(e_{n+1} \leq \frac{e_n^2}{8}\), \(e_1 = \frac14\)을 얻었습니다.
+
+\(e_n \leq 2^{-n}\)임을 귀납법으로 보이면(\(n=1\)일 때 성립하고, \(e_{n+1} \leq \frac{2^{-2n}}{8} = 2^{-(2n+3)} \leq 2^{-(n+1)}\)), \(e_n \to 0\)입니다.
+
+\(|x_n-\sqrt2| = \frac{e_n}{x_n+\sqrt2} \leq \frac{e_n}{2}\)이므로, 실수로서 \(x_n \to \sqrt2\)입니다.`,
+                en: String.raw`From the error analysis, \(e_{n+1} \leq \frac{e_n^2}{8}\) with \(e_1 = \frac14\).
+
+Since \(e_n \leq 2^{-n}\) by induction (true at \(n=1\), and \(e_{n+1} \leq \frac{2^{-2n}}{8} = 2^{-(2n+3)} \leq 2^{-(n+1)}\)), we get \(e_n \to 0\).
+
+With \(|x_n-\sqrt2| = \frac{e_n}{x_n+\sqrt2} \leq \frac{e_n}{2}\), we have \(x_n \to \sqrt2\) as real numbers.`,
               },
             },
             {
               text: {
-                ko: String.raw`\(\varepsilon > 0\)이라 합시다. \(x_n \to \sqrt2\)이므로 \(n \ge N\)일 때 \(|x_n - \sqrt2| < \varepsilon/2\)인 \(N\)을 잡을 수 있습니다. 그러면 \(m, n \ge N\)일 때 \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2| < \varepsilon/2 + \varepsilon/2 = \varepsilon\)입니다. 즉 \((x_n)\)은 코시수열입니다.`,
-                en: String.raw`Let \(\varepsilon > 0\). Since \(x_n \to \sqrt2\), choose \(N\) with \(|x_n - \sqrt2| < \varepsilon/2\) for all \(n \ge N\). Then for all \(m, n \ge N\), \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2| < \varepsilon/2 + \varepsilon/2 = \varepsilon\). Hence \((x_n)\) is a Cauchy sequence.`,
+                ko: String.raw`\(\varepsilon > 0\)이라 합시다.
+
+\(x_n \to \sqrt2\)이므로 \(n \ge N\)일 때 \(|x_n - \sqrt2| < \varepsilon/2\)인 \(N\)을 잡을 수 있습니다.
+
+그러면 \(m, n \ge N\)일 때 \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2| < \varepsilon/2 + \varepsilon/2 = \varepsilon\)입니다.
+
+즉 \((x_n)\)은 코시수열입니다.`,
+                en: String.raw`Let \(\varepsilon > 0\).
+
+Since \(x_n \to \sqrt2\), choose \(N\) with \(|x_n - \sqrt2| < \varepsilon/2\) for all \(n \ge N\).
+
+Then for all \(m, n \ge N\), \(|x_m - x_n| \leq |x_m - \sqrt2| + |x_n - \sqrt2| < \varepsilon/2 + \varepsilon/2 = \varepsilon\).
+
+Hence \((x_n)\) is a Cauchy sequence.`,
               },
             },
             {
               text: {
-                ko: String.raw`만약 유리수 \(r\)에 대해 \(x_n \to r\)이라면 극한의 유일성에 의해 \(r = \sqrt2\)이어야 합니다. 그런데 \(\sqrt2 \notin \mathbb{Q}\)이므로 모순입니다. 따라서 \((x_n)\)은 \(\mathbb{Q}\) 안에서 극한을 갖지 않습니다.`,
-                en: String.raw`If \(x_n \to r\) for some rational \(r\), uniqueness of limits forces \(r = \sqrt2\). But \(\sqrt2 \notin \mathbb{Q}\) — a contradiction. So \((x_n)\) has no limit inside \(\mathbb{Q}\).`,
+                ko: String.raw`만약 유리수 \(r\)에 대해 \(x_n \to r\)이라면 극한의 유일성에 의해 \(r = \sqrt2\)이어야 합니다.
+
+그런데 \(\sqrt2 \notin \mathbb{Q}\)이므로 모순입니다.
+
+따라서 \((x_n)\)은 \(\mathbb{Q}\) 안에서 극한을 갖지 않습니다.`,
+                en: String.raw`If \(x_n \to r\) for some rational \(r\), uniqueness of limits forces \(r = \sqrt2\).
+
+But \(\sqrt2 \notin \mathbb{Q}\) — a contradiction.
+
+So \((x_n)\) has no limit inside \(\mathbb{Q}\).`,
               },
             },
             {

@@ -22,14 +22,30 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`적분을 \(t = 1/2\)에서 나눕니다. \((0, 1/2]\)에서는 \(\frac12 \leq 1-t < 1\)이므로 \((1-t)^{q-1}\)은 양의 상수 \(c_1 = \min(1, 2^{1-q})\)와 \(c_2 = \max(1, 2^{1-q})\) 사이에 갇힙니다. 따라서 \(c_1 t^{p-1} \leq t^{p-1}(1-t)^{q-1} \leq c_2 t^{p-1}\)이고, 비교판정법으로 \(\int_0^{1/2} t^{p-1}(1-t)^{q-1}\,dt\)의 수렴성은 \(\int_0^{1/2} t^{p-1}\,dt\)의 수렴성과 같습니다.`,
-          en: String.raw`Split the integral at \(t = 1/2\). On \((0, 1/2]\) we have \(\frac12 \leq 1-t < 1\), so \((1-t)^{q-1}\) is trapped between the positive constants \(c_1 = \min(1, 2^{1-q})\) and \(c_2 = \max(1, 2^{1-q})\). Hence \(c_1 t^{p-1} \leq t^{p-1}(1-t)^{q-1} \leq c_2 t^{p-1}\), and the comparison test reduces the convergence of \(\int_0^{1/2} t^{p-1}(1-t)^{q-1}\,dt\) to that of \(\int_0^{1/2} t^{p-1}\,dt\).`,
+          ko: String.raw`적분을 \(t = 1/2\)에서 나눕니다.
+
+\((0, 1/2]\)에서는 \(\frac12 \leq 1-t < 1\)이므로 \((1-t)^{q-1}\)은 양의 상수 \(c_1 = \min(1, 2^{1-q})\)와 \(c_2 = \max(1, 2^{1-q})\) 사이에 갇힙니다.
+
+따라서 \(c_1 t^{p-1} \leq t^{p-1}(1-t)^{q-1} \leq c_2 t^{p-1}\)이고, 비교판정법으로 \(\int_0^{1/2} t^{p-1}(1-t)^{q-1}\,dt\)의 수렴성은 \(\int_0^{1/2} t^{p-1}\,dt\)의 수렴성과 같습니다.`,
+          en: String.raw`Split the integral at \(t = 1/2\).
+
+On \((0, 1/2]\) we have \(\frac12 \leq 1-t < 1\), so \((1-t)^{q-1}\) is trapped between the positive constants \(c_1 = \min(1, 2^{1-q})\) and \(c_2 = \max(1, 2^{1-q})\).
+
+Hence \(c_1 t^{p-1} \leq t^{p-1}(1-t)^{q-1} \leq c_2 t^{p-1}\), and the comparison test reduces the convergence of \(\int_0^{1/2} t^{p-1}(1-t)^{q-1}\,dt\) to that of \(\int_0^{1/2} t^{p-1}\,dt\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\int_\delta^{1/2} t^{p-1}\,dt = \frac{(1/2)^p - \delta^p}{p}\) (\(p \neq 0\))이며, \(\delta \to 0^+\)일 때 이는 \(p > 0\)이면 \(\frac{2^{-p}}{p}\)로 수렴합니다. \(p = 0\)이면 \(-\ln(2\delta) \to \infty\)로, \(p < 0\)이면 \(\frac{\delta^p}{|p|} \to \infty\)로 발산합니다. 따라서 \(\int_0^{1/2} t^{p-1}\,dt\)는 \(p > 0\)일 때 정확히 수렴합니다.`,
-          en: String.raw`\(\int_\delta^{1/2} t^{p-1}\,dt = \frac{(1/2)^p - \delta^p}{p}\) for \(p \neq 0\), which converges to \(\frac{2^{-p}}{p}\) as \(\delta \to 0^+\) when \(p > 0\). For \(p = 0\) it is \(-\ln(2\delta) \to \infty\), and for \(p < 0\) it is \(\frac{\delta^p}{|p|} \to \infty\). So \(\int_0^{1/2} t^{p-1}\,dt\) converges exactly when \(p > 0\).`,
+          ko: String.raw`\(\int_\delta^{1/2} t^{p-1}\,dt = \frac{(1/2)^p - \delta^p}{p}\) (\(p \neq 0\))이며, \(\delta \to 0^+\)일 때 이는 \(p > 0\)이면 \(\frac{2^{-p}}{p}\)로 수렴합니다.
+
+\(p = 0\)이면 \(-\ln(2\delta) \to \infty\)로, \(p < 0\)이면 \(\frac{\delta^p}{|p|} \to \infty\)로 발산합니다.
+
+따라서 \(\int_0^{1/2} t^{p-1}\,dt\)는 \(p > 0\)일 때 정확히 수렴합니다.`,
+          en: String.raw`\(\int_\delta^{1/2} t^{p-1}\,dt = \frac{(1/2)^p - \delta^p}{p}\) for \(p \neq 0\), which converges to \(\frac{2^{-p}}{p}\) as \(\delta \to 0^+\) when \(p > 0\).
+
+For \(p = 0\) it is \(-\ln(2\delta) \to \infty\), and for \(p < 0\) it is \(\frac{\delta^p}{|p|} \to \infty\).
+
+So \(\int_0^{1/2} t^{p-1}\,dt\) converges exactly when \(p > 0\).`,
         },
       },
       {
@@ -96,14 +112,34 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`이상적분에 직접 부분적분을 적용하지 않습니다. 절단 구간 \([\delta, 1-\varepsilon]\) (\(0 < \delta < 1-\varepsilon < 1\))에서는 피적분함수가 매끄러우므로, \(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\)의 절단 적분에 \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\)로 부분적분을 적용합니다. 그러면 \(du = p t^{p-1}\,dt\)이고 \(v = -\frac{(1-t)^q}{q}\)입니다. \(0 < p < 1\) 또는 \(0 < q < 1\)이면 도함수가 끝점에서 특이해지므로 이 절단이 필요합니다.`,
-          en: String.raw`Do not apply parts directly to the improper integral. On the truncated interval \([\delta, 1-\varepsilon]\) (\(0 < \delta < 1-\varepsilon < 1\)) the integrand is smooth, so apply parts to the truncated integral of \(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\) with \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\). Then \(du = p t^{p-1}\,dt\) and \(v = -\frac{(1-t)^q}{q}\). The truncation is needed because for \(0 < p < 1\) or \(0 < q < 1\) the derivative is singular at the endpoints.`,
+          ko: String.raw`이상적분에 직접 부분적분을 적용하지 않습니다.
+
+절단 구간 \([\delta, 1-\varepsilon]\) (\(0 < \delta < 1-\varepsilon < 1\))에서는 피적분함수가 매끄러우므로, \(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\)의 절단 적분에 \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\)로 부분적분을 적용합니다.
+
+그러면 \(du = p t^{p-1}\,dt\)이고 \(v = -\frac{(1-t)^q}{q}\)입니다.
+
+\(0 < p < 1\) 또는 \(0 < q < 1\)이면 도함수가 끝점에서 특이해지므로 이 절단이 필요합니다.`,
+          en: String.raw`Do not apply parts directly to the improper integral.
+
+On the truncated interval \([\delta, 1-\varepsilon]\) (\(0 < \delta < 1-\varepsilon < 1\)) the integrand is smooth, so apply parts to the truncated integral of \(B(p+1,q) = \int_0^1 t^p(1-t)^{q-1}\,dt\) with \(u = t^p\), \(dv = (1-t)^{q-1}\,dt\).
+
+Then \(du = p t^{p-1}\,dt\) and \(v = -\frac{(1-t)^q}{q}\).
+
+The truncation is needed because for \(0 < p < 1\) or \(0 < q < 1\) the derivative is singular at the endpoints.`,
         },
       },
       {
         text: {
-          ko: String.raw`절단 구간에서의 경계항은 \(\left[-\frac{t^p(1-t)^q}{q}\right]_{\delta}^{1-\varepsilon} = -\frac{(1-\varepsilon)^p \varepsilon^q}{q} + \frac{\delta^p (1-\delta)^q}{q}\)입니다. \(p, q > 0\)이므로 \(t^p (1-t)^q \to 0\)이 양쪽 끝 모두에서 성립합니다: \(\delta \to 0^+\)이면 \(\delta^p \to 0\)이고, \(\varepsilon \to 0^+\)이면 \(\varepsilon^q \to 0\)이므로 경계항은 \(0\)으로 갑니다. \(\delta, \varepsilon \to 0^+\)으로 보내고 문제 1의 수렴을 이용하면 \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\)을 얻습니다.`,
-          en: String.raw`On the truncated interval the boundary term is \(\left[-\frac{t^p(1-t)^q}{q}\right]_{\delta}^{1-\varepsilon} = -\frac{(1-\varepsilon)^p \varepsilon^q}{q} + \frac{\delta^p (1-\delta)^q}{q}\). Since \(p, q > 0\), \(t^p (1-t)^q \to 0\) at both ends: \(\delta^p \to 0\) as \(\delta \to 0^+\) and \(\varepsilon^q \to 0\) as \(\varepsilon \to 0^+\), so the boundary term tends to \(0\). Sending \(\delta, \varepsilon \to 0^+\) and using convergence from problem 1 gives \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\).`,
+          ko: String.raw`절단 구간에서의 경계항은 \(\left[-\frac{t^p(1-t)^q}{q}\right]_{\delta}^{1-\varepsilon} = -\frac{(1-\varepsilon)^p \varepsilon^q}{q} + \frac{\delta^p (1-\delta)^q}{q}\)입니다.
+
+\(p, q > 0\)이므로 \(t^p (1-t)^q \to 0\)이 양쪽 끝 모두에서 성립합니다: \(\delta \to 0^+\)이면 \(\delta^p \to 0\)이고, \(\varepsilon \to 0^+\)이면 \(\varepsilon^q \to 0\)이므로 경계항은 \(0\)으로 갑니다.
+
+\(\delta, \varepsilon \to 0^+\)으로 보내고 문제 1의 수렴을 이용하면 \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\)을 얻습니다.`,
+          en: String.raw`On the truncated interval the boundary term is \(\left[-\frac{t^p(1-t)^q}{q}\right]_{\delta}^{1-\varepsilon} = -\frac{(1-\varepsilon)^p \varepsilon^q}{q} + \frac{\delta^p (1-\delta)^q}{q}\).
+
+Since \(p, q > 0\), \(t^p (1-t)^q \to 0\) at both ends: \(\delta^p \to 0\) as \(\delta \to 0^+\) and \(\varepsilon^q \to 0\) as \(\varepsilon \to 0^+\), so the boundary term tends to \(0\).
+
+Sending \(\delta, \varepsilon \to 0^+\) and using convergence from problem 1 gives \(B(p+1,q) = \frac{p}{q}\int_0^1 t^{p-1}(1-t)^q\,dt = \frac{p}{q}B(p,q+1)\).`,
         },
       },
       {

@@ -15,8 +15,12 @@ export const eulerMascheroniProblems: readonly ProblemMeta[] = [
   {
     id: 'euler-mascheroni-decreasing',
     statement: {
-      ko: String.raw`\(\gamma_n = H_n - \ln n\)이 감소수열이며 아래로 유계이므로 (따라서) 수렴함을 보이세요. 힌트: \(\frac{1}{n+1} < \ln(n+1) - \ln n < \frac{1}{n}\)을 이용하세요.`,
-      en: String.raw`Show that \(\gamma_n = H_n - \ln n\) is decreasing and bounded below, hence convergent. Hint: use \(\frac{1}{n+1} < \ln(n+1) - \ln n < \frac{1}{n}\).`,
+      ko: String.raw`\(\gamma_n = H_n - \ln n\)이 감소수열이며 아래로 유계이므로 (따라서) 수렴함을 보이세요.
+
+힌트: \(\frac{1}{n+1} < \ln(n+1) - \ln n < \frac{1}{n}\)을 이용하세요.`,
+      en: String.raw`Show that \(\gamma_n = H_n - \ln n\) is decreasing and bounded below, hence convergent.
+
+Hint: use \(\frac{1}{n+1} < \ln(n+1) - \ln n < \frac{1}{n}\).`,
     },
     display: [String.raw`\gamma_{n+1} - \gamma_n = \frac{1}{n+1} - \bigl(\ln(n+1) - \ln n\bigr) < 0`],
     preset: { n: 50 },
@@ -95,8 +99,12 @@ export const eulerMascheroniProblems: readonly ProblemMeta[] = [
   {
     id: 'euler-mascheroni-bounds',
     statement: {
-      ko: String.raw`\(0.5 < \gamma < 0.6\)임을 보이세요. 힌트: \(\gamma = \sum_{k=1}^{\infty} d_k\) (\(d_k = \frac{1}{k} - \ln\left(1+\frac{1}{k}\right)\))의 처음 10개 항을 직접 계산하고, 꼬리는 적분 추정으로 엄밀하게 묶으세요.`,
-      en: String.raw`Prove that \(0.5 < \gamma < 0.6\). Hint: compute the first 10 terms of \(\gamma = \sum_{k=1}^{\infty} d_k\) (\(d_k = \frac{1}{k} - \ln\left(1+\frac{1}{k}\right)\)) directly and bound the tail rigorously with integral estimates.`,
+      ko: String.raw`\(0.5 < \gamma < 0.6\)임을 보이세요.
+
+힌트: \(\gamma = \sum_{k=1}^{\infty} d_k\) (\(d_k = \frac{1}{k} - \ln\left(1+\frac{1}{k}\right)\))의 처음 10개 항을 직접 계산하고, 꼬리는 적분 추정으로 엄밀하게 묶으세요.`,
+      en: String.raw`Prove that \(0.5 < \gamma < 0.6\).
+
+Hint: compute the first 10 terms of \(\gamma = \sum_{k=1}^{\infty} d_k\) (\(d_k = \frac{1}{k} - \ln\left(1+\frac{1}{k}\right)\)) directly and bound the tail rigorously with integral estimates.`,
     },
     display: [
       String.raw`\gamma = \sum_{k=1}^{\infty} d_k, \qquad d_k := \frac{1}{k} - \ln\left(1+\frac{1}{k}\right) > 0`,
@@ -110,14 +118,30 @@ export const eulerMascheroniProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`예제 2에서 \(\gamma = \sum_{k=1}^{\infty} d_k\)이며 모든 \(d_k > 0\)입니다. 처음 10개 항의 합은 망원경 합으로 \(\sum_{k=1}^{10} d_k = H_{10} - \ln 11 \approx 2.9289682539 - 2.3978952728 = 0.5310729812\)입니다. \(d_k > 0\)이므로 이 값이 이미 하한이 됩니다: \(\gamma > 0.5310729812 > 0.5\).`,
-          en: String.raw`By problem 2, \(\gamma = \sum_{k=1}^{\infty} d_k\) with every \(d_k > 0\). The first 10 terms telescope to \(\sum_{k=1}^{10} d_k = H_{10} - \ln 11 \approx 2.9289682539 - 2.3978952728 = 0.5310729812\). Since \(d_k > 0\), this is already a lower bound: \(\gamma > 0.5310729812 > 0.5\).`,
+          ko: String.raw`예제 2에서 \(\gamma = \sum_{k=1}^{\infty} d_k\)이며 모든 \(d_k > 0\)입니다.
+
+처음 10개 항의 합은 망원경 합으로 \(\sum_{k=1}^{10} d_k = H_{10} - \ln 11 \approx 2.9289682539 - 2.3978952728 = 0.5310729812\)입니다.
+
+\(d_k > 0\)이므로 이 값이 이미 하한이 됩니다: \(\gamma > 0.5310729812 > 0.5\).`,
+          en: String.raw`By problem 2, \(\gamma = \sum_{k=1}^{\infty} d_k\) with every \(d_k > 0\).
+
+The first 10 terms telescope to \(\sum_{k=1}^{10} d_k = H_{10} - \ln 11 \approx 2.9289682539 - 2.3978952728 = 0.5310729812\).
+
+Since \(d_k > 0\), this is already a lower bound: \(\gamma > 0.5310729812 > 0.5\).`,
         },
       },
       {
         text: {
-          ko: String.raw`꼬리를 묶기 위해 \(d_k\)를 위에서 추정합니다. \(\ln\left(1+\frac{1}{k}\right) = \int_k^{k+1} \frac{dx}{x}\)이고, \(\frac{1}{x}\)의 볼록성에 의해 \(f(k+t) + f(k+1-t) \ge 2f(k+\tfrac12)\) (\(0 \le t \le 1\))이므로 적분하면 \(\int_k^{k+1} \frac{dx}{x} \ge \frac{1}{k+1/2} = \frac{2}{2k+1}\)입니다. 따라서 \(d_k \le \frac{1}{k} - \frac{2}{2k+1} = \frac{1}{k(2k+1)} < \frac{1}{2k^2}\)입니다.`,
-          en: String.raw`To bound the tail from above, estimate \(d_k\) from above. Write \(\ln\left(1+\frac{1}{k}\right) = \int_k^{k+1} \frac{dx}{x}\); by convexity of \(\frac{1}{x}\), \(f(k+t) + f(k+1-t) \ge 2f(k+\tfrac12)\) for \(0 \le t \le 1\), so integrating gives \(\int_k^{k+1} \frac{dx}{x} \ge \frac{1}{k+1/2} = \frac{2}{2k+1}\). Hence \(d_k \le \frac{1}{k} - \frac{2}{2k+1} = \frac{1}{k(2k+1)} < \frac{1}{2k^2}\).`,
+          ko: String.raw`꼬리를 묶기 위해 \(d_k\)를 위에서 추정합니다.
+
+\(\ln\left(1+\frac{1}{k}\right) = \int_k^{k+1} \frac{dx}{x}\)이고, \(\frac{1}{x}\)의 볼록성에 의해 \(f(k+t) + f(k+1-t) \ge 2f(k+\tfrac12)\) (\(0 \le t \le 1\))이므로 적분하면 \(\int_k^{k+1} \frac{dx}{x} \ge \frac{1}{k+1/2} = \frac{2}{2k+1}\)입니다.
+
+따라서 \(d_k \le \frac{1}{k} - \frac{2}{2k+1} = \frac{1}{k(2k+1)} < \frac{1}{2k^2}\)입니다.`,
+          en: String.raw`To bound the tail from above, estimate \(d_k\) from above.
+
+Write \(\ln\left(1+\frac{1}{k}\right) = \int_k^{k+1} \frac{dx}{x}\); by convexity of \(\frac{1}{x}\), \(f(k+t) + f(k+1-t) \ge 2f(k+\tfrac12)\) for \(0 \le t \le 1\), so integrating gives \(\int_k^{k+1} \frac{dx}{x} \ge \frac{1}{k+1/2} = \frac{2}{2k+1}\).
+
+Hence \(d_k \le \frac{1}{k} - \frac{2}{2k+1} = \frac{1}{k(2k+1)} < \frac{1}{2k^2}\).`,
         },
       },
       {
