@@ -14,8 +14,12 @@ export const jordanDecompositionProblems: readonly ProblemMeta[] = [
   {
     id: 'variation-function',
     statement: {
-      ko: String.raw`\(f\)가 \([a, b]\)에서 유계변동이라고 가정하세요. \(g(x) = V_a^x(f)\)와 \(h(x) = g(x) - f(x)\)로 두면 \(g\)와 \(h\)가 모두 단조증가이므로 \(f = g - h\)가 성립함을 증명하세요 (조르당 분해의 한 방향).`,
-      en: String.raw`Assume \(f\) is of bounded variation on \([a, b]\). Prove that with \(g(x) = V_a^x(f)\) and \(h(x) = g(x) - f(x)\), both \(g\) and \(h\) are increasing, so \(f = g - h\) (one direction of the Jordan decomposition).`,
+      ko: String.raw`\(f\)가 \([a, b]\)에서 유계변동이라고 가정하세요.
+
+\(g(x) = V_a^x(f)\)와 \(h(x) = g(x) - f(x)\)로 두면 \(g\)와 \(h\)가 모두 단조증가이므로 \(f = g - h\)가 성립함을 증명하세요 (조르당 분해의 한 방향).`,
+      en: String.raw`Assume \(f\) is of bounded variation on \([a, b]\).
+
+Prove that with \(g(x) = V_a^x(f)\) and \(h(x) = g(x) - f(x)\), both \(g\) and \(h\) are increasing, so \(f = g - h\) (one direction of the Jordan decomposition).`,
     },
     display: [
       String.raw`V_a^{x_2}(f) = V_a^{x_1}(f) + V_{x_1}^{x_2}(f) \qquad (a \le x_1 < x_2 \le b)`,
@@ -29,20 +33,44 @@ export const jordanDecompositionProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`먼저 변동량(variation)의 가산성(additivity)을 증명합니다. \(a \le x_1 < x_2 \le b\)일 때 \(V_a^{x_2}(f) = V_a^{x_1}(f) + V_{x_1}^{x_2}(f)\)입니다. 부등식 \(\le\)는 다음과 같습니다: \([a, x_2]\)의 임의의 분할 \(P\)에 \(x_1\)이 없으면 추가해도 분할합이 줄어들지 않습니다 (\(\lvert f(v) - f(u)\rvert \le \lvert f(x_1) - f(u)\rvert + \lvert f(v) - f(x_1)\rvert\) 이므로). \(x_1\)을 포함한 분할의 분할합은 \([a, x_1]\)과 \([x_1, x_2]\)에서의 합으로 갈라지며, 각각은 해당 구간의 변동량 이하이므로, \(P\)에 대한 상한을 취하면 \(\le\)를 얻습니다.`,
-          en: String.raw`First prove additivity of variation: for \(a \le x_1 < x_2 \le b\), \(V_a^{x_2}(f) = V_a^{x_1}(f) + V_{x_1}^{x_2}(f)\). The inequality \(\le\) goes as follows: given any partition \(P\) of \([a, x_2]\), if \(x_1\) is absent we may insert it, since the sum can only grow (\(\lvert f(v) - f(u)\rvert \le \lvert f(x_1) - f(u)\rvert + \lvert f(v) - f(x_1)\rvert\)). A partition containing \(x_1\) has its sum split into a sum over \([a, x_1]\) plus a sum over \([x_1, x_2]\), each bounded by the variation on that interval; taking the supremum over \(P\) gives \(\le\).`,
+          ko: String.raw`먼저 변동량(variation)의 가산성(additivity)을 증명합니다.
+
+\(a \le x_1 < x_2 \le b\)일 때 \(V_a^{x_2}(f) = V_a^{x_1}(f) + V_{x_1}^{x_2}(f)\)입니다. 부등식 \(\le\)는 다음과 같습니다: \([a, x_2]\)의 임의의 분할 \(P\)에 \(x_1\)이 없으면 추가해도 분할합이 줄어들지 않습니다 (\(\lvert f(v) - f(u)\rvert \le \lvert f(x_1) - f(u)\rvert + \lvert f(v) - f(x_1)\rvert\) 이므로).
+
+\(x_1\)을 포함한 분할의 분할합은 \([a, x_1]\)과 \([x_1, x_2]\)에서의 합으로 갈라지며, 각각은 해당 구간의 변동량 이하이므로, \(P\)에 대한 상한을 취하면 \(\le\)를 얻습니다.`,
+          en: String.raw`First prove additivity of variation: for \(a \le x_1 < x_2 \le b\), \(V_a^{x_2}(f) = V_a^{x_1}(f) + V_{x_1}^{x_2}(f)\).
+
+The inequality \(\le\) goes as follows: given any partition \(P\) of \([a, x_2]\), if \(x_1\) is absent we may insert it, since the sum can only grow (\(\lvert f(v) - f(u)\rvert \le \lvert f(x_1) - f(u)\rvert + \lvert f(v) - f(x_1)\rvert\)).
+
+A partition containing \(x_1\) has its sum split into a sum over \([a, x_1]\) plus a sum over \([x_1, x_2]\), each bounded by the variation on that interval; taking the supremum over \(P\) gives \(\le\).`,
         },
       },
       {
         text: {
-          ko: String.raw`역부등식 \(\ge\): \([a, x_1]\)의 분할 \(P_1\)과 \([x_1, x_2]\)의 분할 \(P_2\)를 이어 붙이면 \([a, x_2]\)의 분할 \(P_1 \cup P_2\)가 되고, 그 분할합은 두 구간의 분할합의 합과 같습니다. 각 구간에서 상한을 취하면 \(\ge\)를 얻습니다. \(f\)가 유계변동이므로 모든 상한이 유한합니다.`,
-          en: String.raw`The reverse \(\ge\): concatenating a partition \(P_1\) of \([a, x_1]\) with a partition \(P_2\) of \([x_1, x_2]\) gives a partition \(P_1 \cup P_2\) of \([a, x_2]\) whose sum is the sum of the two sums. Taking suprema on each interval gives \(\ge\). All suprema are finite since \(f\) is BV.`,
+          ko: String.raw`역부등식 \(\ge\): \([a, x_1]\)의 분할 \(P_1\)과 \([x_1, x_2]\)의 분할 \(P_2\)를 이어 붙이면 \([a, x_2]\)의 분할 \(P_1 \cup P_2\)가 되고, 그 분할합은 두 구간의 분할합의 합과 같습니다.
+
+각 구간에서 상한을 취하면 \(\ge\)를 얻습니다.
+
+\(f\)가 유계변동이므로 모든 상한이 유한합니다.`,
+          en: String.raw`The reverse \(\ge\): concatenating a partition \(P_1\) of \([a, x_1]\) with a partition \(P_2\) of \([x_1, x_2]\) gives a partition \(P_1 \cup P_2\) of \([a, x_2]\) whose sum is the sum of the two sums.
+
+Taking suprema on each interval gives \(\ge\).
+
+All suprema are finite since \(f\) is BV.`,
         },
       },
       {
         text: {
-          ko: String.raw`이제 \(g(x) = V_a^x(f)\)는 단조증가입니다: \(x_1 < x_2\)이면 가산성에 의해 \(g(x_2) = g(x_1) + V_{x_1}^{x_2}(f) \ge g(x_1)\) (변동량은 음이 아닙니다). 그리고 \(h(x_2) - h(x_1) = (g(x_2) - g(x_1)) - (f(x_2) - f(x_1)) = V_{x_1}^{x_2}(f) - (f(x_2) - f(x_1))\)인데, 분할 \(\{x_1, x_2\}\) 하나만 봐도 \(V_{x_1}^{x_2}(f) \ge \lvert f(x_2) - f(x_1)\rvert \ge f(x_2) - f(x_1)\)이므로 \(h(x_2) - h(x_1) \ge 0\) — \(h\)도 단조증가입니다. \(f = g - h\)는 \(h\)의 정의 그 자체입니다.`,
-          en: String.raw`Now \(g(x) = V_a^x(f)\) is increasing: for \(x_1 < x_2\), additivity gives \(g(x_2) = g(x_1) + V_{x_1}^{x_2}(f) \ge g(x_1)\) (variation is nonnegative). And \(h(x_2) - h(x_1) = (g(x_2) - g(x_1)) - (f(x_2) - f(x_1)) = V_{x_1}^{x_2}(f) - (f(x_2) - f(x_1))\); but \(V_{x_1}^{x_2}(f) \ge \lvert f(x_2) - f(x_1)\rvert \ge f(x_2) - f(x_1)\) from the single partition \(\{x_1, x_2\}\), so \(h(x_2) - h(x_1) \ge 0\) — \(h\) is increasing too. The identity \(f = g - h\) is the definition of \(h\).`,
+          ko: String.raw`이제 \(g(x) = V_a^x(f)\)는 단조증가입니다: \(x_1 < x_2\)이면 가산성에 의해 \(g(x_2) = g(x_1) + V_{x_1}^{x_2}(f) \ge g(x_1)\) (변동량은 음이 아닙니다).
+
+그리고 \(h(x_2) - h(x_1) = (g(x_2) - g(x_1)) - (f(x_2) - f(x_1)) = V_{x_1}^{x_2}(f) - (f(x_2) - f(x_1))\)인데, 분할 \(\{x_1, x_2\}\) 하나만 봐도 \(V_{x_1}^{x_2}(f) \ge \lvert f(x_2) - f(x_1)\rvert \ge f(x_2) - f(x_1)\)이므로 \(h(x_2) - h(x_1) \ge 0\) — \(h\)도 단조증가입니다.
+
+\(f = g - h\)는 \(h\)의 정의 그 자체입니다.`,
+          en: String.raw`Now \(g(x) = V_a^x(f)\) is increasing: for \(x_1 < x_2\), additivity gives \(g(x_2) = g(x_1) + V_{x_1}^{x_2}(f) \ge g(x_1)\) (variation is nonnegative).
+
+And \(h(x_2) - h(x_1) = (g(x_2) - g(x_1)) - (f(x_2) - f(x_1)) = V_{x_1}^{x_2}(f) - (f(x_2) - f(x_1))\); but \(V_{x_1}^{x_2}(f) \ge \lvert f(x_2) - f(x_1)\rvert \ge f(x_2) - f(x_1)\) from the single partition \(\{x_1, x_2\}\), so \(h(x_2) - h(x_1) \ge 0\) — \(h\) is increasing too.
+
+The identity \(f = g - h\) is the definition of \(h\).`,
         },
       },
     ],
@@ -65,9 +93,13 @@ export const jordanDecompositionProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\([a, b]\)의 임의의 분할 \(a = x_0 < x_1 < \dots < x_n = b\)를 잡습니다. 각 조각에서
+          ko: String.raw`\([a, b]\)의 임의의 분할 \(a = x_0 < x_1 < \dots < x_n = b\)를 잡습니다.
+
+각 조각에서
           \(\lvert f(x_i) - f(x_{i-1})\rvert = \lvert (g(x_i) - g(x_{i-1})) - (h(x_i) - h(x_{i-1}))\rvert \le \lvert g(x_i) - g(x_{i-1})\rvert + \lvert h(x_i) - h(x_{i-1})\rvert\) (삼각부등식). \(g\)와 \(h\)가 단조증가이므로 각 차분은 음이 아니어서 절댓값이 그대로 빠집니다.`,
-          en: String.raw`Take any partition \(a = x_0 < x_1 < \dots < x_n = b\) of \([a, b]\). On each piece,
+          en: String.raw`Take any partition \(a = x_0 < x_1 < \dots < x_n = b\) of \([a, b]\).
+
+On each piece,
           \(\lvert f(x_i) - f(x_{i-1})\rvert = \lvert (g(x_i) - g(x_{i-1})) - (h(x_i) - h(x_{i-1}))\rvert \le \lvert g(x_i) - g(x_{i-1})\rvert + \lvert h(x_i) - h(x_{i-1})\rvert\) (triangle inequality). Since \(g\) and \(h\) are increasing, each difference is nonnegative, so the absolute values drop away.`,
         },
       },
@@ -102,8 +134,16 @@ export const jordanDecompositionProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`그러면 \((g + u) - (h + u) = g - h = f\) — \(u\)가 소거됩니다. \(u(x) = x\), \(u(x) = x^2\), \(u(x) = 2\) (상수) 등 단조증가 함수는 무수히 많으므로, 조르당 분해도 무수히 많습니다. 유일성을 얻으려면 정규화 조건(예: \(g(a) = 0\) 같은)이 추가로 필요합니다.`,
-          en: String.raw`Then \((g + u) - (h + u) = g - h = f\) — the \(u\) cancels. Since there are infinitely many increasing functions \(u\) (e.g. \(u(x) = x\), \(u(x) = x^2\), \(u(x) = 2\) constant), there are infinitely many Jordan decompositions. Uniqueness would need an extra normalization (e.g. \(g(a) = 0\)).`,
+          ko: String.raw`그러면 \((g + u) - (h + u) = g - h = f\) — \(u\)가 소거됩니다.
+
+\(u(x) = x\), \(u(x) = x^2\), \(u(x) = 2\) (상수) 등 단조증가 함수는 무수히 많으므로, 조르당 분해도 무수히 많습니다.
+
+유일성을 얻으려면 정규화 조건(예: \(g(a) = 0\) 같은)이 추가로 필요합니다.`,
+          en: String.raw`Then \((g + u) - (h + u) = g - h = f\) — the \(u\) cancels.
+
+Since there are infinitely many increasing functions \(u\) (e.g. \(u(x) = x\), \(u(x) = x^2\), \(u(x) = 2\) constant), there are infinitely many Jordan decompositions.
+
+Uniqueness would need an extra normalization (e.g. \(g(a) = 0\)).`,
         },
       },
     ],

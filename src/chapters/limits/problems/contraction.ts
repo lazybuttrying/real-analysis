@@ -50,8 +50,12 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'half-no-fixed-point',
     statement: {
-      ko: String.raw`\(T(x) = x/2\)가 \((0,1]\) 위에서 \(q = 1/2\)인 수축사상이지만, \((0,1]\) 안에는 고정점이 없음을 보이세요. 완비성이 왜 필수적인지 설명합니다.`,
-      en: String.raw`Show that \(T(x) = x/2\) is a contraction with \(q = 1/2\) on \((0,1]\), yet has no fixed point in \((0,1]\). This is why completeness is essential.`,
+      ko: String.raw`\(T(x) = x/2\)가 \((0,1]\) 위에서 \(q = 1/2\)인 수축사상이지만, \((0,1]\) 안에는 고정점이 없음을 보이세요.
+
+완비성이 왜 필수적인지 설명합니다.`,
+      en: String.raw`Show that \(T(x) = x/2\) is a contraction with \(q = 1/2\) on \((0,1]\), yet has no fixed point in \((0,1]\).
+
+This is why completeness is essential.`,
     },
     display: [
       String.raw`|T(x) - T(y)| = \tfrac12|x - y|, \qquad T\big((0,1]\big) \subset (0,1]`,
@@ -77,8 +81,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x_0 = 1\)에서 시작하면 \(x_n = 2^{-n}\): \(1, \frac12, \frac14, \dots\)입니다. 이 수열은 첫 번째 문제의 기하 상한을 만족하므로 코시수열이지만, 그 극한 \(0\)은 공간 밖에 있습니다. 완비성이 빠지면 코시수열이 "도착할 곳"을 잃고 정리 전체가 무너집니다 — \(n = 8\)에서 \(x_8 = \frac{1}{256} \approx 0.0039\)로, 캡션의 수치와 일치합니다.`,
-          en: String.raw`Starting from \(x_0 = 1\) gives \(x_n = 2^{-n}\): \(1, \frac12, \frac14, \dots\). This sequence satisfies the geometric bound from the first problem, so it is Cauchy — but its limit \(0\) lies outside the space. Without completeness a Cauchy sequence loses its "place to land" and the whole theorem collapses; at \(n = 8\), \(x_8 = \frac{1}{256} \approx 0.0039\), matching the caption's figure.`,
+          ko: String.raw`\(x_0 = 1\)에서 시작하면 \(x_n = 2^{-n}\): \(1, \frac12, \frac14, \dots\)입니다.
+
+이 수열은 첫 번째 문제의 기하 상한을 만족하므로 코시수열이지만, 그 극한 \(0\)은 공간 밖에 있습니다.
+
+완비성이 빠지면 코시수열이 "도착할 곳"을 잃고 정리 전체가 무너집니다 — \(n = 8\)에서 \(x_8 = \frac{1}{256} \approx 0.0039\)로, 캡션의 수치와 일치합니다.`,
+          en: String.raw`Starting from \(x_0 = 1\) gives \(x_n = 2^{-n}\): \(1, \frac12, \frac14, \dots\).
+
+This sequence satisfies the geometric bound from the first problem, so it is Cauchy — but its limit \(0\) lies outside the space.
+
+Without completeness a Cauchy sequence loses its "place to land" and the whole theorem collapses; at \(n = 8\), \(x_8 = \frac{1}{256} \approx 0.0039\), matching the caption's figure.`,
         },
       },
     ],
@@ -107,8 +119,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`극한을 취하는 근거: 거리함수는 연속입니다 — 역삼각부등식에 의해 \(\lvert d(x_n,x_m) - d(x_n,x^*)\rvert \le d(x_m, x^*) \to 0\) (\(m \to \infty\))이므로 \(d(x_n,x_m) \to d(x_n,x^*)\)입니다. 따라서 첫 번째 문제의 부등식에서 \(m \to \infty\)으로 보내면 (\(d(x_1,x_0) = d(x_0,x_1)\)이므로) 오차 상한 \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\)을 얻습니다. \(T(x) = x/2 + 1\), \(q = 1/2\), \(x_0 = 1\)이면 상한은 \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\)이고, 실제 반복값 \(x_8 = 2 - 2^{-8} = 1.99609375\)는 오차 \(|x_8 - 2| = \frac{1}{256}\)으로 상한과 정확히 일치합니다.`,
-          en: String.raw`Justification for passing to the limit: the metric is continuous — by the reverse triangle inequality, \(\lvert d(x_n,x_m) - d(x_n,x^*)\rvert \le d(x_m, x^*) \to 0\) as \(m \to \infty\), so \(d(x_n,x_m) \to d(x_n,x^*)\). Hence letting \(m \to \infty\) in the first problem's estimate (and \(d(x_1,x_0) = d(x_0,x_1)\)) gives the error bound \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\). For \(T(x) = x/2 + 1\) with \(q = 1/2\) and \(x_0 = 1\), the bound is \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\), and the actual iterate \(x_8 = 2 - 2^{-8} = 1.99609375\) has error \(|x_8 - 2| = \frac{1}{256}\), matching the bound exactly.`,
+          ko: String.raw`극한을 취하는 근거: 거리함수는 연속입니다 — 역삼각부등식에 의해 \(\lvert d(x_n,x_m) - d(x_n,x^*)\rvert \le d(x_m, x^*) \to 0\) (\(m \to \infty\))이므로 \(d(x_n,x_m) \to d(x_n,x^*)\)입니다.
+
+따라서 첫 번째 문제의 부등식에서 \(m \to \infty\)으로 보내면 (\(d(x_1,x_0) = d(x_0,x_1)\)이므로) 오차 상한 \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\)을 얻습니다.
+
+\(T(x) = x/2 + 1\), \(q = 1/2\), \(x_0 = 1\)이면 상한은 \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\)이고, 실제 반복값 \(x_8 = 2 - 2^{-8} = 1.99609375\)는 오차 \(|x_8 - 2| = \frac{1}{256}\)으로 상한과 정확히 일치합니다.`,
+          en: String.raw`Justification for passing to the limit: the metric is continuous — by the reverse triangle inequality, \(\lvert d(x_n,x_m) - d(x_n,x^*)\rvert \le d(x_m, x^*) \to 0\) as \(m \to \infty\), so \(d(x_n,x_m) \to d(x_n,x^*)\).
+
+Hence letting \(m \to \infty\) in the first problem's estimate (and \(d(x_1,x_0) = d(x_0,x_1)\)) gives the error bound \(d(x_n,x^*) \le \frac{q^n}{1-q}\,d(x_1,x_0)\).
+
+For \(T(x) = x/2 + 1\) with \(q = 1/2\) and \(x_0 = 1\), the bound is \(\frac{(1/2)^8}{1/2}\cdot\frac12 = \frac{1}{256} \approx 0.0039\), and the actual iterate \(x_8 = 2 - 2^{-8} = 1.99609375\) has error \(|x_8 - 2| = \frac{1}{256}\), matching the bound exactly.`,
         },
       },
       {

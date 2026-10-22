@@ -11,8 +11,12 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'dini-proof',
     statement: {
-      ko: String.raw`\(K\)를 컴팩트 거리공간이라 하자. 각 \(f_n : K \to \mathbb{R}\)가 연속이고, 각 \(x \in K\)에서 \(f_n(x)\)가 단조 증가하면서 연속함수 \(f : K \to \mathbb{R}\)에 수렴할 때, \(f_n \to f\)가 \(K\)에서 균등수렴함을 증명하세요.`,
-      en: String.raw`Let \(K\) be a compact metric space. If each \(f_n : K \to \mathbb{R}\) is continuous and \(f_n(x)\) increases monotonically to a continuous limit \(f : K \to \mathbb{R}\) at each \(x \in K\), prove that \(f_n \to f\) uniformly on \(K\).`,
+      ko: String.raw`\(K\)를 컴팩트 거리공간이라 하자.
+
+각 \(f_n : K \to \mathbb{R}\)가 연속이고, 각 \(x \in K\)에서 \(f_n(x)\)가 단조 증가하면서 연속함수 \(f : K \to \mathbb{R}\)에 수렴할 때, \(f_n \to f\)가 \(K\)에서 균등수렴함을 증명하세요.`,
+      en: String.raw`Let \(K\) be a compact metric space.
+
+If each \(f_n : K \to \mathbb{R}\) is continuous and \(f_n(x)\) increases monotonically to a continuous limit \(f : K \to \mathbb{R}\) at each \(x \in K\), prove that \(f_n \to f\) uniformly on \(K\).`,
     },
     display: [
       String.raw`E_n = \{x \in K : f(x) - f_n(x) < \varepsilon\}, \qquad E_n \subseteq E_{n+1}, \qquad K = \bigcup_{n=1}^{\infty} E_n`,
@@ -25,8 +29,16 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(\varepsilon > 0\)을 고정하고 \(E_n = \{x \in K : f(x) - f_n(x) < \varepsilon\}\)이라 두자. \(f - f_n\)은 연속이므로 각 \(E_n\)은 \(K\)의 열린 부분집합이다. 단조 증가 \(f_n(x) \le f_{n+1}(x)\)이므로 \(f(x) - f_n(x) \ge f(x) - f_{n+1}(x)\)이고, 따라서 \(E_n \subseteq E_{n+1}\)이다.`,
-          en: String.raw`Fix \(\varepsilon > 0\) and set \(E_n = \{x \in K : f(x) - f_n(x) < \varepsilon\}\). Each \(E_n\) is open in \(K\) because \(f - f_n\) is continuous. Since \(f_n(x) \le f_{n+1}(x)\) monotonically, \(f(x) - f_n(x) \ge f(x) - f_{n+1}(x)\), so \(E_n \subseteq E_{n+1}\).`,
+          ko: String.raw`\(\varepsilon > 0\)을 고정하고 \(E_n = \{x \in K : f(x) - f_n(x) < \varepsilon\}\)이라 두자.
+
+\(f - f_n\)은 연속이므로 각 \(E_n\)은 \(K\)의 열린 부분집합이다.
+
+단조 증가 \(f_n(x) \le f_{n+1}(x)\)이므로 \(f(x) - f_n(x) \ge f(x) - f_{n+1}(x)\)이고, 따라서 \(E_n \subseteq E_{n+1}\)이다.`,
+          en: String.raw`Fix \(\varepsilon > 0\) and set \(E_n = \{x \in K : f(x) - f_n(x) < \varepsilon\}\).
+
+Each \(E_n\) is open in \(K\) because \(f - f_n\) is continuous.
+
+Since \(f_n(x) \le f_{n+1}(x)\) monotonically, \(f(x) - f_n(x) \ge f(x) - f_{n+1}(x)\), so \(E_n \subseteq E_{n+1}\).`,
         },
       },
       {
@@ -37,8 +49,24 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(K\)가 컴팩트이므로 유한 부분덮개 \(E_{n_1}, \dots, E_{n_k}\)가 존재한다. \(N = \max\{n_1, \dots, n_k\}\)라 두면 단조성에 의해 \(K \subseteq E_N\)이다. \(n \ge N\)이면 \(E_N \subseteq E_n\)이므로 모든 \(x \in K\)에 대해 \(f(x) - f_n(x) < \varepsilon\)이다. 명시하면, 증가 수렴이므로 \(f_n(x) \le f(x)\)이고 따라서 \(0 \le f(x) - f_n(x)\)이므로 \(|f(x) - f_n(x)| = f(x) - f_n(x) < \varepsilon\)이다 — \(x\)에 의존하지 않는 하나의 \(N\)이 전체 \(K\)에 통하므로 균등수렴이다. (단조 감소인 경우 \(-f_n\)에 적용한다.)`,
-          en: String.raw`Compactness of \(K\) gives a finite subcover \(E_{n_1}, \dots, E_{n_k}\). With \(N = \max\{n_1, \dots, n_k\}\), monotonicity yields \(K \subseteq E_N\). For \(n \ge N\), \(E_N \subseteq E_n\), so \(f(x) - f_n(x) < \varepsilon\) for every \(x \in K\). Explicitly, increasing convergence gives \(f_n(x) \le f(x)\), hence \(0 \le f(x) - f_n(x)\), so \(|f(x) - f_n(x)| = f(x) - f_n(x) < \varepsilon\) — one \(N\) works for all of \(K\), which is uniform convergence. (For the decreasing case, apply the argument to \(-f_n\).)`,
+          ko: String.raw`\(K\)가 컴팩트이므로 유한 부분덮개 \(E_{n_1}, \dots, E_{n_k}\)가 존재한다.
+
+\(N = \max\{n_1, \dots, n_k\}\)라 두면 단조성에 의해 \(K \subseteq E_N\)이다.
+
+\(n \ge N\)이면 \(E_N \subseteq E_n\)이므로 모든 \(x \in K\)에 대해 \(f(x) - f_n(x) < \varepsilon\)이다.
+
+명시하면, 증가 수렴이므로 \(f_n(x) \le f(x)\)이고 따라서 \(0 \le f(x) - f_n(x)\)이므로 \(|f(x) - f_n(x)| = f(x) - f_n(x) < \varepsilon\)이다 — \(x\)에 의존하지 않는 하나의 \(N\)이 전체 \(K\)에 통하므로 균등수렴이다.
+
+(단조 감소인 경우 \(-f_n\)에 적용한다.)`,
+          en: String.raw`Compactness of \(K\) gives a finite subcover \(E_{n_1}, \dots, E_{n_k}\).
+
+With \(N = \max\{n_1, \dots, n_k\}\), monotonicity yields \(K \subseteq E_N\).
+
+For \(n \ge N\), \(E_N \subseteq E_n\), so \(f(x) - f_n(x) < \varepsilon\) for every \(x \in K\).
+
+Explicitly, increasing convergence gives \(f_n(x) \le f(x)\), hence \(0 \le f(x) - f_n(x)\), so \(|f(x) - f_n(x)| = f(x) - f_n(x) < \varepsilon\) — one \(N\) works for all of \(K\), which is uniform convergence.
+
+(For the decreasing case, apply the argument to \(-f_n\).)`,
         },
       },
     ],
@@ -72,8 +100,24 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`두 경우를 분리해야 합니다. (i) \((0,1)\) 위에서는 극한 \(g \equiv 0\)이 연속이고, 각 \(g_n\)은 연속이며 단조 감소하므로, 실패한 디니 가설은 컴팩트성뿐입니다(\((0,1)\)은 컴팩트하지 않음) — 위의 \(\sup = 1\) 계산이 바로 그 예입니다. (ii) \((0,1]\) 위에서는 컴팩트성도 실패하지만, 극한 \(g\)가 \(x = 1\)에서 불연속이므로 연속인 극한이라는 가설도 함께 실패합니다. 따라서 \((0,1]\) 예만으로는 컴팩트성 하나만을 분리해 보여줄 수 없습니다. 균등수렴하는 연속함수열의 극한은 연속이어야 한다는 사실은 (ii)에서도 비균등성을 줍니다.`,
-          en: String.raw`Separate the two cases. (i) On \((0,1)\) the limit \(g \equiv 0\) is continuous, each \(g_n\) is continuous and monotone decreasing, so the only failed Dini hypothesis is compactness (\((0,1)\) is not compact) — the \(\sup = 1\) computation above is exactly this example. (ii) On \((0,1]\) compactness also fails, but the limit \(g\) is discontinuous at \(x = 1\), so the continuous-limit hypothesis fails as well. Hence the \((0,1]\) example alone does not isolate compactness. The fact that a uniform limit of continuous functions must be continuous also gives non-uniformity in case (ii).`,
+          ko: String.raw`두 경우를 분리해야 합니다.
+
+(i) \((0,1)\) 위에서는 극한 \(g \equiv 0\)이 연속이고, 각 \(g_n\)은 연속이며 단조 감소하므로, 실패한 디니 가설은 컴팩트성뿐입니다(\((0,1)\)은 컴팩트하지 않음) — 위의 \(\sup = 1\) 계산이 바로 그 예입니다.
+
+(ii) \((0,1]\) 위에서는 컴팩트성도 실패하지만, 극한 \(g\)가 \(x = 1\)에서 불연속이므로 연속인 극한이라는 가설도 함께 실패합니다.
+
+따라서 \((0,1]\) 예만으로는 컴팩트성 하나만을 분리해 보여줄 수 없습니다.
+
+균등수렴하는 연속함수열의 극한은 연속이어야 한다는 사실은 (ii)에서도 비균등성을 줍니다.`,
+          en: String.raw`Separate the two cases.
+
+(i) On \((0,1)\) the limit \(g \equiv 0\) is continuous, each \(g_n\) is continuous and monotone decreasing, so the only failed Dini hypothesis is compactness (\((0,1)\) is not compact) — the \(\sup = 1\) computation above is exactly this example.
+
+(ii) On \((0,1]\) compactness also fails, but the limit \(g\) is discontinuous at \(x = 1\), so the continuous-limit hypothesis fails as well.
+
+Hence the \((0,1]\) example alone does not isolate compactness.
+
+The fact that a uniform limit of continuous functions must be continuous also gives non-uniformity in case (ii).`,
         },
       },
     ],
@@ -107,8 +151,20 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(S\)가 연속임을 M-판정법 없이 보입니다(M-판정법은 균등수렴 자체를 주므로 순환이 됩니다). \(x, x_0 \in [0,1]\)에 대해 꼬리 추정 \(0 \le S(x) - S_N(x) = \sum_{k>N} \frac{x^k}{k^2} \le \sum_{k>N} \frac{1}{k^2}\)를 이용하면 \(|S(x) - S(x_0)| \le |S_N(x) - S_N(x_0)| + 2\sum_{k>N} \frac{1}{k^2}\)입니다. \(\varepsilon > 0\)에 대해 꼬리가 \(\varepsilon/3\)보다 작아지는 \(N\)을 고른 뒤, \(S_N\)의 연속성으로 \(|x - x_0|\)가 충분히 작을 때 \(|S_N(x) - S_N(x_0)| < \varepsilon/3\)이 되게 하면 \(|S(x) - S(x_0)| < \varepsilon\)입니다. 따라서 \(S\)는 연속입니다 — 여기서 꼬리 추정은 \(S\)의 연속성 검증에만 쓰였고, 균등수렴을 가정한 것은 아닙니다.`,
-          en: String.raw`Show \(S\) is continuous without the M-test (the M-test already gives uniform convergence, so citing it would be circular). For \(x, x_0 \in [0,1]\), the tail estimate \(0 \le S(x) - S_N(x) = \sum_{k>N} \frac{x^k}{k^2} \le \sum_{k>N} \frac{1}{k^2}\) gives \(|S(x) - S(x_0)| \le |S_N(x) - S_N(x_0)| + 2\sum_{k>N} \frac{1}{k^2}\). Given \(\varepsilon > 0\), choose \(N\) so the tail is below \(\varepsilon/3\), then use continuity of \(S_N\) to make \(|S_N(x) - S_N(x_0)| < \varepsilon/3\) for \(|x - x_0|\) small enough; then \(|S(x) - S(x_0)| < \varepsilon\). Hence \(S\) is continuous — the tail estimate is used only to verify continuity of the limit, not to assume uniform convergence.`,
+          ko: String.raw`\(S\)가 연속임을 M-판정법 없이 보입니다(M-판정법은 균등수렴 자체를 주므로 순환이 됩니다).
+
+\(x, x_0 \in [0,1]\)에 대해 꼬리 추정 \(0 \le S(x) - S_N(x) = \sum_{k>N} \frac{x^k}{k^2} \le \sum_{k>N} \frac{1}{k^2}\)를 이용하면 \(|S(x) - S(x_0)| \le |S_N(x) - S_N(x_0)| + 2\sum_{k>N} \frac{1}{k^2}\)입니다.
+
+\(\varepsilon > 0\)에 대해 꼬리가 \(\varepsilon/3\)보다 작아지는 \(N\)을 고른 뒤, \(S_N\)의 연속성으로 \(|x - x_0|\)가 충분히 작을 때 \(|S_N(x) - S_N(x_0)| < \varepsilon/3\)이 되게 하면 \(|S(x) - S(x_0)| < \varepsilon\)입니다.
+
+따라서 \(S\)는 연속입니다 — 여기서 꼬리 추정은 \(S\)의 연속성 검증에만 쓰였고, 균등수렴을 가정한 것은 아닙니다.`,
+          en: String.raw`Show \(S\) is continuous without the M-test (the M-test already gives uniform convergence, so citing it would be circular).
+
+For \(x, x_0 \in [0,1]\), the tail estimate \(0 \le S(x) - S_N(x) = \sum_{k>N} \frac{x^k}{k^2} \le \sum_{k>N} \frac{1}{k^2}\) gives \(|S(x) - S(x_0)| \le |S_N(x) - S_N(x_0)| + 2\sum_{k>N} \frac{1}{k^2}\).
+
+Given \(\varepsilon > 0\), choose \(N\) so the tail is below \(\varepsilon/3\), then use continuity of \(S_N\) to make \(|S_N(x) - S_N(x_0)| < \varepsilon/3\) for \(|x - x_0|\) small enough; then \(|S(x) - S(x_0)| < \varepsilon\).
+
+Hence \(S\) is continuous — the tail estimate is used only to verify continuity of the limit, not to assume uniform convergence.`,
         },
       },
       {

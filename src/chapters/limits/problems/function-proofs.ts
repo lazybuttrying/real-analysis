@@ -16,8 +16,12 @@ export const functionProofsProblems: readonly ProblemMeta[] = [
   {
     id: 'function-proofs-injective-implies',
     statement: {
-      ko: String.raw`\(g \circ f\)가 단사(injective)라면 \(f\)도 단사임을 완전히 증명하세요. 그리고 씬의 injective-chain 예제(\(f = [0,1]\), \(g = [0,1,0]\))를 이용해, 이 가정이 \(g\) 자체에 대해서는 아무것도 보장하지 않음(\(g(0) = g(2) = 0\))을 확인하세요.`,
-      en: String.raw`Prove completely that if \(g \circ f\) is injective then \(f\) is injective. Then use the scene's injective-chain tables (\(f = [0,1]\), \(g = [0,1,0]\)) to confirm that this hypothesis guarantees nothing about \(g\) itself (\(g(0) = g(2) = 0\)).`,
+      ko: String.raw`\(g \circ f\)가 단사(injective)라면 \(f\)도 단사임을 완전히 증명하세요.
+
+그리고 씬의 injective-chain 예제(\(f = [0,1]\), \(g = [0,1,0]\))를 이용해, 이 가정이 \(g\) 자체에 대해서는 아무것도 보장하지 않음(\(g(0) = g(2) = 0\))을 확인하세요.`,
+      en: String.raw`Prove completely that if \(g \circ f\) is injective then \(f\) is injective.
+
+Then use the scene's injective-chain tables (\(f = [0,1]\), \(g = [0,1,0]\)) to confirm that this hypothesis guarantees nothing about \(g\) itself (\(g(0) = g(2) = 0\)).`,
     },
     display: [
       String.raw`f(a_1) = f(a_2) \;\Rightarrow\; g(f(a_1)) = g(f(a_2)) \;\Rightarrow\; a_1 = a_2`,
@@ -31,8 +35,20 @@ export const functionProofsProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(f(a_1) = f(a_2)\)라 가정하세요. 양변에 \(g\)를 적용하면 \((g \circ f)(a_1) = g(f(a_1)) = g(f(a_2)) = (g \circ f)(a_2)\)입니다. 가정에 의해 \(g \circ f\)는 단사이므로 \(a_1 = a_2\) — 따라서 \(f\)는 단사입니다. 그림으로는: 합성 화살표 끝에서 시작점을 유일하게 복원할 수 있다면, 앞쪽 화살표도 시작점을 유일하게 복원합니다.`,
-          en: String.raw`Assume \(f(a_1) = f(a_2)\). Applying \(g\) to both sides gives \((g \circ f)(a_1) = g(f(a_1)) = g(f(a_2)) = (g \circ f)(a_2)\). By hypothesis \(g \circ f\) is injective, so \(a_1 = a_2\) — hence \(f\) is injective. In the picture: if the composite arrows recover the starting point uniquely, so do the first-stage arrows.`,
+          ko: String.raw`\(f(a_1) = f(a_2)\)라 가정하세요.
+
+양변에 \(g\)를 적용하면 \((g \circ f)(a_1) = g(f(a_1)) = g(f(a_2)) = (g \circ f)(a_2)\)입니다.
+
+가정에 의해 \(g \circ f\)는 단사이므로 \(a_1 = a_2\) — 따라서 \(f\)는 단사입니다.
+
+그림으로는: 합성 화살표 끝에서 시작점을 유일하게 복원할 수 있다면, 앞쪽 화살표도 시작점을 유일하게 복원합니다.`,
+          en: String.raw`Assume \(f(a_1) = f(a_2)\).
+
+Applying \(g\) to both sides gives \((g \circ f)(a_1) = g(f(a_1)) = g(f(a_2)) = (g \circ f)(a_2)\).
+
+By hypothesis \(g \circ f\) is injective, so \(a_1 = a_2\) — hence \(f\) is injective.
+
+In the picture: if the composite arrows recover the starting point uniquely, so do the first-stage arrows.`,
         },
       },
       {
@@ -46,8 +62,12 @@ export const functionProofsProblems: readonly ProblemMeta[] = [
   {
     id: 'function-proofs-bijective-inverse-order',
     statement: {
-      ko: String.raw`\(f\)와 \(g\)가 모두 전단사(bijective)라면 \(g \circ f\)도 전단사고 \((g \circ f)^{-1} = f^{-1} \circ g^{-1}\)임을, 결합법칙을 써서 양쪽 곱이 항등함수가 됨을 보이는 방식으로 완전히 증명하세요. 씬의 bijective 표에서 \(g \circ f\)가 항등함수가 되는 것도 직접 확인하세요.`,
-      en: String.raw`Prove completely that if \(f\) and \(g\) are both bijective then \(g \circ f\) is bijective and \((g \circ f)^{-1} = f^{-1} \circ g^{-1}\), using associativity to show both products are the identity. Also verify directly on the scene's bijective tables that \(g \circ f\) comes out as the identity.`,
+      ko: String.raw`\(f\)와 \(g\)가 모두 전단사(bijective)라면 \(g \circ f\)도 전단사고 \((g \circ f)^{-1} = f^{-1} \circ g^{-1}\)임을, 결합법칙을 써서 양쪽 곱이 항등함수가 됨을 보이는 방식으로 완전히 증명하세요.
+
+씬의 bijective 표에서 \(g \circ f\)가 항등함수가 되는 것도 직접 확인하세요.`,
+      en: String.raw`Prove completely that if \(f\) and \(g\) are both bijective then \(g \circ f\) is bijective and \((g \circ f)^{-1} = f^{-1} \circ g^{-1}\), using associativity to show both products are the identity.
+
+Also verify directly on the scene's bijective tables that \(g \circ f\) comes out as the identity.`,
     },
     display: [
       String.raw`(f^{-1} \circ g^{-1}) \circ (g \circ f) = f^{-1} \circ (g^{-1} \circ g) \circ f = \mathrm{id}`,
@@ -82,8 +102,12 @@ export const functionProofsProblems: readonly ProblemMeta[] = [
   {
     id: 'function-proofs-surjective-implies',
     statement: {
-      ko: String.raw`\(g \circ f\)가 전사(surjective)라면 \(g\)도 전사임을 완전히 증명하세요. 그리고 씬의 surjective-chain 표(\(f = [0,1]\), \(g = [0,1,0]\), \(B = [0,1,2]\))에서 \(f\)는 전사가 아니면서(\(2\)를 놓침) 합성 \(g \circ f = [0,1]\)이 \(C\)를 온전히 덮는 이유를 표로 확인하세요.`,
-      en: String.raw`Prove completely that if \(g \circ f\) is surjective then \(g\) is surjective. Then use the scene's surjective-chain tables (\(f = [0,1]\), \(g = [0,1,0]\), \(B = [0,1,2]\)) to check why \(f\) fails to be surjective (it misses \(2\)) while the composition \(g \circ f = [0,1]\) still covers all of \(C\).`,
+      ko: String.raw`\(g \circ f\)가 전사(surjective)라면 \(g\)도 전사임을 완전히 증명하세요.
+
+그리고 씬의 surjective-chain 표(\(f = [0,1]\), \(g = [0,1,0]\), \(B = [0,1,2]\))에서 \(f\)는 전사가 아니면서(\(2\)를 놓침) 합성 \(g \circ f = [0,1]\)이 \(C\)를 온전히 덮는 이유를 표로 확인하세요.`,
+      en: String.raw`Prove completely that if \(g \circ f\) is surjective then \(g\) is surjective.
+
+Then use the scene's surjective-chain tables (\(f = [0,1]\), \(g = [0,1,0]\), \(B = [0,1,2]\)) to check why \(f\) fails to be surjective (it misses \(2\)) while the composition \(g \circ f = [0,1]\) still covers all of \(C\).`,
     },
     display: [
       String.raw`c \in C \;\Rightarrow\; \exists a: g(f(a)) = c \;\Rightarrow\; b = f(a) \text{ has } g(b) = c`,
@@ -97,8 +121,20 @@ export const functionProofsProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(c \in C\)를 임의로 잡으세요. \(g \circ f\)가 전사이므로 \(g(f(a)) = c\)인 \(a \in A\)가 존재합니다. 이제 \(b = f(a) \in B\)로 두면 \(g(b) = g(f(a)) = c\) — \(c\)의 \(g\)-역원소가 존재하므로 \(g\)는 전사입니다. 그림으로는: 합성 화살표가 \(C\)의 모든 점을 맞히면, 뒷쪽 화살표도 모든 점을 맞혀야 합니다.`,
-          en: String.raw`Take any \(c \in C\). Since \(g \circ f\) is surjective, there is \(a \in A\) with \(g(f(a)) = c\). Setting \(b = f(a) \in B\) gives \(g(b) = g(f(a)) = c\) — so \(c\) has a \(g\)-preimage, and \(g\) is surjective. In the picture: if the composite arrows hit every point of \(C\), the later arrows must too.`,
+          ko: String.raw`\(c \in C\)를 임의로 잡으세요.
+
+\(g \circ f\)가 전사이므로 \(g(f(a)) = c\)인 \(a \in A\)가 존재합니다.
+
+이제 \(b = f(a) \in B\)로 두면 \(g(b) = g(f(a)) = c\) — \(c\)의 \(g\)-역원소가 존재하므로 \(g\)는 전사입니다.
+
+그림으로는: 합성 화살표가 \(C\)의 모든 점을 맞히면, 뒷쪽 화살표도 모든 점을 맞혀야 합니다.`,
+          en: String.raw`Take any \(c \in C\).
+
+Since \(g \circ f\) is surjective, there is \(a \in A\) with \(g(f(a)) = c\).
+
+Setting \(b = f(a) \in B\) gives \(g(b) = g(f(a)) = c\) — so \(c\) has a \(g\)-preimage, and \(g\) is surjective.
+
+In the picture: if the composite arrows hit every point of \(C\), the later arrows must too.`,
         },
       },
       {

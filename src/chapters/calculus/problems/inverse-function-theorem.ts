@@ -29,20 +29,40 @@ export const inverseFunctionTheoremProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(f'(x_0) > 0\)인 경우를 증명합니다 (음수인 경우는 \(-f\)에 적용). \(f'\)가 연속이고 \(f'(x_0) > 0\)이므로, \(f'(x) > 0\)인 \(x_0\)의 근방 구간 \(I\)가 존재합니다 (부호 보존). 평균값 정리(MVT)에 의해 \(x_1 < x_2\) (\(x_1, x_2 \in I\))이면 \(f(x_2) - f(x_1) = f'(\xi)(x_2 - x_1) > 0\)이므로 \(f\)는 \(I\)에서 엄격히 증가합니다 — 따라서 단사입니다. \(f\)가 연속이므로 중간값 정리(IVT)에 의해 \(J = f(I)\)는 구간이고 \(f: I \to J\)는 전사입니다. 엄격히 단조인 함수의 역함수는 연속입니다: \(y_n \to y\)인데 \(g(y_n) \not\to g(y)\)이면 순서가 깨져 \(f\)의 단조성과 모순되기 때문입니다 (표준 \(\varepsilon\)-\(\delta\)/순서 논증). 따라서 \(f\)는 \(J\) 위에서 연속인 역함수 \(g: J \to I\)를 가집니다.`,
-          en: String.raw`Prove the case \(f'(x_0) > 0\) (apply to \(-f\) for the negative case). Since \(f'\) is continuous and \(f'(x_0) > 0\), some neighborhood interval \(I\) of \(x_0\) has \(f'(x) > 0\) throughout (sign preservation). By the MVT, \(x_1 < x_2\) in \(I\) gives \(f(x_2) - f(x_1) = f'(\xi)(x_2 - x_1) > 0\), so \(f\) is strictly increasing on \(I\) — hence injective. Since \(f\) is continuous, the intermediate value theorem (IVT) makes \(J = f(I)\) an interval and \(f: I \to J\) surjective. The inverse of a strictly monotone function is continuous: if \(y_n \to y\) but \(g(y_n) \not\to g(y)\), the order is violated, contradicting monotonicity of \(f\) (the standard \(\varepsilon\)-\(\delta\)/order argument). Hence \(f\) has a continuous inverse \(g: J \to I\) on \(J = f(I)\).`,
+          ko: String.raw`\(f'(x_0) > 0\)인 경우를 증명합니다 (음수인 경우는 \(-f\)에 적용). \(f'\)가 연속이고 \(f'(x_0) > 0\)이므로, \(f'(x) > 0\)인 \(x_0\)의 근방 구간 \(I\)가 존재합니다 (부호 보존). 평균값 정리(MVT)에 의해 \(x_1 < x_2\) (\(x_1, x_2 \in I\))이면 \(f(x_2) - f(x_1) = f'(\xi)(x_2 - x_1) > 0\)이므로 \(f\)는 \(I\)에서 엄격히 증가합니다 — 따라서 단사입니다.
+
+\(f\)가 연속이므로 중간값 정리(IVT)에 의해 \(J = f(I)\)는 구간이고 \(f: I \to J\)는 전사입니다. 엄격히 단조인 함수의 역함수는 연속입니다: \(y_n \to y\)인데 \(g(y_n) \not\to g(y)\)이면 순서가 깨져 \(f\)의 단조성과 모순되기 때문입니다 (표준 \(\varepsilon\)-\(\delta\)/순서 논증).
+
+따라서 \(f\)는 \(J\) 위에서 연속인 역함수 \(g: J \to I\)를 가집니다.`,
+          en: String.raw`Prove the case \(f'(x_0) > 0\) (apply to \(-f\) for the negative case). Since \(f'\) is continuous and \(f'(x_0) > 0\), some neighborhood interval \(I\) of \(x_0\) has \(f'(x) > 0\) throughout (sign preservation). By the MVT, \(x_1 < x_2\) in \(I\) gives \(f(x_2) - f(x_1) = f'(\xi)(x_2 - x_1) > 0\), so \(f\) is strictly increasing on \(I\) — hence injective.
+
+Since \(f\) is continuous, the intermediate value theorem (IVT) makes \(J = f(I)\) an interval and \(f: I \to J\) surjective. The inverse of a strictly monotone function is continuous: if \(y_n \to y\) but \(g(y_n) \not\to g(y)\), the order is violated, contradicting monotonicity of \(f\) (the standard \(\varepsilon\)-\(\delta\)/order argument).
+
+Hence \(f\) has a continuous inverse \(g: J \to I\) on \(J = f(I)\).`,
         },
       },
       {
         text: {
           ko: String.raw`\(y_0 = f(x_0)\), \(y \in J\), \(x = g(y)\), \(x_0 = g(y_0)\)라 두면 차분몫은 \(\frac{g(y) - g(y_0)}{y - y_0} = \frac{x - x_0}{f(x) - f(x_0)}\)입니다 (\(x \ne x_0\)일 때; \(g\)가 단사라 \(y \ne y_0\)이면 \(x \ne x_0\)). MVT를 분모에 적용하면 \(f(x) - f(x_0) = f'(\xi)(x - x_0)\)인 \(\xi\) (\(x\)와 \(x_0\) 사이)가 있어 차분몫은 \(\frac{1}{f'(\xi)}\)가 됩니다.`,
-          en: String.raw`Write \(y_0 = f(x_0)\), \(y \in J\), \(x = g(y)\), \(x_0 = g(y_0)\). The difference quotient is \(\frac{g(y) - g(y_0)}{y - y_0} = \frac{x - x_0}{f(x) - f(x_0)}\) (for \(x \ne x_0\); injectivity of \(g\) gives \(x \ne x_0\) when \(y \ne y_0\)). Applying the MVT to the denominator gives \(\xi\) between \(x\) and \(x_0\) with \(f(x) - f(x_0) = f'(\xi)(x - x_0)\), so the quotient equals \(\frac{1}{f'(\xi)}\).`,
+          en: String.raw`Write \(y_0 = f(x_0)\), \(y \in J\), \(x = g(y)\), \(x_0 = g(y_0)\).
+
+The difference quotient is \(\frac{g(y) - g(y_0)}{y - y_0} = \frac{x - x_0}{f(x) - f(x_0)}\) (for \(x \ne x_0\); injectivity of \(g\) gives \(x \ne x_0\) when \(y \ne y_0\)).
+
+Applying the MVT to the denominator gives \(\xi\) between \(x\) and \(x_0\) with \(f(x) - f(x_0) = f'(\xi)(x - x_0)\), so the quotient equals \(\frac{1}{f'(\xi)}\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(y \to y_0\)이면 \(g\)의 연속성에 의해 \(x = g(y) \to x_0\)이고, 따라서 그 사이에 낀 \(\xi \to x_0\)입니다. \(f'\)의 연속성에 의해 \(\frac{1}{f'(\xi)} \to \frac{1}{f'(x_0)}\) (분모가 0이 아님) — 즉 \(g'(y_0) = \frac{1}{f'(x_0)}\)입니다. 증명 완료. (참고: 일반적인 \(\mathbb{R}^n\) 버전의 증명은 여기서 다루지 않습니다 — 아이디어 수준으로만 언급합니다: 미분을 선형사상으로 보고 역행렬이 국소 역함수의 미분이 됩니다.)`,
-          en: String.raw`As \(y \to y_0\), continuity of \(g\) gives \(x = g(y) \to x_0\), so the squeezed \(\xi \to x_0\). By continuity of \(f'\), \(\frac{1}{f'(\xi)} \to \frac{1}{f'(x_0)}\) (denominator nonzero) — i.e. \(g'(y_0) = \frac{1}{f'(x_0)}\). Complete. (Note: the general \(\mathbb{R}^n\) version is only sketched at idea level here, not proved: one views the derivative as a linear map, and the inverse matrix becomes the derivative of the local inverse.)`,
+          ko: String.raw`\(y \to y_0\)이면 \(g\)의 연속성에 의해 \(x = g(y) \to x_0\)이고, 따라서 그 사이에 낀 \(\xi \to x_0\)입니다.
+
+\(f'\)의 연속성에 의해 \(\frac{1}{f'(\xi)} \to \frac{1}{f'(x_0)}\) (분모가 0이 아님) — 즉 \(g'(y_0) = \frac{1}{f'(x_0)}\)입니다.
+
+증명 완료. (참고: 일반적인 \(\mathbb{R}^n\) 버전의 증명은 여기서 다루지 않습니다 — 아이디어 수준으로만 언급합니다: 미분을 선형사상으로 보고 역행렬이 국소 역함수의 미분이 됩니다.)`,
+          en: String.raw`As \(y \to y_0\), continuity of \(g\) gives \(x = g(y) \to x_0\), so the squeezed \(\xi \to x_0\).
+
+By continuity of \(f'\), \(\frac{1}{f'(\xi)} \to \frac{1}{f'(x_0)}\) (denominator nonzero) — i.e. \(g'(y_0) = \frac{1}{f'(x_0)}\).
+
+Complete. (Note: the general \(\mathbb{R}^n\) version is only sketched at idea level here, not proved: one views the derivative as a linear map, and the inverse matrix becomes the derivative of the local inverse.)`,
         },
       },
     ],
@@ -99,8 +119,16 @@ export const inverseFunctionTheoremProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(0\)에서의 차분몫: \(\frac{g(h) - g(0)}{h} = \frac{\sqrt[3]{h}}{h} = h^{-2/3} = \frac{1}{(\sqrt[3]{h})^2}\)입니다. \(h \to 0\)일 때 분모 \(\to 0^+\)이므로 몫은 \(+\infty\)로 발산합니다 — 극한이 존재하지 않으므로 \(g\)는 \(0\)에서 미분가능하지 않습니다. 정리의 공식 \(\frac{1}{f'(0)}\)도 \(\frac{1}{0}\)으로 무의미해집니다.`,
-          en: String.raw`The difference quotient at \(0\): \(\frac{g(h) - g(0)}{h} = \frac{\sqrt[3]{h}}{h} = h^{-2/3} = \frac{1}{(\sqrt[3]{h})^2}\). As \(h \to 0\) the denominator \(\to 0^+\), so the quotient blows up to \(+\infty\) — no limit exists, hence \(g\) is not differentiable at \(0\). The theorem's formula \(\frac{1}{f'(0)}\) is likewise meaningless as \(\frac{1}{0}\).`,
+          ko: String.raw`\(0\)에서의 차분몫: \(\frac{g(h) - g(0)}{h} = \frac{\sqrt[3]{h}}{h} = h^{-2/3} = \frac{1}{(\sqrt[3]{h})^2}\)입니다.
+
+\(h \to 0\)일 때 분모 \(\to 0^+\)이므로 몫은 \(+\infty\)로 발산합니다 — 극한이 존재하지 않으므로 \(g\)는 \(0\)에서 미분가능하지 않습니다.
+
+정리의 공식 \(\frac{1}{f'(0)}\)도 \(\frac{1}{0}\)으로 무의미해집니다.`,
+          en: String.raw`The difference quotient at \(0\): \(\frac{g(h) - g(0)}{h} = \frac{\sqrt[3]{h}}{h} = h^{-2/3} = \frac{1}{(\sqrt[3]{h})^2}\).
+
+As \(h \to 0\) the denominator \(\to 0^+\), so the quotient blows up to \(+\infty\) — no limit exists, hence \(g\) is not differentiable at \(0\).
+
+The theorem's formula \(\frac{1}{f'(0)}\) is likewise meaningless as \(\frac{1}{0}\).`,
         },
       },
       {

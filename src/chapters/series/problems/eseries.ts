@@ -98,20 +98,64 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`정확한 차분은 \(s_{n+1} - s_n = \sum_{k=0}^{n} (a_{n+1,k} - a_{n,k}) + a_{n+1,n+1}\)입니다. 모든 차이 \(a_{n+1,k} - a_{n,k} \ge 0\)이고 추가 항 \(a_{n+1,n+1} > 0\)이므로 \(s_{n+1} - s_n > 0\)입니다. \(n \ge 2\)이면 \(k = 2\) 항의 차이 \(a_{n+1,2} - a_{n,2} > 0\)도 양의 기여를 합니다. \(n = 1\)인 경우는 따로 확인합니다: \(s_1 = 1 + 1 = 2\), \(s_2 = 1 + 1 + \frac{1}{4} = 2.25\)이므로 \(s_2 - s_1 = \frac{1}{4} > 0\)입니다(\(a_{1,2}\)는 \(n = 1\)인 합에 존재하지 않으므로, \(k = 2\) 차이를 \(n = 1\)에 적용하면 \(a_{2,2}\)를 이중으로 세게 됩니다). 즉 \(s_n\)은 엄밀히 증가합니다.`,
-                en: String.raw`The exact difference is \(s_{n+1} - s_n = \sum_{k=0}^{n} (a_{n+1,k} - a_{n,k}) + a_{n+1,n+1}\). Every difference \(a_{n+1,k} - a_{n,k} \ge 0\) and the extra term \(a_{n+1,n+1} > 0\), so \(s_{n+1} - s_n > 0\). For \(n \ge 2\) the \(k = 2\) difference \(a_{n+1,2} - a_{n,2} > 0\) also contributes positively. The case \(n = 1\) is checked directly: \(s_1 = 1 + 1 = 2\) and \(s_2 = 1 + 1 + \frac{1}{4} = 2.25\), so \(s_2 - s_1 = \frac{1}{4} > 0\) (the term \(a_{1,2}\) does not exist in the \(n = 1\) sum, so applying the \(k = 2\) gain at \(n = 1\) would double-count \(a_{2,2}\)). So \(s_n\) is strictly increasing.`,
+                ko: String.raw`정확한 차분은 \(s_{n+1} - s_n = \sum_{k=0}^{n} (a_{n+1,k} - a_{n,k}) + a_{n+1,n+1}\)입니다.
+
+모든 차이 \(a_{n+1,k} - a_{n,k} \ge 0\)이고 추가 항 \(a_{n+1,n+1} > 0\)이므로 \(s_{n+1} - s_n > 0\)입니다.
+
+\(n \ge 2\)이면 \(k = 2\) 항의 차이 \(a_{n+1,2} - a_{n,2} > 0\)도 양의 기여를 합니다.
+
+\(n = 1\)인 경우는 따로 확인합니다: \(s_1 = 1 + 1 = 2\), \(s_2 = 1 + 1 + \frac{1}{4} = 2.25\)이므로 \(s_2 - s_1 = \frac{1}{4} > 0\)입니다(\(a_{1,2}\)는 \(n = 1\)인 합에 존재하지 않으므로, \(k = 2\) 차이를 \(n = 1\)에 적용하면 \(a_{2,2}\)를 이중으로 세게 됩니다).
+
+즉 \(s_n\)은 엄밀히 증가합니다.`,
+                en: String.raw`The exact difference is \(s_{n+1} - s_n = \sum_{k=0}^{n} (a_{n+1,k} - a_{n,k}) + a_{n+1,n+1}\).
+
+Every difference \(a_{n+1,k} - a_{n,k} \ge 0\) and the extra term \(a_{n+1,n+1} > 0\), so \(s_{n+1} - s_n > 0\).
+
+For \(n \ge 2\) the \(k = 2\) difference \(a_{n+1,2} - a_{n,2} > 0\) also contributes positively.
+
+The case \(n = 1\) is checked directly: \(s_1 = 1 + 1 = 2\) and \(s_2 = 1 + 1 + \frac{1}{4} = 2.25\), so \(s_2 - s_1 = \frac{1}{4} > 0\) (the term \(a_{1,2}\) does not exist in the \(n = 1\) sum, so applying the \(k = 2\) gain at \(n = 1\) would double-count \(a_{2,2}\)).
+
+So \(s_n\) is strictly increasing.`,
               },
             },
             {
               text: {
-                ko: String.raw`각 인자는 \(\left(1-\frac{j}{n}\right) \le 1\)입니다. \(k = 0\)이면 빈 곱이라 \(a_{n,0} = \frac{1}{0!} = 1\)이고, \(k = 1\)이면 유일한 인자가 \(j = 0\)인 \(1\)이라 \(a_{n,1} = \frac{1}{1!} = 1\) — 등호가 성립합니다. \(k \ge 2\)이면 \(j = 1\) 인자가 엄격히 \(1\)보다 작아 \(a_{n,k} < \frac{1}{k!}\)입니다. 따라서 \(a_{n,k} \le \frac{1}{k!}\) (등호는 \(k = 0, 1\)에서만)이고, \(s_n \le \sum_{k=0}^{n}\frac{1}{k!} < \sum_{k=0}^{\infty}\frac{1}{k!} = e\)입니다 — \(s_n\)은 \(e\) 아래에 있고, 극한 \(L = \lim s_n\)은 \(L \le e\)를 만족합니다.`,
-                en: String.raw`Each factor satisfies \(\left(1-\frac{j}{n}\right) \le 1\). For \(k = 0\) the product is empty, so \(a_{n,0} = \frac{1}{0!} = 1\); for \(k = 1\) the only factor is \(j = 0\), giving \(1\), so \(a_{n,1} = \frac{1}{1!} = 1\) — equality holds. For \(k \ge 2\) the factor \(j = 1\) is strictly below \(1\), so \(a_{n,k} < \frac{1}{k!}\). Hence \(a_{n,k} \le \frac{1}{k!}\) (equality only for \(k = 0, 1\)), and \(s_n \le \sum_{k=0}^{n}\frac{1}{k!} < \sum_{k=0}^{\infty}\frac{1}{k!} = e\) — \(s_n\) stays below \(e\), and its limit \(L = \lim s_n\) satisfies \(L \le e\).`,
+                ko: String.raw`각 인자는 \(\left(1-\frac{j}{n}\right) \le 1\)입니다.
+
+\(k = 0\)이면 빈 곱이라 \(a_{n,0} = \frac{1}{0!} = 1\)이고, \(k = 1\)이면 유일한 인자가 \(j = 0\)인 \(1\)이라 \(a_{n,1} = \frac{1}{1!} = 1\) — 등호가 성립합니다.
+
+\(k \ge 2\)이면 \(j = 1\) 인자가 엄격히 \(1\)보다 작아 \(a_{n,k} < \frac{1}{k!}\)입니다.
+
+따라서 \(a_{n,k} \le \frac{1}{k!}\) (등호는 \(k = 0, 1\)에서만)이고, \(s_n \le \sum_{k=0}^{n}\frac{1}{k!} < \sum_{k=0}^{\infty}\frac{1}{k!} = e\)입니다 — \(s_n\)은 \(e\) 아래에 있고, 극한 \(L = \lim s_n\)은 \(L \le e\)를 만족합니다.`,
+                en: String.raw`Each factor satisfies \(\left(1-\frac{j}{n}\right) \le 1\).
+
+For \(k = 0\) the product is empty, so \(a_{n,0} = \frac{1}{0!} = 1\); for \(k = 1\) the only factor is \(j = 0\), giving \(1\), so \(a_{n,1} = \frac{1}{1!} = 1\) — equality holds.
+
+For \(k \ge 2\) the factor \(j = 1\) is strictly below \(1\), so \(a_{n,k} < \frac{1}{k!}\).
+
+Hence \(a_{n,k} \le \frac{1}{k!}\) (equality only for \(k = 0, 1\)), and \(s_n \le \sum_{k=0}^{n}\frac{1}{k!} < \sum_{k=0}^{\infty}\frac{1}{k!} = e\) — \(s_n\) stays below \(e\), and its limit \(L = \lim s_n\) satisfies \(L \le e\).`,
               },
             },
             {
               text: {
-                ko: String.raw`극한이 정확히 \(e\)임을 보입니다. \(K\)를 고정하면 \(n \ge K\)일 때 \(s_n \ge \sum_{k=0}^{K} a_{n,k}\)입니다. 고정된 \(k\)에 대해 \(n \to \infty\)이면 각 인자 \(\left(1-\frac{j}{n}\right) \to 1\)이므로 \(a_{n,k} \to \frac{1}{k!}\)입니다. 따라서 \(L \ge \sum_{k=0}^{K} \frac{1}{k!}\)가 모든 \(K\)에 대해 성립하고, \(K \to \infty\)로 보내면 \(L \ge e\)입니다. 앞 단계의 \(L \le e\)와 합치면 \(L = e\)입니다 — \(s_n\)은 아래에서 \(e\)로 증가합니다.`,
-                en: String.raw`It remains to show the limit is exactly \(e\). Fix \(K\); for \(n \ge K\), \(s_n \ge \sum_{k=0}^{K} a_{n,k}\). For fixed \(k\), as \(n \to \infty\) each factor \(\left(1-\frac{j}{n}\right) \to 1\), so \(a_{n,k} \to \frac{1}{k!}\). Hence \(L \ge \sum_{k=0}^{K} \frac{1}{k!}\) for every \(K\), and letting \(K \to \infty\) gives \(L \ge e\). Combined with \(L \le e\) from the previous step, \(L = e\) — \(s_n\) increases to \(e\) from below.`,
+                ko: String.raw`극한이 정확히 \(e\)임을 보입니다.
+
+\(K\)를 고정하면 \(n \ge K\)일 때 \(s_n \ge \sum_{k=0}^{K} a_{n,k}\)입니다.
+
+고정된 \(k\)에 대해 \(n \to \infty\)이면 각 인자 \(\left(1-\frac{j}{n}\right) \to 1\)이므로 \(a_{n,k} \to \frac{1}{k!}\)입니다.
+
+따라서 \(L \ge \sum_{k=0}^{K} \frac{1}{k!}\)가 모든 \(K\)에 대해 성립하고, \(K \to \infty\)로 보내면 \(L \ge e\)입니다.
+
+앞 단계의 \(L \le e\)와 합치면 \(L = e\)입니다 — \(s_n\)은 아래에서 \(e\)로 증가합니다.`,
+                en: String.raw`It remains to show the limit is exactly \(e\).
+
+Fix \(K\); for \(n \ge K\), \(s_n \ge \sum_{k=0}^{K} a_{n,k}\).
+
+For fixed \(k\), as \(n \to \infty\) each factor \(\left(1-\frac{j}{n}\right) \to 1\), so \(a_{n,k} \to \frac{1}{k!}\).
+
+Hence \(L \ge \sum_{k=0}^{K} \frac{1}{k!}\) for every \(K\), and letting \(K \to \infty\) gives \(L \ge e\).
+
+Combined with \(L \le e\) from the previous step, \(L = e\) — \(s_n\) increases to \(e\) from below.`,
               },
             },
           ],

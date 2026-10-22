@@ -37,14 +37,30 @@ export const lebesgueConvergenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`점별 \(\liminf\)를 봅니다. \(x > 0\)이면 \(n > 1/x\)부터 \(1/n < x\)이므로 \(f_n(x) = 0\) — 따라서 \(\liminf_n f_n(x) = 0\)입니다. \(x = 0\)에서는 \(f_n(0) = n \to \infty\)이므로 \(\liminf\)가 \(\infty\)이지만, 한 점은 측도가 \(0\)인 집합이라 적분에 영향을 주지 않습니다. 즉 \(\liminf_n f_n = 0\) a.e.이고 \(\int \liminf_n f_n = 0\)입니다.`,
-          en: String.raw`Now the pointwise \(\liminf\). For \(x > 0\), once \(n > 1/x\) we have \(1/n < x\) and \(f_n(x) = 0\) — so \(\liminf_n f_n(x) = 0\). At \(x = 0\), \(f_n(0) = n \to \infty\), so the \(\liminf\) is \(\infty\) there, but a single point is a null set and does not affect the integral. Thus \(\liminf_n f_n = 0\) a.e. and \(\int \liminf_n f_n = 0\).`,
+          ko: String.raw`점별 \(\liminf\)를 봅니다. \(x > 0\)이면 \(n > 1/x\)부터 \(1/n < x\)이므로 \(f_n(x) = 0\) — 따라서 \(\liminf_n f_n(x) = 0\)입니다.
+
+\(x = 0\)에서는 \(f_n(0) = n \to \infty\)이므로 \(\liminf\)가 \(\infty\)이지만, 한 점은 측도가 \(0\)인 집합이라 적분에 영향을 주지 않습니다.
+
+즉 \(\liminf_n f_n = 0\) a.e.이고 \(\int \liminf_n f_n = 0\)입니다.`,
+          en: String.raw`Now the pointwise \(\liminf\). For \(x > 0\), once \(n > 1/x\) we have \(1/n < x\) and \(f_n(x) = 0\) — so \(\liminf_n f_n(x) = 0\).
+
+At \(x = 0\), \(f_n(0) = n \to \infty\), so the \(\liminf\) is \(\infty\) there, but a single point is a null set and does not affect the integral.
+
+Thus \(\liminf_n f_n = 0\) a.e. and \(\int \liminf_n f_n = 0\).`,
         },
       },
       {
         text: {
-          ko: String.raw`따라서 \(0 = \int \liminf f_n < \liminf \int f_n = 1\) — 파투 부등식 \(\int \liminf f_n \le \liminf \int f_n\)이 엄격한 부등식으로 성립합니다. 질량이 한 점으로 모였다가 극한에서 사라졌기 때문입니다. 이 증명은 이 구체적인 수열에 대한 것으로, 일반 파투 보조정리의 증명이 아니라 그 정리를 완전히 계산 가능한 경우에 확인한 것입니다.`,
-          en: String.raw`Hence \(0 = \int \liminf f_n < \liminf \int f_n = 1\) — Fatou's inequality \(\int \liminf f_n \le \liminf \int f_n\) holds as a strict inequality. The mass concentrated at a single point and vanished in the limit. This proof is for this concrete sequence: it verifies the general Fatou lemma on a fully computable case rather than proving the general theorem.`,
+          ko: String.raw`따라서 \(0 = \int \liminf f_n < \liminf \int f_n = 1\) — 파투 부등식 \(\int \liminf f_n \le \liminf \int f_n\)이 엄격한 부등식으로 성립합니다.
+
+질량이 한 점으로 모였다가 극한에서 사라졌기 때문입니다.
+
+이 증명은 이 구체적인 수열에 대한 것으로, 일반 파투 보조정리의 증명이 아니라 그 정리를 완전히 계산 가능한 경우에 확인한 것입니다.`,
+          en: String.raw`Hence \(0 = \int \liminf f_n < \liminf \int f_n = 1\) — Fatou's inequality \(\int \liminf f_n \le \liminf \int f_n\) holds as a strict inequality.
+
+The mass concentrated at a single point and vanished in the limit.
+
+This proof is for this concrete sequence: it verifies the general Fatou lemma on a fully computable case rather than proving the general theorem.`,
         },
       },
     ],
@@ -73,14 +89,30 @@ export const lebesgueConvergenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`점별 극한: \(x < 1\)이면 언젠가 \(1 - \frac{1}{n} > x\)가 되어 \(f_n(x) = 1\)이므로 극한은 \(1\)입니다. \(x \ge 1\)이면 모든 \(n\)에서 \(f_n(x) = 0\)이므로 극한은 \(0\)입니다. 즉 \(f_n \uparrow \mathbf{1}_{[0,1)}\) pointwise입니다.`,
-          en: String.raw`Pointwise limit: if \(x < 1\), eventually \(1 - \frac{1}{n} > x\), so \(f_n(x) = 1\) and the limit is \(1\). If \(x \ge 1\), \(f_n(x) = 0\) for all \(n\), so the limit is \(0\). That is, \(f_n \uparrow \mathbf{1}_{[0,1)}\) pointwise.`,
+          ko: String.raw`점별 극한: \(x < 1\)이면 언젠가 \(1 - \frac{1}{n} > x\)가 되어 \(f_n(x) = 1\)이므로 극한은 \(1\)입니다.
+
+\(x \ge 1\)이면 모든 \(n\)에서 \(f_n(x) = 0\)이므로 극한은 \(0\)입니다.
+
+즉 \(f_n \uparrow \mathbf{1}_{[0,1)}\) pointwise입니다.`,
+          en: String.raw`Pointwise limit: if \(x < 1\), eventually \(1 - \frac{1}{n} > x\), so \(f_n(x) = 1\) and the limit is \(1\).
+
+If \(x \ge 1\), \(f_n(x) = 0\) for all \(n\), so the limit is \(0\).
+
+That is, \(f_n \uparrow \mathbf{1}_{[0,1)}\) pointwise.`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\int f_n = m([0, 1-\frac{1}{n}]) = 1 - \frac{1}{n} \uparrow 1\)이고, \(\int \lim f_n = m([0, 1)) = 1\)이므로 \(\int f_n \uparrow \int f\)가 등식으로 성립합니다 — 단조수렴정리가 이 수열에서 그대로 확인됩니다. 질량이 도망가지도, 한 점으로 모이지도 않았기 때문입니다. 이 증명은 이 구체적인 수열에 대한 것으로, 일반 단조수렴정리의 증명이 아닙니다.`,
-          en: String.raw`\(\int f_n = m([0, 1-\frac{1}{n}]) = 1 - \frac{1}{n} \uparrow 1\), and \(\int \lim f_n = m([0, 1)) = 1\), so \(\int f_n \uparrow \int f\) holds with equality — the monotone convergence theorem verified on this sequence. No mass escaped and none concentrated at a point. This proof is for this concrete sequence, not a proof of the general monotone convergence theorem.`,
+          ko: String.raw`\(\int f_n = m([0, 1-\frac{1}{n}]) = 1 - \frac{1}{n} \uparrow 1\)이고, \(\int \lim f_n = m([0, 1)) = 1\)이므로 \(\int f_n \uparrow \int f\)가 등식으로 성립합니다 — 단조수렴정리가 이 수열에서 그대로 확인됩니다.
+
+질량이 도망가지도, 한 점으로 모이지도 않았기 때문입니다.
+
+이 증명은 이 구체적인 수열에 대한 것으로, 일반 단조수렴정리의 증명이 아닙니다.`,
+          en: String.raw`\(\int f_n = m([0, 1-\frac{1}{n}]) = 1 - \frac{1}{n} \uparrow 1\), and \(\int \lim f_n = m([0, 1)) = 1\), so \(\int f_n \uparrow \int f\) holds with equality — the monotone convergence theorem verified on this sequence.
+
+No mass escaped and none concentrated at a point.
+
+This proof is for this concrete sequence, not a proof of the general monotone convergence theorem.`,
         },
       },
     ],
@@ -109,14 +141,30 @@ export const lebesgueConvergenceProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`이제 \(|f_n| \le g\) (모든 \(n\))인 적분 가능한 \(g \ge 0\)가 있다고 가정합니다. 각 \(n\)에 대해 \(g \ge f_n = \mathbf{1}_{[n,n+1]}\)이므로, \([n, n+1]\) 위에서 \(g \ge 1\)입니다. 모든 \(n \ge 1\)에 대해 합치면 \([1, \infty) = \bigcup_{n \ge 1} [n, n+1]\) 위에서 \(g \ge 1\) — 따라서 \(\int_0^\infty g \ge \int_1^\infty 1 = \infty\)로, \(g\)는 적분 가능하지 않습니다. 모순입니다.`,
-          en: String.raw`Suppose, for contradiction, an integrable \(g \ge 0\) with \(|f_n| \le g\) for all \(n\). For each \(n\), \(g \ge f_n = \mathbf{1}_{[n,n+1]}\), so \(g \ge 1\) on \([n, n+1]\). Union over all \(n \ge 1\): \(g \ge 1\) on \([1, \infty) = \bigcup_{n \ge 1} [n, n+1]\) — hence \(\int_0^\infty g \ge \int_1^\infty 1 = \infty\), contradicting integrability.`,
+          ko: String.raw`이제 \(|f_n| \le g\) (모든 \(n\))인 적분 가능한 \(g \ge 0\)가 있다고 가정합니다. 각 \(n\)에 대해 \(g \ge f_n = \mathbf{1}_{[n,n+1]}\)이므로, \([n, n+1]\) 위에서 \(g \ge 1\)입니다.
+
+모든 \(n \ge 1\)에 대해 합치면 \([1, \infty) = \bigcup_{n \ge 1} [n, n+1]\) 위에서 \(g \ge 1\) — 따라서 \(\int_0^\infty g \ge \int_1^\infty 1 = \infty\)로, \(g\)는 적분 가능하지 않습니다.
+
+모순입니다.`,
+          en: String.raw`Suppose, for contradiction, an integrable \(g \ge 0\) with \(|f_n| \le g\) for all \(n\).
+
+For each \(n\), \(g \ge f_n = \mathbf{1}_{[n,n+1]}\), so \(g \ge 1\) on \([n, n+1]\).
+
+Union over all \(n \ge 1\): \(g \ge 1\) on \([1, \infty) = \bigcup_{n \ge 1} [n, n+1]\) — hence \(\int_0^\infty g \ge \int_1^\infty 1 = \infty\), contradicting integrability.`,
         },
       },
       {
         text: {
-          ko: String.raw`따라서 이 수열을 지배하는 적분 가능한 함수는 존재하지 않습니다 — 지배수렴정리의 핵심 가정이 깨진 것이고, 그래서 \(\lim \int f_n \ne \int \lim f_n\)이 가능한 것입니다. 질량이 무한대로 도망가면 적분은 극한과 "소통"하지 않습니다. 이 증명은 이 구체적인 수열에 대한 것으로, 일반 지배수렴정리의 증명이 아닙니다.`,
-          en: String.raw`So no integrable dominating function for this sequence exists — the key hypothesis of the dominated convergence theorem fails, which is exactly why \(\lim \int f_n \ne \int \lim f_n\) is possible here. When mass escapes to infinity, the integral does not "commute" with the limit. This proof is for this concrete sequence, not a proof of the general dominated convergence theorem.`,
+          ko: String.raw`따라서 이 수열을 지배하는 적분 가능한 함수는 존재하지 않습니다 — 지배수렴정리의 핵심 가정이 깨진 것이고, 그래서 \(\lim \int f_n \ne \int \lim f_n\)이 가능한 것입니다.
+
+질량이 무한대로 도망가면 적분은 극한과 "소통"하지 않습니다.
+
+이 증명은 이 구체적인 수열에 대한 것으로, 일반 지배수렴정리의 증명이 아닙니다.`,
+          en: String.raw`So no integrable dominating function for this sequence exists — the key hypothesis of the dominated convergence theorem fails, which is exactly why \(\lim \int f_n \ne \int \lim f_n\) is possible here.
+
+When mass escapes to infinity, the integral does not "commute" with the limit.
+
+This proof is for this concrete sequence, not a proof of the general dominated convergence theorem.`,
         },
       },
     ],

@@ -14,8 +14,12 @@ export const derivativeMonotonicityProblems: readonly ProblemMeta[] = [
   {
     id: 'derivative-monotonicity-nonneg',
     statement: {
-      ko: String.raw`\(f\)가 \([a, b]\)에서 연속이고 \((a, b)\)에서 미분 가능하며, \((a, b)\)의 모든 점에서 \(f' \ge 0\)이라고 하세요. \(f\)가 \([a, b]\)에서 증가함수임을 평균값 정리로 완전히 증명하세요.`,
-      en: String.raw`Let \(f\) be continuous on \([a, b]\) and differentiable on \((a, b)\), with \(f' \ge 0\) at every point of \((a, b)\). Prove completely, using the Mean Value Theorem, that \(f\) is increasing on \([a, b]\).`,
+      ko: String.raw`\(f\)가 \([a, b]\)에서 연속이고 \((a, b)\)에서 미분 가능하며, \((a, b)\)의 모든 점에서 \(f' \ge 0\)이라고 하세요.
+
+\(f\)가 \([a, b]\)에서 증가함수임을 평균값 정리로 완전히 증명하세요.`,
+      en: String.raw`Let \(f\) be continuous on \([a, b]\) and differentiable on \((a, b)\), with \(f' \ge 0\) at every point of \((a, b)\).
+
+Prove completely, using the Mean Value Theorem, that \(f\) is increasing on \([a, b]\).`,
     },
     display: [
       String.raw`f(y) - f(x) = f'(c)(y - x) \ge 0 \quad (x < y,\ c \in (x, y))`,
@@ -40,8 +44,16 @@ export const derivativeMonotonicityProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`따라서 \(f(y) - f(x) \ge 0\), 즉 \(f(x) \le f(y)\)입니다. \(x < y\)가 임의였으므로 \(f\)는 \([a, b]\)에서 증가함수입니다. 여기서 등호가 허용됨(\(\le\))에 주목하세요 — 이것이 다음 문제의 엄격한 부등식과 구분되는 지점입니다.`,
-          en: String.raw`Hence \(f(y) - f(x) \ge 0\), i.e. \(f(x) \le f(y)\). Since \(x < y\) were arbitrary, \(f\) is increasing on \([a, b]\). Note the non-strict inequality (\(\le\)) — this is what distinguishes this result from the strict version in the next problem.`,
+          ko: String.raw`따라서 \(f(y) - f(x) \ge 0\), 즉 \(f(x) \le f(y)\)입니다.
+
+\(x < y\)가 임의였으므로 \(f\)는 \([a, b]\)에서 증가함수입니다.
+
+여기서 등호가 허용됨(\(\le\))에 주목하세요 — 이것이 다음 문제의 엄격한 부등식과 구분되는 지점입니다.`,
+          en: String.raw`Hence \(f(y) - f(x) \ge 0\), i.e. \(f(x) \le f(y)\).
+
+Since \(x < y\) were arbitrary, \(f\) is increasing on \([a, b]\).
+
+Note the non-strict inequality (\(\le\)) — this is what distinguishes this result from the strict version in the next problem.`,
         },
       },
     ],
@@ -110,8 +122,16 @@ export const derivativeMonotonicityProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`극한은 약한 부등식을 보존합니다: \(g(h) \ge 0\)이고 \(\lim_{h \to 0} g(h) = L\)이 존재하면 \(L \ge 0\)입니다 (만약 \(L < 0\)이면 \(g(h)\)가 결국 \(L/2 < 0\) 근처에 머물러 모순). \(f\)가 미분 가능하므로 극한 \(f'(x_0)\)이 존재하고, 따라서 \(f'(x_0) \ge 0\)입니다. \(x_0\)이 임의였으므로 \(I\) 전체에서 \(f' \ge 0\)입니다.`,
-          en: String.raw`Limits preserve weak inequalities: if \(g(h) \ge 0\) and \(\lim_{h \to 0} g(h) = L\) exists, then \(L \ge 0\) (if \(L < 0\), then \(g(h)\) would eventually stay near \(L/2 < 0\), a contradiction). Since \(f\) is differentiable, the limit \(f'(x_0)\) exists, so \(f'(x_0) \ge 0\). As \(x_0\) was arbitrary, \(f' \ge 0\) throughout \(I\).`,
+          ko: String.raw`극한은 약한 부등식을 보존합니다: \(g(h) \ge 0\)이고 \(\lim_{h \to 0} g(h) = L\)이 존재하면 \(L \ge 0\)입니다 (만약 \(L < 0\)이면 \(g(h)\)가 결국 \(L/2 < 0\) 근처에 머물러 모순).
+
+\(f\)가 미분 가능하므로 극한 \(f'(x_0)\)이 존재하고, 따라서 \(f'(x_0) \ge 0\)입니다.
+
+\(x_0\)이 임의였으므로 \(I\) 전체에서 \(f' \ge 0\)입니다.`,
+          en: String.raw`Limits preserve weak inequalities: if \(g(h) \ge 0\) and \(\lim_{h \to 0} g(h) = L\) exists, then \(L \ge 0\) (if \(L < 0\), then \(g(h)\) would eventually stay near \(L/2 < 0\), a contradiction).
+
+Since \(f\) is differentiable, the limit \(f'(x_0)\) exists, so \(f'(x_0) \ge 0\).
+
+As \(x_0\) was arbitrary, \(f' \ge 0\) throughout \(I\).`,
         },
       },
       {
