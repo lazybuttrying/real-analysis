@@ -35,8 +35,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(b_n = 1/n\)은 단조 감소하며 \(0\)으로 간다. \(a_n = \sin(nx)\)의 부분합이 유계이므로 디리클레 판정법(부분합에 의한 합산 변환)에 의해 \(\sum_{n=1}^{\infty} a_n b_n = \sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴한다. (실제로 \(x \in (0, 2\pi)\)에서 이 급수는 \((\pi - x)/2\)이다.)`,
-                en: String.raw`\(b_n = 1/n\) decreases to \(0\). Since the partial sums of \(a_n = \sin(nx)\) are bounded, Dirichlet's test (summation by parts) gives convergence of \(\sum_{n=1}^{\infty} a_n b_n = \sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\). (In fact this series equals \((\pi - x)/2\) for \(x \in (0, 2\pi)\).)`,
+                ko: String.raw`\(b_n = 1/n\)은 단조 감소하며 \(0\)으로 간다.
+
+\(a_n = \sin(nx)\)의 부분합이 유계이므로 디리클레 판정법(부분합에 의한 합산 변환)에 의해 \(\sum_{n=1}^{\infty} a_n b_n = \sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\)이 수렴한다.
+
+(실제로 \(x \in (0, 2\pi)\)에서 이 급수는 \((\pi - x)/2\)이다.)`,
+                en: String.raw`\(b_n = 1/n\) decreases to \(0\).
+
+Since the partial sums of \(a_n = \sin(nx)\) are bounded, Dirichlet's test (summation by parts) gives convergence of \(\sum_{n=1}^{\infty} a_n b_n = \sum_{n=1}^{\infty} \frac{\sin(nx)}{n}\).
+
+(In fact this series equals \((\pi - x)/2\) for \(x \in (0, 2\pi)\).)`,
               },
             },
           ],
@@ -91,8 +99,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(b_n\)의 단조성: \(b_n > b_{n+1}\)은 통분하면 \(n\left((n+1)^2+1\right) > (n+1)(n^2+1)\)과 동치이고, 이는 \(n^3+2n^2+2n > n^3+n^2+n+1\), 즉 \(n^2+n-1 > 0\)과 동치이다. \(n = 1\)에서 \(1^2+1-1 = 1 > 0\)이므로 모든 \(n \ge 1\)에서 성립한다. 따라서 \(b_n \downarrow 0\).`,
-                en: String.raw`Monotonicity of \(b_n\): \(b_n > b_{n+1}\) is, after cross-multiplication, \(n\left((n+1)^2+1\right) > (n+1)(n^2+1)\), i.e. \(n^3+2n^2+2n > n^3+n^2+n+1\), i.e. \(n^2+n-1 > 0\). At \(n = 1\) we have \(1^2+1-1 = 1 > 0\), so this holds for all \(n \ge 1\). Hence \(b_n \downarrow 0\).`,
+                ko: String.raw`\(b_n\)의 단조성: \(b_n > b_{n+1}\)은 통분하면 \(n\left((n+1)^2+1\right) > (n+1)(n^2+1)\)과 동치이고, 이는 \(n^3+2n^2+2n > n^3+n^2+n+1\), 즉 \(n^2+n-1 > 0\)과 동치이다.
+
+\(n = 1\)에서 \(1^2+1-1 = 1 > 0\)이므로 모든 \(n \ge 1\)에서 성립한다.
+
+따라서 \(b_n \downarrow 0\).`,
+                en: String.raw`Monotonicity of \(b_n\): \(b_n > b_{n+1}\) is, after cross-multiplication, \(n\left((n+1)^2+1\right) > (n+1)(n^2+1)\), i.e. \(n^3+2n^2+2n > n^3+n^2+n+1\), i.e. \(n^2+n-1 > 0\).
+
+At \(n = 1\) we have \(1^2+1-1 = 1 > 0\), so this holds for all \(n \ge 1\).
+
+Hence \(b_n \downarrow 0\).`,
               },
             },
             {

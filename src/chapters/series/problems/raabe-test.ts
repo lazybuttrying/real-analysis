@@ -32,13 +32,21 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(L > 1\)인 경우: \(1 < r < L\)인 \(r\)을 잡습니다. \(k\left(\frac{a_k}{a_{k+1}}-1\right)\)는 \(L\)로, \(k\left(\frac{b_k}{b_{k+1}}-1\right)\)는 \(r\)로 수렴하므로, 결국 \(\frac{a_k}{a_{k+1}}-1 > \frac{b_k}{b_{k+1}}-1\), 즉 \(\frac{a_{k+1}}{a_k} < \frac{b_{k+1}}{b_k}\)가 성립합니다. \(a_{k+1}b_k < a_k b_{k+1}\), 즉 \(\frac{a_{k+1}}{b_{k+1}} < \frac{a_k}{b_k}\)이므로 \(\frac{a_k}{b_k}\)는 단조감소하고 \(a_k \le Cb_k\)가 되어, 수렴하는 \(\sum b_k\) (\(\(r > 1\))와 비교 판정법으로 \(\sum a_k\)가 수렴합니다.`,
-                en: String.raw`If \(L > 1\): pick \(r\) with \(1 < r < L\). Since \(k\left(\frac{a_k}{a_{k+1}}-1\right) \to L\) and \(k\left(\frac{b_k}{b_{k+1}}-1\right) \to r\), eventually \(\frac{a_k}{a_{k+1}}-1 > \frac{b_k}{b_{k+1}}-1\), i.e. \(\frac{a_{k+1}}{a_k} < \frac{b_{k+1}}{b_k}\). Then \(a_{k+1}b_k < a_k b_{k+1}\), i.e. \(\frac{a_{k+1}}{b_{k+1}} < \frac{a_k}{b_k}\), so \(\frac{a_k}{b_k}\) decreases and \(a_k \le Cb_k\); comparing with the convergent \(\sum b_k\) (\(r > 1\)), \(\sum a_k\) converges.`,
+                ko: String.raw`\(L > 1\)인 경우: \(1 < r < L\)인 \(r\)을 잡습니다.
+
+\(k\left(\frac{a_k}{a_{k+1}}-1\right)\)는 \(L\)로, \(k\left(\frac{b_k}{b_{k+1}}-1\right)\)는 \(r\)로 수렴하므로, 결국 \(\frac{a_k}{a_{k+1}}-1 > \frac{b_k}{b_{k+1}}-1\), 즉 \(\frac{a_{k+1}}{a_k} < \frac{b_{k+1}}{b_k}\)가 성립합니다.
+
+\(a_{k+1}b_k < a_k b_{k+1}\), 즉 \(\frac{a_{k+1}}{b_{k+1}} < \frac{a_k}{b_k}\)이므로 \(\frac{a_k}{b_k}\)는 단조감소하고 \(a_k \le Cb_k\)가 되어, 수렴하는 \(\sum b_k\) (\(r > 1\))와 비교 판정법으로 \(\sum a_k\)가 수렴합니다.`,
+                en: String.raw`If \(L > 1\): pick \(r\) with \(1 < r < L\).
+
+Since \(k\left(\frac{a_k}{a_{k+1}}-1\right) \to L\) and \(k\left(\frac{b_k}{b_{k+1}}-1\right) \to r\), eventually \(\frac{a_k}{a_{k+1}}-1 > \frac{b_k}{b_{k+1}}-1\), i.e. \(\frac{a_{k+1}}{a_k} < \frac{b_{k+1}}{b_k}\).
+
+Then \(a_{k+1}b_k < a_k b_{k+1}\), i.e. \(\frac{a_{k+1}}{b_{k+1}} < \frac{a_k}{b_k}\), so \(\frac{a_k}{b_k}\) decreases and \(a_k \le Cb_k\); comparing with the convergent \(\sum b_k\) (\(r > 1\)), \(\sum a_k\) converges.`,
               },
             },
             {
               text: {
-                ko: String.raw`\(L < 1\)인 경우: \(L < r < 1\)인 \(r\)을 잡으면 부등식이 뒤집혀 \(\frac{a_{k+1}}{a_k} > \frac{b_{k+1}}{b_k}\)가 되고, \(\frac{a_k}{b_k}\)는 단조증가하여 \(a_k \ge cb_k\) (\(c > 0\))를 얻습니다. 발산하는 \(\sum b_k\) (\(\(r < 1\))와의 비교 판정법으로 \(\sum a_k\)가 발산합니다.`,
+                ko: String.raw`\(L < 1\)인 경우: \(L < r < 1\)인 \(r\)을 잡으면 부등식이 뒤집혀 \(\frac{a_{k+1}}{a_k} > \frac{b_{k+1}}{b_k}\)가 되고, \(\frac{a_k}{b_k}\)는 단조증가하여 \(a_k \ge cb_k\) (\(c > 0\))를 얻습니다. 발산하는 \(\sum b_k\) (\(r < 1\))와의 비교 판정법으로 \(\sum a_k\)가 발산합니다.`,
                 en: String.raw`If \(L < 1\): picking \(r\) with \(L < r < 1\) reverses the inequalities to \(\frac{a_{k+1}}{a_k} > \frac{b_{k+1}}{b_k}\); then \(\frac{a_k}{b_k}\) increases, so \(a_k \ge cb_k\) (\(c > 0\)), and comparing with the divergent \(\sum b_k\) (\(r < 1\)) gives divergence of \(\sum a_k\).`,
               },
             },
@@ -104,8 +112,20 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`그러나 두 급수의 운명은 다릅니다. 적분 판정법의 가설부터 확인합니다: \(x \ge 2\)에서 \(x\)와 \((\ln x)^p\) (\(p = 1, 2\))는 모두 양이고 증가하므로 그 곱 \(x(\ln x)^p\)도 증가하고, 따라서 피적분함수 \(\frac{1}{x(\ln x)^p}\)는 양이고 감소합니다. \(t = \ln x\)로 치환하면 \(\int_2^{\infty}\frac{dx}{x(\ln x)^p} = \int_{\ln 2}^{\infty}\frac{dt}{t^p}\)이므로, 적분 판정법으로 \(\sum_{k\ge 2}\frac{1}{k(\ln k)^2}\)는 \(\int_{\ln 2}^{\infty}t^{-2}\,dt = \frac{1}{\ln 2}\)로 수렴하고, \(\sum_{k\ge 2}\frac{1}{k\ln k}\)는 \(\int_{\ln 2}^{\infty}t^{-1}\,dt = \infty\)로 발산합니다. \(L = 1\)에서는 라베 판정법이 진짜로 침묵합니다.`,
-                en: String.raw`Yet the two series have opposite fates. First verify the integral test's hypotheses: for \(x \ge 2\), both \(x\) and \((\ln x)^p\) (\(p = 1, 2\)) are positive and increasing, so their product \(x(\ln x)^p\) is increasing, hence the integrand \(\frac{1}{x(\ln x)^p}\) is positive and decreasing. Substituting \(t = \ln x\), \(\int_2^{\infty}\frac{dx}{x(\ln x)^p} = \int_{\ln 2}^{\infty}\frac{dt}{t^p}\); by the integral test \(\sum_{k\ge 2}\frac{1}{k(\ln k)^2}\) converges (\(\int_{\ln 2}^{\infty}t^{-2}\,dt = \frac{1}{\ln 2}\)) while \(\sum_{k\ge 2}\frac{1}{k\ln k}\) diverges (\(\int_{\ln 2}^{\infty}t^{-1}\,dt = \infty\)). At \(L = 1\) Raabe's test is genuinely silent.`,
+                ko: String.raw`그러나 두 급수의 운명은 다릅니다.
+
+적분 판정법의 가설부터 확인합니다: \(x \ge 2\)에서 \(x\)와 \((\ln x)^p\) (\(p = 1, 2\))는 모두 양이고 증가하므로 그 곱 \(x(\ln x)^p\)도 증가하고, 따라서 피적분함수 \(\frac{1}{x(\ln x)^p}\)는 양이고 감소합니다.
+
+\(t = \ln x\)로 치환하면 \(\int_2^{\infty}\frac{dx}{x(\ln x)^p} = \int_{\ln 2}^{\infty}\frac{dt}{t^p}\)이므로, 적분 판정법으로 \(\sum_{k\ge 2}\frac{1}{k(\ln k)^2}\)는 \(\int_{\ln 2}^{\infty}t^{-2}\,dt = \frac{1}{\ln 2}\)로 수렴하고, \(\sum_{k\ge 2}\frac{1}{k\ln k}\)는 \(\int_{\ln 2}^{\infty}t^{-1}\,dt = \infty\)로 발산합니다.
+
+\(L = 1\)에서는 라베 판정법이 진짜로 침묵합니다.`,
+                en: String.raw`Yet the two series have opposite fates.
+
+First verify the integral test's hypotheses: for \(x \ge 2\), both \(x\) and \((\ln x)^p\) (\(p = 1, 2\)) are positive and increasing, so their product \(x(\ln x)^p\) is increasing, hence the integrand \(\frac{1}{x(\ln x)^p}\) is positive and decreasing.
+
+Substituting \(t = \ln x\), \(\int_2^{\infty}\frac{dx}{x(\ln x)^p} = \int_{\ln 2}^{\infty}\frac{dt}{t^p}\); by the integral test \(\sum_{k\ge 2}\frac{1}{k(\ln k)^2}\) converges (\(\int_{\ln 2}^{\infty}t^{-2}\,dt = \frac{1}{\ln 2}\)) while \(\sum_{k\ge 2}\frac{1}{k\ln k}\) diverges (\(\int_{\ln 2}^{\infty}t^{-1}\,dt = \infty\)).
+
+At \(L = 1\) Raabe's test is genuinely silent.`,
               },
             },
           ],

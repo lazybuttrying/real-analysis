@@ -25,8 +25,12 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(x_0 = p/q\)를 기약분수라 두면 \(f(x_0) = 1/q > 0\)입니다. \(\varepsilon = 1/(2q) > 0\)으로 둡니다. 유리수의 조밀성의 쌍대 — 무리수도 조밀하므로 — 임의의 \(\delta > 0\)에 대해 구간 \((x_0 - \delta, x_0 + \delta)\) 안에는 무리수 \(x\)가 존재합니다.`,
-          en: String.raw`Write \(x_0 = p/q\) in lowest terms, so \(f(x_0) = 1/q > 0\). Set \(\varepsilon = 1/(2q) > 0\). By density of the irrationals, for every \(\delta > 0\) the interval \((x_0 - \delta, x_0 + \delta)\) contains an irrational \(x\).`,
+          ko: String.raw`\(x_0 = p/q\)를 기약분수라 두면 \(f(x_0) = 1/q > 0\)입니다. \(\varepsilon = 1/(2q) > 0\)으로 둡니다.
+
+유리수의 조밀성의 쌍대 — 무리수도 조밀하므로 — 임의의 \(\delta > 0\)에 대해 구간 \((x_0 - \delta, x_0 + \delta)\) 안에는 무리수 \(x\)가 존재합니다.`,
+          en: String.raw`Write \(x_0 = p/q\) in lowest terms, so \(f(x_0) = 1/q > 0\). Set \(\varepsilon = 1/(2q) > 0\).
+
+By density of the irrationals, for every \(\delta > 0\) the interval \((x_0 - \delta, x_0 + \delta)\) contains an irrational \(x\).`,
         },
       },
       {
@@ -60,14 +64,22 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(x_0\)를 무리수, \(\varepsilon > 0\)을 임의로 둡니다. \(f(x) \ge \varepsilon\)인 점들의 집합 \(S_\varepsilon = \{x \in [0,1] : f(x) \ge \varepsilon\}\)을 봅니다. \(f\)의 정의에 의해 \(S_\varepsilon\)의 원소는 \(1/q \ge \varepsilon\), 즉 \(q \le 1/\varepsilon\)인 기약분수 \(p/q\)뿐이므로, \(S_\varepsilon\)은 유한집합입니다.`,
-          en: String.raw`Let \(x_0\) be irrational and \(\varepsilon > 0\) arbitrary. Consider \(S_\varepsilon = \{x \in [0,1] : f(x) \ge \varepsilon\}\). By the definition of \(f\), members of \(S_\varepsilon\) are only lowest-terms fractions \(p/q\) with \(1/q \ge \varepsilon\), i.e. \(q \le 1/\varepsilon\); hence \(S_\varepsilon\) is a finite set.`,
+          ko: String.raw`\(x_0\)를 무리수, \(\varepsilon > 0\)을 임의로 둡니다. \(f(x) \ge \varepsilon\)인 점들의 집합 \(S_\varepsilon = \{x \in [0,1] : f(x) \ge \varepsilon\}\)을 봅니다.
+
+\(f\)의 정의에 의해 \(S_\varepsilon\)의 원소는 \(1/q \ge \varepsilon\), 즉 \(q \le 1/\varepsilon\)인 기약분수 \(p/q\)뿐이므로, \(S_\varepsilon\)은 유한집합입니다.`,
+          en: String.raw`Let \(x_0\) be irrational and \(\varepsilon > 0\) arbitrary. Consider \(S_\varepsilon = \{x \in [0,1] : f(x) \ge \varepsilon\}\).
+
+By the definition of \(f\), members of \(S_\varepsilon\) are only lowest-terms fractions \(p/q\) with \(1/q \ge \varepsilon\), i.e. \(q \le 1/\varepsilon\); hence \(S_\varepsilon\) is a finite set.`,
         },
       },
       {
         text: {
-          ko: String.raw`퇴화 경우: \(S_\varepsilon = \varnothing\)이면 (이는 \(\varepsilon > 1\)일 때 일어납니다 — 모든 \(x\)에서 \(f(x) \le 1 < \varepsilon\)이므로) 임의의 \(\delta > 0\) (예: \(\delta = 1\))로 충분합니다. 이하 \(S_\varepsilon \ne \varnothing\)라 둡니다. \(x_0\)는 무리수이므로 \(x_0 \notin S_\varepsilon\)입니다. 따라서 유한개의 양수 \(\{|x - x_0| : x \in S_\varepsilon\}\)의 최솟값 \(\delta = \min_{x \in S_\varepsilon} |x - x_0|\)는 \(0\)보다 큽니다. 대우로 논증합니다: \(x \in S_\varepsilon\)이면 정의에 의해 \(|x - x_0| \ge \delta\)입니다. 따라서 \(|x - x_0| < \delta\)이면 \(x \notin S_\varepsilon\) — 즉 \(f(x) < \varepsilon\)입니다 (\(x = x_0\)인 경우 \(f(x_0) = 0 < \varepsilon\)로 자명).`,
-          en: String.raw`Degenerate case: if \(S_\varepsilon = \varnothing\) (this happens when \(\varepsilon > 1\), since \(f(x) \le 1 < \varepsilon\) for every \(x\)), any \(\delta > 0\) works (e.g. \(\delta = 1\)). Assume henceforth \(S_\varepsilon \ne \varnothing\). Since \(x_0\) is irrational, \(x_0 \notin S_\varepsilon\). Thus \(\delta = \min_{x \in S_\varepsilon} |x - x_0|\), the minimum of finitely many positive numbers, is strictly positive. Argue by contrapositive: if \(x \in S_\varepsilon\) then \(|x - x_0| \ge \delta\) by definition of the minimum. Hence \(|x - x_0| < \delta\) implies \(x \notin S_\varepsilon\) — i.e. \(f(x) < \varepsilon\) (for \(x = x_0\) this is trivial since \(f(x_0) = 0 < \varepsilon\)).`,
+          ko: String.raw`퇴화 경우: \(S_\varepsilon = \varnothing\)이면 (이는 \(\varepsilon > 1\)일 때 일어납니다 — 모든 \(x\)에서 \(f(x) \le 1 < \varepsilon\)이므로) 임의의 \(\delta > 0\) (예: \(\delta = 1\))로 충분합니다. 이하 \(S_\varepsilon \ne \varnothing\)라 둡니다. \(x_0\)는 무리수이므로 \(x_0 \notin S_\varepsilon\)입니다.
+
+따라서 유한개의 양수 \(\{|x - x_0| : x \in S_\varepsilon\}\)의 최솟값 \(\delta = \min_{x \in S_\varepsilon} |x - x_0|\)는 \(0\)보다 큽니다. 대우로 논증합니다: \(x \in S_\varepsilon\)이면 정의에 의해 \(|x - x_0| \ge \delta\)입니다. 따라서 \(|x - x_0| < \delta\)이면 \(x \notin S_\varepsilon\) — 즉 \(f(x) < \varepsilon\)입니다 (\(x = x_0\)인 경우 \(f(x_0) = 0 < \varepsilon\)로 자명).`,
+          en: String.raw`Degenerate case: if \(S_\varepsilon = \varnothing\) (this happens when \(\varepsilon > 1\), since \(f(x) \le 1 < \varepsilon\) for every \(x\)), any \(\delta > 0\) works (e.g. \(\delta = 1\)). Assume henceforth \(S_\varepsilon \ne \varnothing\). Since \(x_0\) is irrational, \(x_0 \notin S_\varepsilon\).
+
+Thus \(\delta = \min_{x \in S_\varepsilon} |x - x_0|\), the minimum of finitely many positive numbers, is strictly positive. Argue by contrapositive: if \(x \in S_\varepsilon\) then \(|x - x_0| \ge \delta\) by definition of the minimum. Hence \(|x - x_0| < \delta\) implies \(x \notin S_\varepsilon\) — i.e. \(f(x) < \varepsilon\) (for \(x = x_0\) this is trivial since \(f(x_0) = 0 < \varepsilon\)).`,
         },
       },
       {
@@ -95,8 +107,12 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`도메인을 \([0,1]\)로 제한합니다 (이 제한 없이는 아래 유한성이 성립하지 않습니다). 각 \(n \ge 1\)에 대해 \(S_n = \{p/q \in [0,1] : 1 \le q \le n,\ \gcd(p,q) = 1\}\)이라 둡니다. 이는 유한집합입니다: \(0 \le p \le q \le n\)인 쌍 \((p, q)\)가 유한개뿐이기 때문입니다. \(f_n(x) = \max_{r \in S_n} \max(0, 1/q(r) - n|x - r|)\) (\(r = p/q\)의 분모를 \(q(r)\))로 \([0,1]\) 위에서 정의합니다. 각 텐트 \(x \mapsto \max(0, 1/q - n|x - r|)\)는 연속이고 유한개의 최댓값도 연속이므로, \(f_n\)은 연속함수입니다.`,
-          en: String.raw`Restrict the domain to \([0,1]\) (without this restriction the finiteness below fails). For each \(n \ge 1\) let \(S_n = \{p/q \in [0,1] : 1 \le q \le n,\ \gcd(p,q) = 1\}\). This is a finite set: there are only finitely many pairs \((p, q)\) with \(0 \le p \le q \le n\). Define \(f_n(x) = \max_{r \in S_n} \max(0, 1/q(r) - n|x - r|)\) on \([0,1]\), where \(q(r)\) is the denominator of \(r = p/q\). Each tent \(x \mapsto \max(0, 1/q - n|x - r|)\) is continuous, and a finite maximum of continuous functions is continuous, so each \(f_n\) is continuous.`,
+          ko: String.raw`도메인을 \([0,1]\)로 제한합니다 (이 제한 없이는 아래 유한성이 성립하지 않습니다). 각 \(n \ge 1\)에 대해 \(S_n = \{p/q \in [0,1] : 1 \le q \le n,\ \gcd(p,q) = 1\}\)이라 둡니다. 이는 유한집합입니다: \(0 \le p \le q \le n\)인 쌍 \((p, q)\)가 유한개뿐이기 때문입니다.
+
+\(f_n(x) = \max_{r \in S_n} \max(0, 1/q(r) - n|x - r|)\) (\(r = p/q\)의 분모를 \(q(r)\))로 \([0,1]\) 위에서 정의합니다. 각 텐트 \(x \mapsto \max(0, 1/q - n|x - r|)\)는 연속이고 유한개의 최댓값도 연속이므로, \(f_n\)은 연속함수입니다.`,
+          en: String.raw`Restrict the domain to \([0,1]\) (without this restriction the finiteness below fails). For each \(n \ge 1\) let \(S_n = \{p/q \in [0,1] : 1 \le q \le n,\ \gcd(p,q) = 1\}\). This is a finite set: there are only finitely many pairs \((p, q)\) with \(0 \le p \le q \le n\).
+
+Define \(f_n(x) = \max_{r \in S_n} \max(0, 1/q(r) - n|x - r|)\) on \([0,1]\), where \(q(r)\) is the denominator of \(r = p/q\). Each tent \(x \mapsto \max(0, 1/q - n|x - r|)\) is continuous, and a finite maximum of continuous functions is continuous, so each \(f_n\) is continuous.`,
         },
       },
       {
@@ -107,8 +123,12 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x \in [0,1]\)가 무리수이면 \(f(x) = 0\)입니다. \(M \ge 1\)을 고정하면, 분모 \(q \le M\)인 텐트는 \(|x - r|\)이 양의 하한을 가지므로(\([0,1]\) 안에서 분모 \(\le M\)인 유리수는 유한개뿐이고 어느 것도 무리수 \(x\)와 같지 않음) \(n\)이 크면 모두 0이 되고, \(q > M\)인 텐트는 값이 \(1/q < 1/M\) 이하입니다. 따라서 \(\limsup_{n \to \infty} f_n(x) \le 1/M\) — \(M\)이 임의이므로 \(f_n(x) \to 0 = f(x)\)입니다. \([0,1]\)의 모든 \(x\)에서 \(f_n \to f\)이므로 토메 함수는 \([0,1]\) 위에서 베어 1급입니다.`,
-          en: String.raw`If \(x \in [0,1]\) is irrational, \(f(x) = 0\). Fix \(M \ge 1\): tents with denominator \(q \le M\) all vanish for large \(n\) (there are only finitely many rationals in \([0,1]\) with denominator \(\le M\), each at positive distance from the irrational \(x\)), and tents with \(q > M\) are worth at most \(1/q < 1/M\). Hence \(\limsup_{n \to \infty} f_n(x) \le 1/M\); since \(M\) is arbitrary, \(f_n(x) \to 0 = f(x)\). So \(f_n \to f\) at every \(x \in [0,1]\): Thomae's function is Baire class 1 on \([0,1]\).`,
+          ko: String.raw`\(x \in [0,1]\)가 무리수이면 \(f(x) = 0\)입니다. \(M \ge 1\)을 고정하면, 분모 \(q \le M\)인 텐트는 \(|x - r|\)이 양의 하한을 가지므로(\([0,1]\) 안에서 분모 \(\le M\)인 유리수는 유한개뿐이고 어느 것도 무리수 \(x\)와 같지 않음) \(n\)이 크면 모두 0이 되고, \(q > M\)인 텐트는 값이 \(1/q < 1/M\) 이하입니다.
+
+따라서 \(\limsup_{n \to \infty} f_n(x) \le 1/M\) — \(M\)이 임의이므로 \(f_n(x) \to 0 = f(x)\)입니다. \([0,1]\)의 모든 \(x\)에서 \(f_n \to f\)이므로 토메 함수는 \([0,1]\) 위에서 베어 1급입니다.`,
+          en: String.raw`If \(x \in [0,1]\) is irrational, \(f(x) = 0\). Fix \(M \ge 1\): tents with denominator \(q \le M\) all vanish for large \(n\) (there are only finitely many rationals in \([0,1]\) with denominator \(\le M\), each at positive distance from the irrational \(x\)), and tents with \(q > M\) are worth at most \(1/q < 1/M\).
+
+Hence \(\limsup_{n \to \infty} f_n(x) \le 1/M\); since \(M\) is arbitrary, \(f_n(x) \to 0 = f(x)\). So \(f_n \to f\) at every \(x \in [0,1]\): Thomae's function is Baire class 1 on \([0,1]\).`,
         },
       },
     ],

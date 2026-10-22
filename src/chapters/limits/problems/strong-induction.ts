@@ -33,20 +33,32 @@ export const strongInductionProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`경우 1: \(n\)이 소수. 그러면 \(n\)은 그 자체로 “소수들의 곱”(인자가 하나인 곱)입니다. 이것이 밑에 해당하는 경우이며, 증명할 것이 없습니다.`,
-          en: String.raw`Case 1: \(n\) is prime. Then \(n\) is itself a "product of primes" (a product with one factor). This is the base-like case; there is nothing to prove.`,
+          ko: String.raw`경우 1: \(n\)이 소수. 그러면 \(n\)은 그 자체로 “소수들의 곱”(인자가 하나인 곱)입니다.
+
+이것이 밑에 해당하는 경우이며, 증명할 것이 없습니다.`,
+          en: String.raw`Case 1: \(n\) is prime. Then \(n\) is itself a "product of primes" (a product with one factor).
+
+This is the base-like case; there is nothing to prove.`,
         },
       },
       {
         text: {
-          ko: String.raw`경우 2: \(n\)이 합성수. 그러면 \(n = a \cdot b\)인 \(1 < a, b < n\)이 존재합니다. \(a < n\)이므로 강한 귀납 가정 \(P(a)\)가 적용되어 \(a = p_1 \cdots p_r\)은 소수들의 곱이고, 마찬가지로 \(b = q_1 \cdots q_s\)도 소수들의 곱입니다. 따라서 \(n = p_1 \cdots p_r \cdot q_1 \cdots q_s\) — 소수들의 곱입니다. \(P(n)\)이 증명되었습니다.`,
-          en: String.raw`Case 2: \(n\) is composite. Then \(n = a \cdot b\) for some \(1 < a, b < n\). Since \(a < n\), the strong hypothesis \(P(a)\) applies and gives \(a = p_1 \cdots p_r\) as a product of primes; likewise \(b = q_1 \cdots q_s\). Hence \(n = p_1 \cdots p_r \cdot q_1 \cdots q_s\) — a product of primes. This proves \(P(n)\).`,
+          ko: String.raw`경우 2: \(n\)이 합성수. 그러면 \(n = a \cdot b\)인 \(1 < a, b < n\)이 존재합니다. \(a < n\)이므로 강한 귀납 가정 \(P(a)\)가 적용되어 \(a = p_1 \cdots p_r\)은 소수들의 곱이고, 마찬가지로 \(b = q_1 \cdots q_s\)도 소수들의 곱입니다.
+
+따라서 \(n = p_1 \cdots p_r \cdot q_1 \cdots q_s\) — 소수들의 곱입니다. \(P(n)\)이 증명되었습니다.`,
+          en: String.raw`Case 2: \(n\) is composite. Then \(n = a \cdot b\) for some \(1 < a, b < n\). Since \(a < n\), the strong hypothesis \(P(a)\) applies and gives \(a = p_1 \cdots p_r\) as a product of primes; likewise \(b = q_1 \cdots q_s\).
+
+Hence \(n = p_1 \cdots p_r \cdot q_1 \cdots q_s\) — a product of primes. This proves \(P(n)\).`,
         },
       },
       {
         text: {
-          ko: String.raw`약한 귀납이 막히는 지점: 약한 귀납은 \(P(n-1)\) 하나만 제공합니다. 그러나 \(n = 30\)의 경우 필요한 것은 \(P(29)\)가 아니라 \(P(2)\)와 \(P(15)\)입니다 — 인자 \(a = 2\), \(b = 15\)가 \(n-1 = 29\) 근처에 전혀 있지 않기 때문입니다. \(P(n-1)\)은 \(a\)와 \(b\)에 대해 아무 것도 말해주지 못하므로, 약한 귀납 단계는 진행할 수 없습니다. 강한 가정이 “\(n\)보다 작은 모든 수”를 커버하기 때문에 이 증명이 돌아갑니다.`,
-          en: String.raw`Where weak induction stalls: weak induction supplies only \(P(n-1)\). But for \(n = 30\) what is needed is not \(P(29)\) — it is \(P(2)\) and \(P(15)\), because the factors \(a = 2\), \(b = 15\) are nowhere near \(n - 1 = 29\). The hypothesis \(P(n-1)\) says nothing about \(a\) and \(b\), so the weak step cannot proceed. The proof works precisely because the strong hypothesis covers every number below \(n\).`,
+          ko: String.raw`약한 귀납이 막히는 지점: 약한 귀납은 \(P(n-1)\) 하나만 제공합니다. 그러나 \(n = 30\)의 경우 필요한 것은 \(P(29)\)가 아니라 \(P(2)\)와 \(P(15)\)입니다 — 인자 \(a = 2\), \(b = 15\)가 \(n-1 = 29\) 근처에 전혀 있지 않기 때문입니다.
+
+\(P(n-1)\)은 \(a\)와 \(b\)에 대해 아무 것도 말해주지 못하므로, 약한 귀납 단계는 진행할 수 없습니다. 강한 가정이 “\(n\)보다 작은 모든 수”를 커버하기 때문에 이 증명이 돌아갑니다.`,
+          en: String.raw`Where weak induction stalls: weak induction supplies only \(P(n-1)\). But for \(n = 30\) what is needed is not \(P(29)\) — it is \(P(2)\) and \(P(15)\), because the factors \(a = 2\), \(b = 15\) are nowhere near \(n - 1 = 29\).
+
+The hypothesis \(P(n-1)\) says nothing about \(a\) and \(b\), so the weak step cannot proceed. The proof works precisely because the strong hypothesis covers every number below \(n\).`,
         },
         display: [
           String.raw`n = 30 = 2 \times 15:\quad P(2), P(15)\ \text{needed},\quad P(29)\ \text{useless}`,
@@ -78,14 +90,22 @@ export const strongInductionProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`귀납 단계: \(n \ge 16\)이라 하고, \(12 \le k < n\)인 모든 \(k\)에 대해 \(P(k)\)를 가정합니다 (강한 귀납). \(n - 4 \ge 12\)이므로 가정이 \(n - 4\)에 적용되어 \(n - 4 = 4a + 5b\)인 \(a, b \ge 0\)이 존재합니다. 양변에 4를 더하면 \(n = 4(a+1) + 5b\) — \(P(n)\)이 증명되었습니다.`,
-          en: String.raw`Induction step: let \(n \ge 16\) and assume \(P(k)\) for all \(12 \le k < n\) (strong induction). Since \(n - 4 \ge 12\), the hypothesis applies to \(n - 4\), giving \(n - 4 = 4a + 5b\) for some \(a, b \ge 0\). Adding 4 to both sides, \(n = 4(a+1) + 5b\) — proving \(P(n)\).`,
+          ko: String.raw`귀납 단계: \(n \ge 16\)이라 하고, \(12 \le k < n\)인 모든 \(k\)에 대해 \(P(k)\)를 가정합니다 (강한 귀납). \(n - 4 \ge 12\)이므로 가정이 \(n - 4\)에 적용되어 \(n - 4 = 4a + 5b\)인 \(a, b \ge 0\)이 존재합니다.
+
+양변에 4를 더하면 \(n = 4(a+1) + 5b\) — \(P(n)\)이 증명되었습니다.`,
+          en: String.raw`Induction step: let \(n \ge 16\) and assume \(P(k)\) for all \(12 \le k < n\) (strong induction). Since \(n - 4 \ge 12\), the hypothesis applies to \(n - 4\), giving \(n - 4 = 4a + 5b\) for some \(a, b \ge 0\).
+
+Adding 4 to both sides, \(n = 4(a+1) + 5b\) — proving \(P(n)\).`,
         },
       },
       {
         text: {
-          ko: String.raw`밑 경우가 네 개 연속이어야 하는 이유: 귀납 단계는 \(n\)에서 \(n-4\)로 4만큼 뒤로 점프합니다. 따라서 \(n \ge 16\)에 대한 증명이 \(12, 13, 14, 15\) 중 하나에 “착지”하려면, 4로 나눈 나머지가 \(0, 1, 2, 3\)인 경우가 모두 밑에 있어야 합니다. 세 개만 있으면 한 나머지 류가 밑 없이 떠버립니다. 일반적으로 점프 폭이 \(m\)이면 연속된 밑 경우 \(m\)개가 필요합니다. 예: \(30 - 4 \cdot 4 = 14\)이므로, \(30 = (14\)의 표현\() + 4 \cdot 4 = (4 + 2 \cdot 5) + 16 = 5 \cdot 4 + 2 \cdot 5\).`,
-          en: String.raw`Why four consecutive base cases: the induction step jumps back by 4, from \(n\) to \(n - 4\). So for the proof of \(n \ge 16\) to "land" on one of \(12, 13, 14, 15\), every remainder class \(0, 1, 2, 3\) modulo 4 must be present among the bases. With only three, one residue class would be left hanging. In general a jump of \(m\) needs \(m\) consecutive base cases. Example: \(30 - 4 \cdot 4 = 14\), so \(30 = (\text{expression for } 14) + 4 \cdot 4 = (4 + 2 \cdot 5) + 16 = 5 \cdot 4 + 2 \cdot 5\).`,
+          ko: String.raw`밑 경우가 네 개 연속이어야 하는 이유: 귀납 단계는 \(n\)에서 \(n-4\)로 4만큼 뒤로 점프합니다. 따라서 \(n \ge 16\)에 대한 증명이 \(12, 13, 14, 15\) 중 하나에 “착지”하려면, 4로 나눈 나머지가 \(0, 1, 2, 3\)인 경우가 모두 밑에 있어야 합니다. 세 개만 있으면 한 나머지 류가 밑 없이 떠버립니다.
+
+일반적으로 점프 폭이 \(m\)이면 연속된 밑 경우 \(m\)개가 필요합니다. 예: \(30 - 4 \cdot 4 = 14\)이므로, \(30 = (14\)의 표현\() + 4 \cdot 4 = (4 + 2 \cdot 5) + 16 = 5 \cdot 4 + 2 \cdot 5\).`,
+          en: String.raw`Why four consecutive base cases: the induction step jumps back by 4, from \(n\) to \(n - 4\). So for the proof of \(n \ge 16\) to "land" on one of \(12, 13, 14, 15\), every remainder class \(0, 1, 2, 3\) modulo 4 must be present among the bases. With only three, one residue class would be left hanging.
+
+In general a jump of \(m\) needs \(m\) consecutive base cases. Example: \(30 - 4 \cdot 4 = 14\), so \(30 = (\text{expression for } 14) + 4 \cdot 4 = (4 + 2 \cdot 5) + 16 = 5 \cdot 4 + 2 \cdot 5\).`,
         },
       },
     ],
@@ -120,8 +140,12 @@ export const strongInductionProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`경우 2: \(n\)이 합성수. 그러면 \(n = a \cdot b\)인 \(1 < a, b < n\)이 존재합니다. \(a < n\)이므로 가정이 \(a\)에 적용되어, 소수 \(p\)와 \(p \mid a\)인 경우가 존재합니다. \(a \mid n\)이므로 (\(n = a \cdot b\)) 약수 관계의 추이성에 의해 \(p \mid n\)입니다. 즉 \(p\)는 \(n\)의 소인수입니다.`,
-          en: String.raw`Case 2: \(n\) is composite. Then \(n = a \cdot b\) for some \(1 < a, b < n\). Since \(a < n\), the hypothesis applies at \(a\), giving a prime \(p\) with \(p \mid a\). Because \(a \mid n\) (as \(n = a \cdot b\)), transitivity of divisibility yields \(p \mid n\). So \(p\) is a prime divisor of \(n\).`,
+          ko: String.raw`경우 2: \(n\)이 합성수. 그러면 \(n = a \cdot b\)인 \(1 < a, b < n\)이 존재합니다. \(a < n\)이므로 가정이 \(a\)에 적용되어, 소수 \(p\)와 \(p \mid a\)인 경우가 존재합니다.
+
+\(a \mid n\)이므로 (\(n = a \cdot b\)) 약수 관계의 추이성에 의해 \(p \mid n\)입니다. 즉 \(p\)는 \(n\)의 소인수입니다.`,
+          en: String.raw`Case 2: \(n\) is composite. Then \(n = a \cdot b\) for some \(1 < a, b < n\). Since \(a < n\), the hypothesis applies at \(a\), giving a prime \(p\) with \(p \mid a\).
+
+Because \(a \mid n\) (as \(n = a \cdot b\)), transitivity of divisibility yields \(p \mid n\). So \(p\) is a prime divisor of \(n\).`,
         },
         display: [
           String.raw`p \mid a,\ a \mid n \;\Rightarrow\; p \mid n \quad (\text{transitivity})`,
@@ -129,8 +153,12 @@ export const strongInductionProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`주석: 이 정리는 문제 1(소인수분해)의 “한 걸음짜리” 버전입니다. \(n = 36\)에서 가정은 \(a = 2\)에 적용되어 \(p = 2\)를 내놓고, \(2 \mid 2\)이고 \(2 \mid 36\)이므로 끝입니다. 전체 소인수분해를 구하지 않아도, 소인수 하나의 존재는 같은 강한 귀납 구조로 따라옵니다.`,
-          en: String.raw`Remark: this theorem is the "one-step" version of problem 1 (full factorization). For \(n = 36\) the hypothesis is applied at \(a = 2\), yielding \(p = 2\), and \(2 \mid 2\) with \(2 \mid 36\) finishes it. The existence of a single prime divisor follows from the same strong-induction skeleton, without computing the whole factorization.`,
+          ko: String.raw`주석: 이 정리는 문제 1(소인수분해)의 “한 걸음짜리” 버전입니다. \(n = 36\)에서 가정은 \(a = 2\)에 적용되어 \(p = 2\)를 내놓고, \(2 \mid 2\)이고 \(2 \mid 36\)이므로 끝입니다.
+
+전체 소인수분해를 구하지 않아도, 소인수 하나의 존재는 같은 강한 귀납 구조로 따라옵니다.`,
+          en: String.raw`Remark: this theorem is the "one-step" version of problem 1 (full factorization). For \(n = 36\) the hypothesis is applied at \(a = 2\), yielding \(p = 2\), and \(2 \mid 2\) with \(2 \mid 36\) finishes it.
+
+The existence of a single prime divisor follows from the same strong-induction skeleton, without computing the whole factorization.`,
         },
       },
     ],
