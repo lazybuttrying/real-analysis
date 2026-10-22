@@ -18,6 +18,12 @@ import { pageHeader } from './search.ts';
 
 const BASE = import.meta.env.BASE_URL;
 
+/** Splits a prose field into paragraphs on blank lines (single newlines stay). */
+function splitParagraphs(text: string): string[] {
+  const parts = text.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
+  return parts.length > 0 ? parts : [text];
+}
+
 /** Scene loaders, passed in from the chapter entry (the same Loaders shape app.ts uses). */
 type Loaders = Readonly<Record<string, () => Promise<AnySceneModule>>>;
 
@@ -96,9 +102,12 @@ export function renderExercisesPage(
             ),
           );
 
-          const statement = h('p', { class: 'exercise-statement' }, stripInlineMath(localize(exercise.statement, lang)));
-          card.append(statement);
-          richTargets.push({ el: statement, text: localize(exercise.statement, lang), display: exercise.display });
+          const statementParas = splitParagraphs(localize(exercise.statement, lang));
+          statementParas.forEach((para, i) => {
+            const el = h('p', { class: 'exercise-statement' }, stripInlineMath(para));
+            card.append(el);
+            richTargets.push({ el, text: para, display: i === statementParas.length - 1 ? exercise.display : undefined });
+          });
 
           if (exercise.topics.length > 0) {
             card.append(
@@ -132,9 +141,14 @@ export function renderExercisesPage(
           details.append(h('summary', {}, tr(lang, 'showSolution')));
           const list = h('ol', {});
           for (const step of exercise.solution) {
-            const item = h('li', {}, stripInlineMath(localize(step.text, lang)));
+            const item = h('li', {});
+            const stepParas = splitParagraphs(localize(step.text, lang));
+            stepParas.forEach((para, i) => {
+              const el = h('p', {}, stripInlineMath(para));
+              item.append(el);
+              richTargets.push({ el, text: para, display: i === stepParas.length - 1 ? step.display : undefined });
+            });
             list.append(item);
-            richTargets.push({ el: item, text: localize(step.text, lang), display: step.display });
           }
           details.append(list);
           card.append(details);

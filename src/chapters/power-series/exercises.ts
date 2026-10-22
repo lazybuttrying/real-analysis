@@ -60,14 +60,19 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(|z| < 1\)에서 \(\sum_{n=0}^{\infty} z^n = \frac{1}{1-z}\)를 항별 미분하면(멱급수는 수렴원 안에서 항별 미분 가능) \(\sum_{n=1}^{\infty} n z^{n-1} = \frac{1}{(1-z)^2}\)이고, \(z\)를 곱하면 \(\sum_{n=1}^{\infty} n z^n = \frac{z}{(1-z)^2}\)입니다.`,
-          en: String.raw`For \(|z| < 1\), differentiating \(\sum_{n=0}^{\infty} z^n = \frac{1}{1-z}\) termwise (a power series may be differentiated termwise inside its disc) gives \(\sum_{n=1}^{\infty} n z^{n-1} = \frac{1}{(1-z)^2}\); multiplying by \(z\) yields \(\sum_{n=1}^{\infty} n z^n = \frac{z}{(1-z)^2}\).`,
+          ko: String.raw`\(|z| < 1\)에서 \(\sum_{n=0}^{\infty} z^n = \frac{1}{1-z}\)를 항별 미분하면(멱급수는 수렴원 안에서 항별 미분 가능) \(\sum_{n=1}^{\infty} n z^{n-1} = \frac{1}{(1-z)^2}\)이고, \(z\)를 곱하면 아래 식을 얻습니다.`,
+          en: String.raw`For \(|z| < 1\), differentiating \(\sum_{n=0}^{\infty} z^n = \frac{1}{1-z}\) termwise (a power series may be differentiated termwise inside its disc) gives \(\sum_{n=1}^{\infty} n z^{n-1} = \frac{1}{(1-z)^2}\); multiplying by \(z\) yields the formula below.`,
         },
+        display: [String.raw`\sum_{n=1}^{\infty} n z^n = \frac{z}{(1-z)^2}`],
       },
       {
         text: {
-          ko: String.raw`\(z = -x\) (\(0 \le x < 1\))를 대입하면 \(n(-x)^n = n(-1)^n x^n\)이므로 \(\sum_{n=1}^{\infty} n(-1)^n x^n = \frac{-x}{(1+x)^2}\)입니다. \(x \to 1^{-}\)일 때 이는 \(-\frac{1}{4}\)로 수렴하므로, Abel 합은 \(-\frac{1}{4}\)입니다. 발산하는 급수도 Abel 총합가능할 수 있습니다.`,
-          en: String.raw`Substituting \(z = -x\) (\(0 \le x < 1\)) gives \(n(-x)^n = n(-1)^n x^n\), so \(\sum_{n=1}^{\infty} n(-1)^n x^n = \frac{-x}{(1+x)^2}\). As \(x \to 1^{-}\) this tends to \(-\frac{1}{4}\), the Abel sum. A divergent series can still be Abel summable.`,
+          ko: String.raw`\(z = -x\) (\(0 \le x < 1\))를 대입하면 \(n(-x)^n = n(-1)^n x^n\)이므로 \(\sum_{n=1}^{\infty} n(-1)^n x^n = \frac{-x}{(1+x)^2}\)입니다. \(x \to 1^{-}\)일 때 이는 \(-\frac{1}{4}\)로 수렴하므로, Abel 합은 \(-\frac{1}{4}\)입니다.
+
+발산하는 급수도 Abel 총합가능할 수 있습니다.`,
+          en: String.raw`Substituting \(z = -x\) (\(0 \le x < 1\)) gives \(n(-x)^n = n(-1)^n x^n\), so \(\sum_{n=1}^{\infty} n(-1)^n x^n = \frac{-x}{(1+x)^2}\). As \(x \to 1^{-}\) this tends to \(-\frac{1}{4}\), the Abel sum.
+
+A divergent series can still be Abel summable.`,
         },
       },
     ],
@@ -77,8 +82,12 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 2,
     topics: ['rearrangement', 'riemann-rearrangement'],
     statement: {
-      ko: String.raw`교대조화급수를 "양항 두 개, 음항 한 개"씩 순서대로 재배열한 급수 \(1+\frac{1}{3}-\frac{1}{2}+\frac{1}{5}+\frac{1}{7}-\frac{1}{4}+\cdots\)가 \(\frac{3}{2}\ln 2\)로 수렴함을 엄밀히 증명하세요. (\(H_m = \ln m+\gamma+o(1)\)은 알려진 사실로 사용해도 됩니다.)`,
-      en: String.raw`Prove rigorously that the rearrangement of the alternating harmonic series taking "two positive terms, then one negative term" in order, \(1+\frac{1}{3}-\frac{1}{2}+\frac{1}{5}+\frac{1}{7}-\frac{1}{4}+\cdots\), converges to \(\frac{3}{2}\ln 2\). (You may use \(H_m = \ln m+\gamma+o(1)\) as known.)`,
+      ko: String.raw`교대조화급수를 "양항 두 개, 음항 한 개"씩 순서대로 재배열한 급수 \(1+\frac{1}{3}-\frac{1}{2}+\frac{1}{5}+\frac{1}{7}-\frac{1}{4}+\cdots\)가 \(\frac{3}{2}\ln 2\)로 수렴함을 엄밀히 증명하세요.
+
+(\(H_m = \ln m+\gamma+o(1)\)은 알려진 사실로 사용해도 됩니다.)`,
+      en: String.raw`Prove rigorously that the rearrangement of the alternating harmonic series taking "two positive terms, then one negative term" in order, \(1+\frac{1}{3}-\frac{1}{2}+\frac{1}{5}+\frac{1}{7}-\frac{1}{4}+\cdots\), converges to \(\frac{3}{2}\ln 2\).
+
+(You may use \(H_m = \ln m+\gamma+o(1)\) as known.)`,
     },
     display: [String.raw`T_{3N} = H_{4N}-\tfrac12 H_{2N}-\tfrac12 H_N \to \tfrac32\ln 2`],
     solution: [

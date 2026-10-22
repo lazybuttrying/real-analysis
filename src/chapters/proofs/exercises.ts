@@ -14,20 +14,29 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 1,
     topics: ['quantifiers'],
     statement: {
-      ko: String.raw`명제 \(\forall x \in \mathbb{R}\ \exists y \in \mathbb{R}\ (y^2 > x)\)의 부정을 완전히 쓰세요 (양화사를 하나씩 뒤집어 가며). 그 다음 원래 명제와 그 부정 중 어느 것이 참인지 증명하세요.`,
-      en: String.raw`Write the full negation of the statement \(\forall x \in \mathbb{R}\ \exists y \in \mathbb{R}\ (y^2 > x)\) (flip one quantifier at a time). Then prove which of the statement and its negation is true.`,
+      ko: String.raw`명제 \(\forall x \in \mathbb{R}\ \exists y \in \mathbb{R}\ (y^2 > x)\)의 부정을 완전히 쓰세요 (양화사를 하나씩 뒤집어 가며).
+
+그 다음 원래 명제와 그 부정 중 어느 것이 참인지 증명하세요.`,
+      en: String.raw`Write the full negation of the statement \(\forall x \in \mathbb{R}\ \exists y \in \mathbb{R}\ (y^2 > x)\) (flip one quantifier at a time).
+
+Then prove which of the statement and its negation is true.`,
     },
     solution: [
       {
         text: {
-          ko: String.raw`부정은 차례로 뒤집어 얻습니다: \(\lnot\big(\forall x\ \exists y\ (y^2 > x)\big)\)에서 전칭이 존재로, 존재가 전칭으로, 부등식이 반대로 뒤집혀 \(\exists x \in \mathbb{R}\ \forall y \in \mathbb{R}\ (y^2 \le x)\)가 됩니다.`,
-          en: String.raw`The negation comes from flipping in turn: \(\lnot\big(\forall x\ \exists y\ (y^2 > x)\big)\) turns the universal into an existential, the existential into a universal, and reverses the inequality, giving \(\exists x \in \mathbb{R}\ \forall y \in \mathbb{R}\ (y^2 \le x)\).`,
+          ko: String.raw`부정은 차례로 뒤집어 얻습니다: \(\lnot\big(\forall x\ \exists y\ (y^2 > x)\big)\)에서 전칭이 존재로, 존재가 전칭으로, 부등식이 반대로 뒤집혀 아래 식이 됩니다.`,
+          en: String.raw`The negation comes from flipping in turn: \(\lnot\big(\forall x\ \exists y\ (y^2 > x)\big)\) turns the universal into an existential, the existential into a universal, and reverses the inequality, giving the formula below.`,
         },
+        display: [String.raw`\exists x \in \mathbb{R}\ \forall y \in \mathbb{R}\ (y^2 \le x)`],
       },
       {
         text: {
-          ko: String.raw`원래 명제가 참입니다. \(x\)가 주어지면 \(y = x + 1\)이라 두면 \(y^2 = x^2 + 2x + 1\)이고, \(y^2 - x = x^2 + x + 1 = \left(x + \frac12\right)^2 + \frac34 > 0\)이므로 \(y^2 > x\)입니다. 따라서 부정은 거짓입니다.`,
-          en: String.raw`The original statement is true. Given \(x\), take \(y = x + 1\): then \(y^2 = x^2 + 2x + 1\), and \(y^2 - x = x^2 + x + 1 = \left(x + \frac12\right)^2 + \frac34 > 0\), so \(y^2 > x\). Hence the negation is false.`,
+          ko: String.raw`원래 명제가 참입니다.
+
+\(x\)가 주어지면 \(y = x + 1\)이라 두면 \(y^2 = x^2 + 2x + 1\)이고, \(y^2 - x = x^2 + x + 1 = \left(x + \frac12\right)^2 + \frac34 > 0\)이므로 \(y^2 > x\)입니다. 따라서 부정은 거짓입니다.`,
+          en: String.raw`The original statement is true.
+
+Given \(x\), take \(y = x + 1\): then \(y^2 = x^2 + 2x + 1\), and \(y^2 - x = x^2 + x + 1 = \left(x + \frac12\right)^2 + \frac34 > 0\), so \(y^2 > x\). Hence the negation is false.`,
         },
       },
     ],
@@ -43,9 +52,14 @@ export const exercises: readonly ExerciseMeta[] = [
     solution: [
       {
         text: {
-          ko: String.raw`홀수 \(m, n\)을 가정합니다. 정의에 의해 \(m = 2a + 1\), \(n = 2b + 1\)인 정수 \(a, b\)가 존재합니다. 곱하면 \(mn = (2a+1)(2b+1) = 4ab + 2a + 2b + 1 = 2(2ab + a + b) + 1\)입니다. \(2ab + a + b\)는 정수이므로 \(mn\)은 \(2k + 1\) 꼴 — 즉 홀수입니다. 가정에서 바로 결론에 도달했으므로 직접증명입니다.`,
-          en: String.raw`Assume \(m, n\) are odd. By definition there are integers \(a, b\) with \(m = 2a + 1\) and \(n = 2b + 1\). Multiplying gives \(mn = (2a+1)(2b+1) = 4ab + 2a + 2b + 1 = 2(2ab + a + b) + 1\). Since \(2ab + a + b\) is an integer, \(mn\) has the form \(2k + 1\) — i.e. it is odd. We reached the conclusion directly from the hypothesis, so this is a direct proof.`,
+          ko: String.raw`홀수 \(m, n\)을 가정합니다. 정의에 의해 \(m = 2a + 1\), \(n = 2b + 1\)인 정수 \(a, b\)가 존재합니다. 곱하면 아래 식을 얻습니다.
+
+\(2ab + a + b\)는 정수이므로 \(mn\)은 \(2k + 1\) 꼴 — 즉 홀수입니다. 가정에서 바로 결론에 도달했으므로 직접증명입니다.`,
+          en: String.raw`Assume \(m, n\) are odd. By definition there are integers \(a, b\) with \(m = 2a + 1\) and \(n = 2b + 1\). Multiplying gives the formula below.
+
+Since \(2ab + a + b\) is an integer, \(mn\) has the form \(2k + 1\) — i.e. it is odd. We reached the conclusion directly from the hypothesis, so this is a direct proof.`,
         },
+        display: [String.raw`mn = (2a+1)(2b+1) = 4ab + 2a + 2b + 1 = 2(2ab + a + b) + 1`],
       },
     ],
   },
@@ -57,15 +71,24 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 2,
     topics: ['contrapositive'],
     statement: {
-      ko: String.raw`\(5n + 4\)가 짝수이면 \(n\)이 짝수임을 대우법으로 증명하세요. 왜 직접증명(가정 \(5n+4\) 짝수에서 시작)이 어색한지도 설명하세요.`,
-      en: String.raw`Prove by contrapositive that if \(5n + 4\) is even then \(n\) is even. Also explain why a direct proof (starting from the assumption that \(5n+4\) is even) is awkward.`,
+      ko: String.raw`\(5n + 4\)가 짝수이면 \(n\)이 짝수임을 대우법으로 증명하세요.
+
+왜 직접증명(가정 \(5n+4\) 짝수에서 시작)이 어색한지도 설명하세요.`,
+      en: String.raw`Prove by contrapositive that if \(5n + 4\) is even then \(n\) is even.
+
+Also explain why a direct proof (starting from the assumption that \(5n+4\) is even) is awkward.`,
     },
     solution: [
       {
         text: {
-          ko: String.raw`대우는 "\(n\)이 홀수이면 \(5n+4\)가 홀수이다"입니다. \(n\)이 홀수라 가정하면 \(n = 2k+1\)인 정수 \(k\)가 존재합니다. 대입하면 \(5n + 4 = 5(2k+1) + 4 = 10k + 9 = 2(5k+4) + 1\)이므로 \(5n+4\)는 홀수입니다. 따라서 대우가 성립하고, 대우와 원래 명제는 동치이므로 "\(5n+4\) 짝수 \(\Rightarrow\) \(n\) 짝수"가 증명됩니다.`,
-          en: String.raw`The contrapositive is "if \(n\) is odd then \(5n+4\) is odd". Assume \(n\) is odd, so \(n = 2k+1\) for an integer \(k\). Substituting gives \(5n + 4 = 5(2k+1) + 4 = 10k + 9 = 2(5k+4) + 1\), so \(5n+4\) is odd. Thus the contrapositive holds, and since a statement is equivalent to its contrapositive, "\(5n+4\) even \(\Rightarrow\) \(n\) even" is proved.`,
+          ko: String.raw`대우는 "\(n\)이 홀수이면 \(5n+4\)가 홀수이다"입니다. \(n\)이 홀수라 가정하면 \(n = 2k+1\)인 정수 \(k\)가 존재합니다.
+
+대입하면 아래 식을 얻으므로 \(5n+4\)는 홀수입니다. 따라서 대우가 성립하고, 대우와 원래 명제는 동치이므로 "\(5n+4\) 짝수 \(\Rightarrow\) \(n\) 짝수"가 증명됩니다.`,
+          en: String.raw`The contrapositive is "if \(n\) is odd then \(5n+4\) is odd". Assume \(n\) is odd, so \(n = 2k+1\) for an integer \(k\).
+
+Substituting gives the formula below, so \(5n+4\) is odd. Thus the contrapositive holds, and since a statement is equivalent to its contrapositive, "\(5n+4\) even \(\Rightarrow\) \(n\) even" is proved.`,
         },
+        display: [String.raw`5n + 4 = 5(2k+1) + 4 = 10k + 9 = 2(5k+4) + 1`],
       },
       {
         text: {
@@ -106,8 +129,12 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 3,
     topics: ['strong-induction'],
     statement: {
-      ko: String.raw`3원짜리 우표와 5원짜리 우표만으로 \(n \ge 8\)인 모든 정수 금액을 만들 수 있음 — 즉 \(n = 3a + 5b\) (\(a, b \ge 0\)인 정수)를 만족하는 \(a, b\)가 존재함 — 을 강한 귀납법으로 증명하세요. 왜 밑바닥 경우가 세 개 필요한지 설명하세요.`,
-      en: String.raw`Prove by strong induction that every integer amount \(n \ge 8\) can be formed with 3-unit and 5-unit stamps — i.e. there exist integers \(a, b \ge 0\) with \(n = 3a + 5b\). Explain why three base cases are needed.`,
+      ko: String.raw`3원짜리 우표와 5원짜리 우표만으로 \(n \ge 8\)인 모든 정수 금액을 만들 수 있음 — 즉 \(n = 3a + 5b\) (\(a, b \ge 0\)인 정수)를 만족하는 \(a, b\)가 존재함 — 을 강한 귀납법으로 증명하세요.
+
+왜 밑바닥 경우가 세 개 필요한지 설명하세요.`,
+      en: String.raw`Prove by strong induction that every integer amount \(n \ge 8\) can be formed with 3-unit and 5-unit stamps — i.e. there exist integers \(a, b \ge 0\) with \(n = 3a + 5b\).
+
+Explain why three base cases are needed.`,
     },
     solution: [
       {
@@ -118,8 +145,12 @@ export const exercises: readonly ExerciseMeta[] = [
       },
       {
         text: {
-          ko: String.raw`귀납 단계: \(n \ge 11\)이라 하고, \(8 \le k \le n-1\)인 모든 \(k\)에 대해 주장이 성립한다고 가정합니다 (강한 귀납법 가정). 그러면 \(n - 3 \ge 8\)이고 \(n - 3 \le n - 1\)이므로 가정에 의해 \(n - 3 = 3a + 5b\)인 \(a, b \ge 0\)이 존재합니다. 양변에 3을 더하면 \(n = 3(a+1) + 5b\) — 3원짜리 우표 하나를 추가하면 됩니다. 따라서 주장에 의해 모든 \(n \ge 8\)이 표현됩니다.`,
-          en: String.raw`Inductive step: let \(n \ge 11\) and assume the claim holds for every \(k\) with \(8 \le k \le n-1\) (the strong induction hypothesis). Then \(n - 3 \ge 8\) and \(n - 3 \le n - 1\), so by the hypothesis there are \(a, b \ge 0\) with \(n - 3 = 3a + 5b\). Adding 3 to both sides gives \(n = 3(a+1) + 5b\) — add one 3-unit stamp. Hence every \(n \ge 8\) is representable.`,
+          ko: String.raw`귀납 단계: \(n \ge 11\)이라 하고, \(8 \le k \le n-1\)인 모든 \(k\)에 대해 주장이 성립한다고 가정합니다 (강한 귀납법 가정). 그러면 \(n - 3 \ge 8\)이고 \(n - 3 \le n - 1\)이므로 가정에 의해 \(n - 3 = 3a + 5b\)인 \(a, b \ge 0\)이 존재합니다.
+
+양변에 3을 더하면 \(n = 3(a+1) + 5b\) — 3원짜리 우표 하나를 추가하면 됩니다. 따라서 주장에 의해 모든 \(n \ge 8\)이 표현됩니다.`,
+          en: String.raw`Inductive step: let \(n \ge 11\) and assume the claim holds for every \(k\) with \(8 \le k \le n-1\) (the strong induction hypothesis). Then \(n - 3 \ge 8\) and \(n - 3 \le n - 1\), so by the hypothesis there are \(a, b \ge 0\) with \(n - 3 = 3a + 5b\).
+
+Adding 3 to both sides gives \(n = 3(a+1) + 5b\) — add one 3-unit stamp. Hence every \(n \ge 8\) is representable.`,
         },
       },
       {
@@ -141,14 +172,22 @@ export const exercises: readonly ExerciseMeta[] = [
     solution: [
       {
         text: {
-          ko: String.raw`세 공리를 확인합니다. 반사성: \(a^2 + b^2 = a^2 + b^2\)이므로 \((a,b) \sim (a,b)\). 대칭성: \(a^2 + b^2 = c^2 + d^2\)이면 \(c^2 + d^2 = a^2 + b^2\)이므로 \((c,d) \sim (a,b)\). 추이성: \((a,b) \sim (c,d)\)이고 \((c,d) \sim (e,f)\)이면 \(a^2+b^2 = c^2+d^2 = e^2+f^2\)이므로 \((a,b) \sim (e,f)\). 따라서 \(\sim\)은 동치관계입니다.`,
-          en: String.raw`Check the three axioms. Reflexivity: \(a^2 + b^2 = a^2 + b^2\), so \((a,b) \sim (a,b)\). Symmetry: \(a^2 + b^2 = c^2 + d^2\) implies \(c^2 + d^2 = a^2 + b^2\), so \((c,d) \sim (a,b)\). Transitivity: \((a,b) \sim (c,d)\) and \((c,d) \sim (e,f)\) give \(a^2+b^2 = c^2+d^2 = e^2+f^2\), so \((a,b) \sim (e,f)\). Hence \(\sim\) is an equivalence relation.`,
+          ko: String.raw`세 공리를 확인합니다. 반사성: \(a^2 + b^2 = a^2 + b^2\)이므로 \((a,b) \sim (a,b)\). 대칭성: \(a^2 + b^2 = c^2 + d^2\)이면 \(c^2 + d^2 = a^2 + b^2\)이므로 \((c,d) \sim (a,b)\).
+
+추이성: \((a,b) \sim (c,d)\)이고 \((c,d) \sim (e,f)\)이면 \(a^2+b^2 = c^2+d^2 = e^2+f^2\)이므로 \((a,b) \sim (e,f)\). 따라서 \(\sim\)은 동치관계입니다.`,
+          en: String.raw`Check the three axioms. Reflexivity: \(a^2 + b^2 = a^2 + b^2\), so \((a,b) \sim (a,b)\). Symmetry: \(a^2 + b^2 = c^2 + d^2\) implies \(c^2 + d^2 = a^2 + b^2\), so \((c,d) \sim (a,b)\).
+
+Transitivity: \((a,b) \sim (c,d)\) and \((c,d) \sim (e,f)\) give \(a^2+b^2 = c^2+d^2 = e^2+f^2\), so \((a,b) \sim (e,f)\). Hence \(\sim\) is an equivalence relation.`,
         },
       },
       {
         text: {
-          ko: String.raw`점 \((a, b)\)의 동치류는 \([(a,b)] = \{(c,d) : c^2 + d^2 = a^2 + b^2\}\)입니다. \(r = \sqrt{a^2+b^2} \ge 0\)이라 두면 이는 원점을 중심으로 반지름이 \(r\)인 원 \(c^2 + d^2 = r^2\)입니다. \((a,b) = (0,0)\)이면 \(r = 0\)이라 동치류는 \(\{(0,0)\}\) 하나뿐입니다.`,
-          en: String.raw`The class of \((a, b)\) is \([(a,b)] = \{(c,d) : c^2 + d^2 = a^2 + b^2\}\). With \(r = \sqrt{a^2+b^2} \ge 0\) this is the circle \(c^2 + d^2 = r^2\) of radius \(r\) centered at the origin. For \((a,b) = (0,0)\) we get \(r = 0\), so the class is the single point \(\{(0,0)\}\).`,
+          ko: String.raw`점 \((a, b)\)의 동치류는 \([(a,b)] = \{(c,d) : c^2 + d^2 = a^2 + b^2\}\)입니다.
+
+\(r = \sqrt{a^2+b^2} \ge 0\)이라 두면 이는 원점을 중심으로 반지름이 \(r\)인 원 \(c^2 + d^2 = r^2\)입니다. \((a,b) = (0,0)\)이면 \(r = 0\)이라 동치류는 \(\{(0,0)\}\) 하나뿐입니다.`,
+          en: String.raw`The class of \((a, b)\) is \([(a,b)] = \{(c,d) : c^2 + d^2 = a^2 + b^2\}\).
+
+With \(r = \sqrt{a^2+b^2} \ge 0\) this is the circle \(c^2 + d^2 = r^2\) of radius \(r\) centered at the origin. For \((a,b) = (0,0)\) we get \(r = 0\), so the class is the single point \(\{(0,0)\}\).`,
         },
       },
       {

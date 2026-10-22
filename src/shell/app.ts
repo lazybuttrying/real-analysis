@@ -90,6 +90,12 @@ function summarySpan(text: string): HTMLSpanElement {
   return span;
 }
 
+/** Splits a prose field into paragraphs on blank lines (single newlines stay). */
+function splitParagraphs(text: string): string[] {
+  const parts = text.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
+  return parts.length > 0 ? parts : [text];
+}
+
 function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
   const summary = localize(scene.summary, lang);
   const paragraphs = summary.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
@@ -139,9 +145,12 @@ function renderProblems(
   for (const problem of problems) {
     const card = h('article', { class: 'problem', id: `problem-${scene.id}-${problem.id}` });
 
-    const statement = h('p', { class: 'problem-statement' }, stripInlineMath(localize(problem.statement, lang)));
-    card.append(statement);
-    richTargets.push({ el: statement, text: localize(problem.statement, lang), display: problem.display });
+    const statementParas = splitParagraphs(localize(problem.statement, lang));
+    statementParas.forEach((para, i) => {
+      const el = h('p', { class: 'problem-statement' }, stripInlineMath(para));
+      card.append(el);
+      richTargets.push({ el, text: para, display: i === statementParas.length - 1 ? problem.display : undefined });
+    });
 
     const vizHost = h('div', { class: 'problem-viz-host' });
     const caption = h('figcaption', {}, stripInlineMath(localize(problem.presetCaption, lang)));
@@ -153,9 +162,14 @@ function renderProblems(
     details.append(h('summary', {}, tr(lang, problem.isHint ? 'showHint' : 'showProof')));
     const list = h('ol', {});
     for (const step of problem.proof) {
-      const item = h('li', {}, stripInlineMath(localize(step.text, lang)));
+      const item = h('li', {});
+      const stepParas = splitParagraphs(localize(step.text, lang));
+      stepParas.forEach((para, i) => {
+        const el = h('p', {}, stripInlineMath(para));
+        item.append(el);
+        richTargets.push({ el, text: para, display: i === stepParas.length - 1 ? step.display : undefined });
+      });
       list.append(item);
-      richTargets.push({ el: item, text: localize(step.text, lang), display: step.display });
     }
     details.append(list);
     card.append(details);
