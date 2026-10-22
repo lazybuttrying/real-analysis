@@ -23,8 +23,12 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(x_n = 1/n\)이라 두자. \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\)이므로, 제곱합이 유한 — 즉 \(x \in \ell^2\)이다. (값 \(\sum 1/n^2 = \pi^2/6\)은 muntz-szasz 씬에서 Parseval로 증명되며, 수렴 자체는 급수 단원의 적분판정법으로도 얻어진다.)`,
-                en: String.raw`Put \(x_n = 1/n\). Then \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\): the sum of squares is finite, so \(x \in \ell^2\). (The value \(\sum 1/n^2 = \pi^2/6\) is proved by Parseval in the muntz-szasz scene; convergence alone follows from the integral test in the series chapter.)`,
+                ko: String.raw`\(x_n = 1/n\)이라 두자. \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\)이므로, 제곱합이 유한 — 즉 \(x \in \ell^2\)이다.
+
+(값 \(\sum 1/n^2 = \pi^2/6\)은 muntz-szasz 씬에서 Parseval로 증명되며, 수렴 자체는 급수 단원의 적분판정법으로도 얻어진다.)`,
+                en: String.raw`Put \(x_n = 1/n\). Then \(\sum_{n=1}^{\infty} x_n^2 = \sum_{n=1}^{\infty} 1/n^2 = \pi^2/6 < \infty\): the sum of squares is finite, so \(x \in \ell^2\).
+
+(The value \(\sum 1/n^2 = \pi^2/6\) is proved by Parseval in the muntz-szasz scene; convergence alone follows from the integral test in the series chapter.)`,
               },
             },
             {

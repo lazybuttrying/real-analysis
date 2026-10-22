@@ -9,7 +9,9 @@ export const problems: readonly ProblemMeta[] = [
           id: 'decimal-truncations-cauchy',
           statement: {
             ko: String.raw`\(\sqrt{2}\)의 소수점 아래 \(n\)자리에서 자른 값 \(x_n = \frac{\lfloor \sqrt{2}\cdot 10^n \rfloor}{10^n}\)이라 하자. \((x_n)\)이 유리수 코시수열임을 증명하세요.`,
-            en: String.raw`Let \(x_n = \frac{\lfloor \sqrt{2}\cdot 10^n \rfloor}{10^n}\) be \(\sqrt{2}\) cut off after \(n\) decimal places. Prove that \((x_n)\) is a Cauchy sequence of rationals.`,
+            en: String.raw`Let \(x_n = \frac{\lfloor \sqrt{2}\cdot 10^n \rfloor}{10^n}\) be \(\sqrt{2}\) cut off after \(n\) decimal places.
+
+Prove that \((x_n)\) is a Cauchy sequence of rationals.`,
           },
           display: [String.raw`|x_m - x_n| < 10^{-N} \quad (m, n \geq N)`],
           preset: { seq: 'decimal', n: 4 },
@@ -53,8 +55,16 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`먼저 두 수열이 모두 유리수 코시수열임을 확인합니다 (\([(a_n)] = [(b_n)]\)라는 표기 자체가 이를 전제합니다). \((b_n)\)은 상수수열이라 \(|b_m - b_n| = 0\)으로 자명히 코시입니다. \((a_n)\)에 대해서는 \(|a_m - a_n| = |1/m - 1/n| \le 1/m + 1/n\)이므로, \(\varepsilon > 0\)에 대해 \(N > 2/\varepsilon\)로 잡으면 \(m, n \ge N\)일 때 \(|a_m - a_n| < \varepsilon\)입니다 — \((a_n)\)도 코시입니다.`,
-                en: String.raw`First verify both are rational Cauchy sequences (the notation \([(a_n)] = [(b_n)]\) presupposes this). The constant sequence \((b_n)\) is trivially Cauchy: \(|b_m - b_n| = 0\). For \((a_n)\), \(|a_m - a_n| = |1/m - 1/n| \le 1/m + 1/n\), so given \(\varepsilon > 0\), taking \(N > 2/\varepsilon\) gives \(|a_m - a_n| < \varepsilon\) for \(m, n \ge N\) — \((a_n)\) is Cauchy too.`,
+                ko: String.raw`먼저 두 수열이 모두 유리수 코시수열임을 확인합니다 (\([(a_n)] = [(b_n)]\)라는 표기 자체가 이를 전제합니다).
+
+\((b_n)\)은 상수수열이라 \(|b_m - b_n| = 0\)으로 자명히 코시입니다.
+
+\((a_n)\)에 대해서는 \(|a_m - a_n| = |1/m - 1/n| \le 1/m + 1/n\)이므로, \(\varepsilon > 0\)에 대해 \(N > 2/\varepsilon\)로 잡으면 \(m, n \ge N\)일 때 \(|a_m - a_n| < \varepsilon\)입니다 — \((a_n)\)도 코시입니다.`,
+                en: String.raw`First verify both are rational Cauchy sequences (the notation \([(a_n)] = [(b_n)]\) presupposes this).
+
+The constant sequence \((b_n)\) is trivially Cauchy: \(|b_m - b_n| = 0\).
+
+For \((a_n)\), \(|a_m - a_n| = |1/m - 1/n| \le 1/m + 1/n\), so given \(\varepsilon > 0\), taking \(N > 2/\varepsilon\) gives \(|a_m - a_n| < \varepsilon\) for \(m, n \ge N\) — \((a_n)\) is Cauchy too.`,
               },
             },
             {
@@ -104,8 +114,14 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(N = \max(N_1, N_2)\)라 두면 \(m, n \geq N\)일 때 우변은 \(\frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\)보다 작습니다. 따라서 \((x_n + y_n)\)은 코시수열입니다. 대표원을 \((x'_n) \sim (x_n)\)으로 바꿔도 \((x_n+y_n) - (x'_n+y_n) = (x_n - x'_n) \to 0\)이므로 같은 동치류 — 덧셈은 대표원 선택과 무관하게 잘 정의됩니다.`,
-                en: String.raw`With \(N = \max(N_1, N_2)\), the right-hand side is below \(\frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\) for \(m, n \geq N\). So \((x_n + y_n)\) is Cauchy. Changing representatives to \((x'_n) \sim (x_n)\) still gives \((x_n+y_n) - (x'_n+y_n) = (x_n - x'_n) \to 0\), hence the same class — addition is well-defined, independent of the chosen representatives.`,
+                ko: String.raw`\(N = \max(N_1, N_2)\)라 두면 \(m, n \geq N\)일 때 우변은 \(\frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\)보다 작습니다.
+
+따라서 \((x_n + y_n)\)은 코시수열입니다. 대표원을 \((x'_n) \sim (x_n)\)으로 바꿔도 \((x_n+y_n) - (x'_n+y_n) = (x_n - x'_n) \to 0\)이므로 같은 동치류 — 덧셈은 대표원 선택과 무관하게 잘 정의됩니다.`,
+                en: String.raw`With \(N = \max(N_1, N_2)\), the right-hand side is below \(\frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon\) for \(m, n \geq N\).
+
+So \((x_n + y_n)\) is Cauchy.
+
+Changing representatives to \((x'_n) \sim (x_n)\) still gives \((x_n+y_n) - (x'_n+y_n) = (x_n - x'_n) \to 0\), hence the same class — addition is well-defined, independent of the chosen representatives.`,
               },
             },
           ],

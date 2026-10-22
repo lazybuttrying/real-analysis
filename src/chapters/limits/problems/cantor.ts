@@ -59,8 +59,24 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`먼저 삼진법 판정법을 단계에 대한 귀납법으로 증명합니다. 주장: \(x \in C_n\)인 것과, 처음 \(n\)개의 삼진 숫자가 모두 \(0\) 또는 \(2\)인 전개가 \(x\)에 존재하는 것은 동치입니다. \(n = 0\)에서는 자명합니다 (\(C_0 = [0,1]\)). 귀납 단계: \(C_n\)의 각 구간은 \([s, s + 3^{-n}]\) (\(s = \sum_{k \le n} c_k 3^{-k}\), \(c_k \in \{0,2\}\)) 꼴이고, 이를 삼등분하면 왼쪽·오른쪽 닫힌 삼등분이 다음 숫자 \(0\), \(2\)에, 제거되는 열린 가운데 삼등분이 다음 숫자 \(1\)에 대응합니다. 따라서 \(C_{n+1}\)의 구간은 정확히 숫자를 \(0\) 또는 \(2\)로 연장한 것들이고, 숫자 \(1\)을 쓰는 점은 (그 숫자로 시작하는 가운데 구간 안에 들어가는) 그 단계에서 제거됩니다 — 단, 끝점은 \(1\)로 끝나는 전개의 대안 전개(\(\ldots 1000\ldots_3 = \ldots 0222\ldots_3\))를 가지므로, 판정은 전개가 "존재"한다는 것으로 진술해야 합니다.`,
-                en: String.raw`First prove the ternary characterization by induction on stages. Claim: \(x \in C_n\) iff \(x\) has a ternary expansion whose first \(n\) digits are all \(0\) or \(2\). For \(n = 0\) this is trivial (\(C_0 = [0,1]\)). Inductive step: each interval of \(C_n\) has the form \([s, s + 3^{-n}]\) with \(s = \sum_{k \le n} c_k 3^{-k}\), \(c_k \in \{0,2\}\); splitting it in thirds, the left and right closed thirds correspond to next digit \(0\) and \(2\), while the removed open middle third corresponds to next digit \(1\). Hence the intervals of \(C_{n+1}\) are exactly those obtained by appending \(0\) or \(2\), and a point using digit \(1\) at this place (falling into the middle interval that digit opens) is removed at this stage — except that endpoints have the alternative expansion \(\ldots 1000\ldots_3 = \ldots 0222\ldots_3\), so the characterization must be stated with an expansion that "exists".`,
+                ko: String.raw`먼저 삼진법 판정법을 단계에 대한 귀납법으로 증명합니다.
+
+주장: \(x \in C_n\)인 것과, 처음 \(n\)개의 삼진 숫자가 모두 \(0\) 또는 \(2\)인 전개가 \(x\)에 존재하는 것은 동치입니다.
+
+\(n = 0\)에서는 자명합니다 (\(C_0 = [0,1]\)).
+
+귀납 단계: \(C_n\)의 각 구간은 \([s, s + 3^{-n}]\) (\(s = \sum_{k \le n} c_k 3^{-k}\), \(c_k \in \{0,2\}\)) 꼴이고, 이를 삼등분하면 왼쪽·오른쪽 닫힌 삼등분이 다음 숫자 \(0\), \(2\)에, 제거되는 열린 가운데 삼등분이 다음 숫자 \(1\)에 대응합니다.
+
+따라서 \(C_{n+1}\)의 구간은 정확히 숫자를 \(0\) 또는 \(2\)로 연장한 것들이고, 숫자 \(1\)을 쓰는 점은 (그 숫자로 시작하는 가운데 구간 안에 들어가는) 그 단계에서 제거됩니다 — 단, 끝점은 \(1\)로 끝나는 전개의 대안 전개(\(\ldots 1000\ldots_3 = \ldots 0222\ldots_3\))를 가지므로, 판정은 전개가 "존재"한다는 것으로 진술해야 합니다.`,
+                en: String.raw`First prove the ternary characterization by induction on stages.
+
+Claim: \(x \in C_n\) iff \(x\) has a ternary expansion whose first \(n\) digits are all \(0\) or \(2\).
+
+For \(n = 0\) this is trivial (\(C_0 = [0,1]\)).
+
+Inductive step: each interval of \(C_n\) has the form \([s, s + 3^{-n}]\) with \(s = \sum_{k \le n} c_k 3^{-k}\), \(c_k \in \{0,2\}\); splitting it in thirds, the left and right closed thirds correspond to next digit \(0\) and \(2\), while the removed open middle third corresponds to next digit \(1\).
+
+Hence the intervals of \(C_{n+1}\) are exactly those obtained by appending \(0\) or \(2\), and a point using digit \(1\) at this place (falling into the middle interval that digit opens) is removed at this stage — except that endpoints have the alternative expansion \(\ldots 1000\ldots_3 = \ldots 0222\ldots_3\), so the characterization must be stated with an expansion that "exists".`,
               },
             },
             {

@@ -32,8 +32,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(|\sin(1/h)| \le 1\)이므로 \(|h\sin(1/h)| \le |h|\)입니다. \(|h| \to 0\) (\(h \to 0\))이므로 조임 정리에 의해 \(h\sin(1/h) \to 0\) — 즉 차분몫의 극한이 존재하고 \(f'(0) = 0\)입니다. 진동하는 \(\sin(1/h)\) 인자는 \(h\)라는 감쇠 인자에 완전히 눌립니다.`,
-          en: String.raw`Since \(|\sin(1/h)| \le 1\), we have \(|h\sin(1/h)| \le |h|\). As \(|h| \to 0\) (\(h \to 0\)), the squeeze theorem gives \(h\sin(1/h) \to 0\) — the limit of the difference quotient exists and \(f'(0) = 0\). The oscillating factor \(\sin(1/h)\) is completely damped by the factor \(h\).`,
+          ko: String.raw`\(|\sin(1/h)| \le 1\)이므로 \(|h\sin(1/h)| \le |h|\)입니다.
+
+\(|h| \to 0\) (\(h \to 0\))이므로 조임 정리에 의해 \(h\sin(1/h) \to 0\) — 즉 차분몫의 극한이 존재하고 \(f'(0) = 0\)입니다.
+
+진동하는 \(\sin(1/h)\) 인자는 \(h\)라는 감쇠 인자에 완전히 눌립니다.`,
+          en: String.raw`Since \(|\sin(1/h)| \le 1\), we have \(|h\sin(1/h)| \le |h|\).
+
+As \(|h| \to 0\) (\(h \to 0\)), the squeeze theorem gives \(h\sin(1/h) \to 0\) — the limit of the difference quotient exists and \(f'(0) = 0\).
+
+The oscillating factor \(\sin(1/h)\) is completely damped by the factor \(h\).`,
         },
       },
       {
@@ -96,8 +104,16 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(x_n = 1/(2\pi n)\)이라 두면 \(x_n \ne 0\)이고 \(x_n \to 0\)입니다. 문제 2의 공식에 대입하면 \(f'(x_n) = 2x_n\sin(1/x_n) - \cos(1/x_n) = 2x_n\sin(2\pi n) - \cos(2\pi n)\)입니다. \(\sin(2\pi n) = 0\), \(\cos(2\pi n) = 1\)이므로 \(f'(x_n) = 0 - 1 = -1\) — 모든 \(n\)에 대해 상수입니다.`,
-          en: String.raw`Set \(x_n = 1/(2\pi n)\); then \(x_n \ne 0\) and \(x_n \to 0\). Plugging into problem 2's formula, \(f'(x_n) = 2x_n\sin(1/x_n) - \cos(1/x_n) = 2x_n\sin(2\pi n) - \cos(2\pi n)\). Since \(\sin(2\pi n) = 0\) and \(\cos(2\pi n) = 1\), we get \(f'(x_n) = 0 - 1 = -1\) — constant for every \(n\).`,
+          ko: String.raw`\(x_n = 1/(2\pi n)\)이라 두면 \(x_n \ne 0\)이고 \(x_n \to 0\)입니다.
+
+문제 2의 공식에 대입하면 \(f'(x_n) = 2x_n\sin(1/x_n) - \cos(1/x_n) = 2x_n\sin(2\pi n) - \cos(2\pi n)\)입니다.
+
+\(\sin(2\pi n) = 0\), \(\cos(2\pi n) = 1\)이므로 \(f'(x_n) = 0 - 1 = -1\) — 모든 \(n\)에 대해 상수입니다.`,
+          en: String.raw`Set \(x_n = 1/(2\pi n)\); then \(x_n \ne 0\) and \(x_n \to 0\).
+
+Plugging into problem 2's formula, \(f'(x_n) = 2x_n\sin(1/x_n) - \cos(1/x_n) = 2x_n\sin(2\pi n) - \cos(2\pi n)\).
+
+Since \(\sin(2\pi n) = 0\) and \(\cos(2\pi n) = 1\), we get \(f'(x_n) = 0 - 1 = -1\) — constant for every \(n\).`,
         },
       },
       {

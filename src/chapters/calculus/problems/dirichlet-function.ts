@@ -12,8 +12,12 @@ export const dirichletFunctionProblems: readonly ProblemMeta[] = [
   {
     id: 'dirichlet-upper',
     statement: {
-      ko: String.raw`\(f = \mathbf{1}_{\mathbb{Q}}\)를 \([0, 1]\) 위의 디리클레 함수라 하세요. \([0, 1]\)의 모든 부분구간이 유리수를 포함함을 이용해, 임의의 분할 \(P\)에 대해 \(U(f, P) = 1\)임을 완전히 증명하세요.`,
-      en: String.raw`Let \(f = \mathbf{1}_{\mathbb{Q}}\) be the Dirichlet function on \([0, 1]\). Using that every subinterval of \([0, 1]\) contains a rational, prove completely that \(U(f, P) = 1\) for every partition \(P\).`,
+      ko: String.raw`\(f = \mathbf{1}_{\mathbb{Q}}\)를 \([0, 1]\) 위의 디리클레 함수라 하세요.
+
+\([0, 1]\)의 모든 부분구간이 유리수를 포함함을 이용해, 임의의 분할 \(P\)에 대해 \(U(f, P) = 1\)임을 완전히 증명하세요.`,
+      en: String.raw`Let \(f = \mathbf{1}_{\mathbb{Q}}\) be the Dirichlet function on \([0, 1]\).
+
+Using that every subinterval of \([0, 1]\) contains a rational, prove completely that \(U(f, P) = 1\) for every partition \(P\).`,
     },
     display: [
       String.raw`U(f, P) = \sum_{i=1}^{n} M_i\,\Delta x_i = 1 \quad \forall P`,
@@ -32,8 +36,16 @@ export const dirichletFunctionProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`분할 \(P = \{x_0 < x_1 < \cdots < x_n\}\)를 잡습니다. 각 부분구간 \([x_{i-1}, x_i]\)는 위에서 유리수 \(r_i\)를 포함하므로, \(M_i = \sup_{[x_{i-1}, x_i]} f \ge f(r_i) = 1\)입니다. 그런데 \(f \le 1\)이 항상 성립하므로 \(M_i = 1\)입니다.`,
-          en: String.raw`Take a partition \(P = \{x_0 < x_1 < \cdots < x_n\}\). Each subinterval \([x_{i-1}, x_i]\) contains a rational \(r_i\) by the above, so \(M_i = \sup_{[x_{i-1}, x_i]} f \ge f(r_i) = 1\). But \(f \le 1\) always, so \(M_i = 1\).`,
+          ko: String.raw`분할 \(P = \{x_0 < x_1 < \cdots < x_n\}\)를 잡습니다.
+
+각 부분구간 \([x_{i-1}, x_i]\)는 위에서 유리수 \(r_i\)를 포함하므로, \(M_i = \sup_{[x_{i-1}, x_i]} f \ge f(r_i) = 1\)입니다.
+
+그런데 \(f \le 1\)이 항상 성립하므로 \(M_i = 1\)입니다.`,
+          en: String.raw`Take a partition \(P = \{x_0 < x_1 < \cdots < x_n\}\).
+
+Each subinterval \([x_{i-1}, x_i]\) contains a rational \(r_i\) by the above, so \(M_i = \sup_{[x_{i-1}, x_i]} f \ge f(r_i) = 1\).
+
+But \(f \le 1\) always, so \(M_i = 1\).`,
         },
       },
       {
@@ -96,8 +108,16 @@ export const dirichletFunctionProblems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`임의의 \(x \in [0, 1]\)을 잡습니다. 유리수와 무리수의 조밀성에 의해, 각 \(k \ge 1\)마다 구간 \((x - \tfrac1k,\, x + \tfrac1k) \cap [0, 1]\)에서 유리수 \(r_k\)와 무리수 \(s_k\)를 고를 수 있습니다. \(|r_k - x| < \frac1k\), \(|s_k - x| < \frac1k\)이므로 \(r_k \to x\)이고 \(s_k \to x\)입니다.`,
-          en: String.raw`Fix any \(x \in [0, 1]\). By density of rationals and irrationals, for each \(k \ge 1\) we can pick a rational \(r_k\) and an irrational \(s_k\) in \((x - \tfrac1k,\, x + \tfrac1k) \cap [0, 1]\). Since \(|r_k - x| < \frac1k\) and \(|s_k - x| < \frac1k\), we have \(r_k \to x\) and \(s_k \to x\).`,
+          ko: String.raw`임의의 \(x \in [0, 1]\)을 잡습니다.
+
+유리수와 무리수의 조밀성에 의해, 각 \(k \ge 1\)마다 구간 \((x - \tfrac1k,\, x + \tfrac1k) \cap [0, 1]\)에서 유리수 \(r_k\)와 무리수 \(s_k\)를 고를 수 있습니다.
+
+\(|r_k - x| < \frac1k\), \(|s_k - x| < \frac1k\)이므로 \(r_k \to x\)이고 \(s_k \to x\)입니다.`,
+          en: String.raw`Fix any \(x \in [0, 1]\).
+
+By density of rationals and irrationals, for each \(k \ge 1\) we can pick a rational \(r_k\) and an irrational \(s_k\) in \((x - \tfrac1k,\, x + \tfrac1k) \cap [0, 1]\).
+
+Since \(|r_k - x| < \frac1k\) and \(|s_k - x| < \frac1k\), we have \(r_k \to x\) and \(s_k \to x\).`,
         },
       },
       {

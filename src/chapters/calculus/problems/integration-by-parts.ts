@@ -14,8 +14,12 @@ export const integrationByPartsProblems: readonly ProblemMeta[] = [
   {
     id: 'ibp-proof',
     statement: {
-      ko: String.raw`부분적분을 완전히 증명하세요: \(u, v\)가 \([a,b]\)에서 \(C^1\)이면 \(\int_a^b u\,dv = [uv]_a^b - \int_a^b v\,du\)입니다. 곱의 미분법칙 \((uv)' = u'v + uv'\)를 적분하고 미적분학 기본정리를 적용하세요.`,
-      en: String.raw`Prove integration by parts completely: if \(u, v\) are \(C^1\) on \([a,b]\), then \(\int_a^b u\,dv = [uv]_a^b - \int_a^b v\,du\). Integrate the product rule \((uv)' = u'v + uv'\) and apply the fundamental theorem of calculus.`,
+      ko: String.raw`부분적분을 완전히 증명하세요: \(u, v\)가 \([a,b]\)에서 \(C^1\)이면 \(\int_a^b u\,dv = [uv]_a^b - \int_a^b v\,du\)입니다.
+
+곱의 미분법칙 \((uv)' = u'v + uv'\)를 적분하고 미적분학 기본정리를 적용하세요.`,
+      en: String.raw`Prove integration by parts completely: if \(u, v\) are \(C^1\) on \([a,b]\), then \(\int_a^b u\,dv = [uv]_a^b - \int_a^b v\,du\).
+
+Integrate the product rule \((uv)' = u'v + uv'\) and apply the fundamental theorem of calculus.`,
     },
     display: [
       String.raw`\int_a^b u(x)\,v'(x)\,dx = \bigl[u(x)\,v(x)\bigr]_a^b - \int_a^b v(x)\,u'(x)\,dx`,
@@ -78,8 +82,12 @@ export const integrationByPartsProblems: readonly ProblemMeta[] = [
   {
     id: 'ibp-reduction',
     statement: {
-      ko: String.raw`\(I_n = \int_0^{\pi/2} \sin^n x\,dx\)가 점화식 \(I_n = \frac{n-1}{n}\,I_{n-2}\)를 만족함을 부분적분으로 완전히 유도하세요 (\(u = \sin^{n-1}x\), \(dv = \sin x\,dx\)). 그리고 \(I_0 = \frac{\pi}{2}\), \(I_1 = 1\)을 계산하세요.`,
-      en: String.raw`Derive completely via integration by parts that \(I_n = \int_0^{\pi/2} \sin^n x\,dx\) satisfies \(I_n = \frac{n-1}{n}\,I_{n-2}\) (use \(u = \sin^{n-1}x\), \(dv = \sin x\,dx\)). Then compute \(I_0 = \frac{\pi}{2}\) and \(I_1 = 1\).`,
+      ko: String.raw`\(I_n = \int_0^{\pi/2} \sin^n x\,dx\)가 점화식 \(I_n = \frac{n-1}{n}\,I_{n-2}\)를 만족함을 부분적분으로 완전히 유도하세요 (\(u = \sin^{n-1}x\), \(dv = \sin x\,dx\)).
+
+그리고 \(I_0 = \frac{\pi}{2}\), \(I_1 = 1\)을 계산하세요.`,
+      en: String.raw`Derive completely via integration by parts that \(I_n = \int_0^{\pi/2} \sin^n x\,dx\) satisfies \(I_n = \frac{n-1}{n}\,I_{n-2}\) (use \(u = \sin^{n-1}x\), \(dv = \sin x\,dx\)).
+
+Then compute \(I_0 = \frac{\pi}{2}\) and \(I_1 = 1\).`,
     },
     display: [
       String.raw`I_n = \frac{n-1}{n}\,I_{n-2}, \qquad I_0 = \frac{\pi}{2}, \quad I_1 = 1`,
@@ -99,8 +107,16 @@ export const integrationByPartsProblems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`경계항: \(x = \pi/2\)에서 \(\cos = 0\), \(x = 0\)에서 \(\sin = 0\) (단 \(n - 1 \ge 1\))이므로 0입니다. \(\cos^2 x = 1 - \sin^2 x\)를 대입하면 \(I_n = (n-1)\int_0^{\pi/2} (\sin^{n-2}x - \sin^n x)\,dx = (n-1)(I_{n-2} - I_n)\)입니다. 정리하면 \(n\,I_n = (n-1)\,I_{n-2}\), 즉 \(I_n = \frac{n-1}{n}\,I_{n-2}\)입니다.`,
-          en: String.raw`The boundary term vanishes: \(\cos = 0\) at \(x = \pi/2\) and \(\sin = 0\) at \(x = 0\) (since \(n - 1 \ge 1\)). With \(\cos^2 x = 1 - \sin^2 x\) this becomes \(I_n = (n-1)\int_0^{\pi/2} (\sin^{n-2}x - \sin^n x)\,dx = (n-1)(I_{n-2} - I_n)\). Rearranging, \(n\,I_n = (n-1)\,I_{n-2}\), i.e. \(I_n = \frac{n-1}{n}\,I_{n-2}\).`,
+          ko: String.raw`경계항: \(x = \pi/2\)에서 \(\cos = 0\), \(x = 0\)에서 \(\sin = 0\) (단 \(n - 1 \ge 1\))이므로 0입니다.
+
+\(\cos^2 x = 1 - \sin^2 x\)를 대입하면 \(I_n = (n-1)\int_0^{\pi/2} (\sin^{n-2}x - \sin^n x)\,dx = (n-1)(I_{n-2} - I_n)\)입니다.
+
+정리하면 \(n\,I_n = (n-1)\,I_{n-2}\), 즉 \(I_n = \frac{n-1}{n}\,I_{n-2}\)입니다.`,
+          en: String.raw`The boundary term vanishes: \(\cos = 0\) at \(x = \pi/2\) and \(\sin = 0\) at \(x = 0\) (since \(n - 1 \ge 1\)).
+
+With \(\cos^2 x = 1 - \sin^2 x\) this becomes \(I_n = (n-1)\int_0^{\pi/2} (\sin^{n-2}x - \sin^n x)\,dx = (n-1)(I_{n-2} - I_n)\).
+
+Rearranging, \(n\,I_n = (n-1)\,I_{n-2}\), i.e. \(I_n = \frac{n-1}{n}\,I_{n-2}\).`,
         },
       },
       {

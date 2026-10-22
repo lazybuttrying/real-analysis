@@ -116,8 +116,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`임의의 (무한할 수 있는) 일차독립 집합으로의 축소: \(E \subseteq V\)가 일차독립이라 둡니다. \(T(E)\)의 임의의 유한 부분집합은 \(\{T(v_1), \dots, T(v_n)\}\) (\(v_i \in E\) 서로 다름; \(T\)가 단사이므로 상도 서로 다름) 꼴이며, \(\{v_1, \dots, v_n\} \subseteq E\)가 일차독립이므로 위의 유한 경우에 의해 이 유한 부분집합도 일차독립입니다. 집합이 일차독립이라는 것은 정확히 그 모든 유한 부분집합이 일차독립이라는 뜻이므로, \(T(E)\) 전체가 일차독립입니다.`,
-                en: String.raw`Reduction to arbitrary (possibly infinite) independent sets: let \(E \subseteq V\) be linearly independent. Every finite subset of \(T(E)\) has the form \(\{T(v_1), \dots, T(v_n)\}\) with distinct \(v_i \in E\) (injectivity of \(T\) keeps the images distinct), and \(\{v_1, \dots, v_n\} \subseteq E\) is independent, so the finite case above makes this finite subset independent. A set is linearly independent exactly when every finite subset of it is, hence the whole image \(T(E)\) is linearly independent.`,
+                ko: String.raw`임의의 (무한할 수 있는) 일차독립 집합으로의 축소: \(E \subseteq V\)가 일차독립이라 둡니다. \(T(E)\)의 임의의 유한 부분집합은 \(\{T(v_1), \dots, T(v_n)\}\) (\(v_i \in E\) 서로 다름; \(T\)가 단사이므로 상도 서로 다름) 꼴이며, \(\{v_1, \dots, v_n\} \subseteq E\)가 일차독립이므로 위의 유한 경우에 의해 이 유한 부분집합도 일차독립입니다.
+
+집합이 일차독립이라는 것은 정확히 그 모든 유한 부분집합이 일차독립이라는 뜻이므로, \(T(E)\) 전체가 일차독립입니다.`,
+                en: String.raw`Reduction to arbitrary (possibly infinite) independent sets: let \(E \subseteq V\) be linearly independent. Every finite subset of \(T(E)\) has the form \(\{T(v_1), \dots, T(v_n)\}\) with distinct \(v_i \in E\) (injectivity of \(T\) keeps the images distinct), and \(\{v_1, \dots, v_n\} \subseteq E\) is independent, so the finite case above makes this finite subset independent.
+
+A set is linearly independent exactly when every finite subset of it is, hence the whole image \(T(E)\) is linearly independent.`,
               },
             },
           ],

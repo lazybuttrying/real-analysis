@@ -26,8 +26,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`(유계) 모든 \(n\)에 대해 \(a_n = 1 - \frac{1}{n} < 1\)이므로 \(1\)은 상계입니다. \(u < 1\)인 임의의 실수에 대해 \(1 - \frac{1}{n} > u \iff n > \frac{1}{1-u}\)인데, 아르키메데스 성질에 의해 그런 \(n\)이 존재하므로 \(u\)는 상계가 아닙니다. 따라서 \(\sup a_n = 1\)입니다.`,
-                en: String.raw`(Bounded) \(a_n = 1 - \frac{1}{n} < 1\) for every \(n\), so \(1\) is an upper bound. For any real \(u < 1\), \(1 - \frac{1}{n} > u \iff n > \frac{1}{1-u}\), and such an \(n\) exists by the Archimedean property, so \(u\) is not an upper bound. Hence \(\sup a_n = 1\).`,
+                ko: String.raw`(유계) 모든 \(n\)에 대해 \(a_n = 1 - \frac{1}{n} < 1\)이므로 \(1\)은 상계입니다. \(u < 1\)인 임의의 실수에 대해 \(1 - \frac{1}{n} > u \iff n > \frac{1}{1-u}\)인데, 아르키메데스 성질에 의해 그런 \(n\)이 존재하므로 \(u\)는 상계가 아닙니다.
+
+따라서 \(\sup a_n = 1\)입니다.`,
+                en: String.raw`(Bounded) \(a_n = 1 - \frac{1}{n} < 1\) for every \(n\), so \(1\) is an upper bound. For any real \(u < 1\), \(1 - \frac{1}{n} > u \iff n > \frac{1}{1-u}\), and such an \(n\) exists by the Archimedean property, so \(u\) is not an upper bound.
+
+Hence \(\sup a_n = 1\).`,
               },
             },
             {
@@ -59,8 +63,12 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\((a_n)\)이 코시수열이라 하자. \(\varepsilon = 1\)에 대해 \(m, n \geq N\)이면 \(\lvert a_m - a_n\rvert < 1\)인 \(N\)이 존재합니다. 이 \(N\)을 고정합니다.`,
-                en: String.raw`Let \((a_n)\) be Cauchy. For \(\varepsilon = 1\) there is \(N\) with \(\lvert a_m - a_n\rvert < 1\) whenever \(m, n \geq N\). Fix this \(N\).`,
+                ko: String.raw`\((a_n)\)이 코시수열이라 하자. \(\varepsilon = 1\)에 대해 \(m, n \geq N\)이면 \(\lvert a_m - a_n\rvert < 1\)인 \(N\)이 존재합니다.
+
+이 \(N\)을 고정합니다.`,
+                en: String.raw`Let \((a_n)\) be Cauchy. For \(\varepsilon = 1\) there is \(N\) with \(\lvert a_m - a_n\rvert < 1\) whenever \(m, n \geq N\).
+
+Fix this \(N\).`,
               },
             },
             {
@@ -110,8 +118,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(2^{-N} < \varepsilon\)인 \(N\)을 잡습니다 (\(N > \log_2 \frac{1}{\varepsilon}\)). \(m, n \geq N\)이라 합시다. \(m = n\)이면 \(\lvert s_m - s_n\rvert = 0 < \varepsilon\)입니다. 그 외의 경우 대칭성 \(\lvert s_m - s_n\rvert = \lvert s_n - s_m\rvert\)에 의해 일반성을 잃지 않고 \(m > n\)이라 둘 수 있고, 2단계에서 \(\lvert s_m - s_n\rvert < 2^{-n} \le 2^{-N} < \varepsilon\)를 얻습니다. 따라서 \((s_N)\)은 코시수열입니다.`,
-                en: String.raw`Given \(\varepsilon > 0\), choose \(N\) with \(2^{-N} < \varepsilon\) (\(N > \log_2 \frac{1}{\varepsilon}\)). Let \(m, n \geq N\). If \(m = n\) then \(\lvert s_m - s_n\rvert = 0 < \varepsilon\). Otherwise, by symmetry \(\lvert s_m - s_n\rvert = \lvert s_n - s_m\rvert\), so assume without loss of generality \(m > n\); step 2 then gives \(\lvert s_m - s_n\rvert < 2^{-n} \le 2^{-N} < \varepsilon\). Hence \((s_N)\) is Cauchy.`,
+                ko: String.raw`\(\varepsilon > 0\)이 주어지면 \(2^{-N} < \varepsilon\)인 \(N\)을 잡습니다 (\(N > \log_2 \frac{1}{\varepsilon}\)). \(m, n \geq N\)이라 합시다.
+
+\(m = n\)이면 \(\lvert s_m - s_n\rvert = 0 < \varepsilon\)입니다. 그 외의 경우 대칭성 \(\lvert s_m - s_n\rvert = \lvert s_n - s_m\rvert\)에 의해 일반성을 잃지 않고 \(m > n\)이라 둘 수 있고, 2단계에서 \(\lvert s_m - s_n\rvert < 2^{-n} \le 2^{-N} < \varepsilon\)를 얻습니다. 따라서 \((s_N)\)은 코시수열입니다.`,
+                en: String.raw`Given \(\varepsilon > 0\), choose \(N\) with \(2^{-N} < \varepsilon\) (\(N > \log_2 \frac{1}{\varepsilon}\)). Let \(m, n \geq N\).
+
+If \(m = n\) then \(\lvert s_m - s_n\rvert = 0 < \varepsilon\). Otherwise, by symmetry \(\lvert s_m - s_n\rvert = \lvert s_n - s_m\rvert\), so assume without loss of generality \(m > n\); step 2 then gives \(\lvert s_m - s_n\rvert < 2^{-n} \le 2^{-N} < \varepsilon\). Hence \((s_N)\) is Cauchy.`,
               },
             },
             {
