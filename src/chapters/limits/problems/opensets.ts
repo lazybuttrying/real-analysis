@@ -53,8 +53,12 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(x \in \bigcap_{n} (-1/n, 1/n)\)이라 하자. 모든 \(n\)에 대해 \(\lvert x\rvert < 1/n\)이다. 만약 \(\lvert x\rvert > 0\)이면 아르키메데스 성질에 의해 \(1/n < \lvert x\rvert\)인 \(n\)이 존재해 \(\lvert x\rvert < 1/n\)에 모순이다. 따라서 \(\lvert x\rvert = 0\), 즉 \(x = 0\)이다.`,
-                en: String.raw`Let \(x \in \bigcap_n (-1/n, 1/n)\). Then \(\lvert x\rvert < 1/n\) for every \(n\). If \(\lvert x\rvert > 0\), the Archimedean property gives an \(n\) with \(1/n < \lvert x\rvert\), contradicting \(\lvert x\rvert < 1/n\). Hence \(\lvert x\rvert = 0\), i.e. \(x = 0\).`,
+                ko: String.raw`\(x \in \bigcap_{n} (-1/n, 1/n)\)이라 하자. 모든 \(n\)에 대해 \(\lvert x\rvert < 1/n\)이다. 만약 \(\lvert x\rvert > 0\)이면 아르키메데스 성질에 의해 \(1/n < \lvert x\rvert\)인 \(n\)이 존재해 \(\lvert x\rvert < 1/n\)에 모순이다.
+
+따라서 \(\lvert x\rvert = 0\), 즉 \(x = 0\)이다.`,
+                en: String.raw`Let \(x \in \bigcap_n (-1/n, 1/n)\). Then \(\lvert x\rvert < 1/n\) for every \(n\). If \(\lvert x\rvert > 0\), the Archimedean property gives an \(n\) with \(1/n < \lvert x\rvert\), contradicting \(\lvert x\rvert < 1/n\).
+
+Hence \(\lvert x\rvert = 0\), i.e. \(x = 0\).`,
               },
             },
             {

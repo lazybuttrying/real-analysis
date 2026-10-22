@@ -20,8 +20,12 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(f\)가 상수 \(L \geq 0\)에 대해 립시츠라 하자. \(L = 0\)이면 \(f\)는 상수함수이므로 아무 \(\delta > 0\)나 된다. \(L > 0\)이라 하자.`,
-          en: String.raw`Let \(f\) be Lipschitz with constant \(L \geq 0\). If \(L = 0\), then \(f\) is constant and any \(\delta > 0\) works. Assume \(L > 0\).`,
+          ko: String.raw`\(f\)가 상수 \(L \geq 0\)에 대해 립시츠라 하자. \(L = 0\)이면 \(f\)는 상수함수이므로 아무 \(\delta > 0\)나 된다.
+
+\(L > 0\)이라 하자.`,
+          en: String.raw`Let \(f\) be Lipschitz with constant \(L \geq 0\). If \(L = 0\), then \(f\) is constant and any \(\delta > 0\) works.
+
+Assume \(L > 0\).`,
         },
       },
       {

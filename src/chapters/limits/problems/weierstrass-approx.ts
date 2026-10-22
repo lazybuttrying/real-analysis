@@ -53,8 +53,12 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`설정: 정수 \(n \ge 1\)을 고정합니다 (\(n = 0\)이면 \(f(k/n)\)의 나눗셈이 정의되지 않습니다). 목표 함수는 \(f(t) = t\)이므로 \(f(k/n) = k/n\)입니다. \(k \geq 1\)일 때 \(k\binom{n}{k} = n\binom{n-1}{k-1}\)입니다 (\(k = 0\)인 항은 \(\frac{k}{n} = 0\)이므로 사라집니다).`,
-                en: String.raw`Setup: fix an integer \(n \ge 1\) (for \(n = 0\) the values \(f(k/n)\) involve division by zero). The target function is \(f(t) = t\), so \(f(k/n) = k/n\). For \(k \geq 1\), \(k\binom{n}{k} = n\binom{n-1}{k-1}\) (the \(k = 0\) term vanishes since \(\frac{k}{n} = 0\)).`,
+                ko: String.raw`설정: 정수 \(n \ge 1\)을 고정합니다 (\(n = 0\)이면 \(f(k/n)\)의 나눗셈이 정의되지 않습니다). 목표 함수는 \(f(t) = t\)이므로 \(f(k/n) = k/n\)입니다.
+
+\(k \geq 1\)일 때 \(k\binom{n}{k} = n\binom{n-1}{k-1}\)입니다 (\(k = 0\)인 항은 \(\frac{k}{n} = 0\)이므로 사라집니다).`,
+                en: String.raw`Setup: fix an integer \(n \ge 1\) (for \(n = 0\) the values \(f(k/n)\) involve division by zero). The target function is \(f(t) = t\), so \(f(k/n) = k/n\).
+
+For \(k \geq 1\), \(k\binom{n}{k} = n\binom{n-1}{k-1}\) (the \(k = 0\) term vanishes since \(\frac{k}{n} = 0\)).`,
               },
             },
             {
@@ -98,8 +102,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`삼각부등식으로 \(\lvert f(x) - f(x_0)\rvert \leq \lvert f - f_N\rvert + \lvert f_N(x) - f_N(x_0)\rvert + \lvert f_N - f\rvert < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon\) — 따라서 \(f\)는 \(x_0\)에서 연속입니다. \(x_0 \in [a,b]\)는 임의였으므로 \(f\)는 \([a,b]\) 전체에서 연속입니다. (이것이 균일 노름 \(\lVert\cdot\rVert_\infty\)이 \(C[0,1]\)을 닫힌 공간으로 만드는 이유이기도 합니다.)`,
-                en: String.raw`By the triangle inequality, \(\lvert f(x) - f(x_0)\rvert \leq \lvert f - f_N\rvert + \lvert f_N(x) - f_N(x_0)\rvert + \lvert f_N - f\rvert < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon\) — so \(f\) is continuous at \(x_0\). Since \(x_0 \in [a,b]\) was arbitrary, \(f\) is continuous on all of \([a,b]\). (This is also why the uniform norm \(\lVert\cdot\rVert_\infty\) makes \(C[0,1]\) a closed space.)`,
+                ko: String.raw`삼각부등식으로 \(\lvert f(x) - f(x_0)\rvert \leq \lvert f - f_N\rvert + \lvert f_N(x) - f_N(x_0)\rvert + \lvert f_N - f\rvert < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon\) — 따라서 \(f\)는 \(x_0\)에서 연속입니다. \(x_0 \in [a,b]\)는 임의였으므로 \(f\)는 \([a,b]\) 전체에서 연속입니다.
+
+(이것이 균일 노름 \(\lVert\cdot\rVert_\infty\)이 \(C[0,1]\)을 닫힌 공간으로 만드는 이유이기도 합니다.)`,
+                en: String.raw`By the triangle inequality, \(\lvert f(x) - f(x_0)\rvert \leq \lvert f - f_N\rvert + \lvert f_N(x) - f_N(x_0)\rvert + \lvert f_N - f\rvert < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon\) — so \(f\) is continuous at \(x_0\). Since \(x_0 \in [a,b]\) was arbitrary, \(f\) is continuous on all of \([a,b]\).
+
+(This is also why the uniform norm \(\lVert\cdot\rVert_\infty\) makes \(C[0,1]\) a closed space.)`,
               },
             },
           ],

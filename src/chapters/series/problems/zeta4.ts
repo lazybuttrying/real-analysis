@@ -86,8 +86,20 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`베르누이 수 \(B_2 = \frac{1}{6}\), \(B_4 = -\frac{1}{30}\), \(B_6 = \frac{1}{42}\)를 공식 \(\zeta(2n) = \frac{(2\pi)^{2n}|B_{2n}|}{2(2n)!}\)에 대입하면 세 값이 정확히 나옵니다. \(n = 1\): \(\frac{(2\pi)^2(1/6)}{2\cdot 2!} = \frac{4\pi^2/6}{4} = \frac{\pi^2}{6}\). \(n = 2\): \(\frac{(-1)^3 B_4 (2\pi)^4}{2\cdot 4!} = \frac{(1/30)\cdot 16\pi^4}{48} = \frac{\pi^4}{90}\). \(n = 3\): \(\frac{(2\pi)^6(1/42)}{2\cdot 6!} = \frac{64\pi^6}{42\cdot 1440} = \frac{\pi^6}{945}\).`,
-                en: String.raw`Substituting \(B_2 = \frac{1}{6}\), \(B_4 = -\frac{1}{30}\), \(B_6 = \frac{1}{42}\) into \(\zeta(2n) = \frac{(2\pi)^{2n}|B_{2n}|}{2(2n)!}\) gives all three values exactly. For \(n = 1\): \(\frac{(2\pi)^2(1/6)}{2\cdot 2!} = \frac{4\pi^2/6}{4} = \frac{\pi^2}{6}\). For \(n = 2\): \(\frac{(-1)^3 B_4 (2\pi)^4}{2\cdot 4!} = \frac{(1/30)\cdot 16\pi^4}{48} = \frac{\pi^4}{90}\). For \(n = 3\): \(\frac{(2\pi)^6(1/42)}{2\cdot 6!} = \frac{64\pi^6}{42\cdot 1440} = \frac{\pi^6}{945}\).`,
+                ko: String.raw`베르누이 수 \(B_2 = \frac{1}{6}\), \(B_4 = -\frac{1}{30}\), \(B_6 = \frac{1}{42}\)를 공식 \(\zeta(2n) = \frac{(2\pi)^{2n}|B_{2n}|}{2(2n)!}\)에 대입하면 세 값이 정확히 나옵니다.
+
+\(n = 1\): \(\frac{(2\pi)^2(1/6)}{2\cdot 2!} = \frac{4\pi^2/6}{4} = \frac{\pi^2}{6}\).
+
+\(n = 2\): \(\frac{(-1)^3 B_4 (2\pi)^4}{2\cdot 4!} = \frac{(1/30)\cdot 16\pi^4}{48} = \frac{\pi^4}{90}\).
+
+\(n = 3\): \(\frac{(2\pi)^6(1/42)}{2\cdot 6!} = \frac{64\pi^6}{42\cdot 1440} = \frac{\pi^6}{945}\).`,
+                en: String.raw`Substituting \(B_2 = \frac{1}{6}\), \(B_4 = -\frac{1}{30}\), \(B_6 = \frac{1}{42}\) into \(\zeta(2n) = \frac{(2\pi)^{2n}|B_{2n}|}{2(2n)!}\) gives all three values exactly.
+
+For \(n = 1\): \(\frac{(2\pi)^2(1/6)}{2\cdot 2!} = \frac{4\pi^2/6}{4} = \frac{\pi^2}{6}\).
+
+For \(n = 2\): \(\frac{(-1)^3 B_4 (2\pi)^4}{2\cdot 4!} = \frac{(1/30)\cdot 16\pi^4}{48} = \frac{\pi^4}{90}\).
+
+For \(n = 3\): \(\frac{(2\pi)^6(1/42)}{2\cdot 6!} = \frac{64\pi^6}{42\cdot 1440} = \frac{\pi^6}{945}\).`,
               },
             },
             {

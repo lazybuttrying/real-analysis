@@ -65,8 +65,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`중간값 정리에 의해 \(\sin \xi = \frac12\)인 \(\xi \in (0, \frac{\pi}{2})\)가 존재합니다. 이 증인은 유일합니다: \(0 \le x < y \le \frac{\pi}{2}\)이면 \(\sin y - \sin x = 2\cos\frac{x+y}{2}\sin\frac{y-x}{2} > 0\)인데, \(\frac{x+y}{2} \in [0, \frac{\pi}{2})\)라서 \(\cos\frac{x+y}{2} > 0\)이고 \(\frac{y-x}{2} \in (0, \frac{\pi}{4}]\)라서 \(\sin\frac{y-x}{2} > 0\)이기 때문입니다 — 즉 \(\sin\)은 \([0, \frac{\pi}{2}]\)에서 엄격히 증가합니다. \(\sin \frac{\pi}{6} = \frac12\)이므로 유일성에 의해 \(\xi = \frac{\pi}{6}\)입니다.`,
-                en: String.raw`By the Intermediate Value Theorem there is \(\xi \in (0, \frac{\pi}{2})\) with \(\sin \xi = \frac12\). The witness is unique: for \(0 \le x < y \le \frac{\pi}{2}\), \(\sin y - \sin x = 2\cos\frac{x+y}{2}\sin\frac{y-x}{2} > 0\), since \(\frac{x+y}{2} \in [0, \frac{\pi}{2})\) gives \(\cos\frac{x+y}{2} > 0\) and \(\frac{y-x}{2} \in (0, \frac{\pi}{4}]\) gives \(\sin\frac{y-x}{2} > 0\) — so \(\sin\) is strictly increasing on \([0, \frac{\pi}{2}]\). Since \(\sin \frac{\pi}{6} = \frac12\), uniqueness forces \(\xi = \frac{\pi}{6}\).`,
+                ko: String.raw`중간값 정리에 의해 \(\sin \xi = \frac12\)인 \(\xi \in (0, \frac{\pi}{2})\)가 존재합니다.
+
+이 증인은 유일합니다: \(0 \le x < y \le \frac{\pi}{2}\)이면 \(\sin y - \sin x = 2\cos\frac{x+y}{2}\sin\frac{y-x}{2} > 0\)인데, \(\frac{x+y}{2} \in [0, \frac{\pi}{2})\)라서 \(\cos\frac{x+y}{2} > 0\)이고 \(\frac{y-x}{2} \in (0, \frac{\pi}{4}]\)라서 \(\sin\frac{y-x}{2} > 0\)이기 때문입니다 — 즉 \(\sin\)은 \([0, \frac{\pi}{2}]\)에서 엄격히 증가합니다.
+
+\(\sin \frac{\pi}{6} = \frac12\)이므로 유일성에 의해 \(\xi = \frac{\pi}{6}\)입니다.`,
+                en: String.raw`By the Intermediate Value Theorem there is \(\xi \in (0, \frac{\pi}{2})\) with \(\sin \xi = \frac12\).
+
+The witness is unique: for \(0 \le x < y \le \frac{\pi}{2}\), \(\sin y - \sin x = 2\cos\frac{x+y}{2}\sin\frac{y-x}{2} > 0\), since \(\frac{x+y}{2} \in [0, \frac{\pi}{2})\) gives \(\cos\frac{x+y}{2} > 0\) and \(\frac{y-x}{2} \in (0, \frac{\pi}{4}]\) gives \(\sin\frac{y-x}{2} > 0\) — so \(\sin\) is strictly increasing on \([0, \frac{\pi}{2}]\).
+
+Since \(\sin \frac{\pi}{6} = \frac12\), uniqueness forces \(\xi = \frac{\pi}{6}\).`,
               },
             },
           ],
@@ -86,7 +94,11 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(x < \frac12\)이면 \(f(x) = 0 \neq \frac12\)이고, \(x \geq \frac12\)이면 \(f(x) = 1 \neq \frac12\)입니다. 따라서 어떤 \(x\)에 대해서도 \(f(x) = \frac12\)가 될 수 없습니다. 그런데도 \(f(0) = 0 < \frac12 < 1 = f(1)\)입니다.`,
+                ko: String.raw`\(x < \frac12\)이면 \(f(x) = 0 \neq \frac12\)이고, \(x \geq \frac12\)이면 \(f(x) = 1 \neq \frac12\)입니다.
+
+따라서 어떤 \(x\)에 대해서도 \(f(x) = \frac12\)가 될 수 없습니다.
+
+그런데도 \(f(0) = 0 < \frac12 < 1 = f(1)\)입니다.`,
                 en: String.raw`For \(x < \frac12\), \(f(x) = 0 \neq \frac12\); for \(x \geq \frac12\), \(f(x) = 1 \neq \frac12\). So no \(x\) satisfies \(f(x) = \frac12\), even though \(f(0) = 0 < \frac12 < 1 = f(1)\).`,
               },
             },

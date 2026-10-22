@@ -53,8 +53,16 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(\cos\)는 \([0,1]\)에서 연속이고 \((0,1)\)에서 미분가능하므로 평균값 정리를 적용할 수 있습니다: 어떤 \(\xi\)가 \(x, y\) 사이에 있어 \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y|\)입니다. \(\xi \in [0,1] \subset [0, \frac{\pi}{2})\)이고 \(\sin\)은 \([0, \frac{\pi}{2})\)에서 증가하므로 \(|\sin\xi| \le \sin(1)\)이며, 따라서 \(|\cos x - \cos y| \le \sin(1)\,|x - y|\)이고, \(\sin(1) \approx 0.8415 < 1\)이므로 수축사상입니다. 또한 \(\cos\)는 \([0,1]\)에서 감소하므로 (\((\cos)' = -\sin < 0\)), \(\cos([0,1]) = [\cos 1, \cos 0] = [\cos 1, 1] \subset [0,1]\)입니다 (\(\cos 1 \approx 0.5403 > 0\)) — \([0,1]\)을 자기 자신 안으로 보내는 수축사상입니다.`,
-                en: String.raw`\(\cos\) is continuous on \([0,1]\) and differentiable on \((0,1)\), so the Mean Value Theorem applies: some \(\xi\) between \(x\) and \(y\) gives \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y|\). Since \(\xi \in [0,1] \subset [0, \frac{\pi}{2})\) and \(\sin\) is increasing on \([0, \frac{\pi}{2})\), \(|\sin\xi| \le \sin(1)\), so \(|\cos x - \cos y| \le \sin(1)\,|x - y|\), and \(\sin(1) \approx 0.8415 < 1\), so \(\cos\) is a contraction. Also \(\cos\) is decreasing on \([0,1]\) (since \((\cos)' = -\sin < 0\)), so \(\cos([0,1]) = [\cos 1, \cos 0] = [\cos 1, 1] \subset [0,1]\) (with \(\cos 1 \approx 0.5403 > 0\)) — a contraction mapping \([0,1]\) into itself.`,
+                ko: String.raw`\(\cos\)는 \([0,1]\)에서 연속이고 \((0,1)\)에서 미분가능하므로 평균값 정리를 적용할 수 있습니다: 어떤 \(\xi\)가 \(x, y\) 사이에 있어 \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y|\)입니다.
+
+\(\xi \in [0,1] \subset [0, \frac{\pi}{2})\)이고 \(\sin\)은 \([0, \frac{\pi}{2})\)에서 증가하므로 \(|\sin\xi| \le \sin(1)\)이며, 따라서 \(|\cos x - \cos y| \le \sin(1)\,|x - y|\)이고, \(\sin(1) \approx 0.8415 < 1\)이므로 수축사상입니다.
+
+또한 \(\cos\)는 \([0,1]\)에서 감소하므로 (\((\cos)' = -\sin < 0\)), \(\cos([0,1]) = [\cos 1, \cos 0] = [\cos 1, 1] \subset [0,1]\)입니다 (\(\cos 1 \approx 0.5403 > 0\)) — \([0,1]\)을 자기 자신 안으로 보내는 수축사상입니다.`,
+                en: String.raw`\(\cos\) is continuous on \([0,1]\) and differentiable on \((0,1)\), so the Mean Value Theorem applies: some \(\xi\) between \(x\) and \(y\) gives \(|\cos x - \cos y| = |-\sin\xi|\cdot|x - y|\).
+
+Since \(\xi \in [0,1] \subset [0, \frac{\pi}{2})\) and \(\sin\) is increasing on \([0, \frac{\pi}{2})\), \(|\sin\xi| \le \sin(1)\), so \(|\cos x - \cos y| \le \sin(1)\,|x - y|\), and \(\sin(1) \approx 0.8415 < 1\), so \(\cos\) is a contraction.
+
+Also \(\cos\) is decreasing on \([0,1]\) (since \((\cos)' = -\sin < 0\)), so \(\cos([0,1]) = [\cos 1, \cos 0] = [\cos 1, 1] \subset [0,1]\) (with \(\cos 1 \approx 0.5403 > 0\)) — a contraction mapping \([0,1]\) into itself.`,
               },
             },
             {

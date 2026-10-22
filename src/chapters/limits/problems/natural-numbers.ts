@@ -8,8 +8,12 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'sum-to-n',
     statement: {
-      ko: String.raw`\(P(n): \sum_{k=1}^{n} k = \frac{n(n+1)}{2}\)이라 하자. 수학적 귀납법으로 모든 자연수 \(n\)에 대해 이 식이 성립함을 증명하세요.`,
-      en: String.raw`Let \(P(n)\) be the statement \(\sum_{k=1}^{n} k = \frac{n(n+1)}{2}\). Prove by mathematical induction that it holds for every natural number \(n\).`,
+      ko: String.raw`\(P(n): \sum_{k=1}^{n} k = \frac{n(n+1)}{2}\)이라 하자.
+
+수학적 귀납법으로 모든 자연수 \(n\)에 대해 이 식이 성립함을 증명하세요.`,
+      en: String.raw`Let \(P(n)\) be the statement \(\sum_{k=1}^{n} k = \frac{n(n+1)}{2}\).
+
+Prove by mathematical induction that it holds for every natural number \(n\).`,
     },
     display: [String.raw`1 + 2 + \cdots + n = \frac{n(n+1)}{2}`],
     preset: { n: 6 },
@@ -27,8 +31,11 @@ export const problems: readonly ProblemMeta[] = [
       {
         text: {
           ko: String.raw`귀납 단계: \(P(k)\)가 참이라 가정합니다, 즉 \(1+2+\cdots+k = \frac{k(k+1)}{2}\)입니다. 양변에 \(k+1\)을 더하면
+
 \(1+2+\cdots+k+(k+1) = \frac{k(k+1)}{2} + (k+1) = \frac{(k+1)(k+2)}{2}\)를 얻습니다. 이는 정확히 \(P(k+1)\)입니다. 따라서 \(P(k) \Rightarrow P(k+1)\) — 쓰러진 도미노가 다음 도미노를 쓰러뜨립니다.`,
-          en: String.raw`Inductive step: assume \(P(k)\) holds, i.e. \(1+2+\cdots+k = \frac{k(k+1)}{2}\). Adding \(k+1\) to both sides gives
+          en: String.raw`Inductive step: assume \(P(k)\) holds, i.e. \(1+2+\cdots+k = \frac{k(k+1)}{2}\).
+
+Adding \(k+1\) to both sides gives
 \(1+2+\cdots+k+(k+1) = \frac{k(k+1)}{2} + (k+1) = \frac{(k+1)(k+2)}{2}\), which is exactly \(P(k+1)\). Hence \(P(k) \Rightarrow P(k+1)\) — each fallen domino knocks over the next.`,
         },
       },
@@ -62,8 +69,10 @@ export const problems: readonly ProblemMeta[] = [
       {
         text: {
           ko: String.raw`귀납 단계: \((1+x)^k \ge 1+kx\)라 가정합니다. \(x > -1\)이므로 \(1+x > 0\)이고, 부등식의 양변에 양수 \(1+x\)를 곱해도 부등호 방향이 바뀌지 않습니다:
+
 \((1+x)^{k+1} \ge (1+kx)(1+x) = 1 + (k+1)x + kx^2\). 여기서 \(kx^2 \ge 0\)이므로 우변은 \(1+(k+1)x\) 이상입니다. 따라서 \((1+x)^{k+1} \ge 1+(k+1)x\) — 즉 \(P(k) \Rightarrow P(k+1)\)입니다.`,
           en: String.raw`Inductive step: assume \((1+x)^k \ge 1+kx\). Since \(x > -1\), we have \(1+x > 0\), and multiplying both sides of the inequality by the positive number \(1+x\) preserves its direction:
+
 \((1+x)^{k+1} \ge (1+kx)(1+x) = 1 + (k+1)x + kx^2\). Because \(kx^2 \ge 0\), the right side is at least \(1+(k+1)x\). Hence \((1+x)^{k+1} \ge 1+(k+1)x\) — that is, \(P(k) \Rightarrow P(k+1)\).`,
         },
       },
@@ -96,8 +105,12 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`귀납 단계: \(2^k > k\)라 가정합니다. 양변에 \(2\)를 곱하면 \(2^{k+1} = 2\cdot 2^k > 2k\)를 얻습니다. 그런데 \(k \ge 1\)이므로 \(2k = k+k \ge k+1\)입니다. 따라서 \(2^{k+1} > k+1\) — 즉 \(P(k) \Rightarrow P(k+1)\)입니다.`,
-          en: String.raw`Inductive step: assume \(2^k > k\). Multiplying both sides by \(2\) gives \(2^{k+1} = 2\cdot 2^k > 2k\). Since \(k \ge 1\), we have \(2k = k+k \ge k+1\). Hence \(2^{k+1} > k+1\) — that is, \(P(k) \Rightarrow P(k+1)\).`,
+          ko: String.raw`귀납 단계: \(2^k > k\)라 가정합니다. 양변에 \(2\)를 곱하면 \(2^{k+1} = 2\cdot 2^k > 2k\)를 얻습니다.
+
+그런데 \(k \ge 1\)이므로 \(2k = k+k \ge k+1\)입니다. 따라서 \(2^{k+1} > k+1\) — 즉 \(P(k) \Rightarrow P(k+1)\)입니다.`,
+          en: String.raw`Inductive step: assume \(2^k > k\). Multiplying both sides by \(2\) gives \(2^{k+1} = 2\cdot 2^k > 2k\).
+
+Since \(k \ge 1\), we have \(2k = k+k \ge k+1\). Hence \(2^{k+1} > k+1\) — that is, \(P(k) \Rightarrow P(k+1)\).`,
         },
       },
       {

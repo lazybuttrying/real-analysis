@@ -20,7 +20,11 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\((0,1)\)의 점은 자명히 폐포에 속한다. \(x = 0\)이라 하자: 임의의 \(\varepsilon > 0\)에 대해 증인점 \(\min(\varepsilon/2, 1/2) \in (0,\varepsilon) \cap (0,1)\)이므로 (\(\varepsilon \ge 2\)이면 \(\varepsilon/2\)는 \((0,1)\)을 벗어날 수 있어 \(\min\)이 필요합니다), \(0\)의 모든 근방이 \((0,1)\)과 만난다. 즉 \(0 \in \overline{(0,1)}\)이다.`,
+                ko: String.raw`\((0,1)\)의 점은 자명히 폐포에 속한다.
+
+\(x = 0\)이라 하자: 임의의 \(\varepsilon > 0\)에 대해 증인점 \(\min(\varepsilon/2, 1/2) \in (0,\varepsilon) \cap (0,1)\)이므로 (\(\varepsilon \ge 2\)이면 \(\varepsilon/2\)는 \((0,1)\)을 벗어날 수 있어 \(\min\)이 필요합니다), \(0\)의 모든 근방이 \((0,1)\)과 만난다.
+
+즉 \(0 \in \overline{(0,1)}\)이다.`,
                 en: String.raw`Points of \((0,1)\) are trivially in the closure. Let \(x = 0\): for every \(\varepsilon > 0\), the witness \(\min(\varepsilon/2, 1/2) \in (0,\varepsilon) \cap (0,1)\) (the \(\min\) is needed since \(\varepsilon/2\) can leave \((0,1)\) when \(\varepsilon \ge 2\)), so every neighborhood of \(0\) meets \((0,1)\); i.e. \(0 \in \overline{(0,1)}\).`,
               },
             },

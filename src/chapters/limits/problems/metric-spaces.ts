@@ -35,8 +35,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`삼각 부등식을 경우로 나누어 보인다. \(x = z\)이면 좌변 \(d(x,z) = 0 \leq d(x,y) + d(y,z)\)이다. \(x \neq z\)이면 좌변 \(d(x,z) = 1\)이다. 이때 임의의 \(y\)에 대해, \(y\)가 \(x\)와 같으면 우변은 \(0 + 1 = 1\), \(y\)가 \(z\)와 같으면 \(1 + 0 = 1\), \(y\)가 둘 다와 다르면 \(1 + 1 = 2\)이므로, 어느 경우에도 \(1 \leq d(x,y) + d(y,z)\)이다.`,
-                en: String.raw`For the triangle inequality, argue by cases. If \(x = z\) then the left side is \(d(x,z) = 0 \leq d(x,y) + d(y,z)\). If \(x \neq z\) then the left side is \(d(x,z) = 1\). For any \(y\): if \(y\) equals \(x\) the right side is \(0 + 1 = 1\); if \(y\) equals \(z\) it is \(1 + 0 = 1\); if \(y\) equals neither it is \(1 + 1 = 2\). In every case \(1 \leq d(x,y) + d(y,z)\).`,
+                ko: String.raw`삼각 부등식을 경우로 나누어 보인다. \(x = z\)이면 좌변 \(d(x,z) = 0 \leq d(x,y) + d(y,z)\)이다.
+
+\(x \neq z\)이면 좌변 \(d(x,z) = 1\)이다. 이때 임의의 \(y\)에 대해, \(y\)가 \(x\)와 같으면 우변은 \(0 + 1 = 1\), \(y\)가 \(z\)와 같으면 \(1 + 0 = 1\), \(y\)가 둘 다와 다르면 \(1 + 1 = 2\)이므로, 어느 경우에도 \(1 \leq d(x,y) + d(y,z)\)이다.`,
+                en: String.raw`For the triangle inequality, argue by cases. If \(x = z\) then the left side is \(d(x,z) = 0 \leq d(x,y) + d(y,z)\).
+
+If \(x \neq z\) then the left side is \(d(x,z) = 1\). For any \(y\): if \(y\) equals \(x\) the right side is \(0 + 1 = 1\); if \(y\) equals \(z\) it is \(1 + 0 = 1\); if \(y\) equals neither it is \(1 + 1 = 2\). In every case \(1 \leq d(x,y) + d(y,z)\).`,
               },
             },
             {
@@ -62,8 +66,12 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(A\)를 이산 거리 공간의 임의의 부분집합이라 하자. \(A = \emptyset\)이면 확인할 점이 없어 \(A\)는 자명하게 열린집합이다. 그 외의 경우 \(x \in A\)를 잡자.`,
-                en: String.raw`Let \(A\) be any subset of a discrete metric space. If \(A = \emptyset\), then \(A\) is open vacuously — there is no point of \(A\) at which openness could fail. Otherwise take \(x \in A\).`,
+                ko: String.raw`\(A\)를 이산 거리 공간의 임의의 부분집합이라 하자. \(A = \emptyset\)이면 확인할 점이 없어 \(A\)는 자명하게 열린집합이다.
+
+그 외의 경우 \(x \in A\)를 잡자.`,
+                en: String.raw`Let \(A\) be any subset of a discrete metric space. If \(A = \emptyset\), then \(A\) is open vacuously — there is no point of \(A\) at which openness could fail.
+
+Otherwise take \(x \in A\).`,
               },
             },
             {

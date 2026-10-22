@@ -74,7 +74,9 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'unbounded-counterexample',
           statement: {
-            ko: String.raw`\(a_n = n\)은 수렴하는 부분수열을 갖지 않음을 증명하세요. 유계성 가설이 왜 필요한지 보여줍니다.`,
+            ko: String.raw`\(a_n = n\)은 수렴하는 부분수열을 갖지 않음을 증명하세요.
+
+유계성 가설이 왜 필요한지 보여줍니다.`,
             en: String.raw`Prove that \(a_n = n\) has no convergent subsequence — showing why the boundedness hypothesis is essential.`,
           },
           display: [String.raw`n_k \geq k \to \infty`],

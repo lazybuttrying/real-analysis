@@ -49,7 +49,9 @@ export const problems: readonly ProblemMeta[] = [
             {
               text: {
                 ko: String.raw`가정: \(f\)는 \(x^*\) 근처에서 \(C^2\)이고 \(x^*\)는 단순근, 즉 \(f(x^*) = 0\)이고 \(f'(x^*) \ne 0\)입니다 (\(f'(x^*) = 0\)이면 아래 비율 \(\frac{f''(x^*)}{2f'(x^*)}\)는 무의미합니다). 이 가정 아래 \(f(x^*) = 0\)인 근 근처에서 \(f\)를 2차까지 테일러 전개하면 \(0 = f(x^*) \approx f(x_n) + f'(x_n)(x^* - x_n) + \frac{f''(x^*)}{2}e_n^2\)입니다 (\(e_n = x_n - x^*\)).`,
-                en: String.raw`Hypotheses: \(f\) is \(C^2\) near \(x^*\) and \(x^*\) is a simple root, i.e. \(f(x^*) = 0\) with \(f'(x^*) \ne 0\) (if \(f'(x^*) = 0\) the ratio \(\frac{f''(x^*)}{2f'(x^*)}\) below is meaningless). Under these hypotheses, near a root \(f(x^*) = 0\), the second-order Taylor expansion gives \(0 = f(x^*) \approx f(x_n) + f'(x_n)(x^* - x_n) + \frac{f''(x^*)}{2}e_n^2\) (with \(e_n = x_n - x^*\)).`,
+                en: String.raw`Hypotheses: \(f\) is \(C^2\) near \(x^*\) and \(x^*\) is a simple root, i.e. \(f(x^*) = 0\) with \(f'(x^*) \ne 0\) (if \(f'(x^*) = 0\) the ratio \(\frac{f''(x^*)}{2f'(x^*)}\) below is meaningless).
+
+Under these hypotheses, near a root \(f(x^*) = 0\), the second-order Taylor expansion gives \(0 = f(x^*) \approx f(x_n) + f'(x_n)(x^* - x_n) + \frac{f''(x^*)}{2}e_n^2\) (with \(e_n = x_n - x^*\)).`,
               },
             },
             {

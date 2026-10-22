@@ -42,7 +42,9 @@ export const problems: readonly ProblemMeta[] = [
           id: 'gibbs-numeric',
           statement: {
             ko: String.raw`\(N\)이 클 때 점프 옆 최대값이 \(\approx 1.179\)로 수렴함을 수치로 확인하고, 울림이 점프의 약 9%임을 보이세요. (수치 확인)`,
-            en: String.raw`Verify numerically that the peak near the jump tends to \(\approx 1.179\), i.e. about 9% of the jump. (Numerical check)`,
+            en: String.raw`Verify numerically that the peak near the jump tends to \(\approx 1.179\), i.e. about 9% of the jump.
+
+(Numerical check)`,
           },
           display: [String.raw`\max S_N \to \frac{2\,\mathrm{Si}(\pi)}{\pi} \approx 1.17898`],
           preset: { N: 50 },
