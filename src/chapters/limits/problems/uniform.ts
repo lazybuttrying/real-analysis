@@ -26,8 +26,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(x = 0\)에서는 자명하게 \(0\)으로 수렴합니다. \(0 < x < 1\)인 경우, \(t = \frac1x > 1\)이라 두면 \(t = 1 + h\) (\(h > 0\))로 쓸 수 있고, 베르누이 부등식으로 \(t^n \geq 1 + nh\)입니다. 따라서 \(0 \leq x^n = \frac{1}{t^n} \leq \frac{1}{1+nh} \to 0\)이므로 조임 정리로 \(x^n \to 0\)입니다.`,
-                en: String.raw`At \(x = 0\) the limit is trivially \(0\). For \(0 < x < 1\), write \(t = \frac1x > 1\) as \(t = 1 + h\) with \(h > 0\); Bernoulli's inequality gives \(t^n \geq 1 + nh\). Hence \(0 \leq x^n = \frac{1}{t^n} \leq \frac{1}{1+nh} \to 0\), so \(x^n \to 0\) by the squeeze theorem.`,
+                ko: String.raw`\(x = 0\)에서는 자명하게 \(0\)으로 수렴합니다. \(0 < x < 1\)인 경우, \(t = \frac1x > 1\)이라 두면 \(t = 1 + h\) (\(h > 0\))로 쓸 수 있고, 베르누이 부등식으로 \(t^n \geq 1 + nh\)입니다.
+
+따라서 \(0 \leq x^n = \frac{1}{t^n} \leq \frac{1}{1+nh} \to 0\)이므로 조임 정리로 \(x^n \to 0\)입니다.`,
+                en: String.raw`At \(x = 0\) the limit is trivially \(0\). For \(0 < x < 1\), write \(t = \frac1x > 1\) as \(t = 1 + h\) with \(h > 0\); Bernoulli's inequality gives \(t^n \geq 1 + nh\).
+
+Hence \(0 \leq x^n = \frac{1}{t^n} \leq \frac{1}{1+nh} \to 0\), so \(x^n \to 0\) by the squeeze theorem.`,
               },
             },
             {
@@ -59,8 +63,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(x < 1\)이면 \(x^n < 1\)이므로 상한은 \(1\) 이하입니다. 한편 \(x \to 1^{-}\)일 때 \(x^n \to 1\)이므로 (거듭제곱함수의 연속성), \(1\)보다 작은 어떤 수도 상계가 될 수 없습니다. 따라서 상한은 정확히 \(1\)입니다.`,
-                en: String.raw`Since \(x^n < 1\) for \(x < 1\), the supremum is at most \(1\). But \(x^n \to 1\) as \(x \to 1^{-}\) (continuity of the power function), so no number below \(1\) is an upper bound. The supremum is exactly \(1\).`,
+                ko: String.raw`\(x < 1\)이면 \(x^n < 1\)이므로 상한은 \(1\) 이하입니다. 한편 \(x \to 1^{-}\)일 때 \(x^n \to 1\)이므로 (거듭제곱함수의 연속성), \(1\)보다 작은 어떤 수도 상계가 될 수 없습니다.
+
+따라서 상한은 정확히 \(1\)입니다.`,
+                en: String.raw`Since \(x^n < 1\) for \(x < 1\), the supremum is at most \(1\). But \(x^n \to 1\) as \(x \to 1^{-}\) (continuity of the power function), so no number below \(1\) is an upper bound.
+
+The supremum is exactly \(1\).`,
               },
             },
             {
@@ -104,7 +112,9 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(|x - x_0| < \delta\)일 때 삼각부등식으로 \(|f(x) - f(x_0)| \leq |f(x) - f_N(x)| + |f_N(x) - f_N(x_0)| + |f_N(x_0) - f(x_0)| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon\)이다. 따라서 \(f\)는 \(x_0\)에서 연속이다. \(x_0\)가 임의였으므로 \(f\)는 연속이다.`,
+                ko: String.raw`\(|x - x_0| < \delta\)일 때 삼각부등식으로 \(|f(x) - f(x_0)| \leq |f(x) - f_N(x)| + |f_N(x) - f_N(x_0)| + |f_N(x_0) - f(x_0)| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon\)이다.
+
+따라서 \(f\)는 \(x_0\)에서 연속이다. \(x_0\)가 임의였으므로 \(f\)는 연속이다.`,
                 en: String.raw`For \(|x - x_0| < \delta\), the triangle inequality gives \(|f(x) - f(x_0)| \leq |f(x) - f_N(x)| + |f_N(x) - f_N(x_0)| + |f_N(x_0) - f(x_0)| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon\). So \(f\) is continuous at \(x_0\), and \(x_0\) was arbitrary.`,
               },
             },

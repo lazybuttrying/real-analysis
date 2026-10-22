@@ -9,7 +9,9 @@ export const problems: readonly ProblemMeta[] = [
     id: 'binomial-theorem',
     statement: {
       ko: String.raw`\(x, y\)가 수(실수 또는 복소수)이고 \(n \geq 0\)이 정수일 때, 이항정리 \((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\)를 \(n\)에 대한 귀납법으로 증명하세요.`,
-      en: String.raw`Let \(x, y\) be numbers (real or complex) and \(n \geq 0\) an integer. Prove the binomial theorem \((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\) by induction on \(n\).`,
+      en: String.raw`Let \(x, y\) be numbers (real or complex) and \(n \geq 0\) an integer.
+
+Prove the binomial theorem \((x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k\) by induction on \(n\).`,
     },
     display: [String.raw`(x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k`],
     preset: { n: 4 },
@@ -38,8 +40,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`두 번째 합에서 \(j = k+1\)로 치환하면 \(\sum_{j=1}^{n+1}\binom{n}{j-1}x^{n+1-j}y^j\)가 됩니다 (첫 번째 합의 \(k\)도 \(j\)로 다시 씁니다). \(1 \leq j \leq n\)에서 \(x^{n+1-j}y^j\)의 계수는 \(\binom{n}{j}+\binom{n}{j-1}\)이며, 파스칼 항등식으로 \(\binom{n+1}{j}\)가 됩니다. 경계항은 \(j=0\)에서 \(\binom{n}{0} = 1 = \binom{n+1}{0}\), \(j=n+1\)에서 \(\binom{n}{n} = 1 = \binom{n+1}{n+1}\)이므로 전체 합은 \(\sum_{j=0}^{n+1}\binom{n+1}{j}x^{n+1-j}y^j\) — 정확히 \(n+1\)에서의 공식입니다.`,
-          en: String.raw`Reindexing the second sum with \(j = k+1\) gives \(\sum_{j=1}^{n+1}\binom{n}{j-1}x^{n+1-j}y^j\) (renaming \(k\) to \(j\) in the first sum as well). For \(1 \leq j \leq n\) the coefficient of \(x^{n+1-j}y^j\) is \(\binom{n}{j}+\binom{n}{j-1}\), which equals \(\binom{n+1}{j}\) by Pascal's identity. The boundary terms are \(\binom{n}{0} = 1 = \binom{n+1}{0}\) at \(j = 0\) and \(\binom{n}{n} = 1 = \binom{n+1}{n+1}\) at \(j = n+1\), so the whole sum is \(\sum_{j=0}^{n+1}\binom{n+1}{j}x^{n+1-j}y^j\) — exactly the formula for \(n+1\).`,
+          ko: String.raw`두 번째 합에서 \(j = k+1\)로 치환하면 \(\sum_{j=1}^{n+1}\binom{n}{j-1}x^{n+1-j}y^j\)가 됩니다 (첫 번째 합의 \(k\)도 \(j\)로 다시 씁니다).
+
+\(1 \leq j \leq n\)에서 \(x^{n+1-j}y^j\)의 계수는 \(\binom{n}{j}+\binom{n}{j-1}\)이며, 파스칼 항등식으로 \(\binom{n+1}{j}\)가 됩니다.
+
+경계항은 \(j=0\)에서 \(\binom{n}{0} = 1 = \binom{n+1}{0}\), \(j=n+1\)에서 \(\binom{n}{n} = 1 = \binom{n+1}{n+1}\)이므로 전체 합은 \(\sum_{j=0}^{n+1}\binom{n+1}{j}x^{n+1-j}y^j\) — 정확히 \(n+1\)에서의 공식입니다.`,
+          en: String.raw`Reindexing the second sum with \(j = k+1\) gives \(\sum_{j=1}^{n+1}\binom{n}{j-1}x^{n+1-j}y^j\) (renaming \(k\) to \(j\) in the first sum as well).
+
+For \(1 \leq j \leq n\) the coefficient of \(x^{n+1-j}y^j\) is \(\binom{n}{j}+\binom{n}{j-1}\), which equals \(\binom{n+1}{j}\) by Pascal's identity.
+
+The boundary terms are \(\binom{n}{0} = 1 = \binom{n+1}{0}\) at \(j = 0\) and \(\binom{n}{n} = 1 = \binom{n+1}{n+1}\) at \(j = n+1\), so the whole sum is \(\sum_{j=0}^{n+1}\binom{n+1}{j}x^{n+1-j}y^j\) — exactly the formula for \(n+1\).`,
         },
       },
       {

@@ -52,7 +52,9 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`(⇒) \(b \in B\)마다 \(f(a) = b\)인 \(a\)가 존재합니다(전사). 단사이므로 그 \(a\)는 유일합니다. 이를 \(g(b)\)라 정의하면 \(g: B \to A\)입니다.`,
+                ko: String.raw`(⇒) \(b \in B\)마다 \(f(a) = b\)인 \(a\)가 존재합니다(전사). 단사이므로 그 \(a\)는 유일합니다.
+
+이를 \(g(b)\)라 정의하면 \(g: B \to A\)입니다.`,
                 en: String.raw`(⇒) For each \(b \in B\) there is an \(a\) with \(f(a) = b\) (surjective), and by injectivity that \(a\) is unique. Call it \(g(b)\); this defines \(g: B \to A\).`,
               },
             },
@@ -64,8 +66,12 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`(⇐) 그런 \(g\)가 존재한다고 하자. \(f(a_1) = f(a_2)\)이면 양변에 \(g\)를 적용해 \(a_1 = g(f(a_1)) = g(f(a_2)) = a_2\) — 단사입니다. 한편 \(b \in B\)에 대해 \(a = g(b)\)라 두면 \(f(a) = f(g(b)) = b\) — 전사입니다. 따라서 \(f\)는 전단사입니다.`,
-                en: String.raw`(⇐) Suppose such a \(g\) exists. If \(f(a_1) = f(a_2)\), applying \(g\) gives \(a_1 = g(f(a_1)) = g(f(a_2)) = a_2\) — injective. And for \(b \in B\), putting \(a = g(b)\) gives \(f(a) = f(g(b)) = b\) — surjective. Hence \(f\) is bijective.`,
+                ko: String.raw`(⇐) 그런 \(g\)가 존재한다고 하자. \(f(a_1) = f(a_2)\)이면 양변에 \(g\)를 적용해 \(a_1 = g(f(a_1)) = g(f(a_2)) = a_2\) — 단사입니다.
+
+한편 \(b \in B\)에 대해 \(a = g(b)\)라 두면 \(f(a) = f(g(b)) = b\) — 전사입니다. 따라서 \(f\)는 전단사입니다.`,
+                en: String.raw`(⇐) Suppose such a \(g\) exists. If \(f(a_1) = f(a_2)\), applying \(g\) gives \(a_1 = g(f(a_1)) = g(f(a_2)) = a_2\) — injective.
+
+And for \(b \in B\), putting \(a = g(b)\) gives \(f(a) = f(g(b)) = b\) — surjective. Hence \(f\) is bijective.`,
               },
             },
           ],

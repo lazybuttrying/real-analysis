@@ -66,8 +66,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`특히 어떤 \(N\)이 있어 \(n \ge N\)이면 \(\lvert t_{n+1}\rvert \ge 2\lvert t_n\rvert\)이다. \(x \ne 0\)이므로 \(t_N \ne 0\)이고, 귀납법으로 \(\lvert t_{N+k}\rvert \ge 2^k\lvert t_N\rvert\) (\(k \ge 0\))를 얻으므로 \(\lvert t_n\rvert \to \infty\)이다. 따라서 항이 \(0\)으로 가지 않으므로 급수는 발산한다(발산 판정법).`,
-          en: String.raw`In particular, for some \(N\) and all \(n \ge N\), \(\lvert t_{n+1}\rvert \ge 2\lvert t_n\rvert\). Since \(x \ne 0\), \(t_N \ne 0\), and induction gives \(\lvert t_{N+k}\rvert \ge 2^k\lvert t_N\rvert\) for \(k \ge 0\), so \(\lvert t_n\rvert \to \infty\). Hence the terms do not tend to \(0\), and the series diverges by the divergence test.`,
+          ko: String.raw`특히 어떤 \(N\)이 있어 \(n \ge N\)이면 \(\lvert t_{n+1}\rvert \ge 2\lvert t_n\rvert\)이다.
+
+\(x \ne 0\)이므로 \(t_N \ne 0\)이고, 귀납법으로 \(\lvert t_{N+k}\rvert \ge 2^k\lvert t_N\rvert\) (\(k \ge 0\))를 얻으므로 \(\lvert t_n\rvert \to \infty\)이다.
+
+따라서 항이 \(0\)으로 가지 않으므로 급수는 발산한다(발산 판정법).`,
+          en: String.raw`In particular, for some \(N\) and all \(n \ge N\), \(\lvert t_{n+1}\rvert \ge 2\lvert t_n\rvert\).
+
+Since \(x \ne 0\), \(t_N \ne 0\), and induction gives \(\lvert t_{N+k}\rvert \ge 2^k\lvert t_N\rvert\) for \(k \ge 0\), so \(\lvert t_n\rvert \to \infty\).
+
+Hence the terms do not tend to \(0\), and the series diverges by the divergence test.`,
         },
       },
       {
@@ -99,8 +107,16 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`\(x = 0\)에서는 급수가 \(1 + 0 + 0 + \cdots = 1\)이 되어 자명하게 수렴합니다(항은 상수항을 빼고 모두 \(0\)). 이제 \(x \ne 0\)이라 두고 비율 판정법을 \(\lvert x\rvert^n\)에 적용하면 \(\frac{\lvert x\rvert^{n+1}}{\lvert x\rvert^n} = \lvert x\rvert\)이다(\(x = 0\)에서는 이 비율이 \(0/0\)이라 따로 다룬 것이다). \(\lvert x\rvert < 1\)이면 수렴하고 \(\lvert x\rvert > 1\)이면 항이 무한대로 커져 발산하므로 수렴반경은 \(R = 1\)이다.`,
-          en: String.raw`At \(x = 0\) the series is \(1 + 0 + 0 + \cdots = 1\), converging trivially (every term except the constant term is \(0\)). Now assume \(x \ne 0\) and apply the ratio test to \(\lvert x\rvert^n\): \(\frac{\lvert x\rvert^{n+1}}{\lvert x\rvert^n} = \lvert x\rvert\) (at \(x = 0\) this ratio is \(0/0\), which is why that case was separated). It converges for \(\lvert x\rvert < 1\) and diverges for \(\lvert x\rvert > 1\) (terms grow without bound), so the radius is \(R = 1\).`,
+          ko: String.raw`\(x = 0\)에서는 급수가 \(1 + 0 + 0 + \cdots = 1\)이 되어 자명하게 수렴합니다(항은 상수항을 빼고 모두 \(0\)).
+
+이제 \(x \ne 0\)이라 두고 비율 판정법을 \(\lvert x\rvert^n\)에 적용하면 \(\frac{\lvert x\rvert^{n+1}}{\lvert x\rvert^n} = \lvert x\rvert\)이다(\(x = 0\)에서는 이 비율이 \(0/0\)이라 따로 다룬 것이다).
+
+\(\lvert x\rvert < 1\)이면 수렴하고 \(\lvert x\rvert > 1\)이면 항이 무한대로 커져 발산하므로 수렴반경은 \(R = 1\)이다.`,
+          en: String.raw`At \(x = 0\) the series is \(1 + 0 + 0 + \cdots = 1\), converging trivially (every term except the constant term is \(0\)).
+
+Now assume \(x \ne 0\) and apply the ratio test to \(\lvert x\rvert^n\): \(\frac{\lvert x\rvert^{n+1}}{\lvert x\rvert^n} = \lvert x\rvert\) (at \(x = 0\) this ratio is \(0/0\), which is why that case was separated).
+
+It converges for \(\lvert x\rvert < 1\) and diverges for \(\lvert x\rvert > 1\) (terms grow without bound), so the radius is \(R = 1\).`,
         },
       },
       {

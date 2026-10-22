@@ -57,8 +57,16 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(x > 0\)일 때 \(\frac{\sin x}{x} = \frac{\sin x - \sin 0}{x - 0}\)입니다. \(f(t) = \sin t\), \(g(t) = t\)는 모두 \([0, x]\)에서 연속이고 \((0, x)\)에서 미분가능하므로 코시 평균값 정리의 가정이 성립합니다. 구간 \([0, x]\)에서 이 정리를 적용하면 (\(g' = 1 \neq 0\)) 어떤 \(\xi_x \in (0, x)\)에 대해 \(\frac{\sin x - \sin 0}{x - 0} = \frac{\cos \xi_x}{1} = \cos \xi_x\)입니다.`,
-                en: String.raw`For \(x > 0\), \(\frac{\sin x}{x} = \frac{\sin x - \sin 0}{x - 0}\). Both \(f(t) = \sin t\) and \(g(t) = t\) are continuous on \([0, x]\) and differentiable on \((0, x)\), so Cauchy's hypotheses hold. Applying Cauchy's theorem to them on \([0, x]\) (with \(g' = 1 \neq 0\)), some \(\xi_x \in (0, x)\) gives \(\frac{\sin x - \sin 0}{x - 0} = \frac{\cos \xi_x}{1} = \cos \xi_x\).`,
+                ko: String.raw`\(x > 0\)일 때 \(\frac{\sin x}{x} = \frac{\sin x - \sin 0}{x - 0}\)입니다.
+
+\(f(t) = \sin t\), \(g(t) = t\)는 모두 \([0, x]\)에서 연속이고 \((0, x)\)에서 미분가능하므로 코시 평균값 정리의 가정이 성립합니다.
+
+구간 \([0, x]\)에서 이 정리를 적용하면 (\(g' = 1 \neq 0\)) 어떤 \(\xi_x \in (0, x)\)에 대해 \(\frac{\sin x - \sin 0}{x - 0} = \frac{\cos \xi_x}{1} = \cos \xi_x\)입니다.`,
+                en: String.raw`For \(x > 0\), \(\frac{\sin x}{x} = \frac{\sin x - \sin 0}{x - 0}\).
+
+Both \(f(t) = \sin t\) and \(g(t) = t\) are continuous on \([0, x]\) and differentiable on \((0, x)\), so Cauchy's hypotheses hold.
+
+Applying Cauchy's theorem to them on \([0, x]\) (with \(g' = 1 \neq 0\)), some \(\xi_x \in (0, x)\) gives \(\frac{\sin x - \sin 0}{x - 0} = \frac{\cos \xi_x}{1} = \cos \xi_x\).`,
               },
             },
             {
@@ -104,8 +112,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(0 < \xi_2 < \xi < x\)이므로 \(x \to 0^+\)일 때 \(\xi_2 \to 0\)이고, \(e^t\)의 연속성에 의해 \(e^{\xi_2} \to 1\)입니다. 따라서 비율은 \(\frac12\)로 수렴합니다. \(x < 0\)도 \([x, 0]\)에서 같은 논리로 성립하므로 \(\lim_{x \to 0}\frac{e^x-1-x}{x^2} = \frac12\)입니다.`,
-                en: String.raw`Since \(0 < \xi_2 < \xi < x\), \(x \to 0^+\) forces \(\xi_2 \to 0\), and continuity of \(e^t\) gives \(e^{\xi_2} \to 1\). So the ratio tends to \(\frac12\). The same argument on \([x, 0]\) covers \(x < 0\), hence \(\lim_{x \to 0}\frac{e^x-1-x}{x^2} = \frac12\).`,
+                ko: String.raw`\(0 < \xi_2 < \xi < x\)이므로 \(x \to 0^+\)일 때 \(\xi_2 \to 0\)이고, \(e^t\)의 연속성에 의해 \(e^{\xi_2} \to 1\)입니다.
+
+따라서 비율은 \(\frac12\)로 수렴합니다.
+
+\(x < 0\)도 \([x, 0]\)에서 같은 논리로 성립하므로 \(\lim_{x \to 0}\frac{e^x-1-x}{x^2} = \frac12\)입니다.`,
+                en: String.raw`Since \(0 < \xi_2 < \xi < x\), \(x \to 0^+\) forces \(\xi_2 \to 0\), and continuity of \(e^t\) gives \(e^{\xi_2} \to 1\).
+
+So the ratio tends to \(\frac12\).
+
+The same argument on \([x, 0]\) covers \(x < 0\), hence \(\lim_{x \to 0}\frac{e^x-1-x}{x^2} = \frac12\).`,
               },
             },
           ],

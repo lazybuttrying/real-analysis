@@ -8,8 +8,12 @@ export const problems: readonly ProblemMeta[] = [
         {
           id: 'ppn-numerical',
           statement: {
-            ko: String.raw`\((+,+,-)\) 재배열의 부분합이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로 수렴함을 수치로 확인하세요. (수치 확인 — 엄밀한 증명은 생략합니다.)`,
-            en: String.raw`Verify numerically that the \((+,+,-)\) rearrangement's partial sums tend to \(\frac{3}{2}\ln 2 \approx 1.0397\). (Numerical check; rigorous proof omitted.)`,
+            ko: String.raw`\((+,+,-)\) 재배열의 부분합이 \(\frac{3}{2}\ln 2 \approx 1.0397\)로 수렴함을 수치로 확인하세요.
+
+(수치 확인 — 엄밀한 증명은 생략합니다.)`,
+            en: String.raw`Verify numerically that the \((+,+,-)\) rearrangement's partial sums tend to \(\frac{3}{2}\ln 2 \approx 1.0397\).
+
+(Numerical check; rigorous proof omitted.)`,
           },
           display: [String.raw`\frac{3}{2}\ln 2 \approx 1.03972`],
           preset: { n: 150 },
@@ -33,8 +37,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`일반 공식도 알려드립니다 (아이디어 수준): \(p\)개 양항과 \(q\)개 음항을 반복하는 재배열의 합은 \(\ln 2 + \frac{1}{2}\ln\frac{p}{q}\)입니다. \(p = 2, q = 1\)을 대입하면 \(\ln 2 + \frac{1}{2}\ln 2 = \frac{3}{2}\ln 2\)가 나옵니다. 이 공식의 증명은 여기서 다루지 않습니다.`,
-                en: String.raw`The general formula is stated as known (idea level): a rearrangement repeating \(p\) positive and \(q\) negative terms sums to \(\ln 2 + \frac{1}{2}\ln\frac{p}{q}\). For \(p = 2, q = 1\) this gives \(\frac{3}{2}\ln 2\). Its proof is not covered here.`,
+                ko: String.raw`일반 공식도 알려드립니다 (아이디어 수준): \(p\)개 양항과 \(q\)개 음항을 반복하는 재배열의 합은 \(\ln 2 + \frac{1}{2}\ln\frac{p}{q}\)입니다.
+
+\(p = 2, q = 1\)을 대입하면 \(\ln 2 + \frac{1}{2}\ln 2 = \frac{3}{2}\ln 2\)가 나옵니다.
+
+이 공식의 증명은 여기서 다루지 않습니다.`,
+                en: String.raw`The general formula is stated as known (idea level): a rearrangement repeating \(p\) positive and \(q\) negative terms sums to \(\ln 2 + \frac{1}{2}\ln\frac{p}{q}\).
+
+For \(p = 2, q = 1\) this gives \(\frac{3}{2}\ln 2\).
+
+Its proof is not covered here.`,
               },
             },
           ],
@@ -93,8 +105,20 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`이제 끼임(sandwich)을 정당화합니다. 짝수 부분합 \((S_{2m})\)은 증가하고 모든 홀수 부분합 이하이므로 유계이며, 홀수 부분합 \((S_{2m+1})\)은 감소하고 모든 짝수 부분합 이상이므로 유계입니다. 간격은 \(S_{2m+1} - S_{2m} = a_{2m+1} \to 0\)이므로 두 부분수열은 공통 극한 \(S\) (\(= \ln 2\))로 수렴하고, 모든 \(m\)에 대해 \(S_{2m} \le S \le S_{2m+1}\)입니다. 따라서 모든 \(n\)에 대해 극한 \(S = \ln 2\)는 연속한 두 부분합 \(S_n\)과 \(S_{n+1}\) 사이에 끼이므로, \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\)입니다.`,
-                en: String.raw`Now justify the sandwich. The even sums \((S_{2m})\) increase and are bounded above by every odd sum, and the odd sums \((S_{2m+1})\) decrease and are bounded below by every even sum. The gap is \(S_{2m+1} - S_{2m} = a_{2m+1} \to 0\), so both subsequences converge to a common limit \(S\) (\(= \ln 2\)), with \(S_{2m} \le S \le S_{2m+1}\) for all \(m\). Hence for every \(n\) the limit \(S = \ln 2\) lies between two consecutive partial sums \(S_n\) and \(S_{n+1}\), so \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\).`,
+                ko: String.raw`이제 끼임(sandwich)을 정당화합니다.
+
+짝수 부분합 \((S_{2m})\)은 증가하고 모든 홀수 부분합 이하이므로 유계이며, 홀수 부분합 \((S_{2m+1})\)은 감소하고 모든 짝수 부분합 이상이므로 유계입니다.
+
+간격은 \(S_{2m+1} - S_{2m} = a_{2m+1} \to 0\)이므로 두 부분수열은 공통 극한 \(S\) (\(= \ln 2\))로 수렴하고, 모든 \(m\)에 대해 \(S_{2m} \le S \le S_{2m+1}\)입니다.
+
+따라서 모든 \(n\)에 대해 극한 \(S = \ln 2\)는 연속한 두 부분합 \(S_n\)과 \(S_{n+1}\) 사이에 끼이므로, \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\)입니다.`,
+                en: String.raw`Now justify the sandwich.
+
+The even sums \((S_{2m})\) increase and are bounded above by every odd sum, and the odd sums \((S_{2m+1})\) decrease and are bounded below by every even sum.
+
+The gap is \(S_{2m+1} - S_{2m} = a_{2m+1} \to 0\), so both subsequences converge to a common limit \(S\) (\(= \ln 2\)), with \(S_{2m} \le S \le S_{2m+1}\) for all \(m\).
+
+Hence for every \(n\) the limit \(S = \ln 2\) lies between two consecutive partial sums \(S_n\) and \(S_{n+1}\), so \(|S - S_n| \le |S_{n+1} - S_n| = a_{n+1} = \frac{1}{n+1}\).`,
               },
             },
             {

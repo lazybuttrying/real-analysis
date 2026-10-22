@@ -8,8 +8,16 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'integer-addition-well-defined',
     statement: {
-      ko: String.raw`\((a,b)\sim(a',b')\)이고 \((c,d)\sim(c',d')\)이라 하자. \((a+c,b+d)\sim(a'+c',b'+d')\)임을 증명하세요. (덧셈 \([(a,b)]+[(c,d)]=[(a+c,b+d)]\)이 대표원의 선택과 무관하게 잘 정의된다는 뜻이다.)`,
-      en: String.raw`Assume \((a,b)\sim(a',b')\) and \((c,d)\sim(c',d')\). Prove that \((a+c,b+d)\sim(a'+c',b'+d')\). (This says the addition \([(a,b)]+[(c,d)]=[(a+c,b+d)]\) is well-defined, independent of the chosen representatives.)`,
+      ko: String.raw`\((a,b)\sim(a',b')\)이고 \((c,d)\sim(c',d')\)이라 하자.
+
+\((a+c,b+d)\sim(a'+c',b'+d')\)임을 증명하세요.
+
+(덧셈 \([(a,b)]+[(c,d)]=[(a+c,b+d)]\)이 대표원의 선택과 무관하게 잘 정의된다는 뜻이다.)`,
+      en: String.raw`Assume \((a,b)\sim(a',b')\) and \((c,d)\sim(c',d')\).
+
+Prove that \((a+c,b+d)\sim(a'+c',b'+d')\).
+
+(This says the addition \([(a,b)]+[(c,d)]=[(a+c,b+d)]\) is well-defined, independent of the chosen representatives.)`,
     },
     display: [String.raw`(a,b)\sim(a',b'),\ (c,d)\sim(c',d')`, String.raw`(a+c,b+d)\sim(a'+c',b'+d')`],
     preset: { set: 'integers' },
@@ -65,8 +73,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`마찬가지로 \(p<q\)의 양변에 \(q\)를 더하면 \(p+q<2q\), 즉 \(m<q\)입니다. 따라서 \(p<m<q\) — 어떤 두 유리수 사이에도 항상 또 다른 유리수가 있으므로, 유리수는 "빽빽하다"(조밀하다)고 합니다. 정수에서는 성립하지 않는 성질입니다 (연속된 정수 사이에는 정수가 없습니다).`,
-          en: String.raw`Likewise, adding \(q\) to both sides of \(p<q\) gives \(p+q<2q\), i.e. \(m<q\). Hence \(p<m<q\) — between any two rationals there is always another rational, so the rationals are dense. Integers lack this property (no integer lies strictly between consecutive integers).`,
+          ko: String.raw`마찬가지로 \(p<q\)의 양변에 \(q\)를 더하면 \(p+q<2q\), 즉 \(m<q\)입니다.
+
+따라서 \(p<m<q\) — 어떤 두 유리수 사이에도 항상 또 다른 유리수가 있으므로, 유리수는 "빽빽하다"(조밀하다)고 합니다.
+
+정수에서는 성립하지 않는 성질입니다 (연속된 정수 사이에는 정수가 없습니다).`,
+          en: String.raw`Likewise, adding \(q\) to both sides of \(p<q\) gives \(p+q<2q\), i.e. \(m<q\).
+
+Hence \(p<m<q\) — between any two rationals there is always another rational, so the rationals are dense.
+
+Integers lack this property (no integer lies strictly between consecutive integers).`,
         },
       },
     ],
@@ -92,8 +108,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`분수 곱셈의 정의에 따라 \(\frac{a}{b}\cdot\frac{b}{a}=\frac{ab}{ba}\)입니다. 곱셈의 교환법칙으로 \(ab=ba\)이므로 이 분수는 \(\frac{ab}{ab}=1\)과 같습니다. 즉 \(\frac{b}{a}\)는 \(\frac{a}{b}\)의 곱셈 역원입니다.`,
-          en: String.raw`By the definition of fraction multiplication, \(\frac{a}{b}\cdot\frac{b}{a}=\frac{ab}{ba}\). Commutativity gives \(ab=ba\), so this fraction equals \(\frac{ab}{ab}=1\). Hence \(\frac{b}{a}\) is the multiplicative inverse of \(\frac{a}{b}\).`,
+          ko: String.raw`분수 곱셈의 정의에 따라 \(\frac{a}{b}\cdot\frac{b}{a}=\frac{ab}{ba}\)입니다.
+
+곱셈의 교환법칙으로 \(ab=ba\)이므로 이 분수는 \(\frac{ab}{ab}=1\)과 같습니다.
+
+즉 \(\frac{b}{a}\)는 \(\frac{a}{b}\)의 곱셈 역원입니다.`,
+          en: String.raw`By the definition of fraction multiplication, \(\frac{a}{b}\cdot\frac{b}{a}=\frac{ab}{ba}\).
+
+Commutativity gives \(ab=ba\), so this fraction equals \(\frac{ab}{ab}=1\).
+
+Hence \(\frac{b}{a}\) is the multiplicative inverse of \(\frac{a}{b}\).`,
         },
       },
       {

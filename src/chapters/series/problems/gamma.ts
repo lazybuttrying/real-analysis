@@ -21,7 +21,11 @@ export const problems: readonly ProblemMeta[] = [
       {
         text: {
           ko: String.raw`이상적분이므로 먼저 \(0 < \varepsilon < R < \infty\)인 구간 \([\varepsilon, R]\)에서 부분적분합니다. \(u = t^x\), \(dv = e^{-t}\,dt\)로 두면 \(du = x t^{x-1}\,dt\), \(v = -e^{-t}\)이므로 \(\int_{\varepsilon}^{R} t^x e^{-t}\,dt = \left[-t^x e^{-t}\right]_{\varepsilon}^{R} + x \int_{\varepsilon}^{R} t^{x-1} e^{-t}\,dt\)를 얻습니다.`,
-          en: String.raw`The integral is improper, so integrate by parts first on \([\varepsilon, R]\) with \(0 < \varepsilon < R < \infty\). Set \(u = t^x\), \(dv = e^{-t}\,dt\), so \(du = x t^{x-1}\,dt\) and \(v = -e^{-t}\). Then \(\int_{\varepsilon}^{R} t^x e^{-t}\,dt = \left[-t^x e^{-t}\right]_{\varepsilon}^{R} + x \int_{\varepsilon}^{R} t^{x-1} e^{-t}\,dt\).`,
+          en: String.raw`The integral is improper, so integrate by parts first on \([\varepsilon, R]\) with \(0 < \varepsilon < R < \infty\).
+
+Set \(u = t^x\), \(dv = e^{-t}\,dt\), so \(du = x t^{x-1}\,dt\) and \(v = -e^{-t}\).
+
+Then \(\int_{\varepsilon}^{R} t^x e^{-t}\,dt = \left[-t^x e^{-t}\right]_{\varepsilon}^{R} + x \int_{\varepsilon}^{R} t^{x-1} e^{-t}\,dt\).`,
         },
       },
       {
@@ -59,8 +63,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`앞 문제의 함수방정식으로 귀납법을 적용합니다. Base case는 \(n = 0\)일 때 \(\Gamma(1) = 1 = 0!\)이며, 동등하게 \(\Gamma(1) = 0!\)로 base를 잡을 수도 있습니다. 귀납 단계는 \(n \ge 1\)에서만 적용합니다.`,
-          en: String.raw`Induction with the functional equation from the previous problem. The base case is \(\Gamma(1) = 1 = 0!\) at \(n = 0\); equivalently the induction for \(\Gamma(n) = (n-1)!\) starts at \(n = 1\) with \(\Gamma(1) = 0! = 1\). The induction step below is only for \(n \ge 1\).`,
+          ko: String.raw`앞 문제의 함수방정식으로 귀납법을 적용합니다.
+
+Base case는 \(n = 0\)일 때 \(\Gamma(1) = 1 = 0!\)이며, 동등하게 \(\Gamma(1) = 0!\)로 base를 잡을 수도 있습니다.
+
+귀납 단계는 \(n \ge 1\)에서만 적용합니다.`,
+          en: String.raw`Induction with the functional equation from the previous problem.
+
+The base case is \(\Gamma(1) = 1 = 0!\) at \(n = 0\); equivalently the induction for \(\Gamma(n) = (n-1)!\) starts at \(n = 1\) with \(\Gamma(1) = 0! = 1\).
+
+The induction step below is only for \(n \ge 1\).`,
         },
       },
       {
@@ -86,14 +98,30 @@ export const problems: readonly ProblemMeta[] = [
     proof: [
       {
         text: {
-          ko: String.raw`적분을 \(t = 1\)에서 둘로 나눕니다. \((0, 1]\)에서는 \(e^{-t} \leq 1\)이므로 \(0 < t^{x-1}e^{-t} \leq t^{x-1}\)입니다. \(\int_0^1 t^{x-1}\,dt = \frac1x\)는 \(x > 0\)일 때 유한하므로, 비교판정법으로 \(\int_0^1 t^{x-1}e^{-t}\,dt\)가 수렴합니다.`,
-          en: String.raw`Split the integral at \(t = 1\). On \((0, 1]\), \(e^{-t} \leq 1\) gives \(0 < t^{x-1}e^{-t} \leq t^{x-1}\). Since \(\int_0^1 t^{x-1}\,dt = \frac1x < \infty\) exactly when \(x > 0\), the comparison test gives convergence of \(\int_0^1 t^{x-1}e^{-t}\,dt\).`,
+          ko: String.raw`적분을 \(t = 1\)에서 둘로 나눕니다.
+
+\((0, 1]\)에서는 \(e^{-t} \leq 1\)이므로 \(0 < t^{x-1}e^{-t} \leq t^{x-1}\)입니다.
+
+\(\int_0^1 t^{x-1}\,dt = \frac1x\)는 \(x > 0\)일 때 유한하므로, 비교판정법으로 \(\int_0^1 t^{x-1}e^{-t}\,dt\)가 수렴합니다.`,
+          en: String.raw`Split the integral at \(t = 1\).
+
+On \((0, 1]\), \(e^{-t} \leq 1\) gives \(0 < t^{x-1}e^{-t} \leq t^{x-1}\).
+
+Since \(\int_0^1 t^{x-1}\,dt = \frac1x < \infty\) exactly when \(x > 0\), the comparison test gives convergence of \(\int_0^1 t^{x-1}e^{-t}\,dt\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\([1, \infty)\)에서는 \(t^{x-1}e^{-t} = \bigl(t^{x-1}e^{-t/2}\bigr)\,e^{-t/2}\)라 씁니다. \(g(t) = t^{x-1}e^{-t/2}\)는 \([1, \infty)\)에서 연속이고 \(t \to \infty\)에서 \(0\)으로 가므로 유계입니다: \(g(t) < 1\)이 되는 \(R\)을 잡으면 \([1, R]\)에서는 extreme value theorem으로 maximum을 갖고, \([R, \infty)\)에서는 \(1\) 이하입니다. \(g\)가 양의 값을 가지므로 이 maximum은 실제로 attained maximum이며, \(M = \max_{t \geq 1} t^{x-1}e^{-t/2} < \infty\)라 두면 \(t^{x-1}e^{-t} \leq M e^{-t/2}\)입니다.`,
-          en: String.raw`On \([1, \infty)\), write \(t^{x-1}e^{-t} = \bigl(t^{x-1}e^{-t/2}\bigr)\,e^{-t/2}\). The function \(g(t) = t^{x-1}e^{-t/2}\) is continuous on \([1, \infty)\) and tends to \(0\) as \(t \to \infty\), hence is bounded: choose \(R\) with \(g(t) < 1\) for \(t > R\); on \([1, R]\) it attains a maximum by the extreme value theorem, and beyond \(R\) it is below \(1\). Since \(g\) takes positive values, this maximum is attained, so with \(M = \max_{t \geq 1} t^{x-1}e^{-t/2} < \infty\) we get \(t^{x-1}e^{-t} \leq M e^{-t/2}\).`,
+          ko: String.raw`\([1, \infty)\)에서는 \(t^{x-1}e^{-t} = \bigl(t^{x-1}e^{-t/2}\bigr)\,e^{-t/2}\)라 씁니다.
+
+\(g(t) = t^{x-1}e^{-t/2}\)는 \([1, \infty)\)에서 연속이고 \(t \to \infty\)에서 \(0\)으로 가므로 유계입니다: \(g(t) < 1\)이 되는 \(R\)을 잡으면 \([1, R]\)에서는 extreme value theorem으로 maximum을 갖고, \([R, \infty)\)에서는 \(1\) 이하입니다.
+
+\(g\)가 양의 값을 가지므로 이 maximum은 실제로 attained maximum이며, \(M = \max_{t \geq 1} t^{x-1}e^{-t/2} < \infty\)라 두면 \(t^{x-1}e^{-t} \leq M e^{-t/2}\)입니다.`,
+          en: String.raw`On \([1, \infty)\), write \(t^{x-1}e^{-t} = \bigl(t^{x-1}e^{-t/2}\bigr)\,e^{-t/2}\).
+
+The function \(g(t) = t^{x-1}e^{-t/2}\) is continuous on \([1, \infty)\) and tends to \(0\) as \(t \to \infty\), hence is bounded: choose \(R\) with \(g(t) < 1\) for \(t > R\); on \([1, R]\) it attains a maximum by the extreme value theorem, and beyond \(R\) it is below \(1\).
+
+Since \(g\) takes positive values, this maximum is attained, so with \(M = \max_{t \geq 1} t^{x-1}e^{-t/2} < \infty\) we get \(t^{x-1}e^{-t} \leq M e^{-t/2}\).`,
         },
       },
       {

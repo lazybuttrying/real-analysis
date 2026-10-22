@@ -53,8 +53,16 @@ export const problems: readonly ProblemMeta[] = [
           proof: [
             {
               text: {
-                ko: String.raw`\(n \ge 1\)이라 둡니다(\(n = 0\)이면 \(I_{-1}\)이 필요해 성립하지 않습니다). 적분하면 \(I_{2n+1} \le I_{2n} \le I_{2n-1}\)이므로, \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\)입니다. 조임 정리로 \(\frac{I_{2n}}{I_{2n+1}} \to 1\)입니다.`,
-                en: String.raw`Take \(n \ge 1\) (\(n = 0\) would require \(I_{-1}\)). Integrating gives \(I_{2n+1} \le I_{2n} \le I_{2n-1}\), so \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\). By the squeeze theorem, \(\frac{I_{2n}}{I_{2n+1}} \to 1\).`,
+                ko: String.raw`\(n \ge 1\)이라 둡니다(\(n = 0\)이면 \(I_{-1}\)이 필요해 성립하지 않습니다).
+
+적분하면 \(I_{2n+1} \le I_{2n} \le I_{2n-1}\)이므로, \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\)입니다.
+
+조임 정리로 \(\frac{I_{2n}}{I_{2n+1}} \to 1\)입니다.`,
+                en: String.raw`Take \(n \ge 1\) (\(n = 0\) would require \(I_{-1}\)).
+
+Integrating gives \(I_{2n+1} \le I_{2n} \le I_{2n-1}\), so \(1 \le \frac{I_{2n}}{I_{2n+1}} \le \frac{I_{2n-1}}{I_{2n+1}} = \frac{2n+1}{2n} \to 1\).
+
+By the squeeze theorem, \(\frac{I_{2n}}{I_{2n+1}} \to 1\).`,
               },
             },
             {

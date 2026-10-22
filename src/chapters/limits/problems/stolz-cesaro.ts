@@ -30,8 +30,12 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`차분 비율은 \(\frac{c_{n+1}-c_n}{b_{n+1}-b_n} = \frac{a_{n+1}}{1} = a_{n+1}\)입니다. 이동된 수열도 같은 극한으로 수렴합니다: \(a_n \to L\)이면, \(\varepsilon > 0\)에 대한 \(N\)이 \(a_{n+1}\)에도 그대로 적용됩니다 (\(n \ge N \Rightarrow n+1 \ge N\)이므로 \(|a_{n+1} - L| < \varepsilon\)). 따라서 \(a_{n+1} \to L\)이고, 체자로 정리에서 \(\frac{c_n}{b_n} = \frac{a_1+\cdots+a_n}{n} \to L\)을 얻습니다.`,
-          en: String.raw`The difference ratio is \(\frac{c_{n+1}-c_n}{b_{n+1}-b_n} = \frac{a_{n+1}}{1} = a_{n+1}\). A shift of a convergent sequence converges to the same limit: if \(a_n \to L\), then an \(N\) for a given \(\varepsilon > 0\) also works for \(a_{n+1}\) (since \(n \ge N \Rightarrow n+1 \ge N\), giving \(|a_{n+1} - L| < \varepsilon\)). Hence \(a_{n+1} \to L\), and the Stolz–Cesàro theorem gives \(\frac{c_n}{b_n} = \frac{a_1+\cdots+a_n}{n} \to L\).`,
+          ko: String.raw`차분 비율은 \(\frac{c_{n+1}-c_n}{b_{n+1}-b_n} = \frac{a_{n+1}}{1} = a_{n+1}\)입니다. 이동된 수열도 같은 극한으로 수렴합니다: \(a_n \to L\)이면, \(\varepsilon > 0\)에 대한 \(N\)이 \(a_{n+1}\)에도 그대로 적용됩니다 (\(n \ge N \Rightarrow n+1 \ge N\)이므로 \(|a_{n+1} - L| < \varepsilon\)).
+
+따라서 \(a_{n+1} \to L\)이고, 체자로 정리에서 \(\frac{c_n}{b_n} = \frac{a_1+\cdots+a_n}{n} \to L\)을 얻습니다.`,
+          en: String.raw`The difference ratio is \(\frac{c_{n+1}-c_n}{b_{n+1}-b_n} = \frac{a_{n+1}}{1} = a_{n+1}\). A shift of a convergent sequence converges to the same limit: if \(a_n \to L\), then an \(N\) for a given \(\varepsilon > 0\) also works for \(a_{n+1}\) (since \(n \ge N \Rightarrow n+1 \ge N\), giving \(|a_{n+1} - L| < \varepsilon\)).
+
+Hence \(a_{n+1} \to L\), and the Stolz–Cesàro theorem gives \(\frac{c_n}{b_n} = \frac{a_1+\cdots+a_n}{n} \to L\).`,
         },
       },
     ],
@@ -72,8 +76,12 @@ export const problems: readonly ProblemMeta[] = [
   {
     id: 'p3-odd-sum',
     statement: {
-      ko: String.raw`\(1+3+5+\cdots+(2n-1)\)은 처음 \(n\)개 홀수의 합입니다. 체자로 정리를 써서 \(\displaystyle \lim_{n\to\infty}\frac{1+3+\cdots+(2n-1)}{n^2} = 1\)임을 증명하세요.`,
-      en: String.raw`\(1+3+5+\cdots+(2n-1)\) is the sum of the first \(n\) odd numbers. Use the Stolz–Cesàro theorem to prove \(\displaystyle \lim_{n\to\infty}\frac{1+3+\cdots+(2n-1)}{n^2} = 1\).`,
+      ko: String.raw`\(1+3+5+\cdots+(2n-1)\)은 처음 \(n\)개 홀수의 합입니다.
+
+체자로 정리를 써서 \(\displaystyle \lim_{n\to\infty}\frac{1+3+\cdots+(2n-1)}{n^2} = 1\)임을 증명하세요.`,
+      en: String.raw`\(1+3+5+\cdots+(2n-1)\) is the sum of the first \(n\) odd numbers.
+
+Use the Stolz–Cesàro theorem to prove \(\displaystyle \lim_{n\to\infty}\frac{1+3+\cdots+(2n-1)}{n^2} = 1\).`,
     },
     display: [String.raw`\sum_{k=1}^{n}(2k-1) = n^2, \qquad \lim_{n\to\infty}\frac{1+3+\cdots+(2n-1)}{n^2} = 1`],
     preset: { n: 60 },

@@ -54,7 +54,11 @@ export const problems: readonly ProblemMeta[] = [
       {
         text: {
           ko: String.raw`\(x_1 < x_2 < x_3\)이라 두면, \([x_1, x_2]\)와 \([x_2, x_3]\)에 평균값정리를 적용해 \(f'(c_1) = \frac{f(x_2)-f(x_1)}{x_2-x_1}\), \(f'(c_2) = \frac{f(x_3)-f(x_2)}{x_3-x_2}\)인 \(c_1 \in (x_1, x_2)\), \(c_2 \in (x_2, x_3)\)이 존재합니다. \(c_1 < c_2\)이고 \(f'\)이 증가하므로 \(f'(c_1) \le f'(c_2)\)입니다.`,
-          en: String.raw`Take \(x_1 < x_2 < x_3\). The mean value theorem on \([x_1, x_2]\) and \([x_2, x_3]\) gives \(c_1 \in (x_1, x_2)\) and \(c_2 \in (x_2, x_3)\) with \(f'(c_1) = \frac{f(x_2)-f(x_1)}{x_2-x_1}\) and \(f'(c_2) = \frac{f(x_3)-f(x_2)}{x_3-x_2}\). Since \(c_1 < c_2\) and \(f'\) is increasing, \(f'(c_1) \le f'(c_2)\).`,
+          en: String.raw`Take \(x_1 < x_2 < x_3\).
+
+The mean value theorem on \([x_1, x_2]\) and \([x_2, x_3]\) gives \(c_1 \in (x_1, x_2)\) and \(c_2 \in (x_2, x_3)\) with \(f'(c_1) = \frac{f(x_2)-f(x_1)}{x_2-x_1}\) and \(f'(c_2) = \frac{f(x_3)-f(x_2)}{x_3-x_2}\).
+
+Since \(c_1 < c_2\) and \(f'\) is increasing, \(f'(c_1) \le f'(c_2)\).`,
         },
       },
       {
@@ -65,8 +69,16 @@ export const problems: readonly ProblemMeta[] = [
       },
       {
         text: {
-          ko: String.raw`\(x_2 = tx_1+(1-t)x_3\)이라 두면 \(\frac{x_3-x_2}{x_3-x_1} = t\), \(\frac{x_2-x_1}{x_3-x_1} = 1-t\)이므로 부등식은 \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — 볼록성의 정의입니다. 퇴화 경우는 자명합니다: \(t = 0\) 또는 \(t = 1\)이면 양변이 같아 등호가 성립하고, 점들이 겹치면 (\(x_1 = x_3\)) 역시 등호만 남습니다. 참고로 \(f'' \ge 0\)이면 \(f'\)이 증가합니다 — 단, 이는 추가 가정 하에서입니다: \(f\)가 두 번 미분가능하면 (\(f'\)이 연속이고 내부에서 미분가능하며 도함수가 \(f''\)) \(f'\)에 평균값정리를 적용할 수 있습니다.`,
-          en: String.raw`With \(x_2 = tx_1+(1-t)x_3\) we have \(\frac{x_3-x_2}{x_3-x_1} = t\) and \(\frac{x_2-x_1}{x_3-x_1} = 1-t\), so the inequality becomes \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — the definition of convexity. The degenerate cases are trivial: \(t = 0\) or \(t = 1\) gives equality on both sides, and equal points (\(x_1 = x_3\)) likewise leave only equality. Note that \(f'' \ge 0\) makes \(f'\) increasing — under an extra hypothesis: if \(f\) is twice differentiable (so \(f'\) is continuous and differentiable on the interior with derivative \(f''\)), the mean value theorem applied to \(f'\) gives this.`,
+          ko: String.raw`\(x_2 = tx_1+(1-t)x_3\)이라 두면 \(\frac{x_3-x_2}{x_3-x_1} = t\), \(\frac{x_2-x_1}{x_3-x_1} = 1-t\)이므로 부등식은 \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — 볼록성의 정의입니다.
+
+퇴화 경우는 자명합니다: \(t = 0\) 또는 \(t = 1\)이면 양변이 같아 등호가 성립하고, 점들이 겹치면 (\(x_1 = x_3\)) 역시 등호만 남습니다.
+
+참고로 \(f'' \ge 0\)이면 \(f'\)이 증가합니다 — 단, 이는 추가 가정 하에서입니다: \(f\)가 두 번 미분가능하면 (\(f'\)이 연속이고 내부에서 미분가능하며 도함수가 \(f''\)) \(f'\)에 평균값정리를 적용할 수 있습니다.`,
+          en: String.raw`With \(x_2 = tx_1+(1-t)x_3\) we have \(\frac{x_3-x_2}{x_3-x_1} = t\) and \(\frac{x_2-x_1}{x_3-x_1} = 1-t\), so the inequality becomes \(f(tx_1+(1-t)x_3) \le tf(x_1)+(1-t)f(x_3)\) — the definition of convexity.
+
+The degenerate cases are trivial: \(t = 0\) or \(t = 1\) gives equality on both sides, and equal points (\(x_1 = x_3\)) likewise leave only equality.
+
+Note that \(f'' \ge 0\) makes \(f'\) increasing — under an extra hypothesis: if \(f\) is twice differentiable (so \(f'\) is continuous and differentiable on the interior with derivative \(f''\)), the mean value theorem applied to \(f'\) gives this.`,
         },
       },
     ],

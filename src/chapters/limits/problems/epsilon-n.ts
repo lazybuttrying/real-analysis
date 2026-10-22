@@ -27,7 +27,11 @@ export const problems: readonly ProblemMeta[] = [
             {
               text: {
                 ko: String.raw`\(N = \left\lceil \frac{1}{\sqrt{\varepsilon}} \right\rceil\)이라 두면, \(n > N\)일 때 \(n > \frac{1}{\sqrt{\varepsilon}}\)이므로 \(\left|a_n - 0\right| < \varepsilon\)입니다. 따라서 \(\varepsilon\)-\(N\) 정의에 의해 \(a_n \to 0\)입니다.`,
-                en: String.raw`Put \(N = \left\lceil \frac{1}{\sqrt{\varepsilon}} \right\rceil\). If \(n > N\) then \(n > \frac{1}{\sqrt{\varepsilon}}\), so \(\left|a_n - 0\right| < \varepsilon\). Hence \(a_n \to 0\) by the \(\varepsilon\)-\(N\) definition.`,
+                en: String.raw`Put \(N = \left\lceil \frac{1}{\sqrt{\varepsilon}} \right\rceil\).
+
+If \(n > N\) then \(n > \frac{1}{\sqrt{\varepsilon}}\), so \(\left|a_n - 0\right| < \varepsilon\).
+
+Hence \(a_n \to 0\) by the \(\varepsilon\)-\(N\) definition.`,
               },
             },
             {
@@ -59,8 +63,16 @@ export const problems: readonly ProblemMeta[] = [
             },
             {
               text: {
-                ko: String.raw`\(\frac{1}{n+1} < \varepsilon\)은 \(n + 1 > \frac{1}{\varepsilon}\), 즉 \(n > \frac{1}{\varepsilon} - 1\)과 동치입니다. \(\mathbb{R}\)의 아르키메데스 성질에 의해 \(\frac{1}{\varepsilon} - 1\)보다 큰 정수 \(N\)이 존재합니다. 그런 \(N\)을 잡으면 \(n > N\)일 때 \(\left|a_n - 1\right| < \varepsilon\)이므로 \(a_n \to 1\)입니다.`,
-                en: String.raw`\(\frac{1}{n+1} < \varepsilon\) is equivalent to \(n + 1 > \frac{1}{\varepsilon}\), i.e. \(n > \frac{1}{\varepsilon} - 1\). By the Archimedean property of \(\mathbb{R}\) there exists an integer \(N\) larger than \(\frac{1}{\varepsilon} - 1\). Taking any such \(N\) gives \(\left|a_n - 1\right| < \varepsilon\) for \(n > N\), so \(a_n \to 1\).`,
+                ko: String.raw`\(\frac{1}{n+1} < \varepsilon\)은 \(n + 1 > \frac{1}{\varepsilon}\), 즉 \(n > \frac{1}{\varepsilon} - 1\)과 동치입니다.
+
+\(\mathbb{R}\)의 아르키메데스 성질에 의해 \(\frac{1}{\varepsilon} - 1\)보다 큰 정수 \(N\)이 존재합니다.
+
+그런 \(N\)을 잡으면 \(n > N\)일 때 \(\left|a_n - 1\right| < \varepsilon\)이므로 \(a_n \to 1\)입니다.`,
+                en: String.raw`\(\frac{1}{n+1} < \varepsilon\) is equivalent to \(n + 1 > \frac{1}{\varepsilon}\), i.e. \(n > \frac{1}{\varepsilon} - 1\).
+
+By the Archimedean property of \(\mathbb{R}\) there exists an integer \(N\) larger than \(\frac{1}{\varepsilon} - 1\).
+
+Taking any such \(N\) gives \(\left|a_n - 1\right| < \varepsilon\) for \(n > N\), so \(a_n \to 1\).`,
               },
             },
             {
