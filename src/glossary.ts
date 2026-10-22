@@ -1881,4 +1881,154 @@ export const glossary: readonly GlossaryEntry[] = [
     chapterId: 'integration',
     sceneId: 'minkowski',
   },
+  {
+    id: 'connected-set',
+    term: { ko: '연결집합', en: 'connected set' },
+    definition: {
+      ko: String.raw`서로소인 두 비어 있지 않은 열린집합으로 갈라지지 않는 집합. \([0,1]\)이 대표적이고, \(\mathbb{Q}\)는 전혀 해당하지 않는다.`,
+      en: String.raw`A set that cannot be split into two disjoint nonempty open sets. \([0,1]\) is the prototype; \(\mathbb{Q}\) fails completely.`,
+    },
+    chapterId: 'topology',
+    sceneId: 'connected',
+  },
+  {
+    id: 'separation',
+    term: { ko: '분리', en: 'separation' },
+    definition: {
+      ko: String.raw`\(X = U \cup V\) 형태의 분해 — \(U, V\)가 \(X\)에서 열려 있고 서로소이며 둘 다 비어 있지 않은 것. 분리가 존재하면 \(X\)는 연결집합이 아니다.`,
+      en: String.raw`A decomposition \(X = U \cup V\) with \(U, V\) open in \(X\), disjoint, and both nonempty. If a separation exists, \(X\) is disconnected.`,
+    },
+    chapterId: 'topology',
+    sceneId: 'connected',
+  },
+  {
+    id: 'totally-disconnected',
+    term: { ko: '완전 비연결', en: 'totally disconnected' },
+    definition: {
+      ko: String.raw`두 점 이상을 가진 부분집합이 모두 연결이 아닌 공간 — 연결인 부분집합은 한 점 집합과 \(\emptyset\)뿐이다. \(\mathbb{Q}\)가 대표적이다: 두 유리수 사이에는 늘 무리수 절단이 들어간다.`,
+      en: String.raw`A space in which every subset with at least two points is disconnected — the only connected subsets are singletons and \(\emptyset\). \(\mathbb{Q}\) is the classic example: an irrational cut always slips between two rationals.`,
+    },
+    chapterId: 'topology',
+    sceneId: 'connected',
+  },
+  {
+    id: 'complex-number',
+    term: { ko: '복소수', en: 'complex number' },
+    definition: {
+      ko: String.raw`\(z = a + bi\) (\(a, b \in \mathbb{R}\), \(i^2 = -1\)) 꼴의 수 — 평면 위의 점 \((a, b)\)와 같은 대상이다.`,
+      en: String.raw`A number of the form \(z = a + bi\) with \(a, b \in \mathbb{R}\) and \(i^2 = -1\) — the same object as the plane point \((a, b)\).`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'complex-numbers',
+  },
+  {
+    id: 'modulus',
+    term: { ko: '절댓값', en: 'modulus' },
+    definition: {
+      ko: String.raw`복소수 \(z = a + bi\)의 절댓값 \(|z| = \sqrt{a^2 + b^2}\) — 원점에서 점 \(z\)까지의 거리이며, 삼각부등식 \(|z + w| \le |z| + |w|\)를 만족한다.`,
+      en: String.raw`The modulus \(|z| = \sqrt{a^2 + b^2}\) of \(z = a + bi\) — the distance from the origin to the point \(z\), satisfying the triangle inequality \(|z + w| \le |z| + |w|\).`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'complex-numbers',
+  },
+  {
+    id: 'conjugate',
+    term: { ko: '켤레복소수', en: 'conjugate' },
+    definition: {
+      ko: String.raw`\(z = a + bi\)의 켤레는 \(\bar{z} = a - bi\) — 실수축에 대한 대칭이며, \(z\bar{z} = |z|^2\)를 만족한다.`,
+      en: String.raw`The conjugate of \(z = a + bi\) is \(\bar{z} = a - bi\) — reflection across the real axis, satisfying \(z\bar{z} = |z|^2\).`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'complex-numbers',
+  },
+  {
+    id: 'parallelogram-law',
+    term: { ko: '평행사변형 법칙', en: 'parallelogram law' },
+    definition: {
+      ko: String.raw`\(\|x+y\|^2 + \|x-y\|^2 = 2\|x\|^2 + 2\|y\|^2\) — 내적에서 온 노름이 항상 만족하는 항등식. 노름이 이를 어기면 어떤 내적에서도 유도될 수 없다.`,
+      en: String.raw`\(\|x+y\|^2 + \|x-y\|^2 = 2\|x\|^2 + 2\|y\|^2\) — the identity every inner-product norm satisfies. A norm that violates it is induced by no inner product.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'parallelogram-law',
+  },
+  {
+    id: 'polarization-identity',
+    term: { ko: '극화 항등식', en: 'polarization identity' },
+    definition: {
+      ko: String.raw`실수 경우 \(\langle x, y \rangle = \frac{\|x+y\|^2 - \|x-y\|^2}{4}\) — 노름만으로 내적을 되읽는 식. 내적은 노름으로 완전히 결정된다.`,
+      en: String.raw`In the real case, \(\langle x, y \rangle = \frac{\|x+y\|^2 - \|x-y\|^2}{4}\) — the formula that reads the inner product back off the norm alone. The norm completely determines the inner product.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'parallelogram-law',
+  },
+  {
+    id: 'jordan-von-neumann-theorem',
+    term: { ko: '요르단-폰 노이만 정리', en: 'Jordan–von Neumann theorem' },
+    definition: {
+      ko: String.raw`노름이 평행사변형 법칙을 만족할 때, 그리고 그때만 그 노름은 극화 항등식으로 주어지는 내적에서 유도된다는 정리.`,
+      en: String.raw`The theorem that a norm is induced by an inner product — the one given by the polarization identity — if and only if it satisfies the parallelogram law.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'parallelogram-law',
+  },
+  {
+    id: 'rectifiable-curve',
+    term: { ko: '길이를 잴 수 있는 곡선', en: 'rectifiable curve' },
+    definition: {
+      ko: String.raw`꺾은선 길이들의 상한 \(\sup_P \sum_i |\gamma(t_i) - \gamma(t_{i-1})|\)이 유한한 곡선 — 그 상한이 바로 곡선의 길이이다. 연속이기만 해서는 부족하다: \(x\sin(1/x)\)의 그래프는 길이가 무한하다.`,
+      en: String.raw`A curve whose polygonal lengths have a finite supremum, \(\sup_P \sum_i |\gamma(t_i) - \gamma(t_{i-1})|\) — that supremum is its length. Continuity alone is not enough: the graph of \(x\sin(1/x)\) has infinite length.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'arc-length',
+  },
+  {
+    id: 'arc-length',
+    term: { ko: '곡선의 길이', en: 'arc length' },
+    definition: {
+      ko: String.raw`곡선 \(\gamma\)의 길이 \(L = \sup_P \sum_i |\gamma(t_i) - \gamma(t_{i-1})|\). \(\gamma\)가 \(C^1\)이면 \(L = \int_a^b |\gamma'(t)|\,dt\)와 같다.`,
+      en: String.raw`The length \(L = \sup_P \sum_i |\gamma(t_i) - \gamma(t_{i-1})|\) of a curve \(\gamma\). When \(\gamma\) is \(C^1\), this equals \(L = \int_a^b |\gamma'(t)|\,dt\).`,
+    },
+    chapterId: 'integration',
+    sceneId: 'arc-length',
+  },
+  {
+    id: 'polygonal-approximation',
+    term: { ko: '꺾은선 근사', en: 'polygonal approximation' },
+    definition: {
+      ko: String.raw`분할점에서의 곡선 값들을 곧은 선분으로 이은 꺾은선과 그 길이 \(L(P) = \sum_i |\gamma(t_i) - \gamma(t_{i-1})|\) — 분할을 세분화하면 삼각부등식에 의해 길이가 줄어들지 않는다.`,
+      en: String.raw`The broken line joining the curve's values at partition points, and its length \(L(P) = \sum_i |\gamma(t_i) - \gamma(t_{i-1})|\) — refinement never shortens it, by the triangle inequality.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'arc-length',
+  },
+  {
+    id: 'convolution',
+    term: { ko: '합성곱', en: 'convolution' },
+    definition: {
+      ko: String.raw`\((f * g)(x) = \int f(t)\, g(x - t)\, dt\) — 한 함수를 뒤집어 밀면서 다른 함수와의 겹침을 가중 평균한 것으로, 교환법칙을 만족한다.`,
+      en: String.raw`\((f * g)(x) = \int f(t)\, g(x - t)\, dt\) — flip one function, slide it, and take the weighted overlap with the other; the operation commutes.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'convolution',
+  },
+  {
+    id: 'approximate-identity',
+    term: { ko: '근사 항등원', en: 'approximate identity' },
+    definition: {
+      ko: String.raw`질량이 \(1\)이고 원점 근처에 몰린 핵들의 족 \(\varphi_{\varepsilon}\) — 연속점에서 \((f * \varphi_{\varepsilon})(x) \to f(x)\)가 되므로, 합성곱이 항등 연산에 가까워진다.`,
+      en: String.raw`A family \(\varphi_{\varepsilon}\) of kernels of mass \(1\) concentrating near the origin — \((f * \varphi_{\varepsilon})(x) \to f(x)\) at continuity points, so convolution approaches the identity operation.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'convolution',
+  },
+  {
+    id: 'support',
+    term: { ko: '지지집합', en: 'support' },
+    definition: {
+      ko: String.raw`함수 \(f\)의 지지집합 \(\operatorname{supp} f\)는 \(\{x : f(x) \ne 0\}\)의 폐포 — \(f\)가 \(0\)이 아닌 영역을 닫힌 집합으로 만든 것이다.`,
+      en: String.raw`The support \(\operatorname{supp} f\) of a function \(f\) is the closure of \(\{x : f(x) \ne 0\}\) — the region where \(f\) is nonzero, closed up.`,
+    },
+    chapterId: 'integration',
+    sceneId: 'convolution',
+  },
 ];
