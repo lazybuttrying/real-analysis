@@ -41,8 +41,12 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 3,
     topics: ['dini'],
     statement: {
-      ko: String.raw`\(N \ge 1\)에 대해 \(s_N(x) = \sum_{n=1}^{N}(1-x)x^n\)이라 둡니다. (a) \(s_N\)이 \([0,a]\) (\(0 < a < 1\))에서 디니 정리로 균등수렴함을 보이세요. (b) \([0,1]\)에서는 균등수렴하지 않음을 증명하세요.`,
-      en: String.raw`Let \(s_N(x) = \sum_{n=1}^{N}(1-x)x^n\) for \(N \ge 1\). (a) Show \(s_N\) converges uniformly on \([0,a]\) (\(0 < a < 1\)) via Dini's theorem. (b) Prove it does not converge uniformly on \([0,1]\).`,
+      ko: String.raw`\(N \ge 1\)에 대해 \(s_N(x) = \sum_{n=1}^{N}(1-x)x^n\)이라 둡니다.
+
+(a) \(s_N\)이 \([0,a]\) (\(0 < a < 1\))에서 디니 정리로 균등수렴함을 보이세요. (b) \([0,1]\)에서는 균등수렴하지 않음을 증명하세요.`,
+      en: String.raw`Let \(s_N(x) = \sum_{n=1}^{N}(1-x)x^n\) for \(N \ge 1\).
+
+(a) Show \(s_N\) converges uniformly on \([0,a]\) (\(0 < a < 1\)) via Dini's theorem. (b) Prove it does not converge uniformly on \([0,1]\).`,
     },
     display: [String.raw`s_N(x) = x(1-x^N) \uparrow x \quad (0 \le x < 1), \qquad s_N(1) = 0`],
     solution: [
@@ -71,8 +75,16 @@ export const exercises: readonly ExerciseMeta[] = [
     difficulty: 3,
     topics: ['fejer-theorem', 'fourier'],
     statement: {
-      ko: String.raw`연속인 \(2\pi\)-주기 핵 \(K_n \ge 0\)이 다음을 만족한다고 하자: (i) \(\dfrac{1}{2\pi}\int_{-\pi}^{\pi} K_n(t)\,dt = 1\); (ii) 질량 집중: 모든 \(\delta > 0\)에 대해 \(\dfrac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,dt \to 0\) (\(n \to \infty\)). 연속인 \(2\pi\)-주기 함수 \(f\)에 대해 합성곱 \((f \ast K_n)(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x-t)K_n(t)\,dt\)이 \(f\)로 균일수렴함을 증명하세요. (페이예르 핵은 이 가설들을 만족하므로 — 페이예르 장면 참조 — 이는 페이예르 정리를 일반화합니다.)`,
-      en: String.raw`Let \(K_n \ge 0\) be continuous \(2\pi\)-periodic kernels satisfying: (i) \(\dfrac{1}{2\pi}\int_{-\pi}^{\pi} K_n(t)\,dt = 1\); (ii) mass concentration: for every \(\delta > 0\), \(\dfrac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,dt \to 0\) as \(n \to \infty\). For \(f\) continuous and \(2\pi\)-periodic, prove the convolution \((f \ast K_n)(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x-t)K_n(t)\,dt\) converges to \(f\) uniformly. (The Fejér kernel satisfies these hypotheses — see the Fejér scene — so this generalizes Fejér's theorem.)`,
+      ko: String.raw`연속인 \(2\pi\)-주기 핵 \(K_n \ge 0\)이 다음을 만족한다고 하자: (i) \(\dfrac{1}{2\pi}\int_{-\pi}^{\pi} K_n(t)\,dt = 1\); (ii) 질량 집중: 모든 \(\delta > 0\)에 대해 \(\dfrac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,dt \to 0\) (\(n \to \infty\)).
+
+연속인 \(2\pi\)-주기 함수 \(f\)에 대해 합성곱 \((f \ast K_n)(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x-t)K_n(t)\,dt\)이 \(f\)로 균일수렴함을 증명하세요.
+
+(페이예르 핵은 이 가설들을 만족하므로 — 페이예르 장면 참조 — 이는 페이예르 정리를 일반화합니다.)`,
+      en: String.raw`Let \(K_n \ge 0\) be continuous \(2\pi\)-periodic kernels satisfying: (i) \(\dfrac{1}{2\pi}\int_{-\pi}^{\pi} K_n(t)\,dt = 1\); (ii) mass concentration: for every \(\delta > 0\), \(\dfrac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,dt \to 0\) as \(n \to \infty\).
+
+For \(f\) continuous and \(2\pi\)-periodic, prove the convolution \((f \ast K_n)(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x-t)K_n(t)\,dt\) converges to \(f\) uniformly.
+
+(The Fejér kernel satisfies these hypotheses — see the Fejér scene — so this generalizes Fejér's theorem.)`,
     },
     display: [
       String.raw`\lvert (f \ast K_n)(x) - f(x) \rvert \le \frac{1}{2\pi}\int_{-\pi}^{\pi} K_n(t)\,\lvert f(x-t) - f(x) \rvert\,dt`,
@@ -81,28 +93,40 @@ export const exercises: readonly ExerciseMeta[] = [
     solution: [
       {
         text: {
-          ko: String.raw`질량이 \(1\)이므로 \(f(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x)K_n(t)\,dt\)라 쓸 수 있다 (\(f\)는 \(2\pi\)-주기이므로 \(f(x-t)\)는 \(t \in [-\pi,\pi]\)에서 문제없이 정의된다). 빼고 절댓값을 취하면 모든 \(x\)에 대해
+          ko: String.raw`질량이 \(1\)이므로 \(f(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x)K_n(t)\,dt\)라 쓸 수 있다 (\(f\)는 \(2\pi\)-주기이므로 \(f(x-t)\)는 \(t \in [-\pi,\pi]\)에서 문제없이 정의된다).
+
+빼고 절댓값을 취하면 모든 \(x\)에 대해
           \[\lvert (f \ast K_n)(x) - f(x) \rvert \le \frac{1}{2\pi}\int_{-\pi}^{\pi} K_n(t)\,\lvert f(x-t) - f(x) \rvert\,dt\]
           를 얻는다. 적분을 \(\lvert t \rvert < \delta\)와 \(\delta \le \lvert t \rvert \le \pi\)로 나눈다.`,
-          en: String.raw`Since the mass is \(1\), write \(f(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x)K_n(t)\,dt\) (\(f(x-t)\) is well defined for \(t \in [-\pi,\pi]\) because \(f\) is \(2\pi\)-periodic). Subtracting and taking absolute values gives, for every \(x\),
+          en: String.raw`Since the mass is \(1\), write \(f(x) = \dfrac{1}{2\pi}\int_{-\pi}^{\pi} f(x)K_n(t)\,dt\) (\(f(x-t)\) is well defined for \(t \in [-\pi,\pi]\) because \(f\) is \(2\pi\)-periodic).
+
+Subtracting and taking absolute values gives, for every \(x\),
           \[\lvert (f \ast K_n)(x) - f(x) \rvert \le \frac{1}{2\pi}\int_{-\pi}^{\pi} K_n(t)\,\lvert f(x-t) - f(x) \rvert\,dt.\]
           Split the integral into \(\lvert t \rvert < \delta\) and \(\delta \le \lvert t \rvert \le \pi\).`,
         },
       },
       {
         text: {
-          ko: String.raw`\(\varepsilon > 0\)이 주어졌다고 하자. \(f\)는 콤팩트 집합 \(\mathbb{R}\) 위에서 연속인 주기함수이므로 균일연속이다: \(\lvert t \rvert < \delta\)이면 모든 \(x\)에 대해 \(\lvert f(x-t) - f(x) \rvert < \varepsilon/2\)인 \(\delta > 0\)이 존재한다. \(K_n \ge 0\)이고 질량이 \(1\)이므로 첫 번째 적분은 \(\le \varepsilon/2\)이다 (\(x\)와 무관하게).`,
-          en: String.raw`Let \(\varepsilon > 0\). As a continuous periodic function, \(f\) is uniformly continuous on \(\mathbb{R}\): there is \(\delta > 0\) such that \(\lvert t \rvert < \delta\) implies \(\lvert f(x-t) - f(x) \rvert < \varepsilon/2\) for all \(x\). Since \(K_n \ge 0\) with mass \(1\), the first integral is \(\le \varepsilon/2\), independently of \(x\).`,
+          ko: String.raw`\(\varepsilon > 0\)이 주어졌다고 하자. \(f\)는 콤팩트 집합 \(\mathbb{R}\) 위에서 연속인 주기함수이므로 균일연속이다: \(\lvert t \rvert < \delta\)이면 모든 \(x\)에 대해 \(\lvert f(x-t) - f(x) \rvert < \varepsilon/2\)인 \(\delta > 0\)이 존재한다.
+
+\(K_n \ge 0\)이고 질량이 \(1\)이므로 첫 번째 적분은 \(\le \varepsilon/2\)이다 (\(x\)와 무관하게).`,
+          en: String.raw`Let \(\varepsilon > 0\). As a continuous periodic function, \(f\) is uniformly continuous on \(\mathbb{R}\): there is \(\delta > 0\) such that \(\lvert t \rvert < \delta\) implies \(\lvert f(x-t) - f(x) \rvert < \varepsilon/2\) for all \(x\).
+
+Since \(K_n \ge 0\) with mass \(1\), the first integral is \(\le \varepsilon/2\), independently of \(x\).`,
         },
       },
       {
         text: {
           ko: String.raw`꼬리 적분은 \(\lvert f(x-t) - f(x) \rvert \le 2\lVert f \rVert_\infty\)로 상한이 잡히므로
           \[\frac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,\lvert f(x-t) - f(x) \rvert\,dt \le 2\lVert f \rVert_\infty \cdot \frac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,dt \to 0\]
-          이다 (\(n \to \infty\), 가설 (ii)). 따라서 \(n\)이 충분히 크면 꼬리도 \(x\)와 무관하게 \(<\varepsilon/2\)이다. 합하면 \(\lVert f \ast K_n - f \rVert_\infty < \varepsilon\) — 균일수렴이다. 페이예르 핵 \(K_N\)은 \(K_N \ge 0\), 질량 \(1\), 그리고 꼬리 상한 \(K_N(t) \le \dfrac{1}{N\sin^2(\delta/2)}\) (\(\delta \le \lvert t \rvert \le \pi\))을 만족하므로 (페이예르 장면의 문제들), 페이예르 정리는 이 일반 정리의 따름정리이다.`,
+          이다 (\(n \to \infty\), 가설 (ii)). 따라서 \(n\)이 충분히 크면 꼬리도 \(x\)와 무관하게 \(<\varepsilon/2\)이다. 합하면 \(\lVert f \ast K_n - f \rVert_\infty < \varepsilon\) — 균일수렴이다.
+
+페이예르 핵 \(K_N\)은 \(K_N \ge 0\), 질량 \(1\), 그리고 꼬리 상한 \(K_N(t) \le \dfrac{1}{N\sin^2(\delta/2)}\) (\(\delta \le \lvert t \rvert \le \pi\))을 만족하므로 (페이예르 장면의 문제들), 페이예르 정리는 이 일반 정리의 따름정리이다.`,
           en: String.raw`The tail integral is bounded via \(\lvert f(x-t) - f(x) \rvert \le 2\lVert f \rVert_\infty\):
           \[\frac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,\lvert f(x-t) - f(x) \rvert\,dt \le 2\lVert f \rVert_\infty \cdot \frac{1}{2\pi}\int_{\delta \le \lvert t \rvert \le \pi} K_n(t)\,dt \to 0\]
-          as \(n \to \infty\), by hypothesis (ii). So for large \(n\) the tail is \(<\varepsilon/2\) independently of \(x\). Together, \(\lVert f \ast K_n - f \rVert_\infty < \varepsilon\) — uniform convergence. The Fejér kernel \(K_N\) satisfies \(K_N \ge 0\), mass \(1\), and the tail bound \(K_N(t) \le \dfrac{1}{N\sin^2(\delta/2)}\) on \(\delta \le \lvert t \rvert \le \pi\) (the Fejér scene's problems), so Fejér's theorem is a corollary of this general result.`,
+          as \(n \to \infty\), by hypothesis (ii). So for large \(n\) the tail is \(<\varepsilon/2\) independently of \(x\). Together, \(\lVert f \ast K_n - f \rVert_\infty < \varepsilon\) — uniform convergence.
+
+The Fejér kernel \(K_N\) satisfies \(K_N \ge 0\), mass \(1\), and the tail bound \(K_N(t) \le \dfrac{1}{N\sin^2(\delta/2)}\) on \(\delta \le \lvert t \rvert \le \pi\) (the Fejér scene's problems), so Fejér's theorem is a corollary of this general result.`,
         },
       },
     ],

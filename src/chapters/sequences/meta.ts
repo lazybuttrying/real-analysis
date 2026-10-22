@@ -7,6 +7,7 @@ import { problems as holesProblems } from '../limits/problems/holes';
 import { holderProblems } from '../limits/problems/holder';
 import { problems as limsupLiminfProblems } from '../limits/problems/limsup-liminf';
 import { problems as monotoneCauchyProblems } from '../limits/problems/monotone-cauchy';
+import { parallelogramLawProblems } from '../limits/problems/parallelogram-law';
 import { problems as sequenceSpacesProblems } from '../limits/problems/sequence-spaces';
 import { problems as standardLimitsProblems } from '../limits/problems/standard-limits';
 import { problems as stolzCesaroProblems } from '../limits/problems/stolz-cesaro';
@@ -173,9 +174,36 @@ For example, at a 🏪 shop you multiply each item's price by its quantity and a
       problems: holderProblems,
     },
     {
+      id: 'parallelogram-law',
+      title: { ko: '평행사변형 법칙', en: 'The Parallelogram Law' },
+      order: 6,
+      summary: {
+        ko: String.raw`평행사변형의 두 대각선과 두 변 사이에 숨어 있는 등식을 봅니다. 지수 \(p\)를 움직이며 그 등식이 언제 살아남는지 확인하는 장면입니다.
+
+내적에서 온 노름은 항상 이 등식을 만족합니다. \(e_1\)과 \(e_2\)로 계산하면 왼쪽은 \(2 \cdot 2^{2/p}\), 오른쪽은 \(4\)가 됩니다. 둘이 같아지는 경우는 \(p = 2\)뿐입니다. 그래서 \(p\)가 2가 아닌 \(\ell^p\) 노름은 어떤 내적에서도 나올 수 없습니다.
+
+예를 들면, 📐 자로 그린 평행사변형은 그대로인데 재는 자만 바꿉니다. 자를 바꿨을 뿐인데 대각선에 대한 등식이 깨진다면, 그 자는 내적이라는 설계도에서 나온 것이 아닙니다.`,
+        en: String.raw`An identity hides between the two diagonals and the two sides of a parallelogram. This scene slides the exponent \(p\) and checks when that identity survives.
+
+Every norm that comes from an inner product satisfies the identity. Computing with \(e_1\) and \(e_2\) makes the left side \(2 \cdot 2^{2/p}\) and the right side \(4\). The two agree only at \(p = 2\). So an \(\ell^p\) norm with \(p\) different from 2 cannot come from any inner product.
+
+For example, a 📐 parallelogram drawn with a ruler stays exactly the same, but the measuring ruler is swapped. If swapping the ruler alone breaks the diagonal identity, that ruler never came from an inner-product blueprint.`,
+      },
+      tex: [
+        String.raw`\|x+y\|^2 + \|x-y\|^2 = 2\|x\|^2 + 2\|y\|^2`,
+        String.raw`\langle x, y \rangle = \frac{\|x+y\|^2 - \|x-y\|^2}{4}`,
+      ],
+      prerequisites: ['cauchy-schwarz'],
+      controls: [
+        { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 1.1, max: 8, step: 0.1, init: 2 },
+        { kind: 'toggle', key: 'showCircle', label: { ko: '단위구 표시', en: 'Show unit sphere' }, init: true },
+      ],
+      problems: parallelogramLawProblems,
+    },
+    {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`유리수만으로 만든 수열이 유리수가 아닌 곳으로 다가갑니다. 유리수 세계에 구멍이 있다는 것을 보여 주는 장면입니다.
 
@@ -195,7 +223,7 @@ problems: holesProblems,
     {
       id: 'construction',
       title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`유리수의 구멍을 메워 실수를 실제로 만드는 장면입니다. 실수 하나를 유리수 수열들의 묶음으로 정의합니다.
 
@@ -222,7 +250,7 @@ problems: constructionProblems,
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 그 부분수열을 찾아내는 장면입니다.
 
@@ -245,7 +273,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`증가하면서 위로 막힌 수열이 꼭대기에 닿는 장면입니다. 꼬리가 한 점으로 조여드는 모습도 함께 봅니다.
 
@@ -272,7 +300,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'limsup-liminf',
       title: { ko: '상극한과 하극한', en: 'Lim sup and Lim inf' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`수열의 꼬리만 보고 가장 높은 값과 가장 낮은 값을 살핍니다. 둘이 어디에 안착하는지 확인하는 장면입니다.
 
@@ -299,7 +327,7 @@ For example, record each day's high and low temperature with a 🌡️ thermomet
     {
       id: 'stolz-cesaro',
       title: { ko: '체자로 정리', en: 'Stolz–Cesàro Theorem' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`전체 비율이 버거울 때 차분의 비율로 우회하는 장면입니다. 수열 버전의 로피탈 정리입니다.
 
