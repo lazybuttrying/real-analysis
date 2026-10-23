@@ -13,6 +13,7 @@ import type { ProblemMeta } from '../../../contracts.ts';
 export const quantifiersProblems: readonly ProblemMeta[] = [
   {
     id: 'quantifiers-negate-eps-delta-continuity',
+    kind: 'concept',
     statement: {
       ko: String.raw`점 \(a\)에서의 연속성의 \(\varepsilon\)-\(\delta\) 정의 — "모든 \(\varepsilon > 0\)에 대해, 모든 \(x\)에 대해 \(|x-a| < \delta\)이면 \(|f(x)-f(a)| < \varepsilon\)인 \(\delta > 0\)이 존재한다" — 를 완전히 부정하세요.
 
@@ -29,6 +30,17 @@ State precisely what the negation says about \(f\).`,
     presetCaption: {
       ko: String.raw`명제 \(\varepsilon\)-\(\delta\) (\(\varepsilon = 2.5\), \(\delta = \varepsilon/2 = 1.25\)), 부정 사슬 표시: 마지막 단계 \(\exists\varepsilon{>}0\ \forall\delta{>}0\ \exists t\,(|t| < \delta \land |2t| \ge \varepsilon)\).`,
       en: String.raw`The \(\varepsilon\)-\(\delta\) statement (\(\varepsilon = 2.5\), \(\delta = \varepsilon/2 = 1.25\)), negation chain shown: final step \(\exists\varepsilon{>}0\ \forall\delta{>}0\ \exists t\,(|t| < \delta \land |2t| \ge \varepsilon)\).`,
+    },
+    choices: [
+      { ko: String.raw`\(\exists\varepsilon{>}0\ \exists\delta{>}0\ \exists x\,(|x-a|<\delta \land |f(x)-f(a)|\ge\varepsilon)\)`, en: String.raw`\(\exists\varepsilon{>}0\ \exists\delta{>}0\ \exists x\,(|x-a|<\delta \land |f(x)-f(a)|\ge\varepsilon)\)` },
+      { ko: String.raw`\(\exists\varepsilon{>}0\ \forall\delta{>}0\ \exists x\,(|x-a|<\delta \land |f(x)-f(a)|\ge\varepsilon)\)`, en: String.raw`\(\exists\varepsilon{>}0\ \forall\delta{>}0\ \exists x\,(|x-a|<\delta \land |f(x)-f(a)|\ge\varepsilon)\)` },
+      { ko: String.raw`\(\exists\varepsilon{>}0\ \forall\delta{>}0\ \exists x\,(|x-a|<\delta \to |f(x)-f(a)|\ge\varepsilon)\)`, en: String.raw`\(\exists\varepsilon{>}0\ \forall\delta{>}0\ \exists x\,(|x-a|<\delta \to |f(x)-f(a)|\ge\varepsilon)\)` },
+      { ko: String.raw`\(\forall\varepsilon{>}0\ \forall\delta{>}0\ \exists x\,(|x-a|\ge\delta \land |f(x)-f(a)|<\varepsilon)\)`, en: String.raw`\(\forall\varepsilon{>}0\ \forall\delta{>}0\ \exists x\,(|x-a|\ge\delta \land |f(x)-f(a)|<\varepsilon)\)` },
+    ],
+    correctIndex: 1,
+    explanation: {
+      ko: String.raw`부정은 양화사를 하나씩 뒤집고 (\(\forall\)는 \(\exists\)로, \(\exists\)는 \(\forall\)로) 마지막 함의를 \(\lnot(P \to Q) \equiv P \land \lnot Q\)로 바꿔 얻습니다. 첫 번째 선택지는 \(\delta\)의 양화사를 뒤집지 않았고, 세 번째는 함의를 그대로 두었으며, 네 번째는 바깥쪽 \(\forall\varepsilon\)를 뒤집지 않고 부등식만 바꿨습니다.`,
+      en: String.raw`The negation flips every quantifier (\(\forall\) becomes \(\exists\), \(\exists\) becomes \(\forall\)) and rewrites the final implication via \(\lnot(P \to Q) \equiv P \land \lnot Q\). The first option fails to flip the \(\delta\) quantifier, the third keeps the implication instead of turning it into a conjunction, and the fourth never flips the outer \(\forall\varepsilon\) and merely reverses the inequalities.`,
     },
     proof: [
       {

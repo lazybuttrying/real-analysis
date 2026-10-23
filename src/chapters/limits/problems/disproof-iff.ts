@@ -11,6 +11,7 @@ import type { ProblemMeta } from '../../../contracts.ts';
 export const disproofIffProblems: readonly ProblemMeta[] = [
   {
     id: 'disproof-div4',
+    kind: 'counterexample',
     statement: {
       ko: String.raw`“\(n^2\)이 4로 나누어떨어지면 \(n\)도 4로 나누어떨어진다”는 주장을 반례 \(n = 2\)로 반박하세요. 주장의 논리형 \(\forall n \in \mathbb{Z}\,(4 \mid n^2 \Rightarrow 4 \mid n)\)과 그 부정 \(\exists n \in \mathbb{Z}\,(4 \mid n^2 \text{ and } 4 \nmid n)\)을 명시적으로 쓰고, 왜 단 하나의 증인으로 증명이 끝나는지 설명하세요.`,
       en: String.raw`Disprove the claim "if \(n^2\) is divisible by 4 then \(n\) is divisible by 4" using the counterexample \(n = 2\). Write out the claim's logical form \(\forall n \in \mathbb{Z}\,(4 \mid n^2 \Rightarrow 4 \mid n)\) and its negation \(\exists n \in \mathbb{Z}\,(4 \mid n^2 \text{ and } 4 \nmid n)\) explicitly, and explain why a single witness settles the matter.`,
@@ -23,6 +24,10 @@ export const disproofIffProblems: readonly ProblemMeta[] = [
     presetCaption: {
       ko: String.raw`주장 \(4 \mid n^2 \Rightarrow 4 \mid n\), 테스트 \(n = 2\): \(n^2 = 4\)이므로 가정이 참, 결론 \(4 \mid 2\)는 거짓 — 반례 확정.`,
       en: String.raw`claim \(4 \mid n^2 \Rightarrow 4 \mid n\), test \(n = 2\): \(n^2 = 4\) makes the hypothesis true, the conclusion \(4 \mid 2\) is false — counterexample confirmed.`,
+    },
+    verdict: {
+      ko: String.raw`이 명제는 거짓이다 — \(n = 2\)가 반례이다 (\(4 \mid 2^2\)이지만 \(4 \nmid 2\)).`,
+      en: String.raw`The claim is false — \(n = 2\) is a counterexample (\(4 \mid 2^2\) but \(4 \nmid 2\)).`,
     },
     proof: [
       {

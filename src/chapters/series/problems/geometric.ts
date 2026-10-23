@@ -67,6 +67,7 @@ export const problems: readonly ProblemMeta[] = [
         },
         {
           id: 'n-over-2n',
+          kind: 'compute',
           statement: {
             ko: String.raw`\(\sum_{n=1}^{\infty}\frac{n}{2^n} = 2\)를 \(S - \frac{S}{2}\) 트릭으로 증명하세요.`,
             en: String.raw`Prove \(\sum_{n=1}^{\infty}\frac{n}{2^n} = 2\) with the \(S - \frac{S}{2}\) trick.`,
@@ -112,5 +113,6 @@ Hence \(\frac{n}{2^n} \le \left(\frac{3}{4}\right)^n\) for \(n \ge 4\); since \(
               },
             },
           ],
+          answer: { ko: String.raw`\(2\)`, en: String.raw`\(2\)` },
         },
       ];

@@ -40,6 +40,7 @@ export const problems: readonly ProblemMeta[] = [
         },
         {
           id: 'shifted',
+          kind: 'compute',
           statement: {
             ko: String.raw`\(\sum_{n=1}^{\infty}\frac{1}{n(n+2)} = \frac{3}{4}\)를 증명하세요.`,
             en: String.raw`Prove \(\sum_{n=1}^{\infty}\frac{1}{n(n+2)} = \frac{3}{4}\).`,
@@ -70,6 +71,7 @@ export const problems: readonly ProblemMeta[] = [
               },
             },
           ],
+          answer: { ko: String.raw`\(\frac{3}{4}\)`, en: String.raw`\(\frac{3}{4}\)` },
         },
         {
           id: 'sqrt-diverges',

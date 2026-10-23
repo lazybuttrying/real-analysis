@@ -34,6 +34,7 @@ export const problems: readonly ProblemMeta[] = [
         },
         {
           id: 'antiderivative',
+          kind: 'compute',
           statement: {
             ko: String.raw`\(\int_0^1 2x\,dx\)를 역도함수로 계산하세요.`,
             en: String.raw`Compute \(\int_0^1 2x\,dx\) via an antiderivative.`,
@@ -58,6 +59,7 @@ export const problems: readonly ProblemMeta[] = [
               },
             },
           ],
+          answer: { ko: String.raw`\(1\)`, en: String.raw`\(1\)` },
         },
         {
           id: 'chain',

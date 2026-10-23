@@ -7,6 +7,7 @@ import type { ProblemMeta } from '../../../contracts.ts';
 export const problems: readonly ProblemMeta[] = [
         {
           id: 'sup-one-minus',
+          kind: 'concept',
           statement: {
             ko: String.raw`\(S = \left\{1 - \frac{1}{n} : n \geq 1\right\}\)에 대해 \(\sup S = 1\)임을 증명하세요.
 
@@ -20,6 +21,17 @@ export const problems: readonly ProblemMeta[] = [
           presetCaption: {
             ko: String.raw`상한 후보 \(1.2\) — 참 상한 \(1\)보다 \(0.2\) 큽니다.`,
             en: String.raw`Candidate \(1.2\) — \(0.2\) above the true supremum \(1\).`,
+          },
+          choices: [
+            { ko: String.raw`\(1 \in S\)이고 \(1\)은 \(S\)의 최댓값이다`, en: String.raw`\(1 \in S\), and \(1\) is the maximum of \(S\)` },
+            { ko: String.raw`\(1 \notin S\)이지만 \(1\)은 \(S\)의 가장 작은 상계이다`, en: String.raw`\(1 \notin S\), but \(1\) is the least upper bound of \(S\)` },
+            { ko: String.raw`\(1\)이 \(S\)에 속하지 않으므로 \(\sup S\)는 존재하지 않는다`, en: String.raw`Since \(1 \notin S\), \(\sup S\) does not exist` },
+            { ko: String.raw`\(\sup S = 0\)이다 — \(n = 1\)인 원소 \(0\)이 가장 크기 때문이다`, en: String.raw`\(\sup S = 0\), because the \(n = 1\) element \(0\) is the largest` },
+          ],
+          correctIndex: 1,
+          explanation: {
+            ko: String.raw`모든 \(n\)에 대해 \(1 - \frac{1}{n} < 1\)이므로 \(1\)은 상계이고, \(u < 1\)인 수는 아르키메데스 성질 때문에 상계가 될 수 없어 \(1\)이 가장 작은 상계, 즉 \(\sup S = 1\)입니다. 원소들은 \(0\)에서 시작해 \(1\)을 향해 증가하므로 \(0\)은 가장 작은 원소이고, \(1\) 자체는 어떤 \(n\)에 대해서도 \(S\)의 원소가 아닙니다 — 상한은 집합에 속하지 않을 수 있으며, 존재는 완비성 공리가 보장합니다.`,
+            en: String.raw`Since \(1 - \frac{1}{n} < 1\) for every \(n\), \(1\) is an upper bound; by the Archimedean property no \(u < 1\) is an upper bound, so \(1\) is the least upper bound, i.e. \(\sup S = 1\). The elements increase from \(0\) toward \(1\), so \(0\) is the smallest element, and \(1\) itself is not an element of \(S\) for any \(n\) — a supremum need not belong to the set, and its existence is guaranteed by the completeness axiom.`,
           },
           proof: [
             {
