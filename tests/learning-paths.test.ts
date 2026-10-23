@@ -4,7 +4,7 @@ import { LANGS, localize } from '../src/contracts.ts';
 import { learningPaths } from '../src/learning-paths.ts';
 import { pathDetailUrl, pathsUrl, withLang } from '../src/paths.ts';
 
-const BASE = '/real-analysis/';
+const BASE = '/lecture/real-analysis/';
 
 const sceneKeys = new Set<string>();
 for (const chapter of catalog) {
@@ -60,9 +60,9 @@ describe('learning paths: data integrity', () => {
 
 describe('learning paths: URL helpers', () => {
   it('builds the index and detail URLs', () => {
-    expect(pathsUrl(BASE, 'ko')).toBe('/real-analysis/ko/paths/');
-    expect(pathsUrl(BASE, 'en')).toBe('/real-analysis/en/paths/');
-    expect(pathDetailUrl(BASE, 'ko', 'convergence-tests')).toBe('/real-analysis/ko/paths/convergence-tests/');
+    expect(pathsUrl(BASE, 'ko')).toBe('/lecture/real-analysis/ko/paths/');
+    expect(pathsUrl(BASE, 'en')).toBe('/lecture/real-analysis/en/paths/');
+    expect(pathDetailUrl(BASE, 'ko', 'convergence-tests')).toBe('/lecture/real-analysis/ko/paths/convergence-tests/');
   });
 
   it('withLang keeps the paths route across languages', () => {

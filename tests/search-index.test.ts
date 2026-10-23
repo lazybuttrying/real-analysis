@@ -15,7 +15,7 @@ import { exercises as functionSeriesExercises } from '../src/chapters/function-s
 import { exercises as differentiationExercises } from '../src/chapters/differentiation/exercises.ts';
 import { exercises as integrationExercises } from '../src/chapters/integration/exercises.ts';
 
-const BASE = '/real-analysis/';
+const BASE = '/lecture/real-analysis/';
 const totalScenes = catalog.reduce((n, chapter) => n + chapter.scenes.length, 0);
 // The same per-chapter exercise modules src/search-index.ts aggregates.
 const totalExercises = [

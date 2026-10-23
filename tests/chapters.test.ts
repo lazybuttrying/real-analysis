@@ -176,10 +176,10 @@ describe('legacy canonical pages', () => {
         // Never a hub or an exercises page: retired hubs/exercises emit nothing.
         expect(sceneId).not.toBe('exercises');
         expect(sceneId).not.toBe(legacyId);
-        expect(page.url(lang)).toBe(`/real-analysis/${lang}/${legacyId}/${sceneId}/`);
+        expect(page.url(lang)).toBe(`/lecture/real-analysis/${lang}/${legacyId}/${sceneId}/`);
         const canonical = page.canonicalUrl?.(lang);
         expect(canonical, `${legacyId}/${sceneId}`).toBeDefined();
-        expect(canonical).toBe(`/real-analysis/${lang}/${chapterOf.get(sceneId!)}/${sceneId}/`);
+        expect(canonical).toBe(`/lecture/real-analysis/${lang}/${chapterOf.get(sceneId!)}/${sceneId}/`);
         expect(canonical).not.toBe(page.url(lang));
         const key = `${lang}/${legacyId}/${sceneId}`;
         expect(seen.has(key), `duplicate legacy page ${key}`).toBe(false);
@@ -238,8 +238,8 @@ describe('legacy canonical pages', () => {
     for (const legacyUrl of legacyUrls) {
       expect(xml, `sitemap must not list ${legacyUrl}`).not.toContain(`<loc>${legacyUrl}</loc>`);
     }
-    expect(xml).toContain('<loc>https://sdykim.me/real-analysis/ko/sequences/epsilon-n/</loc>');
-    expect(xml).toContain('<loc>https://sdykim.me/real-analysis/en/integration/riemann/</loc>');
+    expect(xml).toContain('<loc>https://sdykim.me/lecture/real-analysis/ko/sequences/epsilon-n/</loc>');
+    expect(xml).toContain('<loc>https://sdykim.me/lecture/real-analysis/en/integration/riemann/</loc>');
     expect((xml.match(/<loc>/g) ?? []).length).toBe(pages.length * LANGS.length);
   });
 });

@@ -18,7 +18,7 @@ export const site: {
   mapIntro: LocalizedText;
 } = {
   name: { ko: 'Real Analysis', en: 'Real Analysis' },
-  base: '/real-analysis/',
+  base: '/lecture/real-analysis/',
   reloadFlag: 'real-analysis:chunk-reload',
   homeIntro: {
     ko: '해석학의 개념을 직접 움직여 보며 익히는 인터랙티브 시각화 모음입니다.',

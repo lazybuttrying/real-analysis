@@ -10,7 +10,7 @@ function normalizeBase(raw: string): string {
   return withLead.endsWith('/') ? withLead : `${withLead}/`;
 }
 
-const BASE = normalizeBase(process.env.SITE_BASE ?? '/real-analysis/');
+const BASE = normalizeBase(process.env.SITE_BASE ?? '/lecture/real-analysis/');
 
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const fromRoot = (path: string): string => fileURLToPath(new URL(path, import.meta.url));
