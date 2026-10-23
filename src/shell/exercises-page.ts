@@ -13,6 +13,7 @@ import { chapterUrl, sceneUrl } from '../paths.ts';
 import { site } from '../site.config.ts';
 import { h } from './dom.ts';
 import { tr } from './i18n.ts';
+import { answerEl, conceptEl, constructionLabelEl, kindBadgeEl, problemKind, verdictEl } from './kind-ui.ts';
 import { mountMiniViz } from './scene-host.ts';
 import { pageHeader } from './search.ts';
 
@@ -92,15 +93,16 @@ export function renderExercisesPage(
         .map((exercise, index) => ({ exercise, index }))
         .filter(({ exercise }) => exercise.difficulty === difficulty)
         .map(({ exercise, index }) => {
+          const kind = problemKind(exercise);
           const card = h('article', { class: 'exercise problem', id: `exercise-${exercise.id}` });
-          card.append(
-            h(
-              'div',
-              { class: 'exercise-badges' },
-              h('span', { class: 'exercise-number' }, String(index + 1)),
-              h('span', { class: `difficulty-badge difficulty-${difficulty}` }, tr(lang, difficultyKey(difficulty))),
-            ),
-          );
+          if (kind !== 'proof') card.classList.add(`kind-${kind}`);
+          const badgeChildren: HTMLElement[] = [
+            h('span', { class: 'exercise-number' }, String(index + 1)),
+            h('span', { class: `difficulty-badge difficulty-${difficulty}` }, tr(lang, difficultyKey(difficulty))),
+          ];
+          const kindBadge = kindBadgeEl(kind, lang);
+          if (kindBadge) badgeChildren.push(kindBadge);
+          card.append(h('div', { class: 'exercise-badges' }, ...badgeChildren));
 
           const statementParas = splitParagraphs(localize(exercise.statement, lang));
           statementParas.forEach((para, i) => {
@@ -108,6 +110,10 @@ export function renderExercisesPage(
             card.append(el);
             richTargets.push({ el, text: para, display: i === statementParas.length - 1 ? exercise.display : undefined });
           });
+
+          if (kind === 'counterexample' && exercise.verdict) {
+            card.append(verdictEl(exercise.verdict, lang, (target) => richTargets.push(target)));
+          }
 
           if (exercise.topics.length > 0) {
             card.append(
@@ -137,21 +143,34 @@ export function renderExercisesPage(
             vizJobs.push({ host: vizHost, sceneId: exercise.viz.sceneId, preset: exercise.viz.preset });
           }
 
-          const details = h('details', { class: 'problem-proof' });
-          details.append(h('summary', {}, tr(lang, 'showSolution')));
-          const list = h('ol', {});
-          for (const step of exercise.solution) {
-            const item = h('li', {});
-            const stepParas = splitParagraphs(localize(step.text, lang));
-            stepParas.forEach((para, i) => {
-              const el = h('p', {}, stripInlineMath(para));
-              item.append(el);
-              richTargets.push({ el, text: para, display: i === stepParas.length - 1 ? step.display : undefined });
-            });
-            list.append(item);
+          if (kind === 'concept') {
+            // Same contract as scene problems: the interactive check replaces
+            // the folded solution; the solution stays in the data as backing.
+            card.append(conceptEl(exercise, lang, (target) => richTargets.push(target)));
+          } else {
+            const details = h('details', { class: 'problem-proof' });
+            details.append(h('summary', {}, tr(lang, 'showSolution')));
+            if (kind === 'counterexample') {
+              details.classList.add('counterexample-construction');
+              details.append(constructionLabelEl(lang));
+            }
+            const list = h('ol', {});
+            for (const step of exercise.solution) {
+              const item = h('li', {});
+              const stepParas = splitParagraphs(localize(step.text, lang));
+              stepParas.forEach((para, i) => {
+                const el = h('p', {}, stripInlineMath(para));
+                item.append(el);
+                richTargets.push({ el, text: para, display: i === stepParas.length - 1 ? step.display : undefined });
+              });
+              list.append(item);
+            }
+            details.append(list);
+            card.append(details);
+            if (kind === 'compute' && exercise.answer) {
+              card.append(answerEl(exercise.answer, lang, (target) => richTargets.push(target)));
+            }
           }
-          details.append(list);
-          card.append(details);
           return card;
         });
       if (cards.length === 0) return null;

@@ -11,6 +11,7 @@ export const exercises: readonly ExerciseMeta[] = [
   // ------------------------------------------------------------------
   {
     id: 'm-test-rational',
+    kind: 'concept',
     difficulty: 2,
     topics: ['m-test'],
     statement: {
@@ -18,6 +19,17 @@ export const exercises: readonly ExerciseMeta[] = [
       en: String.raw`Show that \(\sum_{n=1}^{\infty}\frac{1}{n^2+x^2}\) converges uniformly on all of \(\mathbb{R}\) by the M-test, and prove its sum is continuous on \(\mathbb{R}\).`,
     },
     display: [String.raw`\left|\frac{1}{n^2+x^2}\right| \le \frac{1}{n^2} =: M_n, \qquad \sum_{n=1}^{\infty} M_n < \infty`],
+    choices: [
+      { ko: String.raw`\(M_n = \frac{1}{n^2}\): \(x\)와 무관한 상수이고 \(\sum M_n\)이 수렴한다`, en: String.raw`\(M_n = \frac{1}{n^2}\): constants independent of \(x\), and \(\sum M_n\) converges` },
+      { ko: String.raw`\(M_n = \frac{1}{n^2+x^2}\): 부등식이 등식으로 성립한다`, en: String.raw`\(M_n = \frac{1}{n^2+x^2}\): the bound holds with equality` },
+      { ko: String.raw`\(M_n = \frac{1}{n}\): 모든 \(x\)에 대해 부등식이 성립한다`, en: String.raw`\(M_n = \frac{1}{n}\): the bound holds for every \(x\)` },
+      { ko: String.raw`\(M_n = \frac{1}{x^2}\): 분모의 \(x^2\) 부분만으로 bound한다`, en: String.raw`\(M_n = \frac{1}{x^2}\): bound by the \(x^2\) part of the denominator alone` },
+    ],
+    correctIndex: 0,
+    explanation: {
+      ko: String.raw`M-판정법은 \(x\)와 무관한 수 \(M_n\)에 대해 모든 \(x\)에서 \(|f_n(x)| \le M_n\)이고 \(\sum M_n < \infty\)일 것을 요구합니다. \(n^2 + x^2 \ge n^2\)이므로 \(M_n = \frac{1}{n^2}\)이 작동하고 \(\sum \frac{1}{n^2}\)는 수렴합니다 (\(p\)-급수, \(p = 2\)). 두 번째와 네 번째 선택지의 \(M_n\)은 \(x\)에 의존하므로 허용되지 않고 (네 번째는 \(x = 0\)에서 정의조차 되지 않습니다), 세 번째는 부등식은 성립하지만 \(\sum \frac{1}{n}\)이 발산해 판정법이 결론을 주지 못합니다. 균등수렴하므로 연속항들의 합함수도 연속입니다.`,
+      en: String.raw`The M-test requires numbers \(M_n\) independent of \(x\) with \(|f_n(x)| \le M_n\) for all \(x\) and \(\sum M_n < \infty\). Since \(n^2 + x^2 \ge n^2\), \(M_n = \frac{1}{n^2}\) works, and \(\sum \frac{1}{n^2}\) converges (a \(p\)-series with \(p = 2\)). The second and fourth options depend on \(x\), so they are not admissible \(M_n\) (the fourth is not even defined at \(x = 0\)); the third bound does hold, but \(\sum \frac{1}{n}\) diverges, so the test gives no conclusion. Uniform convergence then makes the sum of the continuous terms continuous.`,
+    },
     solution: [
       {
         text: {

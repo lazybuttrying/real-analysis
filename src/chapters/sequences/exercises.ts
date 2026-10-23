@@ -102,6 +102,7 @@ Substituting gives \(4r^2 = 2q^2\), i.e. \(q^2 = 2r^2\), so by the same argument
   },
   {
     id: 'limsup-two-subseq',
+    kind: 'compute',
     difficulty: 1,
     topics: ['limsup-liminf'],
     statement: {
@@ -133,6 +134,7 @@ Likewise \(a_n \ge 1 \cdot (1 - 1/(n+1))\) and \(1 - 1/(n+1) \to 1\), so \(\limi
         },
       },
     ],
+    answer: { ko: String.raw`\(\limsup a_n = 3\), \(\liminf a_n = 1\)`, en: String.raw`\(\limsup a_n = 3\), \(\liminf a_n = 1\)` },
   },
   // ------------------------------------------------------------------
   // Difficulty 2

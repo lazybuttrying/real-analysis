@@ -105,12 +105,36 @@ interface ProofStep {
 }
 
 /**
+ * The problem template an item is authored in. Absent `kind` means 'proof'
+ * (the classic statement + folded proof/solution rendering); the other kinds
+ * add their own blocks on top of — or, for 'concept', instead of — the folded
+ * proof. See docs/problem-types.md for the authoring skeletons.
+ */
+export type ProblemKind = 'proof' | 'compute' | 'counterexample' | 'concept';
+
+/** The kind-specific optional fields shared by ProblemMeta and ExerciseMeta. */
+export interface ProblemKindFields {
+  /** Problem template; absent renders exactly like 'proof'. */
+  kind?: ProblemKind;
+  /** compute: the final result, shown in a highlighted answer box after the folded solution. */
+  answer?: LocalizedText;
+  /** counterexample: the verdict line (the claim is false), shown prominently under the statement. */
+  verdict?: LocalizedText;
+  /** concept: the answer options (3-4), one of which is correct. */
+  choices?: readonly LocalizedText[];
+  /** concept: index into `choices` of the correct option. */
+  correctIndex?: number;
+  /** concept: why the correct option is right and the others wrong; revealed after answering. */
+  explanation?: LocalizedText;
+}
+
+/**
  * An example/exercise attached to a scene. The mini visualization reuses the
  * scene's own model and renderer with the fixed `preset` control state
  * (non-interactive); `presetCaption` describes that preset in one line.
  * The proof is bilingual data; renderers show it behind a toggle.
  */
-export interface ProblemMeta {
+export interface ProblemMeta extends ProblemKindFields {
   /** Unique within the scene; used for element ids. */
   id: string;
   /** Problem statement; prose may embed \(...\) inline TeX. */
@@ -142,7 +166,7 @@ export type ExerciseDifficulty = 1 | 2 | 3;
  * visualization (same pattern as ProblemMeta.preset). The solution is
  * bilingual data; renderers show it behind a toggle.
  */
-export interface ExerciseMeta {
+export interface ExerciseMeta extends ProblemKindFields {
   /** Unique within the chapter; used for element ids and URL anchors. */
   id: string;
   difficulty: ExerciseDifficulty;

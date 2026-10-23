@@ -11,6 +11,7 @@ export const exercises: readonly ExerciseMeta[] = [
   // ------------------------------------------------------------------
   {
     id: 'open-interval-image',
+    kind: 'counterexample',
     difficulty: 1,
     topics: ['continuity'],
     statement: {
@@ -18,6 +19,10 @@ export const exercises: readonly ExerciseMeta[] = [
       en: String.raw`True or false, with proof: the continuous image of an open interval is always an open set.`,
     },
     display: [String.raw`f(x) = x^2, \qquad I = (-1, 1), \qquad f(I) = [0, 1)`],
+    verdict: {
+      ko: String.raw`이 명제는 거짓이다 — \(f(x) = x^2\)의 열린 구간 \(I = (-1, 1)\)에서의 상은 \([0, 1)\)로, 열린 집합이 아니다.`,
+      en: String.raw`The claim is false — the image of the open interval \(I = (-1, 1)\) under \(f(x) = x^2\) is \([0, 1)\), which is not an open set.`,
+    },
     solution: [
       {
         text: {
