@@ -17,6 +17,12 @@ import { catalog } from '../src/catalog.ts';
  *   but a shared group or vendor entry is emitted only when this build
  *   actually produces its chunks (a fork may fold a whole shared group
  *   into its importers, externalize KaTeX, or never emit three);
+ * - shared chunk names are derived from the build output, never listed by
+ *   hand: every emitted chunk that is neither a chapter entry, nor a scene
+ *   chunk, nor a vendor chunk is a shared chunk. The rules in section 2
+ *   only assign derived names to groups; a name no rule claims lands in a
+ *   catch-all group, so a future shared chunk is budgeted the moment it
+ *   appears and a removed one disappears on its own;
  * - the home entry keeps its fixed 1 kB budget wherever the build meets
  *   it; a fork whose home chunk is structurally larger (its catalog is
  *   embedded in the chunk) gets a measured budget instead, so the check
@@ -104,27 +110,50 @@ function resolveShared(prefix: string): string[] {
   return files;
 }
 
-// Candidate prefixes: every chapter id (verbatim entry chunk), every scene's
-// chunk name from its loaders.ts, and the known shared chunks.
-const candidates = [
+/**
+ * The chunk name of an emitted file: the stem minus the trailing content
+ * hash ('richslot-CQ59a-kQ.js' -> 'richslot'). Vite hashes are 8 chars
+ * from an alphabet that includes '-', so only the final '-XXXXXXXX' is
+ * stripped. A file without a hash suffix keeps its whole stem.
+ */
+function chunkName(file: string): string {
+  const stem = file.slice(0, -'.js'.length);
+  const hash = /-[A-Za-z0-9_-]{8}$/.exec(stem);
+  return hash === null ? stem : stem.slice(0, hash.index);
+}
+
+// Owned prefixes: every chapter id (verbatim entry chunk) and every
+// scene's chunk name from its loaders.ts. These stay strict (resolve()).
+const ownedCandidates = [
   ...catalog.map((chapter) => chapter.id),
   ...catalog.flatMap((chapter) => sceneChunkNames(chapter.id)),
-  'app',
-  'tex',
-  'sum',
-  'clamp',
-  'd3kit',
-  'richslot',
-  'richtext',
-  'preload-helper',
-  'exercises',
-  'home',
-  'glossary-page',
-  'learning-paths',
-  'map-page',
-  'paths-page',
 ];
-const chunkFiles = indexChunks(candidates);
+const chunkFiles = indexChunks(ownedCandidates);
+
+// Shared chunks, derived by exclusion: every emitted .js file that no
+// chapter or scene claimed and whose chunk name is not a vendor chunk.
+// Grouped by chunk name (several files may share one name, e.g. the
+// per-chapter 'exercises' chunks).
+const sharedChunks = new Map<string, string[]>();
+{
+  const claimed = new Set<string>();
+  for (const files of chunkFiles.values()) {
+    for (const file of files) claimed.add(file);
+  }
+  for (const file of readdirSync(ASSETS)) {
+    if (!file.endsWith('.js')) continue;
+    const path = join(ASSETS, file);
+    if (claimed.has(path)) continue;
+    const name = chunkName(file);
+    if (name.startsWith('vendor-')) continue; // section 6 budgets these
+    const list = sharedChunks.get(name) ?? [];
+    list.push(path);
+    sharedChunks.set(name, list);
+    const owned = chunkFiles.get(name) ?? [];
+    owned.push(path);
+    chunkFiles.set(name, owned);
+  }
+}
 
 function brotliBytes(paths: string[]): number {  let total = 0;
   for (const path of paths) {
@@ -160,7 +189,13 @@ const budgets: Budget[] = [];
   });
 }
 
-// 2. Shared chunks, loaded alongside chapter entries.
+// 2. Shared chunks, loaded alongside chapter entries. Membership is the
+// derived sharedChunks set above; these rules only assign names to
+// groups (a rule naming a chunk this build does not emit is skipped with
+// a warning, via resolveShared). Names reserved for their own sections
+// ('home' in 1, 'exercises' in 4, the lazy page chunks in 5) and every
+// rule-claimed name are excluded from the catch-all group that follows,
+// so each shared chunk is budgeted exactly once.
 const sharedGroups: Array<[string, string[]]> = [
   ['shared shell chunks', ['app', 'tex', 'sum', 'clamp']],
   ['shared view kit', ['d3kit', 'richslot', 'richtext']],
@@ -178,6 +213,32 @@ for (const [name, prefixes] of sharedGroups) {
     path: prefixes.map((prefix) => `dist/assets/${prefix}-*.js`),
     limit: niceLimit(kb * HEADROOM),
   });
+}
+
+// Catch-all: derived shared chunks no group rule claims (per-chapter meta
+// chunks, shared models and scene helpers, anything a future refactor
+// emits). Budgeted as one entry so new shared code can never slip past
+// the size check unnoticed.
+{
+  const claimed = new Set<string>([
+    'home',
+    'exercises',
+    'glossary-page',
+    'learning-paths',
+    'map-page',
+    'paths-page',
+    ...sharedGroups.flatMap(([, prefixes]) => prefixes),
+  ]);
+  const names = [...sharedChunks.keys()].filter((name) => !claimed.has(name)).sort();
+  if (names.length > 0) {
+    const files = names.flatMap((name) => sharedChunks.get(name) ?? []);
+    const kb = brotliBytes(files) / 1024;
+    budgets.push({
+      name: 'shared other chunks',
+      path: names.map((name) => `dist/assets/${name}-*.js`),
+      limit: niceLimit(kb * HEADROOM),
+    });
+  }
 }
 
 // 3. One entry per chapter: entry chunk + its scene chunks.

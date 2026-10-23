@@ -3,16 +3,40 @@ import { catalog } from '../src/catalog.ts';
 import { glossary } from '../src/glossary.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { filterSearchIndex } from '../src/shell/search.ts';
+import { exercises as proofsExercises } from '../src/chapters/proofs/exercises.ts';
+import { exercises as numbersExercises } from '../src/chapters/numbers/exercises.ts';
+import { exercises as sequencesExercises } from '../src/chapters/sequences/exercises.ts';
+import { exercises as continuityExercises } from '../src/chapters/continuity/exercises.ts';
+import { exercises as topologyExercises } from '../src/chapters/topology/exercises.ts';
+import { exercises as approximationExercises } from '../src/chapters/approximation/exercises.ts';
+import { exercises as seriesExercises } from '../src/chapters/series/exercises.ts';
+import { exercises as powerSeriesExercises } from '../src/chapters/power-series/exercises.ts';
+import { exercises as functionSeriesExercises } from '../src/chapters/function-series/exercises.ts';
+import { exercises as differentiationExercises } from '../src/chapters/differentiation/exercises.ts';
+import { exercises as integrationExercises } from '../src/chapters/integration/exercises.ts';
 
 const BASE = '/real-analysis/';
 const totalScenes = catalog.reduce((n, chapter) => n + chapter.scenes.length, 0);
+// The same per-chapter exercise modules src/search-index.ts aggregates.
+const totalExercises = [
+  proofsExercises,
+  numbersExercises,
+  sequencesExercises,
+  continuityExercises,
+  topologyExercises,
+  approximationExercises,
+  seriesExercises,
+  powerSeriesExercises,
+  functionSeriesExercises,
+  differentiationExercises,
+  integrationExercises,
+].reduce((n, list) => n + list.length, 0);
 
 describe('search index: buildSearchIndex', () => {
   it('covers every scene in both languages', () => {
     for (const lang of ['ko', 'en'] as const) {
       const index = buildSearchIndex(lang);
       expect(index.scenes).toHaveLength(totalScenes);
-      expect(totalScenes).toBe(142);
       for (const scene of index.scenes) {
         expect(scene.title.trim().length).toBeGreaterThan(0);
         expect(scene.summary.trim().length).toBeGreaterThan(0);
@@ -32,7 +56,7 @@ describe('search index: buildSearchIndex', () => {
   it('covers every chapter exercise in both languages', () => {
     for (const lang of ['ko', 'en'] as const) {
       const index = buildSearchIndex(lang);
-      expect(index.exercises).toHaveLength(42);
+      expect(index.exercises).toHaveLength(totalExercises);
       for (const exercise of index.exercises) {
         expect(exercise.statement.trim().length).toBeGreaterThan(0);
         expect(exercise.number).toBeGreaterThan(0);

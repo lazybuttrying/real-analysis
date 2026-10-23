@@ -47,9 +47,13 @@ const balancedInlineMath = (text: string): boolean => {
 };
 
 describe('chapter exercises', () => {
-  it('has 42 exercises in total with globally unique ids', () => {
+  it('covers exactly the catalog chapters, in order', () => {
+    expect(chapters.map(({ id }) => id)).toEqual(catalog.map((chapter) => chapter.id));
+  });
+
+  it('has globally unique ids across all chapters', () => {
     const ids = chapters.flatMap(({ exercises }) => exercises.map((exercise) => exercise.id));
-    expect(ids).toHaveLength(42);
+    expect(ids.length).toBeGreaterThan(0);
     expect(new Set(ids).size).toBe(ids.length);
   });
 

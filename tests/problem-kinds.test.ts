@@ -26,32 +26,26 @@ interface TaggedItem extends ProblemKindFields {
   id: string;
 }
 
-const allExercises: readonly ExerciseMeta[] = [
-  ...ProofsExercises,
-  ...NumbersExercises,
-  ...SequencesExercises,
-  ...ContinuityExercises,
-  ...TopologyExercises,
-  ...ApproximationExercises,
-  ...SeriesExercises,
-  ...PowerSeriesExercises,
-  ...FunctionSeriesExercises,
-  ...DifferentiationExercises,
-  ...IntegrationExercises,
+const chapterExercises: ReadonlyArray<{ id: string; exercises: readonly ExerciseMeta[] }> = [
+  { id: 'proofs', exercises: ProofsExercises },
+  { id: 'numbers', exercises: NumbersExercises },
+  { id: 'sequences', exercises: SequencesExercises },
+  { id: 'continuity', exercises: ContinuityExercises },
+  { id: 'topology', exercises: TopologyExercises },
+  { id: 'approximation', exercises: ApproximationExercises },
+  { id: 'series', exercises: SeriesExercises },
+  { id: 'power-series', exercises: PowerSeriesExercises },
+  { id: 'function-series', exercises: FunctionSeriesExercises },
+  { id: 'differentiation', exercises: DifferentiationExercises },
+  { id: 'integration', exercises: IntegrationExercises },
 ];
 
-const shimExercises: readonly ExerciseMeta[] = [
-  ...NumbersExercises,
-  ...SequencesExercises,
-  ...ContinuityExercises,
-  ...TopologyExercises,
-  ...ApproximationExercises,
-  ...SeriesExercises,
-  ...PowerSeriesExercises,
-  ...FunctionSeriesExercises,
-  ...DifferentiationExercises,
-  ...IntegrationExercises,
-];
+const allExercises: readonly ExerciseMeta[] = chapterExercises.flatMap(({ exercises }) => exercises);
+
+// The prerender shim corpus: every chapter except proofs.
+const shimExercises: readonly ExerciseMeta[] = chapterExercises
+  .filter(({ id }) => id !== 'proofs')
+  .flatMap(({ exercises }) => exercises);
 
 const sceneProblems: readonly TaggedItem[] = catalog.flatMap((chapter) =>
   (chapter.scenes ?? []).flatMap((scene) => (scene.problems ?? []) as readonly TaggedItem[]),
@@ -68,6 +62,10 @@ function expectBilingual(value: { ko: string; en: string } | undefined, loc: str
 }
 
 describe('problem kinds: data integrity', () => {
+  it('covers exactly the catalog chapters, in order', () => {
+    expect(chapterExercises.map(({ id }) => id)).toEqual(catalog.map((chapter) => chapter.id));
+  });
+
   it('gives every tagged item the fields its kind requires', () => {
     for (const item of allItems) {
       const kind = item.kind ?? 'proof';
