@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
 import { buildConceptMap } from '../src/concept-map.ts';
-import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type ExerciseDifficulty, type ExerciseMeta, type Lang, type LocalizedText, type SceneMeta } from '../src/contracts.ts';
+import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type ExerciseDifficulty, type ExerciseMeta, type Lang, type LocalizedText, type ProblemKind, type ProblemKindFields, type SceneMeta } from '../src/contracts.ts';
 import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
 import { chapterUrl, exercisesUrl, glossaryUrl, homeUrl, legacyChapterOf, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
@@ -135,22 +135,77 @@ export function createPrerender(deps: PrerenderDeps) {
    * and proofs (in <details>, so they work with zero JS). The mini visualizations
    * are client-only; static HTML carries a figure with the caption.
    */
+  /** The effective problem template of an item (absent kind is 'proof'). */
+  const kindOf = (meta: ProblemKindFields): ProblemKind => meta.kind ?? 'proof';
+
+  /** The type chip for non-proof kinds; empty for 'proof' so classic cards stay byte-identical. */
+  const kindBadgeHtml = (kind: ProblemKind, lang: Lang): string => {
+    if (kind === 'proof') return '';
+    const label = kind === 'compute' ? STRINGS.kindCompute : kind === 'counterexample' ? STRINGS.kindCounterexample : STRINGS.kindConcept;
+    return `<span class="kind-badge kind-${kind}">${escapeHtml(localize(label, lang))}</span>`;
+  };
+
+  /** counterexample: the static verdict box. */
+  const verdictHtml = (meta: ProblemKindFields, lang: Lang): string =>
+    meta.verdict
+      ? `<div class="problem-verdict"><span class="problem-verdict-label">${escapeHtml(localize(STRINGS.verdictLabel, lang))}</span>\n${renderParasHtml(localize(meta.verdict, lang))}</div>`
+      : '';
+
+  /** compute: the static final-answer box. */
+  const answerHtml = (meta: ProblemKindFields, lang: Lang): string =>
+    meta.answer
+      ? `<div class="problem-answer"><span class="problem-answer-label">${escapeHtml(localize(STRINGS.answerLabel, lang))}</span>\n${renderParasHtml(localize(meta.answer, lang))}</div>`
+      : '';
+
+  /**
+   * concept: the static form of the check — a plain list of the options plus
+   * the explanation (led by the correct option) in a <details>, so the page
+   * is complete with zero JS. The client renderer swaps in the interactive
+   * pill buttons on boot.
+   */
+  const conceptHtml = (meta: ProblemKindFields, lang: Lang): string => {
+    const items = (meta.choices ?? []).map((choice) => `<li>${renderSummaryHtml(localize(choice, lang))}</li>`).join('\n');
+    const correct = meta.correctIndex !== undefined ? meta.choices?.[meta.correctIndex] : undefined;
+    const answerLine = correct
+      ? `<p class="concept-answer">${escapeHtml(localize(STRINGS.answerLabel, lang))}: ${renderSummaryHtml(localize(correct, lang))}</p>`
+      : '';
+    const explanation = meta.explanation ? renderParasHtml(localize(meta.explanation, lang)) : '';
+    return `<div class="concept-check"><ol class="concept-choices-static">\n${items}\n</ol>\n<details class="concept-explanation"><summary>${escapeHtml(localize(STRINGS.showExplanation, lang))}</summary>\n${answerLine}\n${explanation}</details></div>`;
+  };
+
   const renderProblemsHtml = (scene: SceneMeta, lang: Lang): string => {
     const problems = scene.problems;
     if (!problems || problems.length === 0) return '';
     const cards = problems
       .map((problem) => {
+        const kind = kindOf(problem);
         const steps = problem.proof
           .map((step) => `<li>${renderStepParasHtml(localize(step.text, lang))}${(step.display ?? []).map(renderDisplayHtml).join('\n')}</li>`)
           .join('\n');
-        return `<article class="problem" id="problem-${scene.id}-${problem.id}">
-  ${renderParasHtml(localize(problem.statement, lang), 'problem-statement')}
-  ${(problem.display ?? []).map(renderDisplayHtml).join('\n')}
-  <figure class="problem-viz"><figcaption>${renderSummaryHtml(localize(problem.presetCaption, lang))}</figcaption></figure>
-  <details class="problem-proof"><summary>${escapeHtml(localize(problem.isHint ? STRINGS.showHint : STRINGS.showProof, lang))}</summary>
-  <ol>${steps}</ol>
-  </details>
-  </article>`;
+        const lines = [`<article class="problem${kind !== 'proof' ? ` kind-${kind}` : ''}" id="problem-${scene.id}-${problem.id}">`];
+        const badge = kindBadgeHtml(kind, lang);
+        if (badge) lines.push(`  ${badge}`);
+        lines.push(`  ${renderParasHtml(localize(problem.statement, lang), 'problem-statement')}`);
+        lines.push(`  ${(problem.display ?? []).map(renderDisplayHtml).join('\n')}`);
+        if (kind === 'counterexample') lines.push(`  ${verdictHtml(problem, lang)}`);
+        lines.push(
+          `  <figure class="problem-viz"><figcaption>${renderSummaryHtml(localize(problem.presetCaption, lang))}</figcaption></figure>`,
+        );
+        if (kind === 'concept') {
+          lines.push(`  ${conceptHtml(problem, lang)}`);
+        } else {
+          lines.push(
+            `  <details class="problem-proof${kind === 'counterexample' ? ' counterexample-construction' : ''}"><summary>${escapeHtml(localize(problem.isHint ? STRINGS.showHint : STRINGS.showProof, lang))}</summary>`,
+          );
+          if (kind === 'counterexample') {
+            lines.push(`  <p class="construction-label">${escapeHtml(localize(STRINGS.constructionLabel, lang))}</p>`);
+          }
+          lines.push(`  <ol>${steps}</ol>`);
+          lines.push(`  </details>`);
+          if (kind === 'compute') lines.push(`  ${answerHtml(problem, lang)}`);
+        }
+        lines.push('  </article>');
+        return lines.join('\n');
       })
       .join('\n');
     return `<section class="problems"><h2>${escapeHtml(localize(STRINGS.problemsHeading, lang))}</h2>\n${cards}\n</section>`;
@@ -197,18 +252,33 @@ export function createPrerender(deps: PrerenderDeps) {
             const viz = exercise.viz
               ? `<figure class="exercise-viz"><figcaption>${renderSummaryHtml(localize(exercise.viz.presetCaption, lang))}</figcaption></figure>`
               : '';
-            return `<article class="exercise problem" id="exercise-${exercise.id}">
-  <div class="exercise-badges"><span class="exercise-number">${index + 1}</span><span class="difficulty-badge difficulty-${difficulty}">${difficultyHeading(difficulty, lang)}</span></div>
-  ${renderParasHtml(localize(exercise.statement, lang), 'exercise-statement')}
-  ${(exercise.display ?? []).map(renderDisplayHtml).join('\n')}
-  <ul class="exercise-topics">
-  ${topics}
-  </ul>
-  ${viz}
-  <details class="problem-proof"><summary>${escapeHtml(localize(STRINGS.showSolution, lang))}</summary>
-  <ol>${steps}</ol>
-  </details>
-  </article>`;
+            const kind = kindOf(exercise);
+            const lines = [
+              `<article class="exercise problem${kind !== 'proof' ? ` kind-${kind}` : ''}" id="exercise-${exercise.id}">`,
+              `  <div class="exercise-badges"><span class="exercise-number">${index + 1}</span><span class="difficulty-badge difficulty-${difficulty}">${difficultyHeading(difficulty, lang)}</span>${kindBadgeHtml(kind, lang)}</div>`,
+              `  ${renderParasHtml(localize(exercise.statement, lang), 'exercise-statement')}`,
+              `  ${(exercise.display ?? []).map(renderDisplayHtml).join('\n')}`,
+            ];
+            if (kind === 'counterexample') lines.push(`  ${verdictHtml(exercise, lang)}`);
+            lines.push(`  <ul class="exercise-topics">`);
+            lines.push(`  ${topics}`);
+            lines.push(`  </ul>`);
+            lines.push(`  ${viz}`);
+            if (kind === 'concept') {
+              lines.push(`  ${conceptHtml(exercise, lang)}`);
+            } else {
+              lines.push(
+                `  <details class="problem-proof${kind === 'counterexample' ? ' counterexample-construction' : ''}"><summary>${escapeHtml(localize(STRINGS.showSolution, lang))}</summary>`,
+              );
+              if (kind === 'counterexample') {
+                lines.push(`  <p class="construction-label">${escapeHtml(localize(STRINGS.constructionLabel, lang))}</p>`);
+              }
+              lines.push(`  <ol>${steps}</ol>`);
+              lines.push(`  </details>`);
+              if (kind === 'compute') lines.push(`  ${answerHtml(exercise, lang)}`);
+            }
+            lines.push('  </article>');
+            return lines.join('\n');
           })
           .join('\n');
         return cards ? `<section class="exercise-group"><h2>${difficultyHeading(difficulty, lang)}</h2>\n${cards}\n</section>` : '';
@@ -223,6 +293,10 @@ export function createPrerender(deps: PrerenderDeps) {
       [
         localize(exercise.statement, lang),
         ...(exercise.viz ? [localize(exercise.viz.presetCaption, lang)] : []),
+        ...(exercise.answer ? [localize(exercise.answer, lang)] : []),
+        ...(exercise.verdict ? [localize(exercise.verdict, lang)] : []),
+        ...(exercise.explanation ? [localize(exercise.explanation, lang)] : []),
+        ...(exercise.choices ?? []).map((choice) => localize(choice, lang)),
         ...exercise.solution.map((step) => localize(step.text, lang)),
       ].some((text) => text.includes('\\(')),
     );

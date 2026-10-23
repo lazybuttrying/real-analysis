@@ -138,6 +138,7 @@ Taking absolute values and summing,
   // ------------------------------------------------------------------
   {
     id: 'bv-uniform-limit-fails',
+    kind: 'counterexample',
     difficulty: 3,
     topics: ['bounded-variation'],
     statement: {
@@ -159,6 +160,10 @@ Show this fails for bounded variation: with \(g(x) = x^2\sin(1/x^2)\) for \(x > 
       String.raw`x_k = \frac{1}{\sqrt{\pi/2 + k\pi}},\qquad g(x_k) = (-1)^k\,\frac{2}{(2k+1)\pi}`,
       String.raw`\sum_{k=1}^{N}\lvert g(x_{k-1}) - g(x_k) \rvert = \frac{2}{\pi}\sum_{k=1}^{N}\left(\frac{1}{2k-1} + \frac{1}{2k+1}\right) \to \infty`,
     ],
+    verdict: {
+      ko: String.raw`이 명제는 거짓이다 — 각 \(g_n\)은 유계변동이고 \(g_n \to g\) 균일수렴하지만, 극한 \(g\)는 유계변동이 아니다.`,
+      en: String.raw`The claim is false — each \(g_n\) is of bounded variation and \(g_n \to g\) uniformly, but the limit \(g\) is not of bounded variation.`,
+    },
     solution: [
       {
         text: {

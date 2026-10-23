@@ -29,7 +29,7 @@
         "dist/assets/sum-*.js",
         "dist/assets/clamp-*.js"
       ],
-      "limit": "7 kB"
+      "limit": "8 kB"
     },
     {
       "name": "shared view kit",
@@ -269,7 +269,7 @@
     {
       "name": "exercises (all chapters, 11 chunks)",
       "path": "dist/assets/exercises-*.js",
-      "limit": "45 kB"
+      "limit": "50 kB"
     },
     {
       "name": "home lazy chunks (glossary, paths, map)",
