@@ -48,6 +48,14 @@
       "limit": "450 kB"
     },
     {
+      "name": "shared other chunks",
+      "path": [
+        "dist/assets/simple-scene-*.js",
+        "dist/assets/simpson-*.js"
+      ],
+      "limit": "2 kB"
+    },
+    {
       "name": "chapter: proofs (entry + 10 scenes)",
       "path": [
         "dist/assets/proofs-*.js",

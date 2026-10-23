@@ -8,7 +8,7 @@ import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './i18n';
-import { answerEl, conceptEl, constructionLabelEl, kindBadgeEl, problemKind, verdictEl } from './kind-ui';
+import { domKindFragments, problemCardBlocks, problemKind } from './kind-ui';
 import { disposeExercisesPage, exercisesPageTitle, renderExercisesPage } from './exercises-page';
 import { mountMiniViz, SceneHost } from './scene-host';
 import { mountSearch } from './search';
@@ -91,12 +91,6 @@ function summarySpan(text: string): HTMLSpanElement {
   return span;
 }
 
-/** Splits a prose field into paragraphs on blank lines (single newlines stay). */
-function splitParagraphs(text: string): string[] {
-  const parts = text.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
-  return parts.length > 0 ? parts : [text];
-}
-
 function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
   const summary = localize(scene.summary, lang);
   const paragraphs = summary.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
@@ -142,60 +136,27 @@ function renderProblems(
   }
   const richTargets: RichTarget[] = [];
   const vizJobs: Array<{ host: HTMLElement; preset: ControlState }> = [];
+  const fragments = domKindFragments((target) => richTargets.push(target));
 
   for (const problem of problems) {
     const kind = problemKind(problem);
     const card = h('article', { class: 'problem', id: `problem-${scene.id}-${problem.id}` });
     if (kind !== 'proof') card.classList.add(`kind-${kind}`);
-    const badge = kindBadgeEl(kind, lang);
-    if (badge) card.append(badge);
-
-    const statementParas = splitParagraphs(localize(problem.statement, lang));
-    statementParas.forEach((para, i) => {
-      const el = h('p', { class: 'problem-statement' }, stripInlineMath(para));
-      card.append(el);
-      richTargets.push({ el, text: para, display: i === statementParas.length - 1 ? problem.display : undefined });
-    });
-
-    if (kind === 'counterexample' && problem.verdict) {
-      card.append(verdictEl(problem.verdict, lang, (target) => richTargets.push(target)));
-    }
 
     const vizHost = h('div', { class: 'problem-viz-host' });
     const caption = h('figcaption', {}, stripInlineMath(localize(problem.presetCaption, lang)));
-    card.append(h('figure', { class: 'problem-viz' }, vizHost, caption));
+    const figure = h('figure', { class: 'problem-viz' }, vizHost, caption);
     richTargets.push({ el: caption, text: localize(problem.presetCaption, lang) });
     vizJobs.push({ host: vizHost, preset: problem.preset });
 
-    if (kind === 'concept') {
-      // The interactive check replaces the folded proof: the explanation is
-      // the content, revealed by answering. The proof stays in the data as
-      // the rigorous backing (and keeps the catalog invariants meaningful).
-      card.append(conceptEl(problem, lang, (target) => richTargets.push(target)));
-    } else {
-      const details = h('details', { class: 'problem-proof' });
-      details.append(h('summary', {}, tr(lang, problem.isHint ? 'showHint' : 'showProof')));
-      if (kind === 'counterexample') {
-        details.classList.add('counterexample-construction');
-        details.append(constructionLabelEl(lang));
-      }
-      const list = h('ol', {});
-      for (const step of problem.proof) {
-        const item = h('li', {});
-        const stepParas = splitParagraphs(localize(step.text, lang));
-        stepParas.forEach((para, i) => {
-          const el = h('p', {}, stripInlineMath(para));
-          item.append(el);
-          richTargets.push({ el, text: para, display: i === stepParas.length - 1 ? step.display : undefined });
-        });
-        list.append(item);
-      }
-      details.append(list);
-      card.append(details);
-      if (kind === 'compute' && problem.answer) {
-        card.append(answerEl(problem.answer, lang, (target) => richTargets.push(target)));
-      }
-    }
+    card.append(
+      ...problemCardBlocks(problem, problem.proof, lang, {
+        statementClass: 'problem-statement',
+        summaryLabel: tr(lang, problem.isHint ? 'showHint' : 'showProof'),
+        middle: [figure],
+        fragments,
+      }),
+    );
     section.append(card);
   }
 

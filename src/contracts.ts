@@ -99,7 +99,7 @@ export function defineScene<D>(module: SceneModule<D>): SceneModule<D> {
 }
 
 /** One step of a rigorous proof: prose (with \(...\) inline TeX) plus optional display formulas. */
-interface ProofStep {
+export interface ProofStep {
   text: LocalizedText;
   display?: readonly string[];
 }

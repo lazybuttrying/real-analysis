@@ -13,17 +13,11 @@ import { chapterUrl, sceneUrl } from '../paths.ts';
 import { site } from '../site.config.ts';
 import { h } from './dom.ts';
 import { tr } from './i18n.ts';
-import { answerEl, conceptEl, constructionLabelEl, kindBadgeEl, problemKind, verdictEl } from './kind-ui.ts';
+import { domKindFragments, kindBadgeEl, problemCardBlocks, problemKind } from './kind-ui.ts';
 import { mountMiniViz } from './scene-host.ts';
 import { pageHeader } from './search.ts';
 
 const BASE = import.meta.env.BASE_URL;
-
-/** Splits a prose field into paragraphs on blank lines (single newlines stay). */
-function splitParagraphs(text: string): string[] {
-  const parts = text.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
-  return parts.length > 0 ? parts : [text];
-}
 
 /** Scene loaders, passed in from the chapter entry (the same Loaders shape app.ts uses). */
 type Loaders = Readonly<Record<string, () => Promise<AnySceneModule>>>;
@@ -86,6 +80,7 @@ export function renderExercisesPage(
   const richTargets: RichTarget[] = [];
   const vizJobs: Array<{ host: HTMLElement; sceneId: string; preset: ControlState }> = [];
   const disposers: Array<() => void> = [];
+  const fragments = domKindFragments((target) => richTargets.push(target));
 
   const groups = ([1, 2, 3] as const)
     .map((difficulty) => {
@@ -104,19 +99,9 @@ export function renderExercisesPage(
           if (kindBadge) badgeChildren.push(kindBadge);
           card.append(h('div', { class: 'exercise-badges' }, ...badgeChildren));
 
-          const statementParas = splitParagraphs(localize(exercise.statement, lang));
-          statementParas.forEach((para, i) => {
-            const el = h('p', { class: 'exercise-statement' }, stripInlineMath(para));
-            card.append(el);
-            richTargets.push({ el, text: para, display: i === statementParas.length - 1 ? exercise.display : undefined });
-          });
-
-          if (kind === 'counterexample' && exercise.verdict) {
-            card.append(verdictEl(exercise.verdict, lang, (target) => richTargets.push(target)));
-          }
-
+          const middle: HTMLElement[] = [];
           if (exercise.topics.length > 0) {
-            card.append(
+            middle.push(
               h(
                 'ul',
                 { class: 'exercise-topics' },
@@ -138,39 +123,20 @@ export function renderExercisesPage(
           if (exercise.viz) {
             const vizHost = h('div', { class: 'exercise-viz-host' });
             const caption = h('figcaption', {}, stripInlineMath(localize(exercise.viz.presetCaption, lang)));
-            card.append(h('figure', { class: 'exercise-viz' }, vizHost, caption));
+            middle.push(h('figure', { class: 'exercise-viz' }, vizHost, caption));
             richTargets.push({ el: caption, text: localize(exercise.viz.presetCaption, lang) });
             vizJobs.push({ host: vizHost, sceneId: exercise.viz.sceneId, preset: exercise.viz.preset });
           }
 
-          if (kind === 'concept') {
-            // Same contract as scene problems: the interactive check replaces
-            // the folded solution; the solution stays in the data as backing.
-            card.append(conceptEl(exercise, lang, (target) => richTargets.push(target)));
-          } else {
-            const details = h('details', { class: 'problem-proof' });
-            details.append(h('summary', {}, tr(lang, 'showSolution')));
-            if (kind === 'counterexample') {
-              details.classList.add('counterexample-construction');
-              details.append(constructionLabelEl(lang));
-            }
-            const list = h('ol', {});
-            for (const step of exercise.solution) {
-              const item = h('li', {});
-              const stepParas = splitParagraphs(localize(step.text, lang));
-              stepParas.forEach((para, i) => {
-                const el = h('p', {}, stripInlineMath(para));
-                item.append(el);
-                richTargets.push({ el, text: para, display: i === stepParas.length - 1 ? step.display : undefined });
-              });
-              list.append(item);
-            }
-            details.append(list);
-            card.append(details);
-            if (kind === 'compute' && exercise.answer) {
-              card.append(answerEl(exercise.answer, lang, (target) => richTargets.push(target)));
-            }
-          }
+          card.append(
+            ...problemCardBlocks(exercise, exercise.solution, lang, {
+              includeBadge: false,
+              statementClass: 'exercise-statement',
+              summaryLabel: tr(lang, 'showSolution'),
+              middle,
+              fragments,
+            }),
+          );
           return card;
         });
       if (cards.length === 0) return null;
