@@ -239,6 +239,8 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
   mountSearch(headerSearch, lang);
 
   const sceneHost = new SceneHost(hostEl, lang);
+  /** Stops the current scene's control playback timer when the scene is left. */
+  let controlsDispose: (() => void) | undefined;
   let urlSyncTimer: number | undefined;
   /** Guards the async exercises load against a route change while it is in flight. */
   let exercisesToken = 0;
@@ -274,6 +276,8 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
 
   const showHub = (notice?: string): void => {
     exercisesToken++;
+    controlsDispose?.();
+    controlsDispose = undefined;
     sceneHost.dispose();
     disposeProblems();
     disposeExercisesPage(exercisesView);
@@ -332,13 +336,16 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
     }
 
     const state = parseState(scene.controls, location.search);
-    buildControls(controlsEl, scene.controls, state, lang, (next) => {
+    controlsDispose?.();
+    controlsDispose = buildControls(controlsEl, scene.controls, state, lang, (next) => {
       sceneHost.setState(next);
       scheduleUrlSync(scene, next);
     });
 
     const loader = loaders[scene.id];
     if (!loader) {
+      controlsDispose?.();
+      controlsDispose = undefined;
       sceneHost.dispose();
       sceneHost.showError(`${tr(lang, 'loaderMissing')}: ${scene.id}`);
       return;
@@ -366,6 +373,8 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
     hub.hidden = true;
     sceneView.hidden = true;
     disposeProblems();
+    controlsDispose?.();
+    controlsDispose = undefined;
     sceneHost.dispose();
     disposeExercisesPage(exercisesView);
     exercisesView.hidden = false;

@@ -609,6 +609,38 @@ main.paths {
   font-variant-numeric: tabular-nums;
 }
 
+.playback {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.playback-title {
+  font-weight: 700;
+}
+
+.playback-setting {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playback button,
+.playback select {
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
 .control:has(.option-group) {
   flex-wrap: wrap;
 }

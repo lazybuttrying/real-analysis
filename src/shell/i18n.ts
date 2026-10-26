@@ -82,6 +82,12 @@ export const STRINGS = {
   mapPrereq: { ko: '선수 관계', en: 'Prerequisite' },
   mapPathOrder: { ko: '학습 경로 순서', en: 'Learning-path order' },
   mapResetView: { ko: '보기 초기화', en: 'Reset view' },
+  playbackLabel: { ko: '자동 재생', en: 'Autoplay' },
+  playbackPlay: { ko: '▶ 재생', en: '▶ Play' },
+  playbackPause: { ko: '⏸ 정지', en: '⏸ Pause' },
+  playbackInterval: { ko: '간격', en: 'Interval' },
+  playbackLoop: { ko: '반복', en: 'Loop' },
+  playbackTarget: { ko: '대상', en: 'Target' },
 } satisfies Record<string, LocalizedText>;
 
 type StringKey = keyof typeof STRINGS;
