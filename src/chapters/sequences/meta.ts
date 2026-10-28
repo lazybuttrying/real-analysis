@@ -8,6 +8,7 @@ import { problems as holesProblems } from '../limits/problems/holes';
 import { holderProblems } from '../limits/problems/holder';
 import { problems as limsupLiminfProblems } from '../limits/problems/limsup-liminf';
 import { problems as monotoneCauchyProblems } from '../limits/problems/monotone-cauchy';
+import { normProblems } from '../limits/problems/norm';
 import { parallelogramLawProblems } from '../limits/problems/parallelogram-law';
 import { problems as sequenceSpacesProblems } from '../limits/problems/sequence-spaces';
 import { problems as standardLimitsProblems } from '../limits/problems/standard-limits';
@@ -92,9 +93,41 @@ For example, eat half of the remaining 🍰 cake each day. What is left goes one
       problems: standardLimitsProblems,
     },
     {
+      id: 'norm',
+      title: { ko: '노름: 길이를 재는 규칙', en: 'Norm: The Rule for Measuring Length' },
+      order: 3,
+      summary: {
+        ko: String.raw`벡터의 길이를 어떻게 재는지 봅니다. 길이를 재는 규칙이 노름입니다.
+
+규칙은 세 가지입니다. 길이는 음수가 아니고, 길이가 0인 벡터는 0뿐입니다. 벡터를 몇 배 하면 길이도 그만큼 배가 됩니다. 두 벡터를 합친 길이는 각 길이의 합을 넘지 않습니다. 이 마지막 규칙이 삼각부등식입니다. 자를 바꾸면 길이도 바뀝니다. 블록을 세는 자, 직선으로 재는 자, 왕의 움직임으로 재는 자가 다릅니다.
+
+예를 들면, 🏙 바둑판 도시에서 한 블록 동쪽, 한 블록 북쪽으로 가면 직선으로는 대각선 한 번이지만 블록으로는 두 번 걸어야 합니다. 체스 왕은 대각선으로 한 번에 갑니다. 같은 이동인데 재는 자에 따라 길이가 2, 약 1.41, 1로 달라집니다.`,
+        en: String.raw`How do we measure the length of a vector? The measuring rule is the norm.
+
+The rule has three parts. A length is never negative, and only the zero vector has length 0. Scaling a vector scales its length by the same factor. And the length of a sum never exceeds the sum of the lengths. That last rule is the triangle inequality. Change the ruler and the length changes: the block-counting ruler, the straight-line ruler, and the king-move ruler all differ.
+
+For example, in a 🏙 grid city, go one block east and one block north. The straight line is one diagonal, but on blocks you must walk twice. A chess king goes diagonally in one move. The same move measures 2, about 1.41, and 1 under the three rulers.`,
+      },
+      tex: [
+        String.raw`\|x\| \ge 0, \quad \|x\| = 0 \iff x = 0`,
+        String.raw`\|a x\| = |a| \, \|x\|`,
+        String.raw`\|x + y\| \le \|x\| + \|y\|`,
+        String.raw`\|x\|_1 = |x_1| + |x_2|, \quad \|x\|_2 = \sqrt{x_1^2 + x_2^2}, \quad \|x\|_\infty = \max(|x_1|, |x_2|)`,
+      ],
+      prerequisites: ['metric-spaces'],
+      controls: [
+        { kind: 'slider', key: 'x1', label: { ko: 'x의 첫째 성분', en: 'x first component' }, min: -2, max: 2, step: 0.1, init: 1.2 },
+        { kind: 'slider', key: 'x2', label: { ko: 'x의 둘째 성분', en: 'x second component' }, min: -2, max: 2, step: 0.1, init: 0.8 },
+        { kind: 'slider', key: 'y1', label: { ko: 'y의 첫째 성분', en: 'y first component' }, min: -2, max: 2, step: 0.1, init: -0.6 },
+        { kind: 'slider', key: 'y2', label: { ko: 'y의 둘째 성분', en: 'y second component' }, min: -2, max: 2, step: 0.1, init: 1.4 },
+        { kind: 'select', key: 'p', label: { ko: '노름 p', en: 'Norm p' }, options: ['1', '2', 'inf'], init: '2' },
+      ],
+      problems: normProblems,
+    },
+    {
       id: 'sequence-spaces',
       title: { ko: '수열공간과 함수공간', en: 'Sequence and Function Spaces' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`수열들을 한곳에 모아 놓은 공간을 봅니다. 수열 하나하나가 이 공간에서는 점이 됩니다.
 
@@ -112,7 +145,7 @@ For example, picture three nested 📦 boxes. Anything inside the small box also
         String.raw`\|x\|_1 = \sum |x_n|, \quad \|x\|_2 = \left(\sum |x_n|^2\right)^{1/2}, \quad \|x\|_\infty = \sup_n |x_n|`,
         String.raw`\ell^1 \subset \ell^2 \subset \ell^\infty, \qquad d(x, y) = \|x - y\|`,
       ],
-      prerequisites: ['metric-spaces'],
+      prerequisites: ['metric-spaces', 'norm'],
       controls: [
         { kind: 'select', key: 'view', label: { ko: '보기', en: 'View' }, options: ['balls', 'sequence'], init: 'balls' },
         { kind: 'select', key: 'p', label: { ko: '노름 p', en: 'Norm p' }, options: ['1', '2', 'inf'], init: '2' },
@@ -123,7 +156,7 @@ problems: sequenceSpacesProblems,
     {
       id: 'cauchy-schwarz',
       title: { ko: '코시-슈바르츠 부등식', en: 'Cauchy\u2013Schwarz Inequality' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`두 벡터의 내적이 얼마나 커질 수 있는지 봅니다. 내적은 두 노름의 곱을 절대 넘지 못합니다.
 
@@ -150,7 +183,7 @@ For example, shine a light on a ✏️ pencil and its shadow is never longer tha
     {
       id: 'holder',
       title: { ko: '횔더 부등식', en: 'Hölder’s Inequality' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`코시-슈바르츠를 일반 지수로 넓힌 부등식을 봅니다. 두 지수가 서로 짝을 이루는 것이 핵심입니다.
 
@@ -177,7 +210,7 @@ For example, at a 🏪 shop you multiply each item's price by its quantity and a
     {
       id: 'parallelogram-law',
       title: { ko: '평행사변형 법칙', en: 'The Parallelogram Law' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`평행사변형의 두 대각선과 두 변 사이에 숨어 있는 등식을 봅니다. 지수 \(p\)를 움직이며 그 등식이 언제 살아남는지 확인하는 장면입니다.
 
@@ -204,7 +237,7 @@ For example, a 📐 parallelogram drawn with a ruler stays exactly the same, but
     {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`유리수만으로 만든 수열이 유리수가 아닌 곳으로 다가갑니다. 유리수 세계에 구멍이 있다는 것을 보여 주는 장면입니다.
 
@@ -224,7 +257,7 @@ problems: holesProblems,
     {
       id: 'construction',
       title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`유리수의 구멍을 메워 실수를 실제로 만드는 장면입니다. 실수 하나를 유리수 수열들의 묶음으로 정의합니다.
 
@@ -251,7 +284,7 @@ problems: constructionProblems,
     {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 그 부분수열을 찾아내는 장면입니다.
 
@@ -274,7 +307,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`증가하면서 위로 막힌 수열이 꼭대기에 닿는 장면입니다. 꼬리가 한 점으로 조여드는 모습도 함께 봅니다.
 
@@ -301,7 +334,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'limsup-liminf',
       title: { ko: '상극한과 하극한', en: 'Lim sup and Lim inf' },
-      order: 11,
+      order: 12,
       summary: {
         ko: String.raw`수열의 꼬리만 보고 가장 높은 값과 가장 낮은 값을 살핍니다. 둘이 어디에 안착하는지 확인하는 장면입니다.
 
@@ -328,7 +361,7 @@ For example, record each day's high and low temperature with a 🌡️ thermomet
     {
       id: 'stolz-cesaro',
       title: { ko: '체자로 정리', en: 'Stolz–Cesàro Theorem' },
-      order: 12,
+      order: 13,
       summary: {
         ko: String.raw`전체 비율이 버거울 때 차분의 비율로 우회하는 장면입니다. 수열 버전의 로피탈 정리입니다.
 
@@ -354,7 +387,7 @@ For example, on a 🚗 car trip the speed over the last minute settles at 60 km/
     {
       id: 'double-sequences',
       title: { ko: '이중수열과 반복극한', en: 'Double Sequences and Iterated Limits' },
-      order: 13,
+      order: 14,
       summary: {
         ko: String.raw`이중수열을 보는 씬입니다. 격자에 찍힌 값 \(a_{m,n}\)을 보며, 행 방향 극한과 열 방향 극한이 어떻게 갈리는지 확인합니다.
 

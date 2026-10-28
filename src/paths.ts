@@ -121,6 +121,9 @@ const POST_SPLIT_SCENES = new Set([
   'strong-induction',
   'relations-equivalence',
   'function-proofs',
+  // 2026-10-28: the norm scene — post-split addition, no legacy canonical
+  // page (it never had a pre-split URL).
+  'norm',
 ]);
 
 /**
