@@ -371,7 +371,7 @@ export const glossary: readonly GlossaryEntry[] = [
       en: String.raw`The "length" \(\|x\|\) of a vector; the metric is \(d(x,y) = \|x - y\|\).`,
     },
     chapterId: 'sequences',
-    sceneId: 'sequence-spaces',
+    sceneId: 'norm',
   },
   {
     id: 'lp-space',

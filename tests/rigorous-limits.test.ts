@@ -293,6 +293,7 @@ describe('split chapters: the five ex-limits chapters', () => {
     expect(idsOf('sequences')).toEqual([
       'epsilon-n',
       'standard-limits',
+      'norm',
       'sequence-spaces',
       'cauchy-schwarz',
       'holder',
@@ -354,7 +355,7 @@ describe('split chapters: the five ex-limits chapters', () => {
     expect(byScene.get('opensets')?.prerequisites).toEqual(['continuity']);
     expect(byScene.get('closure')?.prerequisites).toEqual(['opensets']);
     expect(byScene.get('metric-spaces')?.prerequisites).toEqual(['closure']);
-    expect(byScene.get('sequence-spaces')?.prerequisites).toEqual(['metric-spaces']);
+    expect(byScene.get('sequence-spaces')?.prerequisites).toEqual(['metric-spaces', 'norm']);
     expect(byScene.get('construction')?.prerequisites).toEqual(['holes']);
   });
 });
