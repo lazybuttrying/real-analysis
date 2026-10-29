@@ -80,8 +80,15 @@ export interface SceneShell {
 export function createSceneShell(host: HTMLElement): SceneShell {
   host.style.display = 'flex';
   host.style.flexDirection = 'column';
+  // The chart gets a fixed height (the value .scene-host used to give the
+  // whole box) and the host grows by the strips' height instead. When the
+  // chart shared the host's fixed height with the strips, a readout that
+  // wrapped to one more line shrank the chart and dragged the text up
+  // with it — the chart bounced and the text below chased it on every
+  // render. Fixed chart height keeps both still.
+  host.style.height = 'auto';
   const chartWrap = document.createElement('div');
-  chartWrap.style.cssText = 'flex: 1 1 auto; min-height: 0; position: relative;';
+  chartWrap.style.cssText = 'flex: none; height: min(60vh, 480px); position: relative;';
   const strips = document.createElement('div');
   strips.style.cssText = 'padding: 6px 12px 8px; font-size: 13px; flex: none;';
   host.append(chartWrap, strips);
@@ -92,6 +99,7 @@ export function createSceneShell(host: HTMLElement): SceneShell {
       host.replaceChildren();
       host.style.display = '';
       host.style.flexDirection = '';
+      host.style.height = '';
     },
   };
 }
