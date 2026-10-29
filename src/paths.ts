@@ -124,6 +124,15 @@ const POST_SPLIT_SCENES = new Set([
   // 2026-10-28: the norm scene — post-split addition, no legacy canonical
   // page (it never had a pre-split URL).
   'norm',
+  // 2026-10-29: six foundation scenes (absolute value, Archimedean
+  // property, squeeze theorem, inner product, bounded sequences,
+  // subsequences) — post-split additions, no legacy canonical pages.
+  'absolute-value',
+  'archimedean',
+  'squeeze',
+  'inner-product',
+  'bounded',
+  'subsequence',
 ]);
 
 /**

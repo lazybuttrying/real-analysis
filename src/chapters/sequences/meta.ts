@@ -8,7 +8,11 @@ import { problems as holesProblems } from '../limits/problems/holes';
 import { holderProblems } from '../limits/problems/holder';
 import { problems as limsupLiminfProblems } from '../limits/problems/limsup-liminf';
 import { problems as monotoneCauchyProblems } from '../limits/problems/monotone-cauchy';
+import { boundedProblems } from '../limits/problems/bounded';
+import { innerProductProblems } from '../limits/problems/inner-product';
 import { normProblems } from '../limits/problems/norm';
+import { squeezeProblems } from '../limits/problems/squeeze';
+import { subsequenceProblems } from '../limits/problems/subsequence';
 import { parallelogramLawProblems } from '../limits/problems/parallelogram-law';
 import { problems as sequenceSpacesProblems } from '../limits/problems/sequence-spaces';
 import { problems as standardLimitsProblems } from '../limits/problems/standard-limits';
@@ -64,9 +68,35 @@ For example, a ⚽ ball rolled toward a line stops closer and closer to it. Dema
 problems: epsilonNProblems,
     },
     {
+      id: 'squeeze',
+      title: { ko: '조임 정리', en: 'The Squeeze Theorem' },
+      order: 2,
+      summary: {
+        ko: String.raw`두 수열 사이에 낀 수열을 봅니다. 양쪽이 같은 값으로 가면 가운데도 따라갑니다.
+
+가운데 수열은 직접 잴 필요가 없습니다. 양쪽 경비가 같은 문으로 들어가면, 그 사이에 있는 것은 같이 들어갈 수밖에 없습니다. 진동하는 수열도 이 방법으로 잡습니다. \(|\sin n| \le 1\)이라 \(\frac{\sin n}{n}\)은 \(\pm\frac{1}{n}\) 사이에 갇히고, 양쪽이 0으로 가니 가운데도 0으로 갑니다.
+
+예를 들면, 🧍 복도를 걷는 사람이 있습니다. 양쪽 벽이 점점 좁아져 한 점으로 모이면, 그 사람은 벽을 뚫지 않는 한 같은 점으로 갈 수밖에 없습니다.`,
+        en: String.raw`A sequence trapped between two others takes the stage. When both sides head to the same value, the middle follows.
+
+The middle sequence never needs measuring directly. If both guards walk through the same door, whatever stands between them goes through it as well. Oscillating sequences are caught this way too: \(|\sin n| \le 1\) traps \(\frac{\sin n}{n}\) between \(\pm\frac{1}{n}\), and since both sides tend to 0, so does the middle.
+
+For example, picture a 🧍 person walking down a corridor. If both walls narrow in to a single point, the person, unable to pass through walls, must end up at that same point.`,
+      },
+      tex: [
+        String.raw`a_n \le b_n \le c_n \quad \forall n`,
+        String.raw`a_n \to L, \ c_n \to L \ \Longrightarrow \ b_n \to L`,
+      ],
+      prerequisites: ['epsilon-n'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 5, max: 60, step: 1, init: 30 },
+      ],
+      problems: squeezeProblems,
+    },
+    {
       id: 'standard-limits',
       title: { ko: '표준 극한: x^n과 x^{1/n}', en: 'Standard Limits: x^n and x^{1/n}' },
-      order: 2,
+      order: 3,
       summary: {
         ko: String.raw`절댓값이 1보다 작은 수의 거듭제곱과 양수의 거듭제곱근을 봅니다. 각각 어디로 모이는지 확인하는 장면입니다.
 
@@ -95,7 +125,7 @@ For example, eat half of the remaining 🍰 cake each day. What is left goes one
     {
       id: 'norm',
       title: { ko: '노름: 길이를 재는 규칙', en: 'Norm: The Rule for Measuring Length' },
-      order: 3,
+      order: 4,
       summary: {
         ko: String.raw`벡터의 길이를 어떻게 재는지 봅니다. 길이를 재는 규칙이 노름입니다.
 
@@ -125,9 +155,39 @@ For example, in a 🏙 grid city, go one block east and one block north. The str
       problems: normProblems,
     },
     {
+      id: 'inner-product',
+      title: { ko: '내적: 얼마나 겹치는가', en: 'Inner Product: How Much Overlap' },
+      order: 5,
+      summary: {
+        ko: String.raw`두 벡터가 얼마나 같은 방향을 향하는지 봅니다. 그 겹침을 재는 규칙이 내적입니다.
+
+내적은 세 가지 약속을 지킵니다. 자리를 바꿔도 같습니다. 합과 상수배는 그대로 풀립니다. 자기 자신과의 내적은 길이의 제곱입니다. 그래서 내적이 있으면 노름이 따라옵니다. 내적이 0이면 두 벡터는 수직입니다.
+
+예를 들면, 📦 상자를 두 사람이 밉니다. 같은 방향으로 밀면 힘이 온전히 합쳐집니다. 수직으로 밀면 앞으로 가는 데는 아무 도움이 안 됩니다. 내적은 그 합쳐지는 몫을 재는 셈입니다.`,
+        en: String.raw`How much do two vectors point the same way? The inner product is the rule that measures the overlap.
+
+It keeps three promises. Swapping the two sides changes nothing. Sums and scalings pull straight through. And the inner product of a vector with itself is the square of its length. So an inner product brings a norm with it. An inner product of 0 means the vectors are perpendicular.
+
+For example, two people push a 📦 box. Pushing in the same direction, their forces add up in full. Pushing at a right angle, the sideways force does nothing for forward motion. The inner product measures exactly the part that adds up.`,
+      },
+      tex: [
+        String.raw`\langle x, y \rangle = x_1 y_1 + x_2 y_2`,
+        String.raw`\langle x, x \rangle = \|x\|^2`,
+        String.raw`\langle x, y \rangle = \|x\| \, \|y\| \cos\theta`,
+      ],
+      prerequisites: ['norm'],
+      controls: [
+        { kind: 'slider', key: 'x1', label: { ko: 'x의 첫째 성분', en: 'x first component' }, min: -3, max: 3, step: 0.1, init: 1.5 },
+        { kind: 'slider', key: 'x2', label: { ko: 'x의 둘째 성분', en: 'x second component' }, min: -3, max: 3, step: 0.1, init: 0.5 },
+        { kind: 'slider', key: 'y1', label: { ko: 'y의 첫째 성분', en: 'y first component' }, min: -3, max: 3, step: 0.1, init: 0.5 },
+        { kind: 'slider', key: 'y2', label: { ko: 'y의 둘째 성분', en: 'y second component' }, min: -3, max: 3, step: 0.1, init: 1.5 },
+      ],
+      problems: innerProductProblems,
+    },
+    {
       id: 'sequence-spaces',
       title: { ko: '수열공간과 함수공간', en: 'Sequence and Function Spaces' },
-      order: 4,
+      order: 6,
       summary: {
         ko: String.raw`수열들을 한곳에 모아 놓은 공간을 봅니다. 수열 하나하나가 이 공간에서는 점이 됩니다.
 
@@ -156,7 +216,7 @@ problems: sequenceSpacesProblems,
     {
       id: 'cauchy-schwarz',
       title: { ko: '코시-슈바르츠 부등식', en: 'Cauchy\u2013Schwarz Inequality' },
-      order: 5,
+      order: 7,
       summary: {
         ko: String.raw`두 벡터의 내적이 얼마나 커질 수 있는지 봅니다. 내적은 두 노름의 곱을 절대 넘지 못합니다.
 
@@ -173,7 +233,7 @@ For example, shine a light on a ✏️ pencil and its shadow is never longer tha
         String.raw`|\langle x,y\rangle| \le \|x\|\,\|y\|`,
         String.raw`\|x+y\| \le \|x\|+\|y\|`,
       ],
-      prerequisites: ['sequence-spaces'],
+      prerequisites: ['sequence-spaces', 'inner-product'],
       controls: [
         { kind: 'slider', key: 'angle', label: { ko: '각도 θ', en: 'Angle θ' }, min: 0, max: Math.PI * 2, step: Math.PI / 180, init: 0 },
         { kind: 'toggle', key: 'showProjection', label: { ko: '정사영 표시', en: 'Show projection' }, init: true },
@@ -183,7 +243,7 @@ For example, shine a light on a ✏️ pencil and its shadow is never longer tha
     {
       id: 'holder',
       title: { ko: '횔더 부등식', en: 'Hölder’s Inequality' },
-      order: 6,
+      order: 8,
       summary: {
         ko: String.raw`코시-슈바르츠를 일반 지수로 넓힌 부등식을 봅니다. 두 지수가 서로 짝을 이루는 것이 핵심입니다.
 
@@ -210,7 +270,7 @@ For example, at a 🏪 shop you multiply each item's price by its quantity and a
     {
       id: 'parallelogram-law',
       title: { ko: '평행사변형 법칙', en: 'The Parallelogram Law' },
-      order: 7,
+      order: 9,
       summary: {
         ko: String.raw`평행사변형의 두 대각선과 두 변 사이에 숨어 있는 등식을 봅니다. 지수 \(p\)를 움직이며 그 등식이 언제 살아남는지 확인하는 장면입니다.
 
@@ -237,7 +297,7 @@ For example, a 📐 parallelogram drawn with a ruler stays exactly the same, but
     {
       id: 'holes',
       title: { ko: '유리수의 구멍', en: 'Why ℝ Has No Holes' },
-      order: 8,
+      order: 10,
       summary: {
         ko: String.raw`유리수만으로 만든 수열이 유리수가 아닌 곳으로 다가갑니다. 유리수 세계에 구멍이 있다는 것을 보여 주는 장면입니다.
 
@@ -257,7 +317,7 @@ problems: holesProblems,
     {
       id: 'construction',
       title: { ko: '실수의 구성', en: 'Construction of the Real Numbers' },
-      order: 9,
+      order: 11,
       summary: {
         ko: String.raw`유리수의 구멍을 메워 실수를 실제로 만드는 장면입니다. 실수 하나를 유리수 수열들의 묶음으로 정의합니다.
 
@@ -282,9 +342,62 @@ For example, climb a 🪜 staircase one step at a time toward the top. The numbe
 problems: constructionProblems,
     },
     {
+      id: 'bounded',
+      title: { ko: '유계: 울타리 안에 갇힌 수열', en: 'Bounded: A Sequence Inside a Fence' },
+      order: 12,
+      summary: {
+        ko: String.raw`수열의 모든 항을 한 번에 가두는 울타리가 있는지 봅니다. 울타리가 있으면 유계입니다.
+
+울타리는 항마다 바뀌면 안 됩니다. 하나의 수 \(M\)이 모든 항에 대해 \(|a_n| \le M\)을 만족해야 합니다. 수렴하는 수열은 항상 유계입니다. 하지만 유계라고 다 수렴하지는 않습니다. \((-1)^n\)은 울타리 안에서 왔다 갔다만 합니다.
+
+예를 들면, 🐑 양이 울타리 안에서 이리저리 돌아다닙니다. 아무리 돌아다녀도 울타리 밖으로는 나가지 않습니다. 수열의 유계도 그 그림입니다.`,
+        en: String.raw`Is there a fence that pens in every term of the sequence at once? If yes, the sequence is bounded.
+
+The fence may not move from term to term. A single number \(M\) must satisfy \(|a_n| \le M\) for every term. Every convergent sequence is bounded. But bounded does not imply convergent: \((-1)^n\) just bounces back and forth inside its fence.
+
+For example, a 🐑 sheep wanders around inside its fence. However far it roams, it never leaves the fence. A bounded sequence is the same picture.`,
+      },
+      tex: [
+        String.raw`\exists M > 0, \ \forall n: \ |a_n| \le M`,
+      ],
+      prerequisites: ['supremum'],
+      controls: [
+        { kind: 'select', key: 'kind', label: { ko: '수열', en: 'Sequence' }, options: ['ratio', 'alt', 'linear'], init: 'ratio' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 5, max: 40, step: 1, init: 20 },
+      ],
+      problems: boundedProblems,
+    },
+    {
+      id: 'subsequence',
+      title: { ko: '부분수열: 순서를 지켜 뽑기', en: 'Subsequences: Picking in Order' },
+      order: 13,
+      summary: {
+        ko: String.raw`수열에서 순서를 지키며 항을 뽑아낸 새 수열을 봅니다. 그것이 부분수열입니다.
+
+번호가 엄격히 커지기만 하면 됩니다. 항을 건너뛰어도 순서는 바꿀 수 없습니다. 원래 수열이 수렴하면 모든 부분수열도 같은 값으로 수렴합니다. 거꾸로 두 부분수열이 서로 다른 값으로 가면 원래 수열은 발산합니다.
+
+예를 들면, 🚃 급행열차는 모든 역에 서지 않습니다. 서는 역만 순서대로 이으면 완행 노선의 부분수열 같은 그림이 됩니다.`,
+        en: String.raw`Pick terms out of a sequence while keeping their order, and a new sequence appears. That is a subsequence.
+
+The indices only need to grow strictly. Terms may be skipped, but the order may never change. If the original sequence converges, every subsequence converges to the same value. Conversely, if two subsequences head to different values, the original diverges.
+
+For example, an 🚃 express train does not stop at every station. Line up only the stations where it stops, in order, and you get a subsequence of the local line.`,
+      },
+      tex: [
+        String.raw`n_1 < n_2 < n_3 < \cdots, \qquad (a_{n_k})_{k=1}^{\infty}`,
+        String.raw`a_n \to L \ \Longrightarrow \ a_{n_k} \to L`,
+      ],
+      prerequisites: ['bounded'],
+      controls: [
+        { kind: 'select', key: 'part', label: { ko: '뽑을 부분', en: 'Part to pick' }, options: ['all', 'even', 'odd'], init: 'all' },
+        { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 6, max: 48, step: 1, init: 24 },
+      ],
+      problems: subsequenceProblems,
+    },
+    {
       id: 'bolzano-weierstrass',
       title: { ko: '볼차노–바이어슈트라스', en: 'A Convergent Subsequence Always Hides Inside' },
-      order: 10,
+      order: 14,
       summary: {
         ko: String.raw`유계수열 속에는 항상 수렴하는 부분수열이 숨어 있습니다. 구간을 반으로 접어 그 부분수열을 찾아내는 장면입니다.
 
@@ -298,6 +411,7 @@ The trick is to keep halving the interval. Always follow the half that holds inf
 For example, thirty 🧑 classmates scatter across a playground. Split the playground in half and one side still holds a crowd of them. Keep halving that side and you corner a single spot.`,
       },
       tex: [String.raw`(a_n)\ \text{bounded}\Rightarrow\exists\ (a_{n_k})\ \text{convergent}`],
+      prerequisites: ['subsequence'],
       controls: [
         { kind: 'slider', key: 'steps', label: { ko: '이분 단계', en: 'Bisection steps' }, min: 1, max: 8, step: 1, init: 4 },
         { kind: 'select', key: 'seed', label: { ko: '난수 시드', en: 'Random seed' }, options: ['7', '21', '99'], init: '7' },
@@ -307,7 +421,7 @@ problems: bolzanoWeierstrassProblems,
     {
       id: 'monotone-cauchy',
       title: { ko: '단조수열과 코시수열', en: 'Monotone and Cauchy Sequences' },
-      order: 11,
+      order: 15,
       summary: {
         ko: String.raw`증가하면서 위로 막힌 수열이 꼭대기에 닿는 장면입니다. 꼬리가 한 점으로 조여드는 모습도 함께 봅니다.
 
@@ -334,7 +448,7 @@ problems: monotoneCauchyProblems,
     {
       id: 'limsup-liminf',
       title: { ko: '상극한과 하극한', en: 'Lim sup and Lim inf' },
-      order: 12,
+      order: 16,
       summary: {
         ko: String.raw`수열의 꼬리만 보고 가장 높은 값과 가장 낮은 값을 살핍니다. 둘이 어디에 안착하는지 확인하는 장면입니다.
 
@@ -361,7 +475,7 @@ For example, record each day's high and low temperature with a 🌡️ thermomet
     {
       id: 'stolz-cesaro',
       title: { ko: '체자로 정리', en: 'Stolz–Cesàro Theorem' },
-      order: 13,
+      order: 17,
       summary: {
         ko: String.raw`전체 비율이 버거울 때 차분의 비율로 우회하는 장면입니다. 수열 버전의 로피탈 정리입니다.
 
@@ -387,7 +501,7 @@ For example, on a 🚗 car trip the speed over the last minute settles at 60 km/
     {
       id: 'double-sequences',
       title: { ko: '이중수열과 반복극한', en: 'Double Sequences and Iterated Limits' },
-      order: 14,
+      order: 18,
       summary: {
         ko: String.raw`이중수열을 보는 씬입니다. 격자에 찍힌 값 \(a_{m,n}\)을 보며, 행 방향 극한과 열 방향 극한이 어떻게 갈리는지 확인합니다.
 

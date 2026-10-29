@@ -374,6 +374,66 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'norm',
   },
   {
+    id: 'absolute-value',
+    term: { ko: '절댓값', en: 'absolute value' },
+    definition: {
+      ko: String.raw`수직선에서 \(x\)와 0 사이의 거리 \(|x|\). 부호를 벗긴 크기.`,
+      en: String.raw`The distance \(|x|\) between \(x\) and 0 on the number line; size without sign.`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'absolute-value',
+  },
+  {
+    id: 'archimedean-property',
+    term: { ko: '아르키메데스 성질', en: 'Archimedean property' },
+    definition: {
+      ko: String.raw`어떤 \(a > 0\)와 \(b\)에 대해서도 \(na > b\)인 자연수 \(n\)이 있다. 실수에는 무한히 작은 수가 없다.`,
+      en: String.raw`For every \(a > 0\) and \(b\) there is a natural \(n\) with \(na > b\). The reals have no infinitely small numbers.`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'archimedean',
+  },
+  {
+    id: 'squeeze-theorem',
+    term: { ko: '조임 정리', en: 'squeeze theorem' },
+    definition: {
+      ko: String.raw`\(a_n \le b_n \le c_n\)이고 양쪽 끝이 같은 \(L\)로 가면 가운데도 \(L\)로 간다.`,
+      en: String.raw`If \(a_n \le b_n \le c_n\) and both ends tend to the same \(L\), the middle tends to \(L\).`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'squeeze',
+  },
+  {
+    id: 'inner-product',
+    term: { ko: '내적', en: 'inner product' },
+    definition: {
+      ko: String.raw`두 벡터의 겹침 \(\langle x, y \rangle\). \(\langle x, x \rangle = \|x\|^2\)이라 노름을 만든다.`,
+      en: String.raw`The overlap \(\langle x, y \rangle\) of two vectors; \(\langle x, x \rangle = \|x\|^2\), so it induces a norm.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'inner-product',
+  },
+  {
+    id: 'bounded-sequence',
+    term: { ko: '유계수열', en: 'bounded sequence' },
+    definition: {
+      ko: String.raw`어떤 \(M\)이 있어 모든 항이 \(|a_n| \le M\)을 만족하는 수열.`,
+      en: String.raw`A sequence with some \(M\) such that every term satisfies \(|a_n| \le M\).`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'bounded',
+  },
+  {
+    id: 'subsequence',
+    term: { ko: '부분수열', en: 'subsequence' },
+    definition: {
+      ko: String.raw`순서를 지키며 항을 뽑은 수열 \(a_{n_k}\) (\(n_1 < n_2 < \cdots\)).`,
+      en: String.raw`The sequence \(a_{n_k}\) (\(n_1 < n_2 < \cdots\)) picked from a sequence in order.`,
+    },
+    chapterId: 'sequences',
+    sceneId: 'subsequence',
+  },
+  {
     id: 'lp-space',
     term: { ko: String.raw`\(\ell^p\) 공간`, en: String.raw`\(\ell^p\) space` },
     definition: {

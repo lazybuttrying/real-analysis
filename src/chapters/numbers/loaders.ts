@@ -9,6 +9,8 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'natural-numbers': () => import('../limits/scenes/naturalNumbers').then((module) => module.default),
   'binomial': () => import('../limits/scenes/binomial').then((module) => module.default),
   'integers-rationals': () => import('../limits/scenes/integersRationals').then((module) => module.default),
+  'absolute-value': () => import('../limits/scenes/absoluteValue').then((module) => module.default),
+  'archimedean': () => import('../limits/scenes/archimedean').then((module) => module.default),
   'complex-numbers': () => import('../limits/scenes/complexNumbers').then((module) => module.default),
   'sqrt2-irrational': () => import('../limits/scenes/sqrt2Irrational').then((module) => module.default),
   'density-of-rationals': () => import('../limits/scenes/densityOfRationals').then((module) => module.default),

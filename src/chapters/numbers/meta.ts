@@ -1,4 +1,6 @@
 import type { ChapterMeta } from '../../contracts.ts';
+import { absoluteValueProblems } from '../limits/problems/absolute-value';
+import { archimedeanProblems } from '../limits/problems/archimedean';
 import { axiomOfChoiceProblems } from '../limits/problems/axiom-of-choice';
 import { problems as binomialProblems } from '../limits/problems/binomial';
 import { cantorTheoremProblems } from '../limits/problems/cantor-theorem';
@@ -124,9 +126,37 @@ For example, think of 💰 money and debt. Five coins in hand and three owed is 
       problems: integersRationalsProblems,
     },
     {
+      id: 'absolute-value',
+      title: { ko: '절댓값: 0으로부터의 거리', en: 'Absolute Value: Distance from 0' },
+      order: 4,
+      summary: {
+        ko: String.raw`수의 크기를 부호 없이 재는 법을 봅니다. 그것이 절댓값입니다.
+
+수직선에서 절댓값은 0으로부터의 거리입니다. 양수는 그대로, 음수는 부호를 벗깁니다. 거리의 규칙이 그대로 성립합니다. 길이는 음수가 아니고, 두 점을 잇는 길이는 각 길이의 합을 넘지 않습니다. 이것이 삼각부등식입니다.
+
+예를 들면, 🌡 영하 3도와 영상 3도는 0도에서 같은 거리만큼 떨어져 있습니다. 부호는 방향이고, 절댓값은 거리입니다.`,
+        en: String.raw`How do we measure the size of a number without its sign? That measure is the absolute value.
+
+On the number line it is the distance from 0. Positive numbers stay as they are; negative numbers shed their sign. The rules of distance come with it. A length is never negative, and a combined walk never exceeds the sum of its parts. That is the triangle inequality.
+
+For example, 🌡 −3 degrees and +3 degrees are the same distance from 0 degrees. The sign is the direction; the absolute value is the distance.`,
+      },
+      tex: [
+        String.raw`|x| = \begin{cases} x & x \ge 0 \\ -x & x < 0 \end{cases}`,
+        String.raw`|x + y| \le |x| + |y|`,
+        String.raw`|xy| = |x| \, |y|`,
+      ],
+      prerequisites: ['integers-rationals'],
+      controls: [
+        { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -3, max: 3, step: 0.1, init: 1.5 },
+        { kind: 'slider', key: 'y', label: { ko: 'y', en: 'y' }, min: -3, max: 3, step: 0.1, init: -0.5 },
+      ],
+      problems: absoluteValueProblems,
+    },
+    {
       id: 'complex-numbers',
       title: { ko: '복소수', en: 'Complex Numbers' },
-      order: 4,
+      order: 5,
       summary: {
         ko: String.raw`복소수를 평면 위의 점으로 봅니다. 실수 부분은 가로축, 허수 부분은 세로축입니다.
 
@@ -155,7 +185,7 @@ For example, walk 3 steps east with a 🧭 compass, then turn and walk 4 more. T
     {
       id: 'sqrt2-irrational',
       title: { ko: '√2는 무리수', en: '√2 is Irrational' },
-      order: 5,
+      order: 6,
       summary: {
         ko: String.raw`분수를 촘촘히 찍어도 끝내 메워지지 않는 구멍을 봅니다. 그 자리가 바로 루트 2입니다.
 
@@ -181,7 +211,7 @@ For example, measure a length with a 📏 ruler. However fine the marks, some le
     {
       id: 'density-of-rationals',
       title: { ko: '유리수의 조밀성', en: 'Density of the Rationals' },
-      order: 6,
+      order: 7,
       summary: {
         ko: String.raw`아무리 좁은 구간에도 유리수가 숨어 있음을 봅니다. 분모를 키울수록 눈금이 촘촘해집니다.
 
@@ -215,7 +245,7 @@ For example, keep cutting a 🍰 cake in half, again and again. The pieces shrin
     {
       id: 'sets',
       title: { ko: '집합과 함수', en: 'Sets and Functions' },
-      order: 7,
+      order: 8,
       summary: {
         ko: String.raw`집합의 합집합과 교집합을 그림으로 겹쳐 봅니다. 함수가 단사인지 전사인지도 눈으로 가립니다.
 
@@ -253,7 +283,7 @@ problems: setsProblems,
     {
       id: 'axiom-of-choice',
       title: { ko: '선택 공리', en: 'The Axiom of Choice' },
-      order: 8,
+      order: 9,
       summary: {
         ko: String.raw`줄마다 점이 하나씩 들어 있는 표에서 하나씩 골라 봅니다. 유한할 때와 무한할 때가 왜 다른지 봅니다.
 
@@ -280,7 +310,7 @@ For example, every 📦 box holds some 🍬 candies. With three boxes, just reac
     {
       id: 'zorn-lemma',
       title: { ko: '초른 보조정리', en: "Zorn's Lemma" },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`약수들을 나누어떨어지는 순서로 세워 봅니다. 사슬을 따라 올라가면 끝에 무엇이 남는지 봅니다.
 
@@ -306,7 +336,7 @@ For example, the top of a 🪜 staircase has no next step. Every way up ends som
     {
       id: 'supremum',
       title: { ko: '상한과 완비성', en: 'The Supremum Axiom' },
-      order: 10,
+      order: 11,
       summary: {
         ko: String.raw`위로 막힌 집합에서 가장 작은 천장을 찾습니다. 유리수에 없는 그 천장이 실수를 완성합니다.
 
@@ -341,9 +371,36 @@ For example, measure every 🧑 classmate's height. The smallest line above them
 problems: supremumProblems,
     },
     {
+      id: 'archimedean',
+      title: { ko: '아르키메데스 성질', en: 'The Archimedean Property' },
+      order: 12,
+      summary: {
+        ko: String.raw`아무리 작은 걸음이라도 반복하면 어떤 목표든 넘어섬을 봅니다. 그것이 아르키메데스 성질입니다.
+
+실수에는 무한히 작은 수가 없습니다. 아무리 작은 양수라도 충분히 여러 번 더하면 어떤 큰 수보다 커집니다. 이 사실이 없으면 \(\varepsilon\)-\(N\) 논법에서 "충분히 큰 \(N\)"을 잡을 수 없습니다. 증명은 상한 공리를 씁니다.
+
+예를 들면, 🐜 개미의 한 걸음은 아주 작습니다. 하지만 개미가 걸음을 멈추지 않으면 축구장도 건너고, 지구 한 바퀴도 돕니다. 걸음의 크기가 아니라 횟수가 이깁니다.`,
+        en: String.raw`However small a step, repeating it eventually passes any target. That is the Archimedean property.
+
+The reals contain no infinitely small numbers. However tiny a positive number, adding it to itself enough times outgrows any given large number. Without this fact, \(\varepsilon\)-\(N\) arguments could never pick a "large enough \(N\)". The proof uses the least-upper-bound axiom.
+
+For example, one step of an 🐜 ant is tiny. But an ant that never stops crosses a soccer field, and eventually circles the Earth. It is the count of steps, not their size, that wins.`,
+      },
+      tex: [
+        String.raw`\forall a > 0, \ \forall b \in \mathbb{R}, \ \exists n \in \mathbb{N}: \ na > b`,
+        String.raw`\forall \varepsilon > 0, \ \exists n \in \mathbb{N}: \ \frac{1}{n} < \varepsilon`,
+      ],
+      prerequisites: ['supremum'],
+      controls: [
+        { kind: 'slider', key: 'a', label: { ko: '한 걸음 a', en: 'Step a' }, min: 0.1, max: 2, step: 0.1, init: 0.5 },
+        { kind: 'slider', key: 'b', label: { ko: '목표 b', en: 'Target b' }, min: 0, max: 10, step: 0.5, init: 5 },
+      ],
+      problems: archimedeanProblems,
+    },
+    {
       id: 'nth-root',
       title: { ko: 'n제곱근의 존재', en: 'Existence of n-th Roots' },
-      order: 11,
+      order: 13,
       summary: {
         ko: String.raw`제곱해서 원하는 수가 되는 점을 상한으로 찾아냅니다. 빈틈을 메우는 공리가 근을 만들어내는 순간입니다.
 
@@ -370,7 +427,7 @@ For example, find the side of a square with area two. Side one gives too little 
     {
       id: 'countable',
       title: { ko: '가산과 비가산', en: 'Countable vs Uncountable' },
-      order: 12,
+      order: 14,
       summary: {
         ko: String.raw`유리수는 한 줄로 번호를 매길 수 있음을 봅니다. 실수는 그 시도가 무너지는 것도 봅니다.
 
@@ -399,7 +456,7 @@ problems: countableProblems,
     {
       id: 'cantor-theorem',
       title: { ko: '칸토어 정리', en: "Cantor's Theorem" },
-      order: 13,
+      order: 15,
       summary: {
         ko: String.raw`어떤 집합도 그 부분집합 전체의 모임보다는 작음을 봅니다. 목록의 대각선을 뒤집어 새 원소를 만듭니다.
 
@@ -425,7 +482,7 @@ For example, three 🧑 classmates have eight subsets. Subsets already outnumber
     {
       id: 'groups-fields',
       title: { ko: '군과 체', en: 'Groups vs Fields' },
-      order: 14,
+      order: 16,
       summary: {
         ko: String.raw`되돌릴 수 있는 움직임들의 규칙을 표로 확인합니다. 사칙연산이 전부 되는 세계와 비교합니다.
 
@@ -456,7 +513,7 @@ problems: groupsFieldsProblems,
     {
       id: 'vector-spaces',
       title: { ko: '벡터공간과 동형', en: 'Vector Spaces and Isomorphism' },
-      order: 15,
+      order: 17,
       summary: {
         ko: String.raw`계수를 움직이면 직선과 점이 함께 움직이는 모습을 봅니다. 겉모습이 다른 공간들이 같은 구조임을 확인합니다.
 
@@ -483,7 +540,7 @@ problems: vectorSpacesProblems,
     {
       id: 'dimension-rank',
       title: { ko: '차원과 랭크', en: 'Dimension and Rank' },
-      order: 16,
+      order: 18,
       summary: {
         ko: String.raw`격자가 행렬에 눌려 펴지는 모습을 봅니다. 사라지는 차원과 남는 차원을 셉니다.
 
