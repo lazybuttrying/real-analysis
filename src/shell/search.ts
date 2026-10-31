@@ -13,12 +13,16 @@ const MAX_RESULTS = 8;
 /** Cosine floor for semantic hits: e5 scores on this corpus cluster high. */
 const SEMANTIC_MIN_SCORE = 0.8;
 /**
- * Off-topic judgement (measured 2026-10-31): with no keyword hits, a top
- * semantic score under this reads as unrelated to real analysis — food,
- * weather, and recipe queries topped out at 0.80-0.82, while genuine
- * metaphor matches start around 0.86. In between, weak hits still show.
+ * Off-topic judgement (measured 2026-10-31, after the alias round): with
+ * no keyword hits, a top semantic score under this reads as unrelated to
+ * real analysis. Food, weather, stock, and recipe queries top out at
+ * 0.81-0.83, and even a nonsense nature question ("why do otters swim")
+ * reaches 0.849, while genuine metaphor matches land at 0.85 and above.
+ * The 0.84-0.86 band genuinely mixes both kinds, so the line errs toward
+ * declaring off-topic: the suggestion chips cost one tap, while junk
+ * hits dressed as answers cost trust.
  */
-const OFFTOPIC_MAX_SCORE = 0.83;
+const OFFTOPIC_MAX_SCORE = 0.85;
 
 interface RankedHit {
   kind: 'scene' | 'term' | 'exercise';
