@@ -29,6 +29,11 @@ export const proofs: ChapterMeta = {
     ko: '해석학의 언어인 증명을 처음부터 — 명제와 양화사부터 직접증명·대우·귀류법, 강한 귀납법, 동치관계와 함수 증명까지, Hammack의 Book of Proof 흐름을 따라갑니다.',
     en: 'The language of analysis, from the ground up — propositions and quantifiers through direct proof, contrapositive, contradiction, strong induction, equivalence relations, and function proofs, following the arc of Hammack’s Book of Proof.',
   },
+  sections: [
+    { id: 'logic-basics', title: { ko: '명제와 양화사', en: 'Propositions and Quantifiers' }, sceneIds: ['logic-propositions', 'quantifiers'] },
+    { id: 'proof-methods', title: { ko: '증명 방법', en: 'Proof Methods' }, sceneIds: ['direct-proof', 'contrapositive', 'contradiction', 'cases-existence', 'disproof-iff'] },
+    { id: 'induction-relations', title: { ko: '귀납법과 관계', en: 'Induction and Relations' }, sceneIds: ['strong-induction', 'relations-equivalence', 'function-proofs'] },
+  ],
   scenes: [
     {
       id: 'logic-propositions',

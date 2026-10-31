@@ -37,6 +37,12 @@ export const series: ChapterMeta = {
     ko: '무한급수의 수렴과 발산을 부분합의 움직임으로 확인하고, 수렴 판정 도구들을 익힙니다.',
     en: 'Watch infinite series converge or diverge through their partial sums, and master the convergence tests.',
   },
+  sections: [
+    { id: 'famous-series', title: { ko: '유명한 급수들', en: 'Famous Series' }, sceneIds: ['harmonic', 'euler-mascheroni', 'basel', 'euler-product', 'leibniz'] },
+    { id: 'tests-1', title: { ko: '판정법 1부', en: 'Convergence Tests, Part 1' }, sceneIds: ['tests', 'integral-test', 'raabe-test', 'kummer-test', 'condensation'] },
+    { id: 'computing-series', title: { ko: '급수의 계산', en: 'Computing Series' }, sceneIds: ['telescoping', 'geometric', 'wallis', 'stirling', 'grandi'] },
+    { id: 'tests-2', title: { ko: '판정법 2부와 이중급수', en: 'Convergence Tests, Part 2, and Double Series' }, sceneIds: ['dirichlet-test', 'abel-test', 'double-series'] },
+  ],
   scenes: [
     {
       id: 'harmonic',

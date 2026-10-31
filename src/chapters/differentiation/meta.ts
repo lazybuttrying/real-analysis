@@ -33,6 +33,11 @@ export const differentiation: ChapterMeta = {
     ko: '미분의 정의에서 평균값 정리·로피탈 정리·테일러 전개까지, 미분학의 핵심을 다룹니다.',
     en: 'From the definition of the derivative through the mean value theorem, l\'Hôpital, and Taylor expansions.',
   },
+  sections: [
+    { id: 'derivative-properties', title: { ko: '도함수의 성질', en: 'Properties of the Derivative' }, sceneIds: ['diffcont', 'discontinuous-derivative', 'mvt', 'derivative-monotonicity'] },
+    { id: 'mvt-extensions', title: { ko: '평균값 정리의 확장', en: 'Beyond the Mean Value Theorem' }, sceneIds: ['inverse-function-theorem', 'cauchy-mvt', 'lhopital', 'darboux'] },
+    { id: 'taylor-applications', title: { ko: '테일러 근사와 응용', en: 'Taylor Approximation and Applications' }, sceneIds: ['weierstrass-function', 'taylor', 'taylor-thm', 'convex', 'newton', 'banach'] },
+  ],
   scenes: [
     {
       id: 'diffcont',

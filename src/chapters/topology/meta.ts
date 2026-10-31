@@ -33,6 +33,11 @@ export const topology: ChapterMeta = {
     ko: '열린집합·콤팩트·완비성 — 실직선의 위상적 구조와 베어 범주 정리, 칸토어 집합을 다룹니다.',
     en: 'Open sets, compactness, completeness — the topology of the real line, the Baire category theorem, Cantor sets.',
   },
+  sections: [
+    { id: 'open-connected', title: { ko: '열린집합과 연결성', en: 'Open Sets and Connectedness' }, sceneIds: ['opensets', 'clopen', 'connected', 'closure'] },
+    { id: 'compact-metric', title: { ko: '컴팩트와 거리공간', en: 'Compactness and Metric Spaces' }, sceneIds: ['compact', 'topologist-sine', 'peano-curve', 'metric-spaces', 'contraction'] },
+    { id: 'baire-cantor', title: { ko: '베어와 칸토어', en: 'Baire and Cantor' }, sceneIds: ['baire-category', 'baire-1', 'cantor', 'fat-cantor', 'cantor-function'] },
+  ],
   scenes: [
     {
       id: 'opensets',

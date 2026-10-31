@@ -37,6 +37,13 @@ export const sequences: ChapterMeta = {
     ko: 'ε-N 논법으로 수열의 수렴을 다루고, 단조·코시 수열과 limsup/liminf의 기술을 익힙니다.',
     en: 'Convergence of sequences via ε-N arguments: monotone and Cauchy sequences, limsup and liminf.',
   },
+  sections: [
+    { id: 'limit-basics', title: { ko: '극한의 기본', en: 'Limits, the Basics' }, sceneIds: ['epsilon-n', 'squeeze', 'standard-limits'] },
+    { id: 'norms-inner-products', title: { ko: '노름과 내적', en: 'Norms and Inner Products' }, sceneIds: ['norm', 'inner-product', 'sequence-spaces', 'cauchy-schwarz', 'holder', 'parallelogram-law'] },
+    { id: 'constructing-reals', title: { ko: '실수의 구성', en: 'Constructing the Reals' }, sceneIds: ['holes', 'construction'] },
+    { id: 'convergence-tests', title: { ko: '수렴의 판정', en: 'Deciding Convergence' }, sceneIds: ['bounded', 'subsequence', 'bolzano-weierstrass', 'monotone-cauchy', 'limsup-liminf'] },
+    { id: 'special-limits', title: { ko: '특수한 극한', en: 'Special Limits' }, sceneIds: ['stolz-cesaro', 'double-sequences'] },
+  ],
   scenes: [
     {
       id: 'epsilon-n',

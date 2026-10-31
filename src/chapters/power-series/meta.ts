@@ -29,6 +29,11 @@ export const powerSeries: ChapterMeta = {
     ko: '수렴반경 안의 세계 — 아벨 정리와 타우버 정리, 급수의 재배열과 코시 곱을 다룹니다.',
     en: 'Inside the radius of convergence — Abel and Tauber theorems, rearrangements, Cauchy products.',
   },
+  sections: [
+    { id: 'power-basics', title: { ko: '멱급수의 기본', en: 'Power Series Basics' }, sceneIds: ['power-series', 'hadamard-gap', 'abel-theorem', 'tauber'] },
+    { id: 'constants', title: { ko: '상수로 가는 급수', en: 'Series for Constants' }, sceneIds: ['eseries', 'zeta4'] },
+    { id: 'rearrangement-products', title: { ko: '재배열과 곱', en: 'Rearrangements and Products' }, sceneIds: ['rearrangement', 'absolute', 'riemann-rearrangement', 'cauchy-product'] },
+  ],
   scenes: [
     {
       id: 'power-series',

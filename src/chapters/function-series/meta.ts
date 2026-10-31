@@ -27,6 +27,10 @@ export const functionSeries: ChapterMeta = {
     ko: '함수들의 급수가 언제 균등수렴하는지, 그리고 푸리에급수와 깁스 현상을 다룹니다.',
     en: 'When series of functions converge uniformly — plus Fourier series and the Gibbs phenomenon.',
   },
+  sections: [
+    { id: 'uniform-tests', title: { ko: '균등수렴 판정', en: 'Uniform Convergence Tests' }, sceneIds: ['m-test', 'dini'] },
+    { id: 'fourier', title: { ko: '푸리에 급수와 함수공간', en: 'Fourier Series and Function Spaces' }, sceneIds: ['fourier', 'riemann-lebesgue', 'fejer-theorem', 'parseval', 'gibbs-phenomenon', 'function-spaces'] },
+  ],
   scenes: [
     {
       id: 'm-test',

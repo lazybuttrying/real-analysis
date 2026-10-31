@@ -10,6 +10,7 @@ import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
 import { chapterUrl, errataUrl, exercisesUrl, glossaryUrl, homeUrl, legacyChapterOf, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
+import { sceneGroups } from '../src/sections.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 import { htmlKindFragments, paragraphs, problemCardBlocks, problemKind } from '../src/shell/kind-ui.ts';
 
@@ -412,14 +413,15 @@ export function createPrerender(deps: PrerenderDeps) {
         [
           `<h1>${chapterNumber}. ${escapeHtml(localize(chapter.title, lang))}</h1>`,
           `<p>${renderSummaryHtml(localize(chapter.summary, lang))}</p>`,
-          '<ul>',
-          ...[...chapter.scenes]
-            .sort((a, b) => a.order - b.order)
-            .map(
+          ...sceneGroups(chapter, [...chapter.scenes].sort((a, b) => a.order - b.order)).flatMap((group) => [
+            ...(group.section ? [`<h2 class="hub-section-title">${escapeHtml(localize(group.section.title, lang))}</h2>`] : []),
+            '<ul>',
+            ...group.scenes.map(
               (scene) =>
                 `<li><a href="${sceneUrl(BASE, lang, chapter.id, scene.id)}">${escapeHtml(localize(scene.title, lang))}</a> — ${renderSummaryHtml(localize(scene.summary, lang))}</li>`,
             ),
-          '</ul>',
+            '</ul>',
+          ]),
         ].join('\n'),
     });
 
@@ -715,6 +717,22 @@ export function createPrerender(deps: PrerenderDeps) {
         ] as const) {
           checkTextValue(`glossary term '${entry.id}'`, field, text, lang);
         }
+      }
+    }
+    // Chapter sections: when declared, their sceneIds must partition the
+    // chapter's scenes exactly, in scene order, with non-empty titles.
+    for (const chapter of catalog) {
+      if (!chapter.sections) continue;
+      const orderedIds = [...chapter.scenes].sort((a, b) => a.order - b.order).map((s) => s.id);
+      const grouped = chapter.sections.flatMap((section) => section.sceneIds);
+      if (JSON.stringify(grouped) !== JSON.stringify(orderedIds)) {
+        problems.push(`chapter '${chapter.id}' sections do not partition its scenes in order`);
+      }
+      const seenSectionIds = new Set<string>();
+      for (const section of chapter.sections) {
+        if (seenSectionIds.has(section.id)) problems.push(`chapter '${chapter.id}' has a duplicate section id '${section.id}'`);
+        seenSectionIds.add(section.id);
+        for (const lang of LANGS) checkTextValue(`chapter '${chapter.id}' section '${section.id}'`, 'title', localize(section.title, lang), lang);
       }
     }
     // Errata entries: unique ids, ISO dates, real chapter/scene links when

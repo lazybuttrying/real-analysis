@@ -29,6 +29,10 @@ export const continuity: ChapterMeta = {
     ko: 'ε-δ로 연속성을 정의하고, 균등연속·중간값 정리·최대최소 정리까지 연속함수의 성질을 탐구합니다.',
     en: 'Continuity via ε-δ, uniform continuity, and the great theorems: the intermediate and extreme value theorems.',
   },
+  sections: [
+    { id: 'continuity-basics', title: { ko: '연속의 얼굴들', en: 'The Faces of Continuity' }, sceneIds: ['epsdelta', 'continuity', 'thomae', 'continuity-equivalences', 'monotone-discontinuities'] },
+    { id: 'continuity-theorems', title: { ko: '연속함수의 큰 정리', en: 'The Big Theorems of Continuous Functions' }, sceneIds: ['uniform-continuity', 'ivt', 'evt', 'additive-functions', 'uniform'] },
+  ],
   scenes: [
     {
       id: 'epsdelta',

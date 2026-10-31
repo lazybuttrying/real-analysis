@@ -209,11 +209,26 @@ export interface SceneMeta {
   problems?: readonly ProblemMeta[];
 }
 
+/**
+ * A sub-unit (소단원) of a chapter: a contiguous run of scenes under one
+ * heading, so long chapters read as a few named groups instead of one
+ * flat list. When a chapter declares sections, their sceneIds must
+ * partition the chapter's scenes exactly, in scene order.
+ */
+export interface ChapterSection {
+  /** Lowercase letters, digits, and hyphens. */
+  id: string;
+  title: LocalizedText;
+  sceneIds: readonly string[];
+}
+
 export interface ChapterMeta {
   /** URL path and folder name. Lowercase letters, digits, and hyphens. */
   id: string;
   title: LocalizedText;
   /** Same inline-TeX convention as SceneMeta.summary. */
   summary: LocalizedText;
+  /** Optional sub-units; absent means the chapter renders as one flat list. */
+  sections?: readonly ChapterSection[];
   scenes: readonly SceneMeta[];
 }

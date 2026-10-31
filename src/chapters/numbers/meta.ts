@@ -38,6 +38,14 @@ export const numbers: ChapterMeta = {
     ko: '자연수에서 실수까지 — 수 체계를 공리부터 쌓아 올리고, 셀 수 있는 무한과 셀 수 없는 무한을 구분합니다.',
     en: 'From naturals to reals — building the number systems from axioms, and telling countable infinities from uncountable ones.',
   },
+  sections: [
+    { id: 'number-systems', title: { ko: '수 체계의 출발', en: 'Building the Number Systems' }, sceneIds: ['natural-numbers', 'binomial', 'integers-rationals', 'absolute-value', 'complex-numbers'] },
+    { id: 'irrational-density', title: { ko: '무리수와 조밀성', en: 'Irrationality and Density' }, sceneIds: ['sqrt2-irrational', 'density-of-rationals'] },
+    { id: 'sets-choice', title: { ko: '집합과 선택 공리', en: 'Sets and the Axiom of Choice' }, sceneIds: ['sets', 'axiom-of-choice', 'zorn-lemma'] },
+    { id: 'completeness', title: { ko: '완비성', en: 'Completeness' }, sceneIds: ['supremum', 'archimedean', 'nth-root'] },
+    { id: 'countability', title: { ko: '가산과 비가산', en: 'Countable and Uncountable' }, sceneIds: ['countable', 'cantor-theorem'] },
+    { id: 'algebraic-structures', title: { ko: '대수 구조', en: 'Algebraic Structures' }, sceneIds: ['groups-fields', 'ordered-fields', 'vector-spaces', 'dimension-rank'] },
+  ],
   scenes: [
     {
       id: 'natural-numbers',

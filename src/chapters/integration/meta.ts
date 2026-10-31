@@ -45,6 +45,13 @@ export const integration: ChapterMeta = {
     ko: '리만 적분에서 르베그 적분까지 — 적분의 개념이 어떻게 확장되는지 따라갑니다.',
     en: 'From the Riemann integral to the Lebesgue integral — how the idea of integration expands.',
   },
+  sections: [
+    { id: 'special-improper', title: { ko: '특수함수와 이상적분', en: 'Special Functions and Improper Integrals' }, sceneIds: ['gamma', 'beta-function', 'bohr-mollerup', 'improper', 'gabriel-horn'] },
+    { id: 'riemann', title: { ko: '리만 적분', en: 'The Riemann Integral' }, sceneIds: ['riemann', 'dirichlet-function', 'volterra-function', 'ftc', 'integration-by-parts', 'change-of-variables'] },
+    { id: 'variation-stieltjes', title: { ko: '유계변동과 스틸체스 적분', en: 'Bounded Variation and the Stieltjes Integral' }, sceneIds: ['bounded-variation', 'arc-length', 'riemann-stieltjes', 'jordan-decomposition'] },
+    { id: 'lebesgue-basics', title: { ko: '측도와 르베그 적분', en: 'Measure and the Lebesgue Integral' }, sceneIds: ['measure', 'vitali', 'borel-cantelli', 'lebesgue'] },
+    { id: 'lebesgue-convergence', title: { ko: '르베그 수렴 정리와 응용', en: 'Lebesgue Convergence Theorems and Applications' }, sceneIds: ['lebesgue-convergence', 'fubini-tonelli', 'convolution', 'egorov', 'absolute-continuity', 'differentiation-under-integral', 'minkowski'] },
+  ],
   scenes: [
     {
       id: 'gamma',

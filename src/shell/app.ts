@@ -4,6 +4,7 @@ import { site } from '../site.config';
 import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type ExerciseMeta, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { learningPaths } from '../learning-paths';
 import { chapterUrl, errataUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
+import { sceneGroups } from '../sections';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
@@ -198,20 +199,23 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
   const chapterNumber = catalog.indexOf(chapter) + 1;
   const chapterTitle = `${chapterNumber}. ${localize(chapter.title, lang)}`;
 
-  const nav = h(
-    'nav',
-    { 'aria-label': `${chapterTitle} ${tr(lang, 'tocLabel')}` },
+  const navItems: HTMLElement[] = [];
+  for (const group of sceneGroups(chapter, scenes)) {
+    if (group.section) {
+      navItems.push(h('li', { class: 'nav-section' }, localize(group.section.title, lang)));
+    }
+    for (const scene of group.scenes) {
+      navItems.push(h('li', {}, sceneLink(lang, chapter, scene)));
+    }
+  }
+  navItems.push(
     h(
-      'ul',
+      'li',
       {},
-      ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene))),
-      h(
-        'li',
-        {},
-        h('a', { href: exercisesUrl(BASE, lang, chapter.id), 'data-spa': '', 'data-scene': 'exercises' }, tr(lang, 'exercises')),
-      ),
+      h('a', { href: exercisesUrl(BASE, lang, chapter.id), 'data-spa': '', 'data-scene': 'exercises' }, tr(lang, 'exercises')),
     ),
   );
+  const nav = h('nav', { 'aria-label': `${chapterTitle} ${tr(lang, 'tocLabel')}` }, h('ul', {}, ...navItems));
   const hub = h('section', { class: 'hub' });
   const exercisesView = h('section', { class: 'exercises-view' });
   const hostEl = h('div', { class: 'scene-host' });
@@ -298,7 +302,10 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
         ' — ',
         tr(lang, 'exercisesIntro'),
       ),
-      h('ul', {}, ...scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene), ' — ', summarySpan(localize(scene.summary, lang))))),
+      ...sceneGroups(chapter, scenes).flatMap((group) => [
+        ...(group.section ? [h('h2', { class: 'hub-section-title' }, localize(group.section.title, lang))] : []),
+        h('ul', {}, ...group.scenes.map((scene) => h('li', {}, sceneLink(lang, chapter, scene), ' — ', summarySpan(localize(scene.summary, lang))))),
+      ]),
     );
     markActive(undefined);
   };
