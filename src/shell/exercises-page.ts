@@ -10,6 +10,7 @@ import {
   type Lang,
 } from '../contracts.ts';
 import { chapterUrl, sceneUrl } from '../paths.ts';
+import { groupExercisesBySection } from '../sections.ts';
 import { site } from '../site.config.ts';
 import { h } from './dom.ts';
 import { tr } from './i18n.ts';
@@ -54,8 +55,9 @@ const difficultyKey = (difficulty: ExerciseDifficulty): 'difficultyEasy' | 'diff
  * writes an equivalent static page (same cards) so the content is readable
  * with zero JS; the SPA replaces it on boot.
  *
- * Cards are numbered 1..N in file order (easy first, so numbering aligns with
- * the difficulty groups). Mini visualizations reuse the chapter's own scene
+ * Cards are numbered 1..N in file order (easy first), whichever grouping
+ * the page uses: by chapter section when the chapter declares sections,
+ * else by difficulty. Mini visualizations reuse the chapter's own scene
  * modules with fixed presets, exactly like the scene problems in app.ts.
  */
 export function renderExercisesPage(
@@ -82,69 +84,82 @@ export function renderExercisesPage(
   const disposers: Array<() => void> = [];
   const fragments = domKindFragments((target) => richTargets.push(target));
 
-  const groups = ([1, 2, 3] as const)
-    .map((difficulty) => {
-      const cards = exercises
-        .map((exercise, index) => ({ exercise, index }))
-        .filter(({ exercise }) => exercise.difficulty === difficulty)
-        .map(({ exercise, index }) => {
-          const kind = problemKind(exercise);
-          const card = h('article', { class: 'exercise problem', id: `exercise-${exercise.id}` });
-          if (kind !== 'proof') card.classList.add(`kind-${kind}`);
-          const badgeChildren: HTMLElement[] = [
-            h('span', { class: 'exercise-number' }, String(index + 1)),
-            h('span', { class: `difficulty-badge difficulty-${difficulty}` }, tr(lang, difficultyKey(difficulty))),
-          ];
-          const kindBadge = kindBadgeEl(kind, lang);
-          if (kindBadge) badgeChildren.push(kindBadge);
-          card.append(h('div', { class: 'exercise-badges' }, ...badgeChildren));
+  const buildCard = (exercise: ExerciseMeta, index: number): HTMLElement => {
+    const kind = problemKind(exercise);
+    const card = h('article', { class: 'exercise problem', id: `exercise-${exercise.id}` });
+    if (kind !== 'proof') card.classList.add(`kind-${kind}`);
+    const badgeChildren: HTMLElement[] = [
+      h('span', { class: 'exercise-number' }, String(index + 1)),
+      h('span', { class: `difficulty-badge difficulty-${exercise.difficulty}` }, tr(lang, difficultyKey(exercise.difficulty))),
+    ];
+    const kindBadge = kindBadgeEl(kind, lang);
+    if (kindBadge) badgeChildren.push(kindBadge);
+    card.append(h('div', { class: 'exercise-badges' }, ...badgeChildren));
 
-          const middle: HTMLElement[] = [];
-          if (exercise.topics.length > 0) {
-            middle.push(
+    const middle: HTMLElement[] = [];
+    if (exercise.topics.length > 0) {
+      middle.push(
+        h(
+          'ul',
+          { class: 'exercise-topics' },
+          ...exercise.topics.map((topicId) =>
+            h(
+              'li',
+              {},
               h(
-                'ul',
-                { class: 'exercise-topics' },
-                ...exercise.topics.map((topicId) =>
-                  h(
-                    'li',
-                    {},
-                    h(
-                      'a',
-                      { href: sceneUrl(BASE, lang, chapter.id, topicId), 'data-spa': '' },
-                      sceneTitleOf.get(topicId) ?? topicId,
-                    ),
-                  ),
-                ),
+                'a',
+                { href: sceneUrl(BASE, lang, chapter.id, topicId), 'data-spa': '' },
+                sceneTitleOf.get(topicId) ?? topicId,
               ),
-            );
-          }
+            ),
+          ),
+        ),
+      );
+    }
 
-          if (exercise.viz) {
-            const vizHost = h('div', { class: 'exercise-viz-host' });
-            const caption = h('figcaption', {}, stripInlineMath(localize(exercise.viz.presetCaption, lang)));
-            middle.push(h('figure', { class: 'exercise-viz' }, vizHost, caption));
-            richTargets.push({ el: caption, text: localize(exercise.viz.presetCaption, lang) });
-            vizJobs.push({ host: vizHost, sceneId: exercise.viz.sceneId, preset: exercise.viz.preset });
-          }
+    if (exercise.viz) {
+      const vizHost = h('div', { class: 'exercise-viz-host' });
+      const caption = h('figcaption', {}, stripInlineMath(localize(exercise.viz.presetCaption, lang)));
+      middle.push(h('figure', { class: 'exercise-viz' }, vizHost, caption));
+      richTargets.push({ el: caption, text: localize(exercise.viz.presetCaption, lang) });
+      vizJobs.push({ host: vizHost, sceneId: exercise.viz.sceneId, preset: exercise.viz.preset });
+    }
 
-          card.append(
-            ...problemCardBlocks(exercise, exercise.solution, lang, {
-              includeBadge: false,
-              statementClass: 'exercise-statement',
-              summaryLabel: tr(lang, 'showSolution'),
-              middle,
-              fragments,
-            }),
-          );
-          return card;
-        });
-      if (cards.length === 0) return null;
-      const section = h('section', { class: 'exercise-group' });
-      section.append(h('h2', {}, tr(lang, difficultyKey(difficulty))), ...cards);
-      return section;
-    })
-    .filter((section): section is HTMLElement => section !== null);
+    card.append(
+      ...problemCardBlocks(exercise, exercise.solution, lang, {
+        includeBadge: false,
+        statementClass: 'exercise-statement',
+        summaryLabel: tr(lang, 'showSolution'),
+        middle,
+        fragments,
+      }),
+    );
+    return card;
+  };
+
+  const indexOf = new Map(exercises.map((exercise, index) => [exercise, index] as const));
+  const groupSection = (heading: string | undefined, items: readonly ExerciseMeta[]): HTMLElement | null => {
+    if (items.length === 0) return null;
+    const section = h('section', { class: 'exercise-group' });
+    if (heading !== undefined) section.append(h('h2', {}, heading));
+    section.append(...items.map((exercise) => buildCard(exercise, indexOf.get(exercise) ?? 0)));
+    return section;
+  };
+
+  // Chapters with sub-units group their exercises by section (an exercise
+  // belongs to the section of its first topic scene); the rest group by
+  // difficulty, as before. Card numbering is file order either way.
+  const sectionGroups = groupExercisesBySection(chapter, exercises);
+  const groups = (
+    sectionGroups
+      ? sectionGroups.map((group) => groupSection(group.section ? localize(group.section.title, lang) : undefined, group.exercises))
+      : ([1, 2, 3] as const).map((difficulty) =>
+          groupSection(
+            tr(lang, difficultyKey(difficulty)),
+            exercises.filter((exercise) => exercise.difficulty === difficulty),
+          ),
+        )
+  ).filter((section): section is HTMLElement => section !== null);
 
   const main = h('main', { class: 'home exercises' });
   main.append(

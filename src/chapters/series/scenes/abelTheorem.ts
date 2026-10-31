@@ -16,15 +16,37 @@ import { abelTheoremModel, type AbelData } from '../models/abelTheorem';
  * ln 2 -- where Abel's theorem agrees with the ordinary convergent sum.
  */
 
-const MAIN_MARGIN = { top: 84, right: 20, bottom: 40, left: 60 };
+const MAIN_MARGIN = { top: 16, right: 20, bottom: 40, left: 60 };
 const SIDE_MARGIN = { top: 40, right: 20, bottom: 30, left: 60 };
 const GOLD = '#d9930d';
 
+/**
+ * The title and guide lines live in above-chart HTML slots, not in the SVG:
+ * the formula needs real TeX rendering, which SVG text cannot do (the old
+ * SVG header printed the pseudo-TeX string raw).
+ */
 function seriesTitle(series: AbelData['series'], lang: Lang): string {
   return localize(
     {
-      ko: series === 'grandi' ? 'S_N(x) = Σ_{n=0}^{N} (−1)ⁿxⁿ  →  1/(1+x)' : 'S_N(x) = Σ_{n=0}^{N} (−1)ⁿxⁿ⁺¹/(n+1)  →  ln(1+x)',
-      en: series === 'grandi' ? 'S_N(x) = Σ_{n=0}^{N} (−1)ⁿxⁿ  →  1/(1+x)' : 'S_N(x) = Σ_{n=0}^{N} (−1)ⁿxⁿ⁺¹/(n+1)  →  ln(1+x)',
+      ko:
+        series === 'grandi'
+          ? String.raw`\(S_N(x) = \sum_{n=0}^{N} (-1)^n x^n \to \frac{1}{1+x}\)`
+          : String.raw`\(S_N(x) = \sum_{n=0}^{N} (-1)^n \frac{x^{n+1}}{n+1} \to \ln(1+x)\)`,
+      en:
+        series === 'grandi'
+          ? String.raw`\(S_N(x) = \sum_{n=0}^{N} (-1)^n x^n \to \frac{1}{1+x}\)`
+          : String.raw`\(S_N(x) = \sum_{n=0}^{N} (-1)^n \frac{x^{n+1}}{n+1} \to \ln(1+x)\)`,
+    },
+    lang,
+  );
+}
+
+function guideText(data: AbelData, lang: Lang): string {
+  const sum = data.series === 'grandi' ? String.raw`\(1/2\)` : String.raw`\(\ln 2 \approx 0.6931\)`;
+  return localize(
+    {
+      ko: String.raw`x 슬라이더를 1 쪽으로 — 닫힌식 곡선이 Abel 합 ${sum}에 다가갑니다 (열린 원: \(x = 1\)에서의 한계점)`,
+      en: String.raw`drag x toward 1 — the closed-form curve homes in on the Abel sum ${sum} (open circle: the limiting point at \(x = 1\))`,
     },
     lang,
   );
@@ -75,19 +97,6 @@ function drawMain(chart: Chart, data: AbelData, lang: Lang): void {
 
   g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(xScale).ticks(6));
   g.append('g').call(axisLeft(y).ticks(6));
-
-  const header1 = g.append('text').attr('x', 0).attr('y', -64).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-  const header2 = g.append('text').attr('x', 0).attr('y', -42).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
-  header1.text(seriesTitle(data.series, lang));
-  header2.text(
-    localize(
-      {
-        ko: `x 슬라이더를 1 쪽으로 — 닫힌식 곡선이 Abel 합 ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'}에 다가갑니다 (열린 원: x = 1에서의 한계점)`,
-        en: `drag x toward 1 — the closed-form curve homes in on the Abel sum ${data.series === 'grandi' ? '1/2' : 'ln 2 ≈ 0.6931'} (open circle: the limiting point at x = 1)`,
-      },
-      lang,
-    ),
-  );
 
   const curve = (values: number[]) =>
     line<number>()
@@ -253,6 +262,10 @@ export default defineSimpleScene<AbelData>({
   secondWrapCss: 'flex: none; height: 210px; position: relative;',
   drawMain,
   drawSecond,
+  slotsAbove: [
+    { text: (data, lang) => seriesTitle(data.series, lang), cssText: 'padding: 8px 12px 0; font-size: 15px; font-weight: 600; flex: none;' },
+    { text: guideText, cssText: 'padding: 2px 12px 0; font-size: 12px; opacity: 0.75; flex: none;' },
+  ],
   slots: [
     { text: factsText, bold: true },
     { text: verdictText, bold: true },

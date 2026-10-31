@@ -56,6 +56,17 @@ export function loadSearchVectors(base: string, lang: Lang): Promise<Float32Arra
   return pending;
 }
 
+/**
+ * Warms the vectors and the model ahead of the first keystroke (called
+ * when the search box gains focus): the first real search then pays
+ * only the inference, not the 113 MB download. Failures are swallowed;
+ * the search itself retries through the normal path.
+ */
+export function warmSemantic(base: string, lang: Lang): void {
+  void loadSearchVectors(base, lang);
+  loadExtractor().catch(() => undefined);
+}
+
 /** Embeds one query with the e5 'query: ' prefix; null on failure. */
 export async function embedQuery(query: string): Promise<Float32Array | null> {
   try {

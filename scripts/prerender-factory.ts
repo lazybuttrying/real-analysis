@@ -10,7 +10,7 @@ import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
 import { chapterUrl, errataUrl, exercisesUrl, glossaryUrl, homeUrl, legacyChapterOf, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
-import { sceneGroups } from '../src/sections.ts';
+import { groupExercisesBySection, sceneGroups } from '../src/sections.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 import { htmlKindFragments, paragraphs, problemCardBlocks, problemKind } from '../src/shell/kind-ui.ts';
 
@@ -174,41 +174,53 @@ export function createPrerender(deps: PrerenderDeps) {
   const renderExercisesHtml = (chapter: ChapterMeta, lang: Lang): string => {
     const exercises = exercisesByChapter.get(chapter.id) ?? [];
     const sceneTitleOf = new Map(chapter.scenes.map((scene) => [scene.id, localize(scene.title, lang)]));
-    const groups = ([1, 2, 3] as const)
-      .map((difficulty) => {
-        const cards = exercises
-          .map((exercise, index) => ({ exercise, index }))
-          .filter(({ exercise }) => exercise.difficulty === difficulty)
-          .map(({ exercise, index }) => {
-            const topics = exercise.topics
-              .map(
-                (topicId) =>
-                  `<li><a href="${sceneUrl(BASE, lang, chapter.id, topicId)}">${escapeHtml(sceneTitleOf.get(topicId) ?? topicId)}</a></li>`,
-              )
-              .join('\n');
-            const viz = exercise.viz
-              ? `<figure class="exercise-viz"><figcaption>${renderSummaryHtml(localize(exercise.viz.presetCaption, lang))}</figcaption></figure>`
-              : '';
-            const kind = problemKind(exercise);
-            const lines = [
-              `<article class="exercise problem${kind !== 'proof' ? ` kind-${kind}` : ''}" id="exercise-${exercise.id}">`,
-              `  <div class="exercise-badges"><span class="exercise-number">${index + 1}</span><span class="difficulty-badge difficulty-${difficulty}">${difficultyHeading(difficulty, lang)}</span>${kindBadgeHtml(kind, lang)}</div>`,
-            ];
-            const blocks = problemCardBlocks(exercise, exercise.solution, lang, {
-              includeBadge: false,
-              statementClass: 'exercise-statement',
-              summaryLabel: localize(STRINGS.showSolution, lang),
-              middle: ['<ul class="exercise-topics">', topics, '</ul>', viz],
-              fragments: kindFragments,
-            });
-            for (const block of blocks) lines.push(`  ${block}`);
-            lines.push('  </article>');
-            return lines.join('\n');
-          })
+    const indexOf = new Map(exercises.map((exercise, index) => [exercise, index] as const));
+    const cardHtml = (exercise: ExerciseMeta): string => {
+      const index = indexOf.get(exercise) ?? 0;
+      const difficulty = exercise.difficulty;
+      const topics = exercise.topics
+        .map(
+          (topicId) =>
+            `<li><a href="${sceneUrl(BASE, lang, chapter.id, topicId)}">${escapeHtml(sceneTitleOf.get(topicId) ?? topicId)}</a></li>`,
+        )
+        .join('\n');
+      const viz = exercise.viz
+        ? `<figure class="exercise-viz"><figcaption>${renderSummaryHtml(localize(exercise.viz.presetCaption, lang))}</figcaption></figure>`
+        : '';
+      const kind = problemKind(exercise);
+      const lines = [
+        `<article class="exercise problem${kind !== 'proof' ? ` kind-${kind}` : ''}" id="exercise-${exercise.id}">`,
+        `  <div class="exercise-badges"><span class="exercise-number">${index + 1}</span><span class="difficulty-badge difficulty-${difficulty}">${difficultyHeading(difficulty, lang)}</span>${kindBadgeHtml(kind, lang)}</div>`,
+      ];
+      const blocks = problemCardBlocks(exercise, exercise.solution, lang, {
+        includeBadge: false,
+        statementClass: 'exercise-statement',
+        summaryLabel: localize(STRINGS.showSolution, lang),
+        middle: ['<ul class="exercise-topics">', topics, '</ul>', viz],
+        fragments: kindFragments,
+      });
+      for (const block of blocks) lines.push(`  ${block}`);
+      lines.push('  </article>');
+      return lines.join('\n');
+    };
+    const groupHtml = (heading: string | undefined, items: readonly ExerciseMeta[]): string => {
+      if (items.length === 0) return '';
+      const cards = items.map(cardHtml).join('\n');
+      const headingHtml = heading !== undefined ? `<h2>${escapeHtml(heading)}</h2>\n` : '';
+      return `<section class="exercise-group">${headingHtml}${cards}\n</section>`;
+    };
+    // Same grouping as the SPA: by chapter section when declared, else by difficulty.
+    const sectionGroups = groupExercisesBySection(chapter, exercises);
+    const groups = sectionGroups
+      ? sectionGroups.map((group) => groupHtml(group.section ? localize(group.section.title, lang) : undefined, group.exercises)).join('\n')
+      : ([1, 2, 3] as const)
+          .map((difficulty) =>
+            groupHtml(
+              difficultyHeading(difficulty, lang),
+              exercises.filter((exercise) => exercise.difficulty === difficulty),
+            ),
+          )
           .join('\n');
-        return cards ? `<section class="exercise-group"><h2>${difficultyHeading(difficulty, lang)}</h2>\n${cards}\n</section>` : '';
-      })
-      .join('\n');
     return groups;
   };
 

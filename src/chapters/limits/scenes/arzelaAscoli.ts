@@ -213,8 +213,8 @@ function createArzelaAscoliScene(): Scene<ArzelaData> {
       lang,
       localize(
         {
-          ko: `등연속 수열 f_{a_k} → f*: 균등 유계(≤ 3/4) + ${LIP_UNIFORM}-Lipschitz`,
-          en: `Equicontinuous sequence f_{a_k} → f*: uniformly bounded (≤ 3/4) + ${LIP_UNIFORM}-Lipschitz`,
+          ko: `등연속 수열 fₐₖ → f*: 균등 유계(≤ 3/4) + ${LIP_UNIFORM}-Lipschitz`,
+          en: `Equicontinuous sequence fₐₖ → f*: uniformly bounded (≤ 3/4) + ${LIP_UNIFORM}-Lipschitz`,
         },
         lang,
       ),

@@ -217,7 +217,55 @@ main.home {
   gap: 6px;
   align-items: center;
   padding: 8px;
-  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.home-search-hero {
+  padding: 1.6rem 0 0.4rem;
+}
+
+.home-search-hero .site-search {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.home-search-hero .site-search input[type='search'] {
+  width: 100%;
+  font-size: 1.05rem;
+  padding: 13px 20px;
+  border-radius: 999px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+}
+
+.home-search-hero .search-results {
+  left: 0;
+  right: 0;
+  min-width: 0;
+  max-width: none;
+  border-radius: 16px;
+}
+
+.search-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.search-example {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+}
+
+.search-example:hover {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 .search-clarify-label {

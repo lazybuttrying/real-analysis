@@ -1,6 +1,6 @@
 import './style.css';
 import { catalog } from './catalog';
-import { localize, stripInlineMath } from './contracts';
+import { localize, stripInlineMath, type Lang } from './contracts';
 import { chapterUrl, errataUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathsUrl } from './paths';
 import { h } from './shell/dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './shell/i18n';
@@ -19,6 +19,12 @@ function summarySpan(text: string): HTMLSpanElement {
   }
   return span;
 }
+
+/** Example questions under the home hero search: phrased as questions, since the semantic search answers those best. */
+const SEARCH_EXAMPLES: Record<Lang, string[]> = {
+  ko: ['급수가 수렴하는지 판정하는 방법', '가장 작은 상계', '울타리처럼 가두는 수열'],
+  en: ['how to test whether a series converges', 'the smallest upper bound', 'a sequence fenced in on both sides'],
+};
 
 const BASE = import.meta.env.BASE_URL;
 const root = document.getElementById('app');
@@ -51,6 +57,19 @@ if (parsed.lang === undefined) {
     });
   } else {
     const headerSearch = h('span', { class: 'header-search' });
+    // Google-style hero search for the home page: a long, centered box
+    // with three example questions as bubbles under it. The header keeps
+    // its own compact search; both mount the same search behavior.
+    const heroSearch = h('div', { class: 'hero-search-mount' });
+    const exampleButtons = SEARCH_EXAMPLES[lang].map((question) =>
+      h('button', { type: 'button', class: 'search-example' }, question),
+    );
+    const heroSection = h(
+      'section',
+      { class: 'home-search-hero' },
+      heroSearch,
+      h('div', { class: 'search-examples' }, ...exampleButtons),
+    );
     const mapMount = h('div', { class: 'map-mount' });
     const mapSection = h(
       'section',
@@ -75,6 +94,7 @@ if (parsed.lang === undefined) {
         { class: 'home' },
         h('h1', {}, 'Real Analysis'),
         h('p', {}, tr(lang, 'homeIntro')),
+        heroSection,
         h(
           'ul',
           {},
@@ -94,6 +114,16 @@ if (parsed.lang === undefined) {
       ),
     );
     mountSearch(headerSearch, lang);
+    mountSearch(heroSearch, lang);
+    const heroInput = heroSearch.querySelector('input');
+    for (const button of exampleButtons) {
+      button.addEventListener('click', () => {
+        if (!heroInput) return;
+        heroInput.value = button.textContent ?? '';
+        heroInput.focus();
+        heroInput.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+    }
     // The concept map graph (and d3) stays out of the home entry chunk: it
     // loads only when the section scrolls into view.
     const bootMap = (): void => {

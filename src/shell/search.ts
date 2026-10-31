@@ -5,7 +5,7 @@ import type { SearchIndexData } from '../search-index.ts';
 import { rankSemantic } from '../search-vectors.ts';
 import { h } from './dom.ts';
 import { langSwitcher, tr } from './i18n.ts';
-import { embedQuery, loadSearchVectors } from './semantic.ts';
+import { embedQuery, loadSearchVectors, warmSemantic } from './semantic.ts';
 
 const BASE = import.meta.env.BASE_URL;
 const MAX_RESULTS = 8;
@@ -261,6 +261,17 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
     if (hits.length === 0) {
       list.append(h('li', { class: 'search-empty', role: 'option', 'aria-selected': 'false' }, tr(lang, 'searchNoResults')));
     } else {
+      // Clarification candidates sit at the TOP: when the match is
+      // ambiguous, narrowing the topic matters more than the first hit.
+      if (clarify && clarify.length > 0 && onClarify) {
+        const header = h('li', { class: 'search-clarify' }, h('span', { class: 'search-clarify-label' }, tr(lang, 'searchClarifyLabel')));
+        for (const option of clarify) {
+          const chip = h('button', { type: 'button', class: 'search-chip' }, option.label);
+          chip.addEventListener('click', () => onClarify(option));
+          header.append(chip);
+        }
+        list.append(header);
+      }
       for (const hit of hits) {
         const kindLabel = tr(
           lang,
@@ -283,16 +294,20 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
         );
         list.append(item);
       }
-      if (clarify && clarify.length > 0 && onClarify) {
-        const footer = h('li', { class: 'search-clarify' }, h('span', { class: 'search-clarify-label' }, tr(lang, 'searchClarifyLabel')));
-        for (const option of clarify) {
-          const chip = h('button', { type: 'button', class: 'search-chip' }, option.label);
-          chip.addEventListener('click', () => onClarify(option));
-          footer.append(chip);
-        }
-        list.append(footer);
-      }
     }
+    list.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  };
+
+  /**
+   * Shown while the semantic pass is still loading (the first search
+   * pays the model download): without it, an empty keyword result reads
+   * as a final "no results" for the whole wait.
+   */
+  const renderSemanticPending = (): void => {
+    list.replaceChildren();
+    activeIndex = -1;
+    list.append(h('li', { class: 'search-empty', role: 'option', 'aria-selected': 'false' }, tr(lang, 'searchSemanticPending')));
     list.hidden = false;
     input.setAttribute('aria-expanded', 'true');
   };
@@ -311,6 +326,10 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
     }
   };
 
+  // First focus warms the semantic engine (vectors and model), so the
+  // first real search pays only the inference, not the download.
+  input.addEventListener('focus', () => warmSemantic(BASE, lang), { once: true });
+
   let pending = 0;
   input.addEventListener('input', () => {
     const query = input.value;
@@ -327,15 +346,28 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
       // Runs after the keyword render; on first use it also pays the
       // model download, so early keystrokes usually stay keyword-only.
       if (query.trim().length < 2) return;
+      if (keywordHits.length === 0) renderSemanticPending();
       void (async () => {
         // Vectors first: if they are missing (a site without semantic
         // data), never pay the model download at all.
         const vectors = await loadSearchVectors(BASE, lang);
-        if (ticket !== pending || !vectors) return;
+        if (ticket !== pending) return;
+        if (!vectors) {
+          renderHits(keywordHits);
+          return;
+        }
         const queryVector = await embedQuery(query.trim());
-        if (ticket !== pending || !queryVector) return;
+        if (ticket !== pending) return;
+        if (!queryVector) {
+          renderHits(keywordHits);
+          return;
+        }
         const semanticHits = semanticSearchIndex(loaded, vectors, queryVector, BASE, lang);
-        if (semanticHits.length === 0) return;
+        if (semanticHits.length === 0) {
+          // Settle the pending state back to the honest keyword outcome.
+          renderHits(keywordHits);
+          return;
+        }
         const merged = mergeSearchHits(keywordHits, semanticHits);
         // Ambiguous between topics, and no exact keyword match to
         // settle it: offer the candidate topics as one-tap refinements.
