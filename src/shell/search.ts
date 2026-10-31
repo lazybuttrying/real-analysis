@@ -3,7 +3,7 @@ import { site } from '../site.config.ts';
 import type { Lang } from '../contracts.ts';
 import type { SearchIndexData } from '../search-index.ts';
 import { rankSemantic } from '../search-vectors.ts';
-import { SEARCH_EXAMPLES } from '../search-examples.ts';
+import { SEARCH_EXAMPLES, SEARCH_MATH_TERMS } from '../search-examples.ts';
 import { h } from './dom.ts';
 import { langSwitcher, tr } from './i18n.ts';
 import { embedQuery, loadSearchVectors, warmSemantic } from './semantic.ts';
@@ -329,9 +329,27 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
    * example questions that do find something, instead of dressing up
    * near-random low-score hits as answers.
    */
-  const renderOffTopic = (): void => {
+  const renderOffTopic = (currentQuery: string): void => {
     list.replaceChildren();
     activeIndex = -1;
+    const rerun = (nextQuery: string): void => {
+      input.value = nextQuery;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+    };
+    const termRow = h(
+      'div',
+      { class: 'search-offtopic' },
+      h('span', { class: 'search-clarify-label' }, tr(lang, 'searchMathTermLabel')),
+    );
+    for (const term of SEARCH_MATH_TERMS[lang]) {
+      const chip = h('button', { type: 'button', class: 'search-example' }, term);
+      // Keep the input focused so the dropdown stays open for the new query.
+      chip.addEventListener('mousedown', (event) => event.preventDefault());
+      chip.addEventListener('click', () => rerun(`${currentQuery.trim()} ${term}`));
+      termRow.append(chip);
+    }
+    list.append(termRow);
     const chips = h(
       'div',
       { class: 'search-offtopic' },
@@ -339,13 +357,8 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
     );
     for (const question of SEARCH_EXAMPLES[lang]) {
       const chip = h('button', { type: 'button', class: 'search-example' }, question);
-      // Keep the input focused so the dropdown stays open for the new query.
       chip.addEventListener('mousedown', (event) => event.preventDefault());
-      chip.addEventListener('click', () => {
-        input.value = question;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.focus();
-      });
+      chip.addEventListener('click', () => rerun(question));
       chips.append(chip);
     }
     list.append(chips);
@@ -407,12 +420,12 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
         if (semanticHits.length === 0) {
           // Nothing by meaning either: with no keyword hits the query is
           // off-topic; with keyword hits, settle back to those.
-          if (keywordHits.length === 0) renderOffTopic();
+          if (keywordHits.length === 0) renderOffTopic(query);
           else renderHits(keywordHits);
           return;
         }
         if (keywordHits.length === 0 && (semanticHits[0]?.score ?? 0) < OFFTOPIC_MAX_SCORE) {
-          renderOffTopic();
+          renderOffTopic(query);
           return;
         }
         const merged = mergeSearchHits(keywordHits, semanticHits);

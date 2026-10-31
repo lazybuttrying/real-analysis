@@ -62,6 +62,10 @@ export const STRINGS = {
   searchLabel: { ko: '사이트 검색', en: 'Search the site' },
   searchNoResults: { ko: '검색 결과가 없습니다', en: 'No results' },
   searchSemanticPending: { ko: '의미로 관련 주제를 찾는 중…', en: 'Finding related topics by meaning…' },
+  searchMathTermLabel: {
+    ko: '수학 용어를 붙여서 다시 찾아볼까요?',
+    en: 'Add a math term and search again?',
+  },
   searchOffTopic: {
     ko: '해석학과는 무관한 질문 같아요. 이런 질문은 찾아드릴 수 있어요',
     en: 'That looks unrelated to real analysis. Questions like these work',
