@@ -3,7 +3,7 @@ import { catalog } from '../catalog';
 import { site } from '../site.config';
 import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type ExerciseMeta, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
 import { learningPaths } from '../learning-paths';
-import { chapterUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
+import { chapterUrl, errataUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
 import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
@@ -230,6 +230,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
       h('a', { href: chapterUrl(BASE, lang, chapter.id), 'data-spa': '' }, chapterTitle),
       h('a', { href: pathsUrl(BASE, lang), class: 'paths-link' }, tr(lang, 'paths')),
       h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
+      h('a', { href: errataUrl(BASE, lang), class: 'errata-link' }, tr(lang, 'errata')),
       headerSearch,
       langSwitcher(lang, (target) => `${withLang(BASE, parsePath(BASE, location.pathname), target)}${location.search}`),
     ),

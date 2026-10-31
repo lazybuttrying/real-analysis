@@ -27,6 +27,9 @@ export const glossaryUrl = (base: string, lang: Lang): string => `${base}${lang}
 /** The learning paths index: /<lang>/paths/ */
 export const pathsUrl = (base: string, lang: Lang): string => `${base}${lang}/paths/`;
 
+/** The errata page: /<lang>/errata/ */
+export const errataUrl = (base: string, lang: Lang): string => `${base}${lang}/errata/`;
+
 /** One chapter's exercises page: /<lang>/<chapter id>/exercises/ */
 export const exercisesUrl = (base: string, lang: Lang, chapterId: string): string =>
   `${base}${lang}/${chapterId}/exercises/`;
@@ -161,6 +164,7 @@ export function legacyChapterOf(sceneId: string, chapterId: string): string {
 export function withLang(base: string, parsed: ParsedPath, lang: Lang): string {
   if (parsed.chapterId === undefined) return homeUrl(base, lang);
   if (parsed.chapterId === 'glossary') return glossaryUrl(base, lang);
+  if (parsed.chapterId === 'errata') return errataUrl(base, lang);
   if (parsed.chapterId === 'paths') return parsed.sceneId ? pathDetailUrl(base, lang, parsed.sceneId) : pathsUrl(base, lang);
   if (parsed.sceneId === undefined) return chapterUrl(base, lang, parsed.chapterId);
   return sceneUrl(base, lang, parsed.chapterId, parsed.sceneId);

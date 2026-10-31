@@ -1,7 +1,7 @@
 import './style.css';
 import { catalog } from './catalog';
 import { localize, stripInlineMath } from './contracts';
-import { chapterUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathsUrl } from './paths';
+import { chapterUrl, errataUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathsUrl } from './paths';
 import { h } from './shell/dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './shell/i18n';
 import { mountSearch } from './shell/search';
@@ -34,22 +34,21 @@ if (parsed.lang === undefined) {
   rememberLang(lang);
   document.documentElement.lang = lang;
 
-  if (parsed.chapterId === 'glossary') {
-    // The glossary page lives on the home entry; its renderer (and the
-    // glossary data) loads as a separate chunk only for this route.
-    import('./shell/glossary-page')
-      .then((module) => module.renderGlossaryPage(root, lang))
-      .catch((error: unknown) => console.error(error));
+  // The standalone pages (errata, glossary, paths) live on the home entry;
+  // each renderer (and its data) loads as a separate chunk only for its route.
+  const lazyPage = <T,>(load: () => Promise<T>, run: (module: T) => void): void => {
+    load().then(run).catch((error: unknown) => console.error(error));
+  };
+  if (parsed.chapterId === 'errata') {
+    lazyPage(() => import('./shell/errata-page'), (module) => module.renderErrataPage(root, lang));
+  } else if (parsed.chapterId === 'glossary') {
+    lazyPage(() => import('./shell/glossary-page'), (module) => module.renderGlossaryPage(root, lang));
   } else if (parsed.chapterId === 'paths') {
-    // Same treatment as the glossary: the paths pages live on the home
-    // entry, and their renderer (plus the paths data) loads as a separate
-    // chunk only for these routes. parsed.sceneId is the path id, if any.
-    import('./shell/paths-page')
-      .then((module) => {
-        if (parsed.sceneId) module.renderPathDetailPage(root, lang, parsed.sceneId);
-        else module.renderPathsIndexPage(root, lang);
-      })
-      .catch((error: unknown) => console.error(error));
+    // parsed.sceneId is the path id, if any.
+    lazyPage(() => import('./shell/paths-page'), (module) => {
+      if (parsed.sceneId) module.renderPathDetailPage(root, lang, parsed.sceneId);
+      else module.renderPathsIndexPage(root, lang);
+    });
   } else {
     const headerSearch = h('span', { class: 'header-search' });
     const mapMount = h('div', { class: 'map-mount' });
@@ -67,6 +66,7 @@ if (parsed.lang === undefined) {
         h('a', { href: homeUrl(BASE, lang), class: 'site-title' }, 'Real Analysis'),
         h('a', { href: pathsUrl(BASE, lang), class: 'paths-link' }, tr(lang, 'paths')),
         h('a', { href: glossaryUrl(BASE, lang), class: 'glossary-link' }, tr(lang, 'glossary')),
+        h('a', { href: errataUrl(BASE, lang), class: 'errata-link' }, tr(lang, 'errata')),
         headerSearch,
         langSwitcher(lang, (target) => homeUrl(BASE, target)),
       ),

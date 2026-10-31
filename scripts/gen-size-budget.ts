@@ -269,16 +269,16 @@ for (const chapter of catalog) {
   });
 }
 
-// 5. Home page lazy chunks (glossary, learning paths, concept map, path detail).
+// 5. Home page lazy chunks (glossary, errata, learning paths, concept map, path detail).
 {
-  const prefixes = ['glossary-page', 'learning-paths', 'map-page', 'paths-page'];
+  const prefixes = ['glossary-page', 'errata-page', 'learning-paths', 'map-page', 'paths-page'];
   const files = prefixes.flatMap(resolveShared);
   if (files.length === 0) {
     console.warn('gen-size-budget: warning: home lazy chunks matched no chunks at all — skipped');
   } else {
     const kb = brotliBytes(files) / 1024;
     budgets.push({
-      name: 'home lazy chunks (glossary, paths, map)',
+      name: 'home lazy chunks (glossary, errata, paths, map)',
       path: prefixes.map((prefix) => `dist/assets/${prefix}-*.js`),
       limit: niceLimit(kb * HEADROOM),
     });

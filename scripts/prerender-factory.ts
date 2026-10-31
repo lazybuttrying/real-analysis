@@ -5,9 +5,10 @@ import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
 import { buildConceptMap } from '../src/concept-map.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type ExerciseDifficulty, type ExerciseMeta, type Lang, type LocalizedText, type ProblemKind, type SceneMeta } from '../src/contracts.ts';
+import { ERRATA_AS_OF, ERRATA_REPORT_URL, errata } from '../src/errata.ts';
 import { glossary } from '../src/glossary.ts';
 import { learningPaths, type LearningPath } from '../src/learning-paths.ts';
-import { chapterUrl, exercisesUrl, glossaryUrl, homeUrl, legacyChapterOf, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
+import { chapterUrl, errataUrl, exercisesUrl, glossaryUrl, homeUrl, legacyChapterOf, pathDetailUrl, pathsUrl, sceneUrl } from '../src/paths.ts';
 import { buildSearchIndex } from '../src/search-index.ts';
 import { STRINGS } from '../src/shell/i18n.ts';
 import { htmlKindFragments, paragraphs, problemCardBlocks, problemKind } from '../src/shell/kind-ui.ts';
@@ -298,6 +299,42 @@ export function createPrerender(deps: PrerenderDeps) {
     return [`<h1>${escapeHtml(localize(STRINGS.paths, lang))}</h1>`, `<p>${escapeHtml(localize(STRINGS.pathsIntro, lang))}</p>`, cards].join('\n');
   };
 
+  /** Static body of the errata page: the correction log, newest first, plus the report channel. */
+  const renderErrataHtml = (lang: Lang): string => {
+    const parts = [
+      `<h1>${escapeHtml(localize(STRINGS.errata, lang))}</h1>`,
+      `<p>${escapeHtml(localize(STRINGS.errataIntro, lang))}</p>`,
+      `<p class="errata-asof">${escapeHtml(localize(STRINGS.errataAsOf, lang))}: ${ERRATA_AS_OF}</p>`,
+    ];
+    if (errata.length === 0) {
+      parts.push(`<p>${escapeHtml(localize(STRINGS.errataEmpty, lang))}</p>`);
+    } else {
+      const entries = [...errata]
+        .sort((a, b) => (a.date < b.date ? 1 : -1))
+        .map((entry) => {
+          let place = escapeHtml(localize(STRINGS.errataSiteWide, lang));
+          if (entry.chapterId && entry.sceneId) {
+            const chapter = catalog.find((c) => c.id === entry.chapterId);
+            const scene = chapter?.scenes.find((s) => s.id === entry.sceneId);
+            if (chapter && scene) {
+              place = `<a href="${sceneUrl(BASE, lang, chapter.id, scene.id)}">${escapeHtml(localize(chapter.title, lang))} — ${escapeHtml(localize(scene.title, lang))}</a>`;
+            }
+          }
+          return `<article class="errata-entry" id="errata-${entry.id}">
+  <p class="errata-meta"><time datetime="${entry.date}">${entry.date}</time> — ${place}</p>
+  <h2>${escapeHtml(localize(entry.title, lang))}</h2>
+  <p>${escapeHtml(localize(entry.detail, lang))}</p>
+</article>`;
+        })
+        .join('\n');
+      parts.push(`<div class="errata-list">\n${entries}\n</div>`);
+    }
+    parts.push(
+      `<section class="errata-report">\n  <p>${escapeHtml(localize(STRINGS.errataReport, lang))}</p>\n  <p><a href="${ERRATA_REPORT_URL}">${escapeHtml(localize(STRINGS.errataReportLink, lang))}</a></p>\n</section>`,
+    );
+    return parts.join('\n');
+  };
+
   /** Static body of one learning path: numbered ordered scene list. */
   const renderPathDetailHtml = (path: LearningPath, lang: Lang): string => {
     const steps = path.scenes
@@ -498,6 +535,16 @@ export function createPrerender(deps: PrerenderDeps) {
     body: renderPathsIndexHtml,
   });
 
+  pages.push({
+    segments: (lang) => [lang, 'errata'],
+    url: (lang) => errataUrl(BASE, lang),
+    title: (lang) => `${localize(STRINGS.errata, lang)} | ${SITE_NAME}`,
+    description: (lang) => localize(STRINGS.errataIntro, lang),
+    template: 'home',
+    formulas: errata.some((entry) => hasInlineMath(entry.detail)),
+    body: renderErrataHtml,
+  });
+
   for (const path of learningPaths) {
     pages.push({
       segments: (lang) => [lang, 'paths', path.id],
@@ -668,6 +715,24 @@ export function createPrerender(deps: PrerenderDeps) {
         ] as const) {
           checkTextValue(`glossary term '${entry.id}'`, field, text, lang);
         }
+      }
+    }
+    // Errata entries: unique ids, ISO dates, real chapter/scene links when
+    // present, non-empty text in both languages.
+    const seenErrataIds = new Set<string>();
+    for (const entry of errata) {
+      if (seenErrataIds.has(entry.id)) problems.push(`errata has a duplicate id '${entry.id}'`);
+      seenErrataIds.add(entry.id);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date)) problems.push(`errata entry '${entry.id}' has a non-ISO date '${entry.date}'`);
+      if ((entry.chapterId === undefined) !== (entry.sceneId === undefined)) {
+        problems.push(`errata entry '${entry.id}' must set chapterId and sceneId together`);
+      }
+      if (entry.chapterId && entry.sceneId && !sceneOf.get(`${entry.chapterId}/${entry.sceneId}`)) {
+        problems.push(`errata entry '${entry.id}' links to unknown scene '${entry.chapterId}/${entry.sceneId}'`);
+      }
+      for (const lang of LANGS) {
+        checkTextValue(`errata entry '${entry.id}'`, 'title', localize(entry.title, lang), lang);
+        checkTextValue(`errata entry '${entry.id}'`, 'detail', localize(entry.detail, lang), lang);
       }
     }
     // Learning paths: unique ids, real chapter/scene links, non-empty text in
@@ -898,7 +963,7 @@ export function createPrerender(deps: PrerenderDeps) {
     }
 
     console.log(
-      `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + ${catalog.length} exercises page(s) + 1 glossary + 1 paths index + ${learningPaths.length} path detail(s)), ${legacyPages.length} legacy canonical pages (not in sitemap), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
+      `prerender: wrote ${written} pages (${LANGS.length} languages × ${pages.length} pages: home (with embedded concept map) + ${catalog.length} hub(s) + ${catalog.reduce((n, c) => n + c.scenes.length, 0)} scenes + ${catalog.length} exercises page(s) + 1 glossary + 1 errata + 1 paths index + ${learningPaths.length} path detail(s)), ${legacyPages.length} legacy canonical pages (not in sitemap), sitemap.xml (${written} URLs), 404.html, robots.txt, search-index JSON`,
     );
   }
 

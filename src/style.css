@@ -270,6 +270,33 @@ main.glossary {
   text-decoration: none;
 }
 
+.errata-asof {
+  color: var(--muted, #666);
+  font-size: 0.9em;
+}
+
+.errata-entry {
+  border-top: 1px solid var(--border, #ddd);
+  padding: 0.75rem 0;
+}
+
+.errata-entry h2 {
+  font-size: 1.05rem;
+  margin: 0.25rem 0;
+}
+
+.errata-meta {
+  color: var(--muted, #666);
+  font-size: 0.9em;
+  margin: 0;
+}
+
+.errata-report {
+  border-top: 1px solid var(--border, #ddd);
+  margin-top: 1.5rem;
+  padding-top: 0.75rem;
+}
+
 .glossary-term {
   border-top: 1px solid var(--line);
   padding: 12px 0;

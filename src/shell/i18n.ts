@@ -71,6 +71,19 @@ export const STRINGS = {
     en: 'Key terms from the scenes, grouped by chapter. Each term links to the scene where it is introduced.',
   },
   glossaryFilterPlaceholder: { ko: '용어 검색…', en: 'Filter terms…' },
+  errata: { ko: '정오표', en: 'Errata' },
+  errataIntro: {
+    ko: '내용과 표기에서 발견된 오류와 그 수정 내역이다. 고친 날짜 순으로 쌓인다.',
+    en: 'Errors found in the content and notation, and what was fixed. Listed newest first.',
+  },
+  errataAsOf: { ko: '현재 판 기준일', en: 'Current edition as of' },
+  errataEmpty: { ko: '아직 등록된 정오가 없다.', en: 'No corrections recorded yet.' },
+  errataSiteWide: { ko: '사이트 전체', en: 'Site-wide' },
+  errataReport: {
+    ko: '오류를 찾으면 GitHub 이슈로 알려 달라. 씬 주소와 잘못된 내용을 적어 주면 확인해서 이 표에 올린다.',
+    en: 'Found an error? Report it as a GitHub issue with the scene URL and what looks wrong, and it will be checked and added to this list.',
+  },
+  errataReportLink: { ko: '오류 신고하기', en: 'Report an error' },
   paths: { ko: '학습 경로', en: 'Learning Paths' },
   pathsIntro: {
     ko: '주제별로 엮은 씬들의 guided tour. 순서대로 따라가면 개념이 자연스럽게 쌓인다.',

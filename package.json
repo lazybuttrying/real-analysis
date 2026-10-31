@@ -19,7 +19,7 @@
     {
       "name": "home entry",
       "path": "dist/assets/home-*.js",
-      "limit": "1 kB"
+      "limit": "2 kB"
     },
     {
       "name": "shared shell chunks",
@@ -29,7 +29,7 @@
         "dist/assets/sum-*.js",
         "dist/assets/clamp-*.js"
       ],
-      "limit": "8 kB"
+      "limit": "9 kB"
     },
     {
       "name": "shared view kit",
@@ -41,19 +41,14 @@
       "limit": "2 kB"
     },
     {
-      "name": "shared problems data (all chapters)",
-      "path": [
-        "dist/assets/preload-helper-*.js"
-      ],
-      "limit": "450 kB"
-    },
-    {
       "name": "shared other chunks",
       "path": [
+        "dist/assets/errata-page-*.js",
+        "dist/assets/search-*.js",
         "dist/assets/simple-scene-*.js",
         "dist/assets/simpson-*.js"
       ],
-      "limit": "2 kB"
+      "limit": "470 kB"
     },
     {
       "name": "chapter: proofs (entry + 10 scenes)",
@@ -73,12 +68,14 @@
       "limit": "35 kB"
     },
     {
-      "name": "chapter: numbers (entry + 16 scenes)",
+      "name": "chapter: numbers (entry + 19 scenes)",
       "path": [
         "dist/assets/numbers-*.js",
         "dist/assets/naturalNumbers-*.js",
         "dist/assets/binomial-*.js",
         "dist/assets/integersRationals-*.js",
+        "dist/assets/absoluteValue-*.js",
+        "dist/assets/archimedean-*.js",
         "dist/assets/complexNumbers-*.js",
         "dist/assets/sqrt2Irrational-*.js",
         "dist/assets/densityOfRationals-*.js",
@@ -90,17 +87,23 @@
         "dist/assets/zornLemma-*.js",
         "dist/assets/nthRoot-*.js",
         "dist/assets/groupsFields-*.js",
+        "dist/assets/orderedFields-*.js",
         "dist/assets/vectorSpaces-*.js",
         "dist/assets/dimensionRank-*.js"
       ],
-      "limit": "35 kB"
+      "limit": "40 kB"
     },
     {
-      "name": "chapter: sequences (entry + 13 scenes)",
+      "name": "chapter: sequences (entry + 18 scenes)",
       "path": [
         "dist/assets/sequences-*.js",
         "dist/assets/epsilonN-*.js",
+        "dist/assets/squeeze-*.js",
         "dist/assets/standardLimits-*.js",
+        "dist/assets/norm-*.js",
+        "dist/assets/innerProduct-*.js",
+        "dist/assets/bounded-*.js",
+        "dist/assets/subsequence-*.js",
         "dist/assets/sequenceSpaces-*.js",
         "dist/assets/cauchySchwarz-*.js",
         "dist/assets/holder-*.js",
@@ -113,10 +116,10 @@
         "dist/assets/stolzCesaro-*.js",
         "dist/assets/doubleSequences-*.js"
       ],
-      "limit": "30 kB"
+      "limit": "40 kB"
     },
     {
-      "name": "chapter: continuity (entry + 9 scenes)",
+      "name": "chapter: continuity (entry + 10 scenes)",
       "path": [
         "dist/assets/continuity-*.js",
         "dist/assets/epsdelta-*.js",
@@ -127,6 +130,7 @@
         "dist/assets/uniformContinuity-*.js",
         "dist/assets/ivt-*.js",
         "dist/assets/evt-*.js",
+        "dist/assets/additiveFunctions-*.js",
         "dist/assets/uniform-*.js"
       ],
       "limit": "25 kB"
@@ -280,9 +284,10 @@
       "limit": "50 kB"
     },
     {
-      "name": "home lazy chunks (glossary, paths, map)",
+      "name": "home lazy chunks (glossary, errata, paths, map)",
       "path": [
         "dist/assets/glossary-page-*.js",
+        "dist/assets/errata-page-*.js",
         "dist/assets/learning-paths-*.js",
         "dist/assets/map-page-*.js",
         "dist/assets/paths-page-*.js"
