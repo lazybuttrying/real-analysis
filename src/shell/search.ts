@@ -2,11 +2,15 @@ import { exercisesUrl, glossaryUrl, homeUrl, parsePath, sceneUrl, withLang } fro
 import { site } from '../site.config.ts';
 import type { Lang } from '../contracts.ts';
 import type { SearchIndexData } from '../search-index.ts';
+import { rankSemantic } from '../search-vectors.ts';
 import { h } from './dom.ts';
 import { langSwitcher, tr } from './i18n.ts';
+import { embedQuery, loadSearchVectors } from './semantic.ts';
 
 const BASE = import.meta.env.BASE_URL;
 const MAX_RESULTS = 8;
+/** Cosine floor for semantic hits: e5 scores on this corpus cluster high. */
+const SEMANTIC_MIN_SCORE = 0.8;
 
 interface RankedHit {
   kind: 'scene' | 'term' | 'exercise';
@@ -15,6 +19,112 @@ interface RankedHit {
   /** Chapter title for scenes and exercises, scene title for terms. */
   context: string;
   url: string;
+  /** Cosine similarity for semantic hits; absent for keyword hits. */
+  score?: number;
+  /** Owning chapter, used by the ambiguity check. */
+  chapterId?: string;
+}
+
+/**
+ * Ambiguity check for semantic hits: the match is ambiguous when the
+ * top few hits are bunched within a narrow score band AND span more
+ * than one chapter — the query sits between topics. A bunched cluster
+ * inside one chapter (the series convergence tests, say) is coherent,
+ * not ambiguous.
+ */
+export function isAmbiguousSemantic(hits: readonly RankedHit[]): boolean {
+  const top = hits.slice(0, 3);
+  if (top.length < 2) return false;
+  const first = top[0];
+  const third = top[top.length - 1];
+  if (!first || !third || first.score === undefined || third.score === undefined) return false;
+  if (first.score - third.score > 0.03) return false;
+  const chapters = new Set(top.map((hit) => hit.chapterId ?? hit.context));
+  return chapters.size >= 2;
+}
+
+/**
+ * Clarification candidates for an ambiguous match: the top semantic
+ * hits, preferring one per chapter so the choices actually separate
+ * the candidate topics, then filling by score.
+ */
+export function clarifyOptions(hits: readonly RankedHit[], max = 3): RankedHit[] {
+  const picked: RankedHit[] = [];
+  const usedChapters = new Set<string>();
+  for (const hit of hits) {
+    if (picked.length >= max) break;
+    const key = hit.chapterId ?? hit.context;
+    if (usedChapters.has(key)) continue;
+    usedChapters.add(key);
+    picked.push(hit);
+  }
+  for (const hit of hits) {
+    if (picked.length >= max) break;
+    if (!picked.includes(hit)) picked.push(hit);
+  }
+  return picked;
+}
+
+/**
+ * Semantic ranking over the precomputed document vectors: scenes and
+ * glossary terms whose embeddings sit closest to the query embedding,
+ * best first. The vectors align by position with the search index:
+ * scenes first (in index order), then terms.
+ */
+export function semanticSearchIndex(
+  index: SearchIndexData,
+  vectors: readonly Float32Array[],
+  queryVector: ArrayLike<number>,
+  base: string,
+  lang: Lang,
+): RankedHit[] {
+  const ranked = rankSemantic(vectors, queryVector, SEMANTIC_MIN_SCORE, MAX_RESULTS);
+  const hits: RankedHit[] = [];
+  for (const { index: position, score } of ranked) {
+    if (position < index.scenes.length) {
+      const scene = index.scenes[position];
+      if (!scene) continue;
+      hits.push({
+        kind: 'scene',
+        label: scene.title,
+        context: scene.chapterTitle,
+        url: sceneUrl(base, lang, scene.chapterId, scene.sceneId),
+        score,
+        chapterId: scene.chapterId,
+      });
+    } else {
+      const term = index.terms[position - index.scenes.length];
+      if (!term) continue;
+      hits.push({
+        kind: 'term',
+        label: term.term,
+        context: term.sceneTitle,
+        url: `${glossaryUrl(base, lang)}#term-${term.id}`,
+        score,
+        chapterId: term.chapterId,
+      });
+    }
+  }
+  return hits;
+}
+
+/**
+ * Merges keyword and semantic hits: the first few exact keyword hits
+ * stay pinned (a typed name is unambiguous), then semantic hits in
+ * similarity order, then the remaining keyword hits. Deduped by URL.
+ */
+export function mergeSearchHits(keyword: RankedHit[], semantic: RankedHit[], max = MAX_RESULTS): RankedHit[] {
+  const seen = new Set<string>();
+  const out: RankedHit[] = [];
+  const push = (hit: RankedHit): void => {
+    if (out.length >= max || seen.has(hit.url)) return;
+    seen.add(hit.url);
+    out.push(hit);
+  };
+  keyword.slice(0, 3).forEach(push);
+  semantic.forEach(push);
+  keyword.slice(3).forEach(push);
+  return out;
 }
 
 interface ScoredHit {
@@ -47,6 +157,7 @@ export function filterSearchIndex(index: SearchIndexData, query: string, base: s
       label: scene.title,
       context: scene.chapterTitle,
       url: sceneUrl(base, lang, scene.chapterId, scene.sceneId),
+      chapterId: scene.chapterId,
     }));
   }
   for (const term of index.terms) {
@@ -55,6 +166,7 @@ export function filterSearchIndex(index: SearchIndexData, query: string, base: s
       label: term.term,
       context: term.sceneTitle,
       url: `${glossaryUrl(base, lang)}#term-${term.id}`,
+      chapterId: term.chapterId,
     }));
   }
   for (const exercise of index.exercises) {
@@ -64,6 +176,7 @@ export function filterSearchIndex(index: SearchIndexData, query: string, base: s
       label,
       context: exercise.chapterTitle,
       url: `${exercisesUrl(base, lang, exercise.chapterId)}#exercise-${exercise.exerciseId}`,
+      chapterId: exercise.chapterId,
     }));
   }
   scored.sort((a, b) => b.score - a.score || a.hit.label.localeCompare(b.hit.label));
@@ -138,7 +251,11 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
     activeIndex = -1;
   };
 
-  const renderHits = (hits: RankedHit[]): void => {
+  const renderHits = (
+    hits: RankedHit[],
+    clarify?: readonly RankedHit[],
+    onClarify?: (hit: RankedHit) => void,
+  ): void => {
     list.replaceChildren();
     activeIndex = -1;
     if (hits.length === 0) {
@@ -149,6 +266,10 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
           lang,
           hit.kind === 'scene' ? 'searchSceneKind' : hit.kind === 'term' ? 'searchTermKind' : 'searchExerciseKind',
         );
+        const context =
+          hit.score !== undefined
+            ? `${hit.context} · ${tr(lang, 'searchSimilarity')} ${Math.round(hit.score * 100)}%`
+            : hit.context;
         const item = h(
           'li',
           { role: 'option', 'aria-selected': 'false' },
@@ -157,10 +278,19 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
             { href: hit.url },
             h('span', { class: 'search-kind' }, kindLabel),
             h('span', { class: 'search-label' }, hit.label),
-            h('span', { class: 'search-context' }, hit.context),
+            h('span', { class: 'search-context' }, context),
           ),
         );
         list.append(item);
+      }
+      if (clarify && clarify.length > 0 && onClarify) {
+        const footer = h('li', { class: 'search-clarify' }, h('span', { class: 'search-clarify-label' }, tr(lang, 'searchClarifyLabel')));
+        for (const option of clarify) {
+          const chip = h('button', { type: 'button', class: 'search-chip' }, option.label);
+          chip.addEventListener('click', () => onClarify(option));
+          footer.append(chip);
+        }
+        list.append(footer);
       }
     }
     list.hidden = false;
@@ -191,7 +321,42 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
     }
     void ensureIndex().then((loaded) => {
       if (ticket !== pending || !loaded) return;
-      renderHits(filterSearchIndex(loaded, query, BASE, lang));
+      const keywordHits = filterSearchIndex(loaded, query, BASE, lang);
+      renderHits(keywordHits);
+      // Semantic pass: related topics by meaning, in similarity order.
+      // Runs after the keyword render; on first use it also pays the
+      // model download, so early keystrokes usually stay keyword-only.
+      if (query.trim().length < 2) return;
+      void (async () => {
+        // Vectors first: if they are missing (a site without semantic
+        // data), never pay the model download at all.
+        const vectors = await loadSearchVectors(BASE, lang);
+        if (ticket !== pending || !vectors) return;
+        const queryVector = await embedQuery(query.trim());
+        if (ticket !== pending || !queryVector) return;
+        const semanticHits = semanticSearchIndex(loaded, vectors, queryVector, BASE, lang);
+        if (semanticHits.length === 0) return;
+        const merged = mergeSearchHits(keywordHits, semanticHits);
+        // Ambiguous between topics, and no exact keyword match to
+        // settle it: offer the candidate topics as one-tap refinements.
+        const q = query.trim().toLowerCase();
+        const hasPrimary =
+          loaded.scenes.some((s) => s.title.toLowerCase().includes(q)) ||
+          loaded.terms.some((t) => t.term.toLowerCase().includes(q));
+        if (hasPrimary || !isAmbiguousSemantic(semanticHits)) {
+          renderHits(merged);
+          return;
+        }
+        renderHits(merged, clarifyOptions(semanticHits), (anchor) => {
+          void (async () => {
+            const refined = await embedQuery(`${query.trim()} ${anchor.label}`);
+            if (ticket !== pending || !refined) return;
+            const refinedHits = semanticSearchIndex(loaded, vectors, refined, BASE, lang);
+            const rest = mergeSearchHits(keywordHits, refinedHits).filter((hit) => hit.url !== anchor.url);
+            renderHits([anchor, ...rest].slice(0, MAX_RESULTS));
+          })();
+        });
+      })();
     });
   });
 

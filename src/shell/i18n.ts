@@ -61,6 +61,8 @@ export const STRINGS = {
   searchPlaceholder: { ko: '검색', en: 'Search' },
   searchLabel: { ko: '사이트 검색', en: 'Search the site' },
   searchNoResults: { ko: '검색 결과가 없습니다', en: 'No results' },
+  searchClarifyLabel: { ko: '어느 쪽에 가까워?', en: 'Which is closer?' },
+  searchSimilarity: { ko: '유사도', en: 'similarity' },
   searchSceneKind: { ko: '씬', en: 'Scene' },
   searchTermKind: { ko: '용어', en: 'Term' },
   glossary: { ko: '용어 사전', en: 'Glossary' },

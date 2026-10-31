@@ -211,6 +211,35 @@ main.home {
   font-size: 0.875rem;
 }
 
+.search-clarify {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.search-clarify-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.search-chip {
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 10px;
+  cursor: pointer;
+}
+
+.search-chip:hover {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
 .glossary-link {
   font-size: 0.875rem;
   text-decoration: none;
