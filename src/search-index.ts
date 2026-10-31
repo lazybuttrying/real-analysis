@@ -12,6 +12,7 @@ import { exercises as differentiationExercises } from './chapters/differentiatio
 import { exercises as integrationExercises } from './chapters/integration/exercises.ts';
 import { localize, stripInlineMath, type ExerciseMeta, type Lang } from './contracts.ts';
 import { glossary } from './glossary.ts';
+import { SCENE_ALIASES } from './scene-aliases.ts';
 
 /**
  * Build-time search index. Pure data construction, run in Node by
@@ -31,6 +32,8 @@ interface SearchSceneRecord {
   title: string;
   /** Plain text (math delimiters stripped) for substring matching. */
   summary: string;
+  /** Everyday-language aliases (see scene-aliases.ts); consumed by the semantic vector builder, never matched as keywords. */
+  aliases: string;
   /** "1. 극한과 연속" — shown as the result's context line. */
   chapterTitle: string;
 }
@@ -78,6 +81,10 @@ const exercisesByChapter = new Map<string, readonly ExerciseMeta[]>([
   ['integration', integrationExercises],
 ]);
 
+function aliasText(alias: { ko: string; en: string } | undefined, lang: Lang): string {
+  return alias ? localize(alias, lang) : '';
+}
+
 /** One JSON-serializable index per language, covering every scene, glossary term, and chapter exercise. */
 export function buildSearchIndex(lang: Lang): SearchIndexData {
   const scenes: SearchSceneRecord[] = [];
@@ -93,6 +100,7 @@ export function buildSearchIndex(lang: Lang): SearchIndexData {
         sceneId: scene.id,
         title,
         summary: stripInlineMath(localize(scene.summary, lang)),
+        aliases: aliasText(SCENE_ALIASES[scene.id], lang),
         chapterTitle,
       });
     }

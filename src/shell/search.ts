@@ -3,6 +3,7 @@ import { site } from '../site.config.ts';
 import type { Lang } from '../contracts.ts';
 import type { SearchIndexData } from '../search-index.ts';
 import { rankSemantic } from '../search-vectors.ts';
+import { SEARCH_EXAMPLES } from '../search-examples.ts';
 import { h } from './dom.ts';
 import { langSwitcher, tr } from './i18n.ts';
 import { embedQuery, loadSearchVectors, warmSemantic } from './semantic.ts';
@@ -11,6 +12,13 @@ const BASE = import.meta.env.BASE_URL;
 const MAX_RESULTS = 8;
 /** Cosine floor for semantic hits: e5 scores on this corpus cluster high. */
 const SEMANTIC_MIN_SCORE = 0.8;
+/**
+ * Off-topic judgement (measured 2026-10-31): with no keyword hits, a top
+ * semantic score under this reads as unrelated to real analysis — food,
+ * weather, and recipe queries topped out at 0.80-0.82, while genuine
+ * metaphor matches start around 0.86. In between, weak hits still show.
+ */
+const OFFTOPIC_MAX_SCORE = 0.83;
 
 interface RankedHit {
   kind: 'scene' | 'term' | 'exercise';
@@ -312,6 +320,35 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
     input.setAttribute('aria-expanded', 'true');
   };
 
+  /**
+   * The query looks unrelated to real analysis: say so plainly and offer
+   * example questions that do find something, instead of dressing up
+   * near-random low-score hits as answers.
+   */
+  const renderOffTopic = (): void => {
+    list.replaceChildren();
+    activeIndex = -1;
+    const chips = h(
+      'div',
+      { class: 'search-offtopic' },
+      h('span', { class: 'search-clarify-label' }, tr(lang, 'searchOffTopic')),
+    );
+    for (const question of SEARCH_EXAMPLES[lang]) {
+      const chip = h('button', { type: 'button', class: 'search-example' }, question);
+      // Keep the input focused so the dropdown stays open for the new query.
+      chip.addEventListener('mousedown', (event) => event.preventDefault());
+      chip.addEventListener('click', () => {
+        input.value = question;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+      });
+      chips.append(chip);
+    }
+    list.append(chips);
+    list.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+  };
+
   const markActive = (next: number): void => {
     const items = [...list.querySelectorAll<HTMLElement>('li[role="option"]')];
     activeIndex = items.length === 0 ? -1 : (next + items.length) % items.length;
@@ -364,8 +401,14 @@ export function mountSearch(host: HTMLElement, lang: Lang): void {
         }
         const semanticHits = semanticSearchIndex(loaded, vectors, queryVector, BASE, lang);
         if (semanticHits.length === 0) {
-          // Settle the pending state back to the honest keyword outcome.
-          renderHits(keywordHits);
+          // Nothing by meaning either: with no keyword hits the query is
+          // off-topic; with keyword hits, settle back to those.
+          if (keywordHits.length === 0) renderOffTopic();
+          else renderHits(keywordHits);
+          return;
+        }
+        if (keywordHits.length === 0 && (semanticHits[0]?.score ?? 0) < OFFTOPIC_MAX_SCORE) {
+          renderOffTopic();
           return;
         }
         const merged = mergeSearchHits(keywordHits, semanticHits);

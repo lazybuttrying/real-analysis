@@ -1,10 +1,11 @@
 import './style.css';
 import { catalog } from './catalog';
-import { localize, stripInlineMath, type Lang } from './contracts';
+import { localize, stripInlineMath } from './contracts';
 import { chapterUrl, errataUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathsUrl } from './paths';
 import { h } from './shell/dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './shell/i18n';
 import { mountSearch } from './shell/search';
+import { SEARCH_EXAMPLES } from './search-examples';
 
 /**
  * A span holding a summary: the delimiter-stripped text shows immediately, and
@@ -20,11 +21,7 @@ function summarySpan(text: string): HTMLSpanElement {
   return span;
 }
 
-/** Example questions under the home hero search: phrased as questions, since the semantic search answers those best. */
-const SEARCH_EXAMPLES: Record<Lang, string[]> = {
-  ko: ['급수가 수렴하는지 판정하는 방법', '가장 작은 상계', '울타리처럼 가두는 수열'],
-  en: ['how to test whether a series converges', 'the smallest upper bound', 'a sequence fenced in on both sides'],
-};
+/** Example questions under the home hero search live in search-examples.ts (shared with the off-topic suggestions). */
 
 const BASE = import.meta.env.BASE_URL;
 const root = document.getElementById('app');
