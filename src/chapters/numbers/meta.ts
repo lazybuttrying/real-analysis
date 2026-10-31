@@ -12,6 +12,7 @@ import { problems as groupsFieldsProblems } from '../limits/problems/groups-fiel
 import { problems as integersRationalsProblems } from '../limits/problems/integers-rationals';
 import { problems as naturalNumbersProblems } from '../limits/problems/natural-numbers';
 import { nthRootProblems } from '../limits/problems/nth-root';
+import { orderedFieldsProblems } from '../limits/problems/ordered-fields';
 import { problems as setsProblems } from '../limits/problems/sets';
 import { problems as supremumProblems } from '../limits/problems/supremum';
 import { sqrt2IrrationalProblems } from '../limits/problems/sqrt2-irrational';
@@ -511,9 +512,43 @@ For example, pedaling a bicycle forward can be undone by pedaling back. Staying 
 problems: groupsFieldsProblems,
     },
     {
+      id: 'ordered-fields',
+      title: { ko: '순서체', en: 'Ordered Fields' },
+      order: 17,
+      summary: {
+        ko: String.raw`순서를 넣을 수 있는 체와 넣을 수 없는 체를 가릅니다. 양의 원뿔 하나로 부등식의 규칙이 전부 나옵니다.
+
+순서체는 체에 양수들의 모임, 양의 원뿔을 얹은 것입니다. 양수끼리 더해도 양수, 곱해도 양수여야 하고, 모든 수는 양수거나 0이거나 그 음수가 양수입니다. 유리수와 실수는 이 규칙을 만족하지만, 시계처럼 순환하는 세계는 만족할 수 없습니다.
+
+예를 들면, 🕐 시계에서 1시간씩 일곱 번 가면 제자리로 돌아옵니다. 양의 걸음만으로 0에 닿는 세계에서는 크다, 작다를 정할 수 없습니다. 길이는 다릅니다. 양의 길이들을 어떻게 더해도 0이 되지 않습니다.`,
+        en: String.raw`Sort the fields that admit an order from those that cannot. One positive cone yields every inequality rule.
+
+An ordered field is a field plus a set of positives, the positive cone. Positives must stay positive under addition and multiplication, and every element is positive, zero, or its negative is positive. The rationals and reals obey this; a cyclic clock-like world cannot.
+
+For example, on a 🕐 clock, seven steps of one hour return to the start. In a world where positive steps reach 0, larger and smaller cannot be defined. Lengths differ: no sum of positive lengths is ever 0.`,
+      },
+      tex: [
+        String.raw`P + P \subseteq P, \quad P \cdot P \subseteq P, \quad \forall a: \ a \in P \ \lor \ a = 0 \ \lor \ -a \in P`,
+        String.raw`a < b \iff b - a \in P, \qquad a \ne 0 \ \Longrightarrow \ a^2 > 0`,
+      ],
+      prerequisites: ['groups-fields'],
+      controls: [
+        {
+          kind: 'select',
+          key: 'mode',
+          label: { ko: '체', en: 'Field' },
+          options: ['q', 'z7'],
+          init: 'q',
+        },
+        { kind: 'slider', key: 'p', label: { ko: '양수 p', en: 'Positive p' }, min: 0.25, max: 2.5, step: 0.25, init: 1.25 },
+        { kind: 'slider', key: 'q', label: { ko: '양수 q', en: 'Positive q' }, min: 0.25, max: 2.5, step: 0.25, init: 0.75 },
+      ],
+      problems: orderedFieldsProblems,
+    },
+    {
       id: 'vector-spaces',
       title: { ko: '벡터공간과 동형', en: 'Vector Spaces and Isomorphism' },
-      order: 17,
+      order: 18,
       summary: {
         ko: String.raw`계수를 움직이면 직선과 점이 함께 움직이는 모습을 봅니다. 겉모습이 다른 공간들이 같은 구조임을 확인합니다.
 
@@ -540,7 +575,7 @@ problems: vectorSpacesProblems,
     {
       id: 'dimension-rank',
       title: { ko: '차원과 랭크', en: 'Dimension and Rank' },
-      order: 18,
+      order: 19,
       summary: {
         ko: String.raw`격자가 행렬에 눌려 펴지는 모습을 봅니다. 사라지는 차원과 남는 차원을 셉니다.
 

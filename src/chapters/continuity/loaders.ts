@@ -14,5 +14,6 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'uniform-continuity': () => import('../limits/scenes/uniformContinuity').then((module) => module.default),
   'ivt': () => import('../limits/scenes/ivt').then((module) => module.default),
   'evt': () => import('../limits/scenes/evt').then((module) => module.default),
+  'additive-functions': () => import('../limits/scenes/additiveFunctions').then((module) => module.default),
   'uniform': () => import('../limits/scenes/uniform').then((module) => module.default),
 };

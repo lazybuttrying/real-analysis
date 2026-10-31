@@ -133,6 +133,10 @@ const POST_SPLIT_SCENES = new Set([
   'inner-product',
   'bounded',
   'subsequence',
+  // 2026-10-31: two algebra-bridge scenes (ordered fields,
+  // additive functions and the Hamel basis) — post-split additions.
+  'ordered-fields',
+  'additive-functions',
 ]);
 
 /**

@@ -434,6 +434,36 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'subsequence',
   },
   {
+    id: 'ordered-field',
+    term: { ko: '순서체', en: 'ordered field' },
+    definition: {
+      ko: String.raw`양의 원뿔 \(P\)가 있어 덧셈과 곱셈에 닫히고 삼분법을 만족하는 체. \(\mathbb{Q}\)와 \(\mathbb{R}\)은 순서체이고, \(\mathbb{Z}_p\)와 \(\mathbb{C}\)는 순서체가 될 수 없다.`,
+      en: String.raw`A field with a positive cone \(P\) closed under addition and multiplication and satisfying trichotomy. \(\mathbb{Q}\) and \(\mathbb{R}\) are ordered fields; \(\mathbb{Z}_p\) and \(\mathbb{C}\) cannot be.`,
+    },
+    chapterId: 'numbers',
+    sceneId: 'ordered-fields',
+  },
+  {
+    id: 'additive-function',
+    term: { ko: '덧셈 함수', en: 'additive function' },
+    definition: {
+      ko: String.raw`\(f(x + y) = f(x) + f(y)\)를 만족하는 함수. 유리수에서는 \(f(q) = qf(1)\)로 고정되고, 연속이면 \(f(x) = cx\)뿐이다.`,
+      en: String.raw`A function with \(f(x + y) = f(x) + f(y)\). It is pinned on the rationals by \(f(q) = qf(1)\), and continuity forces \(f(x) = cx\).`,
+    },
+    chapterId: 'continuity',
+    sceneId: 'additive-functions',
+  },
+  {
+    id: 'hamel-basis',
+    term: { ko: '하멜 기저', en: 'Hamel basis' },
+    definition: {
+      ko: String.raw`실수를 유리수 위의 벡터공간으로 본 기저. 존재는 선택 공리가 보장한다. 덧셈 함수는 기저 원소마다 값을 자유롭게 정할 수 있다.`,
+      en: String.raw`A basis of the reals viewed as a vector space over the rationals, whose existence the axiom of choice guarantees. An additive function may assign values to basis elements freely.`,
+    },
+    chapterId: 'continuity',
+    sceneId: 'additive-functions',
+  },
+  {
     id: 'lp-space',
     term: { ko: String.raw`\(\ell^p\) 공간`, en: String.raw`\(\ell^p\) space` },
     definition: {

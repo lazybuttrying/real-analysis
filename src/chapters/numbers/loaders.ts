@@ -22,6 +22,7 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'zorn-lemma': () => import('../limits/scenes/zornLemma').then((module) => module.default),
   'nth-root': () => import('../limits/scenes/nthRoot').then((module) => module.default),
   'groups-fields': () => import('../limits/scenes/groupsFields').then((module) => module.default),
+  'ordered-fields': () => import('../limits/scenes/orderedFields').then((module) => module.default),
   'vector-spaces': () => import('../limits/scenes/vectorSpaces').then((module) => module.default),
   'dimension-rank': () => import('../limits/scenes/dimensionRank').then((module) => module.default),
 };

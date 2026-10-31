@@ -1,4 +1,5 @@
 import type { ChapterMeta } from '../../contracts.ts';
+import { additiveFunctionsProblems } from '../limits/problems/additive-functions';
 import { monotoneDiscontinuitiesProblems } from '../limits/problems/monotone-discontinuities';
 import { problems as continuityProblems } from '../limits/problems/continuity';
 import { problems as continuityEquivalencesProblems } from '../limits/problems/continuity-equivalences';
@@ -250,9 +251,35 @@ For example, picture a 🧑 hiker walking a trail to the summit. If the trail ru
 problems: evtProblems,
     },
     {
+      id: 'additive-functions',
+      title: { ko: '덧셈 함수와 하멜 기저', en: 'Additive Functions and the Hamel Basis' },
+      order: 9,
+      summary: {
+        ko: String.raw`합을 그대로 두는 함수가 어디까지 자유로운지 봅니다. 유리수에서는 완전히 고정되고, 무리수에서는 값이 풀려납니다.
+
+덧셈 함수는 \(f(x + y) = f(x) + f(y)\)를 만족합니다. 유리수에서는 \(f(q) = qf(1)\)이라 자유가 없습니다. 하지만 실수를 유리수 위의 벡터공간으로 보면 \(1\)과 \(\sqrt{2}\)는 독립이라, \(f(\sqrt{2})\)는 아무 값으로나 정할 수 있습니다. 그 자유가 하멜 기저입니다.
+
+예를 들면, 📐 정사각형의 한 변이 1이면 대각선은 \(\sqrt{2}\)입니다. 변의 길이만 알아서는 대각선에 매길 값을 정할 수 없습니다. 대각선은 변과 독립인 새 방향이기 때문입니다. 연속이라는 조건을 거는 순간 이 자유는 사라지고 직선만 남습니다.`,
+        en: String.raw`See how free a function that preserves addition can be. On the rationals it is completely pinned; at irrationals its values come loose.
+
+An additive function obeys \(f(x + y) = f(x) + f(y)\). On the rationals \(f(q) = qf(1)\) leaves no freedom. But viewing the reals as a vector space over the rationals, \(1\) and \(\sqrt{2}\) are independent, so \(f(\sqrt{2})\) may be chosen as anything. That freedom is the Hamel basis.
+
+For example, a 📐 square with side 1 has diagonal \(\sqrt{2}\). Knowing only the side pins nothing about the value assigned to the diagonal, because the diagonal is a new, independent direction. Impose continuity and the freedom vanishes, leaving only a straight line.`,
+      },
+      tex: [
+        String.raw`f(x + y) = f(x) + f(y), \qquad f(q) = qf(1) \ \ (q \in \mathbb{Q})`,
+        String.raw`f(a + b\sqrt{2}) = a + bt, \qquad t = f(\sqrt{2}) \text{ is free}`,
+      ],
+      prerequisites: ['continuity'],
+      controls: [
+        { kind: 'slider', key: 't', label: { ko: 'f(√2) = t', en: 'f(√2) = t' }, min: -2.5, max: 2.5, step: 0.01, init: 1.41 },
+      ],
+      problems: additiveFunctionsProblems,
+    },
+    {
       id: 'uniform',
       title: { ko: '균등수렴 vs 점별수렴', en: 'When the Limit Breaks' },
-      order: 9,
+      order: 10,
       summary: {
         ko: String.raw`점별수렴과 균등수렴의 차이를 보는 씬입니다. 거듭제곱 곡선들이 극한에서 어떻게 끊기는지 확인합니다.
 

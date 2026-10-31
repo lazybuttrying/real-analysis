@@ -289,6 +289,7 @@ describe('split chapters: the five ex-limits chapters', () => {
       'countable',
       'cantor-theorem',
       'groups-fields',
+      'ordered-fields',
       'vector-spaces',
       'dimension-rank',
     ]);
@@ -321,6 +322,7 @@ describe('split chapters: the five ex-limits chapters', () => {
       'uniform-continuity',
       'ivt',
       'evt',
+      'additive-functions',
       'uniform',
     ]);
     expect(idsOf('topology')).toEqual([
