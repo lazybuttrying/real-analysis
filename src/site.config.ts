@@ -16,6 +16,8 @@ export const site: {
   homeIntro: LocalizedText;
   /** Concept-map intro line (shell string, kept per site). */
   mapIntro: LocalizedText;
+  /** Application-map intro line (shell string, kept per site). */
+  appMapIntro: LocalizedText;
 } = {
   name: { ko: 'Real Analysis', en: 'Real Analysis' },
   base: '/lecture/real-analysis/',
@@ -27,6 +29,10 @@ export const site: {
   mapIntro: {
     ko: '102개 씬을 선수 관계로 엮은 지도. 노드를 드래그하고 확대해 보세요. 노드를 클릭하면 해당 씬으로 이동합니다.',
     en: 'All 102 scenes linked by prerequisite relations. Drag nodes, zoom in, and click a node to open its scene.',
+  },
+  appMapIntro: {
+    ko: '기초 씬 다음에 만나는 응용 씬들의 지도. 마름모는 아직 준비 중인 응용 씬이다. 마름모를 클릭하면 그 응용이 쌓는 기초 씬 목록이 열린다.',
+    en: 'A map of the application scenes that follow the basic scenes. Diamonds are application scenes still in planning. Click a diamond to list the basic scenes it builds on.',
   },
 };
 

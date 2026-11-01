@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import katex from 'katex';
 import { catalog } from '../src/catalog.ts';
+import { buildApplicationMap } from '../src/application-map.ts';
 import { buildConceptMap } from '../src/concept-map.ts';
 import { LANGS, localize, splitInlineMath, stripInlineMath, type ChapterMeta, type ExerciseDifficulty, type ExerciseMeta, type Lang, type LocalizedText, type ProblemKind, type SceneMeta } from '../src/contracts.ts';
 import { ERRATA_AS_OF, ERRATA_REPORT_URL, errata } from '../src/errata.ts';
@@ -407,6 +408,13 @@ export function createPrerender(deps: PrerenderDeps) {
           renderMapFallbackHtml(lang),
           `</div>`,
           `</section>`,
+          `<section class="home-map home-app-map">`,
+          `<h2>${escapeHtml(localize(STRINGS.appMap, lang))}</h2>`,
+          `<p>${escapeHtml(localize(STRINGS.appMapIntro, lang))}</p>`,
+          `<div class="map-mount">`,
+          renderAppMapFallbackHtml(lang),
+          `</div>`,
+          `</section>`,
         ].join('\n'),
     },
   ];
@@ -604,6 +612,31 @@ export function createPrerender(deps: PrerenderDeps) {
       })
       .join('\n');
     return sections;
+  };
+
+  /** Static fallback for the home page's application map section: the planned application stops with their descriptions and links to the basic scenes each one builds on (zero-JS readable). Application scenes have no pages yet, so nothing here links to an application id. */
+  const renderAppMapFallbackHtml = (lang: Lang): string => {
+    const { apps } = buildApplicationMap();
+    return apps
+      .map((app) => {
+        const items = app.scenes
+          .map((ref) => {
+            const scene = sceneOf.get(`${ref.chapterId}/${ref.sceneId}`);
+            const label = scene ? localize(scene.title, lang) : ref.sceneId;
+            return `<li><a href="${sceneUrl(BASE, lang, ref.chapterId, ref.sceneId)}">${escapeHtml(label)}</a></li>`;
+          })
+          .join('\n');
+        return [
+          `<section>`,
+          `<h3>${escapeHtml(localize(app.title, lang))} <span class="path-step-chapter">${escapeHtml(localize(STRINGS.appMapPlanned, lang))}</span></h3>`,
+          `<p>${escapeHtml(localize(app.description, lang))}</p>`,
+          `<ul>`,
+          items,
+          `</ul>`,
+          `</section>`,
+        ].join('\n');
+      })
+      .join('\n');
   };
 
   function selfCheck(): string[] {

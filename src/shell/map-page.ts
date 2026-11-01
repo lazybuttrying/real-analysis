@@ -9,11 +9,17 @@ import {
   select,
   zoom,
   zoomIdentity,
+  type Selection,
   type SimulationLinkDatum,
   type SimulationNodeDatum,
 } from 'd3';
 import { catalogLight as catalog } from '../catalog-light.ts';
 import { localize, type Lang } from '../contracts.ts';
+import {
+  buildApplicationMap,
+  MECHANISM_LABELS,
+  type ApplicationMechanism,
+} from '../application-map.ts';
 import { buildConceptMap } from '../concept-map.ts';
 import { sceneUrl } from '../paths.ts';
 import { h } from './dom.ts';
@@ -359,4 +365,596 @@ export function mountConceptMap(container: HTMLElement, lang: Lang): void {
 
   // Replace the static fallback (chapter-grouped scene list) with the graph.
   container.replaceChildren(legend, wrap);
+}
+
+const APP_WIDTH = 960;
+const APP_HEIGHT = 460;
+const APP_SETTLE_TICKS = 320;
+
+type BundledMechanism = Exclude<ApplicationMechanism, 'individual'>;
+
+interface AppSimNode extends SimulationNodeDatum {
+  key: string;
+  kind: 'hub' | 'app' | 'scene';
+  chapterId: string;
+  sceneId: string;
+  appId: string;
+  mechanism: ApplicationMechanism | '';
+  title: string;
+  subLabel: string;
+  count: number;
+  anchorX: number;
+  anchorY: number;
+  collideRadius: number;
+}
+
+interface AppSimLink extends SimulationLinkDatum<AppSimNode> {
+  kind: 'applies' | 'hub' | 'builds-on';
+}
+
+/** Count label for hub badges and the overview list, in the shell language. */
+function appsCountLabel(lang: Lang, count: number): string {
+  if (lang === 'ko') return `응용 ${count}개`;
+  return `${count} application${count === 1 ? '' : 's'}`;
+}
+
+/**
+ * Mounts the application map into a container element, below the concept
+ * map on the home page. Application nodes are roadmap stops, not scenes:
+ * they render as diamonds, never navigate, and clicking one opens a panel
+ * listing the constituent basic scenes with working links to those real
+ * scenes. Basic scene nodes keep the concept map behavior (click opens
+ * the scene).
+ *
+ * The map is built to grow. The initial view is a collapsed top level:
+ * one hub per bundled mechanism (a rounded rectangle with an application
+ * count badge, visually distinct from both the round scene nodes and
+ * the application diamonds) plus the individual applications as
+ * diamonds. Clicking a hub expands its cluster, its applications and
+ * their basic scenes anchored as a lobe beside the hub; only one
+ * cluster is expanded at a time, and clicking the expanded hub again
+ * or the reset control returns to the collapsed top level. In the
+ * collapsed view no basic scene nodes or labels render at all.
+ * App-to-app builds-on edges from the data layer render as dashed
+ * arrows between the application diamonds visible in the current
+ * view; the current data set declares none. The layout is pre-settled
+ * synchronously and deterministic, mirroring mountConceptMap.
+ */
+export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
+  const { apps, edges, dependencyEdges } = buildApplicationMap();
+  const appById = new Map(apps.map((app) => [app.id, app]));
+  const bundledAppsOf = (mechanism: BundledMechanism) => apps.filter((app) => app.mechanism === mechanism);
+
+  // Top-level items in APPLICATIONS order: a hub per bundled mechanism,
+  // a diamond per individual application. Anchors sit on a 3 by 2 grid.
+  interface TopItem {
+    kind: 'hub' | 'app';
+    mechanism: BundledMechanism | '';
+    appId: string;
+  }
+  const topItems: TopItem[] = [];
+  const seenMechanisms = new Set<string>();
+  for (const app of apps) {
+    if (app.mechanism === 'individual') {
+      topItems.push({ kind: 'app', mechanism: '', appId: app.id });
+    } else if (!seenMechanisms.has(app.mechanism)) {
+      seenMechanisms.add(app.mechanism);
+      topItems.push({ kind: 'hub', mechanism: app.mechanism, appId: '' });
+    }
+  }
+  const topAnchors = new Map<string, { x: number; y: number }>();
+  for (const [index, item] of topItems.entries()) {
+    const col = index % 3;
+    const row = Math.floor(index / 3);
+    topAnchors.set(item.kind === 'hub' ? `hub/${item.mechanism}` : `app/${item.appId}`, {
+      x: APP_WIDTH * (0.18 + 0.31 * col),
+      y: APP_HEIGHT * (0.27 + 0.47 * row),
+    });
+  }
+  const topAnchorOf = (key: string): { x: number; y: number } =>
+    topAnchors.get(key) ?? { x: APP_WIDTH / 2, y: APP_HEIGHT / 2 };
+
+  // Static chrome: legend, svg frame, tooltip, reset control, panel.
+  const legendItems: HTMLElement[] = [
+    h('span', { class: 'map-legend-item' }, h('span', { class: 'appmap-sample-hub' }), tr(lang, 'appMapHub')),
+    h('span', { class: 'map-legend-item' }, h('span', { class: 'appmap-sample-diamond' }), tr(lang, 'appMapPlanned')),
+    h('span', { class: 'map-legend-item' }, h('span', { class: 'map-line-sample appmap-line-applies' }), tr(lang, 'appMapApplies')),
+  ];
+  if (dependencyEdges.length > 0) {
+    legendItems.push(
+      h(
+        'span',
+        { class: 'map-legend-item' },
+        h('span', { class: 'map-line-sample appmap-line-builds-on' }),
+        tr(lang, 'appMapBuildsOn'),
+      ),
+    );
+  }
+  const legend = h('div', { class: 'map-legend' }, ...legendItems);
+
+  const wrap = h('div', { class: 'map-wrap' });
+  const svg = svgEl('svg', {
+    class: 'map-svg appmap-svg',
+    viewBox: `0 0 ${APP_WIDTH} ${APP_HEIGHT}`,
+    role: 'img',
+    'aria-label': tr(lang, 'appMap'),
+  }) as SVGSVGElement;
+  wrap.append(svg);
+
+  const tooltip = h('div', { class: 'map-tooltip', hidden: 'true' });
+  wrap.append(tooltip);
+
+  const resetButton = h('button', { class: 'map-reset', type: 'button' }, tr(lang, 'mapResetView'));
+  wrap.append(resetButton);
+
+  const panel = h('div', { class: 'appmap-panel' });
+
+  // Arrowhead markers, one per navigable edge kind (hub links have none).
+  const defs = svgEl('defs');
+  for (const kind of ['applies', 'builds-on'] as const) {
+    const marker = svgEl('marker', {
+      id: `appmap-arrow-${kind}`,
+      viewBox: '0 0 10 10',
+      refX: '8.5',
+      refY: '5',
+      markerWidth: '6.5',
+      markerHeight: '6.5',
+      orient: 'auto-start-reverse',
+    });
+    marker.append(svgEl('path', { d: 'M 0 1 L 9 5 L 0 9 z', class: `appmap-arrow-${kind}` }));
+    defs.append(marker);
+  }
+  svg.append(defs);
+
+  const viewport = svgEl('g', { class: 'map-viewport' });
+  svg.append(viewport);
+  const linkGroup = svgEl('g', { class: 'map-edges' });
+  viewport.append(linkGroup);
+  const nodeGroup = svgEl('g', { class: 'map-nodes' });
+  viewport.append(nodeGroup);
+
+  const zoomBehavior = zoom<SVGSVGElement, unknown>().on('zoom', (event) => {
+    select(viewport).attr('transform', event.transform.toString());
+  });
+  select(svg).call(zoomBehavior);
+
+  // View state: which mechanism cluster (if any) is expanded, and which
+  // application the panel currently shows.
+  let expandedMechanism: BundledMechanism | null = null;
+  let selectedAppId: string | null = null;
+  let currentNodes: AppSimNode[] = [];
+  let currentNodeSel: Selection<SVGGElement, AppSimNode, SVGElement, unknown> | null = null;
+
+  /** Fits the currently visible nodes into the viewBox with padding. */
+  const fitView = (): void => {
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const node of currentNodes) {
+      minX = Math.min(minX, node.x ?? 0);
+      maxX = Math.max(maxX, node.x ?? 0);
+      minY = Math.min(minY, node.y ?? 0);
+      maxY = Math.max(maxY, node.y ?? 0);
+    }
+    if (!Number.isFinite(minX)) return;
+    const pad = 70;
+    const fitScale = Math.min(APP_WIDTH / (maxX - minX + pad * 2), APP_HEIGHT / (maxY - minY + pad * 2));
+    const transform = zoomIdentity
+      .translate(APP_WIDTH / 2 - fitScale * ((minX + maxX) / 2), APP_HEIGHT / 2 - fitScale * ((minY + maxY) / 2))
+      .scale(fitScale);
+    select(svg).call(zoomBehavior.transform, transform);
+  };
+
+  const markSelected = (): void => {
+    currentNodeSel?.classed('appmap-selected', (node) => node.kind === 'app' && node.appId === selectedAppId);
+  };
+
+  /** The collapsed-state panel: a short overview listing the top level. */
+  const showOverview = (): void => {
+    selectedAppId = null;
+    markSelected();
+    panel.replaceChildren(
+      h('div', { class: 'appmap-panel-head' }, h('h3', {}, tr(lang, 'appMapOverview'))),
+      h('p', { class: 'appmap-panel-desc' }, tr(lang, 'appMapOverviewHint')),
+      h(
+        'ul',
+        { class: 'appmap-basics' },
+        ...topItems.map((item) => {
+          if (item.kind === 'hub') {
+            const mechanism = item.mechanism as BundledMechanism;
+            return h(
+              'li',
+              {},
+              localize(MECHANISM_LABELS[mechanism], lang),
+              h('span', { class: 'appmap-chapter' }, appsCountLabel(lang, bundledAppsOf(mechanism).length)),
+            );
+          }
+          const app = appById.get(item.appId);
+          return h(
+            'li',
+            {},
+            app ? localize(app.title, lang) : item.appId,
+            h('span', { class: 'appmap-chapter' }, tr(lang, 'appMapPlanned')),
+          );
+        }),
+      ),
+    );
+  };
+
+  /**
+   * The application panel: an application node never navigates (its
+   * scene does not exist yet); selecting it lists the basic scenes it
+   * builds on, each with a working link to the real scene page.
+   */
+  const showApp = (appId: string): void => {
+    const app = appById.get(appId);
+    if (!app) return;
+    selectedAppId = appId;
+    markSelected();
+    panel.replaceChildren(
+      h(
+        'div',
+        { class: 'appmap-panel-head' },
+        h('h3', {}, localize(app.title, lang)),
+        h('span', { class: 'appmap-badge' }, tr(lang, 'appMapPlanned')),
+        h('span', { class: 'appmap-mechanism' }, localize(MECHANISM_LABELS[app.mechanism], lang)),
+      ),
+      h('p', { class: 'appmap-panel-desc' }, localize(app.description, lang)),
+      h('p', { class: 'appmap-basics-label' }, tr(lang, 'appMapBasics')),
+      h(
+        'ul',
+        { class: 'appmap-basics' },
+        ...app.scenes.map((ref) => {
+          const info = sceneOf.get(`${ref.chapterId}/${ref.sceneId}`);
+          return h(
+            'li',
+            {},
+            h('a', { href: sceneUrl(BASE, lang, ref.chapterId, ref.sceneId) }, info?.title(lang) ?? ref.sceneId),
+            h('span', { class: 'appmap-chapter' }, info?.chapterTitle(lang) ?? ref.chapterId),
+          );
+        }),
+      ),
+    );
+  };
+
+  /**
+   * The visible graph for the current view state: the top level always,
+   * plus the expanded cluster (its applications, their basic scenes,
+   * the hub links and applies edges) when a hub is expanded. Builds-on
+   * edges appear only when both endpoint diamonds are visible.
+   */
+  const buildGraph = (): { nodes: AppSimNode[]; links: AppSimLink[] } => {
+    const nodes: AppSimNode[] = [];
+    const links: AppSimLink[] = [];
+
+    for (const item of topItems) {
+      if (item.kind === 'hub') {
+        const mechanism = item.mechanism as BundledMechanism;
+        const anchor = topAnchorOf(`hub/${mechanism}`);
+        const count = bundledAppsOf(mechanism).length;
+        nodes.push({
+          key: `hub/${mechanism}`,
+          kind: 'hub',
+          chapterId: '',
+          sceneId: '',
+          appId: '',
+          mechanism,
+          title: localize(MECHANISM_LABELS[mechanism], lang),
+          subLabel: appsCountLabel(lang, count),
+          count,
+          anchorX: anchor.x,
+          anchorY: anchor.y,
+          collideRadius: 38,
+          x: anchor.x,
+          y: anchor.y,
+        });
+      } else {
+        const app = appById.get(item.appId);
+        if (!app) continue;
+        const anchor = topAnchorOf(`app/${app.id}`);
+        nodes.push({
+          key: `app/${app.id}`,
+          kind: 'app',
+          chapterId: '',
+          sceneId: '',
+          appId: app.id,
+          mechanism: app.mechanism,
+          title: localize(app.title, lang),
+          subLabel: localize(MECHANISM_LABELS[app.mechanism], lang),
+          count: 0,
+          anchorX: anchor.x,
+          anchorY: anchor.y,
+          collideRadius: 30,
+          x: anchor.x,
+          y: anchor.y,
+        });
+      }
+    }
+
+    if (expandedMechanism !== null) {
+      const mechanism = expandedMechanism;
+      const hubAnchor = topAnchorOf(`hub/${mechanism}`);
+      const cluster = bundledAppsOf(mechanism);
+      for (const [slot, app] of cluster.entries()) {
+        // Multiple applications in one cluster spread vertically beside
+        // their hub; the current data has exactly one per mechanism.
+        const appAnchor = {
+          x: hubAnchor.x + 155,
+          y: hubAnchor.y + (slot - (cluster.length - 1) / 2) * 170,
+        };
+        nodes.push({
+          key: `app/${app.id}`,
+          kind: 'app',
+          chapterId: '',
+          sceneId: '',
+          appId: app.id,
+          mechanism: app.mechanism,
+          title: localize(app.title, lang),
+          subLabel: localize(MECHANISM_LABELS[app.mechanism], lang),
+          count: 0,
+          anchorX: appAnchor.x,
+          anchorY: appAnchor.y,
+          collideRadius: 30,
+          x: appAnchor.x,
+          y: appAnchor.y,
+        });
+        links.push({ source: `hub/${mechanism}`, target: `app/${app.id}`, kind: 'hub' });
+        for (const [sceneSlot, ref] of app.scenes.entries()) {
+          const info = sceneOf.get(`${ref.chapterId}/${ref.sceneId}`);
+          const ring = 68 + (sceneSlot % 3) * 20;
+          const angle = (sceneSlot / Math.max(1, app.scenes.length)) * Math.PI * 2;
+          nodes.push({
+            key: `${ref.chapterId}/${ref.sceneId}`,
+            kind: 'scene',
+            chapterId: ref.chapterId,
+            sceneId: ref.sceneId,
+            appId: app.id,
+            mechanism: '',
+            title: info?.title(lang) ?? ref.sceneId,
+            subLabel: info?.chapterTitle(lang) ?? ref.chapterId,
+            count: 0,
+            anchorX: appAnchor.x,
+            anchorY: appAnchor.y,
+            collideRadius: 24,
+            x: appAnchor.x + ring * Math.cos(angle),
+            y: appAnchor.y + ring * Math.sin(angle),
+          });
+        }
+        for (const edge of edges) {
+          if (edge.targetAppId !== app.id) continue;
+          links.push({
+            source: `${edge.source.chapterId}/${edge.source.sceneId}`,
+            target: `app/${app.id}`,
+            kind: 'applies',
+          });
+        }
+      }
+    }
+
+    const visibleAppKeys = new Set(nodes.filter((node) => node.kind === 'app').map((node) => node.key));
+    for (const dep of dependencyEdges) {
+      const source = `app/${dep.sourceAppId}`;
+      const target = `app/${dep.targetAppId}`;
+      if (visibleAppKeys.has(source) && visibleAppKeys.has(target)) {
+        links.push({ source, target, kind: 'builds-on' });
+      }
+    }
+
+    return { nodes, links };
+  };
+
+  /**
+   * Rebuilds the svg contents for the current view state: a fresh
+   * pre-settled simulation, fresh selections and handlers. Called on
+   * mount and whenever a hub expands or collapses.
+   */
+  const renderGraph = (): void => {
+    const { nodes, links } = buildGraph();
+    currentNodes = nodes;
+
+    linkGroup.replaceChildren();
+    nodeGroup.replaceChildren();
+
+    const simulation = forceSimulation(nodes)
+      .force(
+        'link',
+        forceLink<AppSimNode, AppSimLink>(links)
+          .id((node) => node.key)
+          .distance((link) => (link.kind === 'builds-on' ? 180 : 78))
+          .strength((link) => (link.kind === 'hub' ? 0.6 : link.kind === 'builds-on' ? 0.2 : 0.5)),
+      )
+      .force('charge', forceManyBody().strength(-170))
+      .force('collide', forceCollide<AppSimNode>((node) => node.collideRadius))
+      .force(
+        'x',
+        forceX<AppSimNode>((node) => node.anchorX).strength((node) => (node.kind === 'scene' ? 0.16 : 0.5)),
+      )
+      .force(
+        'y',
+        forceY<AppSimNode>((node) => node.anchorY).strength((node) => (node.kind === 'scene' ? 0.16 : 0.5)),
+      )
+      .stop();
+    for (let i = 0; i < APP_SETTLE_TICKS; i++) simulation.tick();
+
+    const linkSel = select(linkGroup)
+      .selectAll<SVGLineElement, AppSimLink>('line')
+      .data(links)
+      .join('line')
+      .attr('class', (link) => `appmap-edge appmap-edge-${link.kind}`)
+      .attr('marker-end', (link) => (link.kind === 'hub' ? null : `url(#appmap-arrow-${link.kind})`));
+
+    const nodeSel = select(nodeGroup)
+      .selectAll<SVGGElement, AppSimNode>('g')
+      .data(nodes)
+      .join('g')
+      .attr('class', (node) => {
+        const base =
+          node.kind === 'hub'
+            ? 'appmap-node appmap-node-hub'
+            : node.kind === 'app'
+              ? 'appmap-node appmap-node-app'
+              : 'appmap-node appmap-node-scene';
+        return node.kind === 'hub' && node.mechanism === expandedMechanism ? `${base} appmap-expanded` : base;
+      })
+      .attr('data-chapter', (node) => (node.kind === 'scene' ? node.chapterId : null));
+    currentNodeSel = nodeSel;
+
+    nodeSel.each(function (node) {
+      const group = select(this);
+      if (node.kind === 'hub') {
+        group
+          .append('rect')
+          .attr('x', '-20')
+          .attr('y', '-14')
+          .attr('width', '40')
+          .attr('height', '28')
+          .attr('rx', '7')
+          .attr('class', 'appmap-hub-rect');
+        group.append('circle').attr('cx', '20').attr('cy', '-14').attr('r', '9').attr('class', 'appmap-hub-badge');
+        group
+          .append('text')
+          .attr('x', '20')
+          .attr('y', '-14')
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'middle')
+          .attr('class', 'appmap-hub-count')
+          .text(String(node.count));
+        group
+          .append('text')
+          .attr('dy', '2.6em')
+          .attr('text-anchor', 'middle')
+          .attr('class', 'appmap-label-hub')
+          .text(node.title);
+      } else if (node.kind === 'app') {
+        group.append('path').attr('d', 'M 0 -17 L 14 0 L 0 17 L -14 0 Z').attr('class', 'appmap-diamond');
+        group
+          .append('text')
+          .attr('dy', '2.1em')
+          .attr('text-anchor', 'middle')
+          .attr('class', 'appmap-label-app')
+          .text(node.title);
+      } else {
+        group.append('circle').attr('r', '6.5');
+        group.append('text').attr('dy', '1.8em').attr('text-anchor', 'middle').text(node.title);
+      }
+    });
+
+    // Adjacency (both directions) for the hover neighborhood highlight.
+    const neighbors = new Map<string, Set<string>>();
+    for (const node of nodes) neighbors.set(node.key, new Set([node.key]));
+    for (const link of links) {
+      const from = (link.source as AppSimNode).key;
+      const to = (link.target as AppSimNode).key;
+      neighbors.get(from)?.add(to);
+      neighbors.get(to)?.add(from);
+    }
+
+    const setFocus = (focused: AppSimNode | null): void => {
+      const keep: Set<string> | null = focused === null ? null : (neighbors.get(focused.key) ?? new Set<string>());
+      nodeSel.style('opacity', (node) => (keep === null || keep.has(node.key) ? null : '0.15'));
+      linkSel.style('opacity', (link) => {
+        if (keep === null) return null;
+        const from = (link.source as AppSimNode).key;
+        const to = (link.target as AppSimNode).key;
+        return keep.has(from) && keep.has(to) ? null : '0.15';
+      });
+    };
+
+    const renderPositions = (): void => {
+      linkSel
+        .attr('x1', (d) => (d.source as AppSimNode).x ?? 0)
+        .attr('y1', (d) => (d.source as AppSimNode).y ?? 0)
+        .attr('x2', (d) => (d.target as AppSimNode).x ?? 0)
+        .attr('y2', (d) => (d.target as AppSimNode).y ?? 0);
+      nodeSel.attr('transform', (d) => `translate(${d.x ?? 0},${d.y ?? 0})`);
+    };
+    renderPositions();
+    simulation.on('tick', renderPositions);
+
+    // Drag a node; a click (no drag) toggles a hub, selects an
+    // application, or opens a basic scene.
+    let dragged = false;
+    nodeSel.call(
+      drag<SVGGElement, AppSimNode>()
+        .on('start', (event, d) => {
+          dragged = false;
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on('drag', (event, d) => {
+          dragged = true;
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on('end', (event, d) => {
+          if (!event.active) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        }),
+    );
+    nodeSel.on('click', (event, d) => {
+      if (dragged) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      if (d.kind === 'hub') {
+        const mechanism = d.mechanism as BundledMechanism;
+        if (expandedMechanism === mechanism) {
+          expandedMechanism = null;
+          renderGraph();
+          showOverview();
+        } else {
+          expandedMechanism = mechanism;
+          renderGraph();
+          const first = bundledAppsOf(mechanism)[0];
+          if (first) showApp(first.id);
+        }
+      } else if (d.kind === 'app') {
+        showApp(d.appId);
+      } else {
+        location.href = sceneUrl(BASE, lang, d.chapterId, d.sceneId);
+      }
+    });
+
+    nodeSel
+      .on('mouseenter', (_event, d) => {
+        tooltip.replaceChildren(
+          h('strong', {}, d.title),
+          h(
+            'span',
+            { class: 'map-tooltip-chapter' },
+            d.kind === 'app' ? `${tr(lang, 'appMapPlanned')} — ${d.subLabel}` : d.subLabel,
+          ),
+        );
+        tooltip.hidden = false;
+        setFocus(d);
+      })
+      .on('mousemove', (event) => {
+        const rect = wrap.getBoundingClientRect();
+        tooltip.style.left = `${event.clientX - rect.left + 12}px`;
+        tooltip.style.top = `${event.clientY - rect.top + 12}px`;
+      })
+      .on('mouseleave', () => {
+        tooltip.hidden = true;
+        setFocus(null);
+      });
+
+    markSelected();
+    fitView();
+  };
+
+  // The reset control returns to the collapsed top-level view.
+  resetButton.addEventListener('click', () => {
+    expandedMechanism = null;
+    renderGraph();
+    showOverview();
+  });
+
+  renderGraph();
+  showOverview();
+
+  container.replaceChildren(legend, wrap, panel);
 }
