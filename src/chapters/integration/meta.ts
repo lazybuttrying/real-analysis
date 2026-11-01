@@ -1,34 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { absoluteContinuityProblems } from '../calculus/problems/absolute-continuity';
-import { arcLengthProblems } from '../calculus/problems/arc-length';
-import { convolutionProblems } from '../calculus/problems/convolution';
-import { bohrMollerupProblems } from '../series/problems/bohr-mollerup';
-import { borelCantelliProblems } from '../calculus/problems/borel-cantelli';
-import { boundedVariationProblems } from '../calculus/problems/bounded-variation';
-import { jordanDecompositionProblems } from '../calculus/problems/jordan-decomposition';
-import { problems as betaFunctionProblems } from '../series/problems/beta-function';
-import { problems as ftcProblems } from '../calculus/problems/ftc';
-import { changeOfVariablesProblems } from '../calculus/problems/change-of-variables';
-import { dirichletFunctionProblems } from '../calculus/problems/dirichlet-function';
-import { differentiationUnderIntegralProblems } from '../calculus/problems/differentiation-under-integral';
-import { minkowskiProblems } from '../calculus/problems/minkowski';
-import { egorovProblems } from '../calculus/problems/egorov';
-import { fubiniTonelliProblems } from '../calculus/problems/fubini-tonelli';
-import { gabrielHornProblems } from '../calculus/problems/gabriel-horn';
-import { riemannStieltjesProblems } from '../calculus/problems/riemann-stieltjes';
-import { integrationByPartsProblems } from '../calculus/problems/integration-by-parts';
-import { problems as gammaProblems } from '../series/problems/gamma';
-import { problems as improperProblems } from '../series/problems/improper';
-import { problems as lebesgueProblems } from '../calculus/problems/lebesgue';
-import { lebesgueConvergenceProblems } from '../calculus/problems/lebesgue-convergence';
-import { problems as measureProblems } from '../calculus/problems/measure';
-import { problems as riemannProblems } from '../calculus/problems/riemann';
-import { vitaliProblems } from '../calculus/problems/vitali';
-import { volterraFunctionProblems } from '../calculus/problems/volterra-function';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -75,7 +50,6 @@ For example, picture a 🪜 staircase jumping 1, 2, 6, 24, with a smooth slide f
       ],
       prerequisites: ['stirling'],
       controls: [{ kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: 0.1, max: 4, step: 0.05, init: 2 }],
-problems: gammaProblems,
     },
     {
       id: 'beta-function',
@@ -102,7 +76,6 @@ For example, pull the two ends of a 🧵 string with different strengths and the
         { kind: 'slider', key: 'p', label: { ko: 'p', en: 'p' }, min: 0.2, max: 5, step: 0.1, init: 2 },
         { kind: 'slider', key: 'q', label: { ko: 'q', en: 'q' }, min: 0.2, max: 5, step: 0.1, init: 3 },
       ],
-problems: betaFunctionProblems,
     },
     {
       id: 'bohr-mollerup',
@@ -131,7 +104,6 @@ For example, height and weight alone cannot confirm a 🧑 friend's identity. A 
         { kind: 'slider', key: 'amp', label: { ko: '진폭 a', en: 'Amplitude a' }, min: 0, max: 0.5, step: 0.05, init: 0.3 },
         { kind: 'slider', key: 'probe', label: { ko: '현 테스트 위치 x₀', en: 'Secant probe x₀' }, min: 0.2, max: 1.8, step: 0.1, init: 0.6 },
       ],
-problems: bohrMollerupProblems,
     },
     {
       id: 'improper',
@@ -160,7 +132,6 @@ For example, a 💧 water leak that slows down quickly spills only one bucketful
         { kind: 'slider', key: 'R', label: { ko: '위끝 R', en: 'Upper limit R' }, min: 2, max: 50, step: 1, init: 10 },
         { kind: 'slider', key: 'eps', label: { ko: '아래끝 ε', en: 'Lower limit ε' }, min: 0.001, max: 0.5, step: 0.001, init: 0.01 },
       ],
-problems: improperProblems,
     },
     {
       id: 'gabriel-horn',
@@ -186,7 +157,6 @@ For example, a coiled 🧵 string fits inside a small 📦 box. Spread that same
       controls: [
         { kind: 'slider', key: 'r', label: { ko: '절단 R', en: 'Truncation R' }, min: 1, max: 50, step: 0.5, init: 5 },
       ],
-      problems: gabrielHornProblems,
     },
     {
       id: 'riemann',
@@ -206,7 +176,6 @@ For example, fit square pieces into the curved shape of a 🍰 cake. The smaller
       },
       tex: [String.raw`L(f,P) \le \int_a^b f \le U(f,P)`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Subdivisions n' }, min: 1, max: 48, step: 1, init: 12 }],
-problems: riemannProblems,
     },
     {
       id: 'dirichlet-function',
@@ -230,7 +199,6 @@ For example, mix black and white ⚽ balls as finely as you like, and every scoo
       ],
       prerequisites: ['riemann'],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Subdivisions n' }, min: 1, max: 32, step: 1, init: 8 }],
-      problems: dirichletFunctionProblems,
     },
     {
       id: 'volterra-function',
@@ -257,7 +225,6 @@ For example, measure the slope of a smooth road with a 📏 ruler, but the readi
         { kind: 'slider', key: 'stage', label: { ko: '단계', en: 'Stage' }, min: 1, max: 7, step: 1, init: 4 },
         { kind: 'slider', key: 'interval', label: { ko: '확대 구간', en: 'Zoom interval' }, min: 0, max: 126, step: 1, init: 0 },
       ],
-problems: volterraFunctionProblems,
     },
     {
       id: 'ftc',
@@ -286,7 +253,6 @@ For example, filling a tank with 💧 water, the level rises at the rate the wat
         },
         { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: 0, max: 100, step: 1, init: 60 },
       ],
-problems: ftcProblems,
     },
     {
       id: 'integration-by-parts',
@@ -319,7 +285,6 @@ For example, measuring a 🍰 cake's area gets easier when you swap to a full re
         },
         { kind: 'slider', key: 'b', label: { ko: '상한 b', en: 'Upper limit b' }, min: 0.5, max: 3, step: 0.1, init: 2 },
       ],
-      problems: integrationByPartsProblems,
     },
     {
       id: 'change-of-variables',
@@ -352,7 +317,6 @@ For example, measure with a 📏 ruler whose marks are stretched twofold and eve
         },
         { kind: 'slider', key: 'N', label: { ko: '구간 수', en: 'Panels' }, min: 4, max: 200, step: 4, init: 50 },
       ],
-      problems: changeOfVariablesProblems,
     },
     {
       id: 'bounded-variation',
@@ -385,7 +349,6 @@ For example, a 🚗 car driving up and down has bounded variation while its tota
         },
         { kind: 'slider', key: 'n', label: { ko: '분할 점 수 n', en: 'Partition points n' }, min: 2, max: 200, step: 1, init: 40 },
       ],
-problems: boundedVariationProblems,
     },
     {
       id: 'arc-length',
@@ -412,7 +375,6 @@ For example, lay a 🧵 string along a winding path and measure it piece by piec
         { kind: 'select', key: 'curve', label: { ko: '곡선', en: 'Curve' }, options: ['circle', 'parabola'], init: 'circle' },
         { kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Partition count n' }, min: 1, max: 64, step: 1, init: 8 },
       ],
-      problems: arcLengthProblems,
     },
     {
       id: 'riemann-stieltjes',
@@ -439,7 +401,6 @@ For example, total cargo by weight, not by count, when each 📦 box weighs diff
         { kind: 'select', key: 'alpha', label: { ko: '적분자 α', en: 'Integrator α' }, options: ['identity', 'square', 'step'], init: 'identity' },
         { kind: 'slider', key: 'n', label: { ko: '분할 수 n', en: 'Subdivisions n' }, min: 1, max: 24, step: 1, init: 6 },
       ],
-      problems: riemannStieltjesProblems,
     },
     {
       id: 'jordan-decomposition',
@@ -465,7 +426,6 @@ For example, money now in a 🐷 piggy bank is the total 💰 money put in minus
       controls: [
         { kind: 'slider', key: 'X0', label: { ko: '관찰점 X₀', en: 'Probe point X₀' }, min: 0, max: 1, step: 0.001, init: 0.7 },
       ],
-      problems: jordanDecompositionProblems,
     },
     {
       id: 'measure',
@@ -490,7 +450,6 @@ For example, cover a set with pieces of 🧵 string; the shortest total string l
         { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.01, max: 0.5, step: 0.01, init: 0.1 },
         { kind: 'slider', key: 'K', label: { ko: '유리수 개수 K', en: 'Rationals K' }, min: 1, max: 64, step: 1, init: 16 },
       ],
-      problems: measureProblems,
     },
     {
       id: 'vitali',
@@ -516,7 +475,6 @@ For example, copies of one 📦 box can fill a room, yet if the box's size were 
       controls: [
         { kind: 'slider', key: 'd', label: { ko: '분모 상한 d', en: 'Denominator cap d' }, min: 1, max: 6, step: 1, init: 3 },
       ],
-      problems: vitaliProblems,
     },
     {
       id: 'borel-cantelli',
@@ -543,7 +501,6 @@ For example, in rain whose 💧 water drops keep shrinking, a finite total volum
         { kind: 'select', key: 'mode', label: { ko: '모드', en: 'Mode' }, options: ['summable', 'nonsummable'], init: 'summable' },
         { kind: 'slider', key: 'n', label: { ko: '집합 개수 n', en: 'Number of sets n' }, min: 1, max: 60, step: 1, init: 20 },
       ],
-      problems: borelCantelliProblems,
     },
     {
       id: 'lebesgue',
@@ -566,7 +523,6 @@ For example, cover 🍬 candies scattered on the floor, one by one, with smaller
         { kind: 'slider', key: 'epsilon', label: { ko: 'ε', en: 'ε' }, min: 0.01, max: 0.5, step: 0.01, init: 0.1 },
         { kind: 'slider', key: 'K', label: { ko: '유리수 개수 K', en: 'Rationals K' }, min: 1, max: 64, step: 1, init: 16 },
       ],
-problems: lebesgueProblems,
     },
     {
       id: 'lebesgue-convergence',
@@ -594,7 +550,6 @@ For example, pour 💧 water from cup to cup with no spill and the total stays t
         { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['escape', 'spike', 'monotone'], init: 'escape' },
         { kind: 'slider', key: 'n', label: { ko: 'n', en: 'n' }, min: 1, max: 40, step: 1, init: 10 },
       ],
-      problems: lebesgueConvergenceProblems,
     },
     {
       id: 'fubini-tonelli',
@@ -620,7 +575,6 @@ For example, count 🍎 apples packed in a grid inside a 📦 box: counting by r
         { kind: 'select', key: 'mode', label: { ko: '함수 모드', en: 'Function mode' }, options: ['separable', 'tent'], init: 'separable' },
         { kind: 'slider', key: 'n', label: { ko: '격자 N', en: 'Grid N' }, min: 8, max: 64, step: 8, init: 32 },
       ],
-      problems: fubiniTonelliProblems,
     },
     {
       id: 'convolution',
@@ -648,7 +602,6 @@ For example, it is the blur effect in a 📷 photo, replacing each pixel by a we
         { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -0.5, max: 2.5, step: 0.01, init: 0.7 },
         { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.05, max: 1, step: 0.05, init: 0.3 },
       ],
-      problems: convolutionProblems,
     },
     {
       id: 'egorov',
@@ -674,7 +627,6 @@ For example, of 30 🧑 friends racing to a finish line, one or two may lag; set
         { kind: 'slider', key: 'delta', label: { ko: 'δ (나쁜 집합 기준)', en: 'δ (bad-set threshold)' }, min: 0.1, max: 1, step: 0.05, init: 0.5 },
         { kind: 'slider', key: 'n', label: { ko: '단계 n', en: 'Stage n' }, min: 1, max: 40, step: 1, init: 6 },
       ],
-      problems: egorovProblems,
     },
     {
       id: 'absolute-continuity',
@@ -701,7 +653,6 @@ For example, open a tap a little and only a little 💧 water comes out. The Can
         { kind: 'select', key: 'func', label: { ko: '함수', en: 'Function' }, options: ['square', 'cantor'], init: 'square' },
         { kind: 'slider', key: 'scale', label: { ko: 'δ / 단계 n', en: 'δ / stage n' }, min: 1, max: 10, step: 1, init: 4 },
       ],
-problems: absoluteContinuityProblems,
     },
     {
       id: 'differentiation-under-integral',
@@ -727,7 +678,6 @@ For example, measure how fast a room's average 🌡️ thermometer reading rises
         { kind: 'slider', key: 'x', label: { ko: 'x (지수)', en: 'x (exponent)' }, min: 0.2, max: 4, step: 0.05, init: 1 },
         { kind: 'slider', key: 'n', label: { ko: 'n (심슨 구간 수)', en: 'n (Simpson panels)' }, min: 8, max: 2000, step: 2, init: 200 },
       ],
-      problems: differentiationUnderIntegralProblems,
     },
     {
       id: 'minkowski',
@@ -755,7 +705,6 @@ For example, a 🚗 car that drives two legs in an L shape travels at least the 
         { kind: 'slider', key: 'a', label: { ko: '지수 a (f(t) = t^a)', en: 'Exponent a' }, min: 0, max: 3, step: 0.1, init: 1 },
         { kind: 'slider', key: 'b', label: { ko: '지수 b (g(t) = (1-t)^b)', en: 'Exponent b' }, min: 0, max: 3, step: 0.1, init: 1 },
       ],
-      problems: minkowskiProblems,
     },
   ],
 };

@@ -1,26 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { doubleSequencesProblems } from '../limits/problems/double-sequences';
-import { problems as bolzanoWeierstrassProblems } from '../limits/problems/bolzano-weierstrass';
-import { problems as cauchySchwarzProblems } from '../limits/problems/cauchy-schwarz';
-import { problems as constructionProblems } from '../limits/problems/construction';
-import { problems as epsilonNProblems } from '../limits/problems/epsilon-n';
-import { problems as holesProblems } from '../limits/problems/holes';
-import { holderProblems } from '../limits/problems/holder';
-import { problems as limsupLiminfProblems } from '../limits/problems/limsup-liminf';
-import { problems as monotoneCauchyProblems } from '../limits/problems/monotone-cauchy';
-import { boundedProblems } from '../limits/problems/bounded';
-import { innerProductProblems } from '../limits/problems/inner-product';
-import { normProblems } from '../limits/problems/norm';
-import { squeezeProblems } from '../limits/problems/squeeze';
-import { subsequenceProblems } from '../limits/problems/subsequence';
-import { parallelogramLawProblems } from '../limits/problems/parallelogram-law';
-import { problems as sequenceSpacesProblems } from '../limits/problems/sequence-spaces';
-import { problems as standardLimitsProblems } from '../limits/problems/standard-limits';
-import { problems as stolzCesaroProblems } from '../limits/problems/stolz-cesaro';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -72,7 +55,6 @@ For example, a ⚽ ball rolled toward a line stops closer and closer to it. Dema
         },
         { kind: 'slider', key: 'epsilon', label: { ko: 'ε', en: 'ε' }, min: 0.01, max: 0.5, step: 0.01, init: 0.1 },
       ],
-problems: epsilonNProblems,
     },
     {
       id: 'squeeze',
@@ -98,7 +80,6 @@ For example, picture a 🧍 person walking down a corridor. If both walls narrow
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 5, max: 60, step: 1, init: 30 },
       ],
-      problems: squeezeProblems,
     },
     {
       id: 'standard-limits',
@@ -127,7 +108,6 @@ For example, eat half of the remaining 🍰 cake each day. What is left goes one
         { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -2, max: 2, step: 0.05, init: 0.5 },
         { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 1, max: 60, step: 1, init: 20 },
       ],
-      problems: standardLimitsProblems,
     },
     {
       id: 'norm',
@@ -159,7 +139,6 @@ For example, in a 🏙 grid city, go one block east and one block north. The str
         { kind: 'slider', key: 'y2', label: { ko: 'y의 둘째 성분', en: 'y second component' }, min: -2, max: 2, step: 0.1, init: 1.4 },
         { kind: 'select', key: 'p', label: { ko: '노름 p', en: 'Norm p' }, options: ['1', '2', 'inf'], init: '2' },
       ],
-      problems: normProblems,
     },
     {
       id: 'inner-product',
@@ -189,7 +168,6 @@ For example, two people push a 📦 box. Pushing in the same direction, their fo
         { kind: 'slider', key: 'y1', label: { ko: 'y의 첫째 성분', en: 'y first component' }, min: -3, max: 3, step: 0.1, init: 0.5 },
         { kind: 'slider', key: 'y2', label: { ko: 'y의 둘째 성분', en: 'y second component' }, min: -3, max: 3, step: 0.1, init: 1.5 },
       ],
-      problems: innerProductProblems,
     },
     {
       id: 'sequence-spaces',
@@ -218,7 +196,6 @@ For example, picture three nested 📦 boxes. Anything inside the small box also
         { kind: 'select', key: 'p', label: { ko: '노름 p', en: 'Norm p' }, options: ['1', '2', 'inf'], init: '2' },
         { kind: 'slider', key: 'alpha', label: { ko: '지수 α', en: 'Exponent α' }, min: 0.2, max: 2, step: 0.05, init: 1 },
       ],
-problems: sequenceSpacesProblems,
     },
     {
       id: 'cauchy-schwarz',
@@ -245,7 +222,6 @@ For example, shine a light on a ✏️ pencil and its shadow is never longer tha
         { kind: 'slider', key: 'angle', label: { ko: '각도 θ', en: 'Angle θ' }, min: 0, max: Math.PI * 2, step: Math.PI / 180, init: 0 },
         { kind: 'toggle', key: 'showProjection', label: { ko: '정사영 표시', en: 'Show projection' }, init: true },
       ],
-      problems: cauchySchwarzProblems,
     },
     {
       id: 'holder',
@@ -272,7 +248,6 @@ For example, at a 🏪 shop you multiply each item's price by its quantity and a
         { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 1.1, max: 8, step: 0.1, init: 2 },
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Terms n' }, min: 2, max: 30, step: 1, init: 8 },
       ],
-      problems: holderProblems,
     },
     {
       id: 'parallelogram-law',
@@ -299,7 +274,6 @@ For example, a 📐 parallelogram drawn with a ruler stays exactly the same, but
         { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 1.1, max: 8, step: 0.1, init: 2 },
         { kind: 'toggle', key: 'showCircle', label: { ko: '단위구 표시', en: 'Show unit sphere' }, init: true },
       ],
-      problems: parallelogramLawProblems,
     },
     {
       id: 'holes',
@@ -319,7 +293,6 @@ For example, measure the diagonal of a square with a 📏 ruler. Try 1.4, then 1
       },
       tex: [String.raw`x_{n+1}=\frac{x_n+2/x_n}{2}\to\sqrt{2}`, String.raw`\sqrt{2}\notin\mathbb{Q}`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '반복 횟수 n', en: 'Iterations n' }, min: 0, max: 8, step: 1, init: 4 }],
-problems: holesProblems,
     },
     {
       id: 'construction',
@@ -346,7 +319,6 @@ For example, climb a 🪜 staircase one step at a time toward the top. The numbe
         { kind: 'select', key: 'seq', label: { ko: '수열', en: 'Sequence' }, options: ['decimal', 'newton'], init: 'decimal' },
         { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 1, max: 6, step: 1, init: 4 },
       ],
-problems: constructionProblems,
     },
     {
       id: 'bounded',
@@ -372,7 +344,6 @@ For example, a 🐑 sheep wanders around inside its fence. However far it roams,
         { kind: 'select', key: 'kind', label: { ko: '수열', en: 'Sequence' }, options: ['ratio', 'alt', 'linear'], init: 'ratio' },
         { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 5, max: 40, step: 1, init: 20 },
       ],
-      problems: boundedProblems,
     },
     {
       id: 'subsequence',
@@ -399,7 +370,6 @@ For example, an 🚃 express train does not stop at every station. Line up only 
         { kind: 'select', key: 'part', label: { ko: '뽑을 부분', en: 'Part to pick' }, options: ['all', 'even', 'odd'], init: 'all' },
         { kind: 'slider', key: 'n', label: { ko: '항의 개수 n', en: 'Terms n' }, min: 6, max: 48, step: 1, init: 24 },
       ],
-      problems: subsequenceProblems,
     },
     {
       id: 'bolzano-weierstrass',
@@ -423,7 +393,6 @@ For example, thirty 🧑 classmates scatter across a playground. Split the playg
         { kind: 'slider', key: 'steps', label: { ko: '이분 단계', en: 'Bisection steps' }, min: 1, max: 8, step: 1, init: 4 },
         { kind: 'select', key: 'seed', label: { ko: '난수 시드', en: 'Random seed' }, options: ['7', '21', '99'], init: '7' },
       ],
-problems: bolzanoWeierstrassProblems,
     },
     {
       id: 'monotone-cauchy',
@@ -450,7 +419,6 @@ For example, drop coins into a 🐷 piggy bank: half the goal, then half of what
         { kind: 'slider', key: 'n', label: { ko: '보이는 항 개수', en: 'Terms shown' }, min: 1, max: 12, step: 1, init: 8 },
         { kind: 'slider', key: 'tailN', label: { ko: '꼬리 시작 N', en: 'Tail start N' }, min: 1, max: 10, step: 1, init: 4 },
       ],
-problems: monotoneCauchyProblems,
     },
     {
       id: 'limsup-liminf',
@@ -477,7 +445,6 @@ For example, record each day's high and low temperature with a 🌡️ thermomet
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '항 개수', en: 'Terms shown' }, min: 2, max: 60, step: 1, init: 24 },
       ],
-      problems: limsupLiminfProblems,
     },
     {
       id: 'stolz-cesaro',
@@ -503,7 +470,6 @@ For example, on a 🚗 car trip the speed over the last minute settles at 60 km/
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '항 개수', en: 'Terms shown' }, min: 10, max: 300, step: 1, init: 60 },
       ],
-      problems: stolzCesaroProblems,
     },
     {
       id: 'double-sequences',
@@ -530,7 +496,6 @@ For example, reading a 📋 table row by row is not the same as reading it colum
         { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['ratio', 'difference', 'product', 'vanishing'], init: 'ratio' },
         { kind: 'slider', key: 'k', label: { ko: '격자 크기 K', en: 'Grid size K' }, min: 4, max: 24, step: 1, init: 12 },
       ],
-      problems: doubleSequencesProblems,
     },
   ],
 };

@@ -1,4 +1,4 @@
-import { catalog } from '../catalog.ts';
+import { catalogLight as catalog } from '../catalog-light.ts';
 import { glossary } from '../glossary.ts';
 import { localize, stripInlineMath, type Lang } from '../contracts.ts';
 import { chapterUrl, sceneUrl } from '../paths.ts';

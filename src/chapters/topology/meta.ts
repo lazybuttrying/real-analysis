@@ -1,22 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { baireCategoryProblems } from '../limits/problems/baire-category';
-import { baireOneProblems } from '../limits/problems/baire-1';
-import { clopenProblems } from '../limits/problems/clopen';
-import { connectedProblems } from '../limits/problems/connected';
-import { fatCantorProblems } from '../limits/problems/fat-cantor';
-import { peanoCurveProblems } from '../limits/problems/peano-curve';
-import { topologistSineProblems } from '../limits/problems/topologist-sine';
-import { problems as cantorFunctionProblems } from '../limits/problems/cantor-function';
-import { problems as cantorProblems } from '../limits/problems/cantor';
-import { problems as closureProblems } from '../limits/problems/closure';
-import { problems as compactProblems } from '../limits/problems/compact';
-import { problems as contractionProblems } from '../limits/problems/contraction';
-import { problems as metricSpacesProblems } from '../limits/problems/metric-spaces';
-import { problems as opensetsProblems } from '../limits/problems/opensets';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -65,7 +52,6 @@ For example, kick a ⚽ ball in the middle of a yard. A gentle kick keeps it ins
         { kind: 'slider', key: 'x', label: { ko: '점 x', en: 'Point x' }, min: -0.3, max: 1.3, step: 0.05, init: 0.5 },
         { kind: 'slider', key: 'eps', label: { ko: '반지름 ε', en: 'Radius ε' }, min: 0.05, max: 0.6, step: 0.05, init: 0.2 },
       ],
-problems: opensetsProblems,
     },
     {
       id: 'clopen',
@@ -93,7 +79,6 @@ For example, take one of two far-apart 🏠 houses. In a world made of that hous
         { kind: 'slider', key: 'x', label: { ko: '탐침 x', en: 'Probe x' }, min: -0.6, max: 3.6, step: 0.01, init: 0.5 },
         { kind: 'slider', key: 'eps', label: { ko: '반지름 ε', en: 'Radius ε' }, min: 0.01, max: 2, step: 0.01, init: 0.2 },
       ],
-      problems: clopenProblems,
     },
     {
       id: 'connected',
@@ -120,7 +105,6 @@ For example, look at one 🧩 jigsaw puzzle. While the pieces interlock, it is a
         { kind: 'select', key: 'case', label: { ko: '경우', en: 'Case' }, options: ['interval', 'two-pieces', 'rationals'], init: 'interval' },
         { kind: 'slider', key: 't', label: { ko: '절단점 t', en: 'Cut point t' }, min: -0.2, max: 3.2, step: 0.01, init: 1.5 },
       ],
-      problems: connectedProblems,
     },
     {
       id: 'closure',
@@ -147,7 +131,6 @@ For example, fill a 📦 box and put the lid on. Only with the lid is the box co
         { kind: 'select', key: 'kind', label: { ko: '집합 A', en: 'Set A' }, options: ['open', 'halfclosed', 'reciprocal'], init: 'open' },
         { kind: 'slider', key: 'm', label: { ko: '경계 M', en: 'Bound M' }, min: 0.5, max: 2.5, step: 0.1, init: 1.5 },
       ],
-problems: closureProblems,
     },
     {
       id: 'compact',
@@ -175,7 +158,6 @@ For example, cover a desk completely with 📚 books. A finite desk needs only a
         { kind: 'select', key: 'set', label: { ko: '집합 K', en: 'Set K' }, options: ['closed', 'halfopen', 'unbounded'], init: 'closed' },
         { kind: 'slider', key: 'step', label: { ko: '유한 부분커버: 앞 k개', en: 'Finite subcover: first k' }, min: 0, max: 8, step: 1, init: 6 },
       ],
-      problems: compactProblems,
     },
     {
       id: 'topologist-sine',
@@ -203,7 +185,6 @@ For example, shake one end of a 🧵 string faster and faster. The shaking end b
         { kind: 'toggle', key: 'showSegment', label: { ko: '극한 선분 표시', en: 'Show limit segment' }, init: true },
         { kind: 'toggle', key: 'showSeq', label: { ko: '수열 표시', en: 'Show sequences' }, init: true },
       ],
-      problems: topologistSineProblems,
     },
     {
       id: 'peano-curve',
@@ -231,7 +212,6 @@ For example, color a whole sheet with a ✏️ pencil, never lifting it. Zigzag 
         { kind: 'slider', key: 't', label: { ko: '매개변수 t', en: 'Parameter t' }, min: 0, max: 1, step: 0.001, init: 0.5 },
         { kind: 'toggle', key: 'showGrid', label: { ko: '격자 표시', en: 'Show grid' }, init: true },
       ],
-      problems: peanoCurveProblems,
     },
     {
       id: 'metric-spaces',
@@ -259,7 +239,6 @@ For example, change how a 📏 ruler measures between two points. Measure straig
         { kind: 'select', key: 'metric', label: { ko: '거리', en: 'Metric' }, options: ['euclid', 'discrete', 'maxnorm'], init: 'euclid' },
         { kind: 'slider', key: 'r', label: { ko: '반지름 r', en: 'Radius r' }, min: 0.2, max: 2, step: 0.1, init: 1 },
       ],
-      problems: metricSpacesProblems,
     },
     {
       id: 'contraction',
@@ -288,7 +267,6 @@ For example, fold a 🗺️ map in half, then in half again. Each fold shrinks t
         { kind: 'slider', key: 'n', label: { ko: '반복 횟수 n', en: 'Iterations n' }, min: 0, max: 12, step: 1, init: 5 },
         { kind: 'slider', key: 'x0', label: { ko: '시작점 x₀', en: 'Start x₀' }, min: 0.1, max: 3, step: 0.1, init: 1 },
       ],
-      problems: contractionProblems,
     },
     {
       id: 'baire-category',
@@ -314,7 +292,6 @@ For example, put a 📦 box inside a box, then a smaller one inside that. Howeve
       controls: [
         { kind: 'slider', key: 'stage', label: { ko: '단계', en: 'Stage' }, min: 1, max: 14, step: 1, init: 6 },
       ],
-problems: baireCategoryProblems,
     },
     {
       id: 'baire-1',
@@ -340,7 +317,6 @@ For example, bend a 🧵 string into ever sharper mountain shapes. At every stag
       controls: [
         { kind: 'slider', key: 'N', label: { ko: '근사 단계 N', en: 'Approximation stage N' }, min: 2, max: 12, step: 1, init: 5 },
       ],
-      problems: baireOneProblems,
     },
     {
       id: 'cantor',
@@ -360,7 +336,6 @@ For example, cut the middle third out of a 🍰 cake. Then cut the middle of eac
       },
       tex: [String.raw`|C_n|=\left(\frac{2}{3}\right)^n\to 0`, String.raw`|C|=|\mathbb{R}|`],
       controls: [{ kind: 'slider', key: 'stage', label: { ko: '단계 n', en: 'Stage n' }, min: 0, max: 8, step: 1, init: 4 }],
-problems: cantorProblems,
     },
     {
       id: 'fat-cantor',
@@ -384,7 +359,6 @@ For example, scoop a 🍰 cake again, but take only small bites. Holes appear ev
       ],
       prerequisites: ['cantor'],
       controls: [{ kind: 'slider', key: 'stage', label: { ko: '단계 n', en: 'Stage n' }, min: 0, max: 7, step: 1, init: 4 }],
-problems: fatCantorProblems,
     },
     {
       id: 'cantor-function',
@@ -410,7 +384,6 @@ For example, climb a 🪜 staircase whose landings are endlessly long. You rest 
       controls: [
         { kind: 'slider', key: 'stage', label: { ko: '칸토어 집합 단계 n', en: 'Cantor set stage n' }, min: 0, max: 7, step: 1, init: 4 },
       ],
-      problems: cantorFunctionProblems,
     },
   ],
 };
