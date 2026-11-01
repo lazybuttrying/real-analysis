@@ -9,6 +9,8 @@ import { parseState, serializeState } from '../state';
 import { buildControls } from './controls';
 import { h } from './dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './i18n';
+import { setChartShed } from '../view/d3kit';
+import { shedCharts, startLoadPolicy } from './load-policy';
 import { domKindFragments, problemCardBlocks, problemKind } from './kind-ui';
 import { disposeExercisesPage, exercisesPageTitle, renderExercisesPage } from './exercises-page';
 import { mountMiniViz, SceneHost } from './scene-host';
@@ -37,6 +39,14 @@ export function startChapter(chapterId: string, loaders: Loaders, exercisesLoade
   const lang = parsed.lang;
   rememberLang(lang);
   document.documentElement.lang = lang;
+
+  // Load shedding (real-analysis only): same registration as the home
+  // entry — charts and the semantic model shed first, text never does.
+  startLoadPolicy();
+  setChartShed(
+    () => shedCharts(),
+    () => tr(lang, 'chartShedNotice'),
+  );
 
   // Retired chapter URLs (10-chapter split) serve the scene's full content
   // directly: the prerendered page boots this chapter's entry and the router

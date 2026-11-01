@@ -211,6 +211,20 @@ main.home {
   font-size: 0.875rem;
 }
 
+.chart-shed-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 120px;
+  padding: 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+}
+
 .search-offtopic {
   display: flex;
   flex-wrap: wrap;

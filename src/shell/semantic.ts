@@ -1,5 +1,6 @@
 import type { Lang } from '../contracts.ts';
 import { decodeSearchVectors, type SearchVectorsData } from '../search-vectors.ts';
+import { shedSemantic, shedSemanticWarm } from './load-policy.ts';
 
 /**
  * Lazy semantic-search engine. Two costs are paid only when a visitor
@@ -63,12 +64,15 @@ export function loadSearchVectors(base: string, lang: Lang): Promise<Float32Arra
  * the search itself retries through the normal path.
  */
 export function warmSemantic(base: string, lang: Lang): void {
+  // Load policy tier 1 and up: no speculative 113 MB download.
+  if (shedSemanticWarm()) return;
   void loadSearchVectors(base, lang);
   loadExtractor().catch(() => undefined);
 }
 
-/** Embeds one query with the e5 'query: ' prefix; null on failure. */
+/** Embeds one query with the e5 'query: ' prefix; null on failure, and null when the load policy sheds the model (tier 2), which the caller already treats as keyword-only. */
 export async function embedQuery(query: string): Promise<Float32Array | null> {
+  if (shedSemantic()) return null;
   try {
     const extractor = await loadExtractor();
     const out = await extractor([`query: ${query}`], { pooling: 'mean', normalize: true });

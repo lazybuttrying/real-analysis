@@ -1,6 +1,7 @@
 import { localize, type ControlSpec, type ControlState, type ControlValue, type Lang } from '../contracts';
 import { h } from './dom';
 import { tr } from './i18n';
+import { shedAutoplay } from './load-policy';
 
 /** Default playback interval: slow, one step every two seconds. */
 export const PLAYBACK_DEFAULT_INTERVAL_MS = 2000;
@@ -131,7 +132,9 @@ export function buildControls(
   let targetKey = sliderRefs[0]?.spec.key ?? '';
   let intervalMs = PLAYBACK_DEFAULT_INTERVAL_MS;
   let loop = true;
-  let playing = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Load policy tier 1 and up: no auto-start; the play button still works.
+  let playing =
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !shedAutoplay();
   let timer: number | undefined;
 
   const stopTimer = (): void => {

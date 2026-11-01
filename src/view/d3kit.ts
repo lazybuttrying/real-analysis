@@ -33,8 +33,50 @@ export interface Chart {
   destroy(): void;
 }
 
+/**
+ * Load-shedding hook for charts. A host app may register a check
+ * (and the notice text shown instead of a chart) so that under
+ * critical load charts are the first thing shed while text and
+ * tables keep working. Unregistered (the default everywhere) means
+ * charts always render, exactly as before.
+ */
+let chartShedCheck: (() => boolean) | null = null;
+let chartShedNotice: (() => string) | null = null;
+
+export function setChartShed(check: () => boolean, notice: () => string): void {
+  chartShedCheck = check;
+  chartShedNotice = notice;
+}
+
 /** Builds the SVG chart skeleton inside the host. The host height must be set in CSS. */
 export function createChart(host: HTMLElement, margin: Margin = DEFAULT_MARGIN): Chart {
+  if (chartShedCheck?.()) {
+    // Shed: a notice in the visible host, and a stub chart built on a
+    // detached element so scene code keeps running against valid d3
+    // selections — its writes just never reach the document or paint.
+    const notice = document.createElement('div');
+    notice.className = 'chart-shed-notice';
+    notice.textContent = chartShedNotice?.() ?? '';
+    host.append(notice);
+    const detached = document.createElement('div');
+    const stubSvg = select(detached).append('svg');
+    const stubG = stubSvg.append('g');
+    const stub: Chart = {
+      svg: stubSvg,
+      g: stubG,
+      width: 0,
+      height: 0,
+      setSize(outerWidth, outerHeight) {
+        stub.width = Math.max(0, outerWidth - margin.left - margin.right);
+        stub.height = Math.max(0, outerHeight - margin.top - margin.bottom);
+      },
+      destroy() {
+        notice.remove();
+      },
+    };
+    stub.setSize(host.clientWidth || 640, host.clientHeight || 360);
+    return stub;
+  }
   const svg = select(host)
     .append('svg')
     .attr('role', 'img')

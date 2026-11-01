@@ -6,6 +6,8 @@ import { h } from './shell/dom';
 import { langSwitcher, rememberLang, storedLang, tr } from './shell/i18n';
 import { mountSearch } from './shell/search';
 import { SEARCH_EXAMPLES } from './search-examples';
+import { setChartShed } from './view/d3kit';
+import { shedCharts, startLoadPolicy } from './shell/load-policy';
 
 /**
  * A span holding a summary: the delimiter-stripped text shows immediately, and
@@ -36,6 +38,15 @@ if (parsed.lang === undefined) {
   const lang = parsed.lang;
   rememberLang(lang);
   document.documentElement.lang = lang;
+
+  // Load shedding (real-analysis only): register the chart shed hook
+  // and start watching the load signals. Text, tables, and keyword
+  // search are never shed; charts and the semantic model go first.
+  startLoadPolicy();
+  setChartShed(
+    () => shedCharts(),
+    () => tr(lang, 'chartShedNotice'),
+  );
 
   // The standalone pages (errata, glossary, paths) live on the home entry;
   // each renderer (and its data) loads as a separate chunk only for its route.
