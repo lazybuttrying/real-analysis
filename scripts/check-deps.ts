@@ -22,8 +22,11 @@ import { fileURLToPath } from 'node:url';
  *     chapters/{limits,series,calculus}/ — but never their retired wiring
  *     (meta.ts, loaders.ts, entry.ts, exercises.ts of limits/calculus,
  *     deleted 2026-10-18).
- *  5. Outside the chapters, only src/catalog.ts may import chapter code
- *     (it is the aggregation point for chapter meta), with one narrow
+ *  5. Outside the chapters, only src/catalog.ts and src/catalog-light.ts
+ *     may import chapter code
+ *     (they are the aggregation points for chapter meta: the full view
+ *     for Node consumers, and the light view without problems data for
+ *     client bundles), with one narrow
  *     exception: src/search-index.ts may aggregate the chapter exercise data
  *     modules, because it is build/test-only and provably never enters a
  *     client bundle (no value import of search-index.ts from src/ is allowed).
@@ -148,13 +151,23 @@ for (const file of files) {
         violations.push({ file: rel, rule: 'chapters do not import other chapters', detail: `imports '${ref.spec}'` });
       }
     }
-    if (!inChapter && resolved !== undefined && resolved.startsWith('chapters/') && rel !== 'catalog.ts') {
-      // Narrow exception: search-index.ts is build/test-only (imported by
+    if (
+      !inChapter &&
+      resolved !== undefined &&
+      resolved.startsWith('chapters/') &&
+      rel !== 'catalog.ts' &&
+      rel !== 'catalog-light.ts'
+    ) {
+      // Narrow exceptions: search-index.ts is build/test-only (imported by
       // scripts/prerender.ts and tests/; see the build-only guard below), so
       // aggregating the chapter exercise data there never puts chapter code
-      // into a client bundle.
+      // into a client bundle. catalog-light.ts is the second catalog
+      // aggregation point (real-analysis only): it collects the chapter
+      // metas without the problems maps, and it is the only catalog module
+      // client code may import, so a page bundle never carries the full
+      // problems corpus through the catalog.
       if (rel !== 'search-index.ts') {
-        violations.push({ file: rel, rule: 'only catalog.ts aggregates chapters', detail: `imports '${ref.spec}'` });
+        violations.push({ file: rel, rule: 'only catalog.ts and catalog-light.ts aggregate chapters', detail: `imports '${ref.spec}'` });
       }
     }
     // search-index.ts must stay build-only: no value import of it is allowed

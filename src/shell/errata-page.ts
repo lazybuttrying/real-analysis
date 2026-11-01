@@ -1,4 +1,4 @@
-import { catalog } from '../catalog.ts';
+import { catalogLight as catalog } from '../catalog-light.ts';
 import { localize, type Lang } from '../contracts.ts';
 import { ERRATA_AS_OF, ERRATA_REPORT_URL, errata } from '../errata.ts';
 import { sceneUrl } from '../paths.ts';

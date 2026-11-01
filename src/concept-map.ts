@@ -1,4 +1,4 @@
-import { catalog } from './catalog.ts';
+import { catalogLight as catalog } from './catalog-light.ts';
 import { learningPaths } from './learning-paths.ts';
 
 /**

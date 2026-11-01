@@ -1,12 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { arzelaAscoliProblems } from '../limits/problems/arzela-ascoli';
-import { muntzSzaszProblems } from '../limits/problems/muntz-szasz';
-import { problems as weierstrassApproxProblems } from '../limits/problems/weierstrass-approx';
-import { stoneWeierstrassProblems } from '../limits/problems/stone-weierstrass';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -47,7 +44,6 @@ For example, picture 30 🧑 friends walking across a playground. Everyone must 
       ],
       prerequisites: ['uniform', 'bolzano-weierstrass'],
       controls: [{ kind: 'slider', key: 'members', label: { ko: '부분수열 항의 수', en: 'Subsequence members' }, min: 2, max: 12, step: 1, init: 6 }],
-problems: arzelaAscoliProblems,
     },
     {
       id: 'weierstrass-approx',
@@ -74,7 +70,6 @@ For example, think of replacing a slope with a 🪜 staircase. The finer the ste
         { kind: 'select', key: 'fn', label: { ko: '함수 f', en: 'Function f' }, options: ['one', 'id', 'abs', 'square', 'sin'], init: 'abs' },
         { kind: 'slider', key: 'n', label: { ko: '차수 n', en: 'Degree n' }, min: 1, max: 60, step: 1, init: 10 },
       ],
-problems: weierstrassApproxProblems,
     },
     {
       id: 'stone-weierstrass',
@@ -101,7 +96,6 @@ For example, layering round waves can build even a pointy 🏠 roof shape. In th
       controls: [
         { kind: 'slider', key: 'degree', label: { ko: '차수 n', en: 'Degree n' }, min: 1, max: 40, step: 1, init: 8 },
       ],
-problems: stoneWeierstrassProblems,
     },
     {
       id: 'muntz-szasz',
@@ -127,7 +121,6 @@ For example, think of measuring with a 📏 ruler. Marks packed endlessly close 
       controls: [
         { kind: 'slider', key: 'N', label: { ko: '차수 N', en: 'Degree N' }, min: 2, max: 8, step: 1, init: 6 },
       ],
-      problems: muntzSzaszProblems,
     },
   ],
 };
