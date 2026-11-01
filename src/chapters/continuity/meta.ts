@@ -1,18 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { additiveFunctionsProblems } from '../limits/problems/additive-functions';
-import { monotoneDiscontinuitiesProblems } from '../limits/problems/monotone-discontinuities';
-import { problems as continuityProblems } from '../limits/problems/continuity';
-import { problems as continuityEquivalencesProblems } from '../limits/problems/continuity-equivalences';
-import { problems as epsdeltaProblems } from '../limits/problems/epsdelta';
-import { problems as evtProblems } from '../limits/problems/evt';
-import { problems as ivtProblems } from '../limits/problems/ivt';
-import { problems as thomaeProblems } from '../limits/problems/thomae';
-import { problems as uniformContinuityProblems } from '../limits/problems/uniform-continuity';
-import { problems as uniformProblems } from '../limits/problems/uniform';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -56,7 +47,6 @@ For example, play at throwing a ⚽ ball into a 📦 box. Your friend may swap i
       ],
       prerequisites: ['epsilon-n'],
       controls: [{ kind: 'slider', key: 'epsilon', label: { ko: 'ε', en: 'ε' }, min: 0.05, max: 1, step: 0.05, init: 0.4 }],
-problems: epsdeltaProblems,
     },
     {
       id: 'continuity',
@@ -83,7 +73,6 @@ For example, draw the graph with a ✏️ pencil without lifting it. If one stro
         { kind: 'slider', key: 'a', label: { ko: '점 a', en: 'Point a' }, min: -2, max: 2, step: 0.1, init: 1 },
         { kind: 'toggle', key: 'broken', label: { ko: '한 점 깨뜨리기', en: 'Break one point' }, init: false },
       ],
-problems: continuityProblems,
     },
     {
       id: 'thomae',
@@ -112,7 +101,6 @@ For example, picture a jar of 🍬 candies. Only a few are big, and you can coun
         { kind: 'slider', key: 'center', label: { ko: '중심 x₀', en: 'Center x₀' }, min: 0, max: 1, step: 0.01, init: 0.5 },
         { kind: 'slider', key: 'zoom', label: { ko: '확대 폭', en: 'Zoom width' }, min: 0.02, max: 0.5, step: 0.01, init: 0.2 },
       ],
-      problems: thomaeProblems,
     },
     {
       id: 'continuity-equivalences',
@@ -141,7 +129,6 @@ For example, look at one object in a 🪞 mirror from three sides. Front or side
         { kind: 'select', key: 'view', label: { ko: '관점', en: 'View' }, options: ['epsdelta', 'sequential', 'preimage'], init: 'epsdelta' },
         { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.05, max: 1, step: 0.05, init: 0.3 },
       ],
-      problems: continuityEquivalencesProblems,
     },
     {
       id: 'monotone-discontinuities',
@@ -168,7 +155,6 @@ For example, take a 🪜 staircase three meters tall in total. Steps higher than
         { kind: 'slider', key: 'terms', label: { ko: '유리수 점프 수', en: 'Rational jumps' }, min: 1, max: 60, step: 1, init: 24 },
         { kind: 'slider', key: 'n', label: { ko: '임계값 분모 n (1/n)', en: 'Threshold denominator n (1/n)' }, min: 1, max: 32, step: 1, init: 4 },
       ],
-problems: monotoneDiscontinuitiesProblems,
     },
     {
       id: 'uniform-continuity',
@@ -197,7 +183,6 @@ For example, imagine a whole class sharing one 📏 ruler. Everyone must measure
         { kind: 'slider', key: 'x', label: { ko: '점 x', en: 'Point x' }, min: 0, max: 4, step: 0.1, init: 2 },
         { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.1, max: 2, step: 0.1, init: 0.5 },
       ],
-      problems: uniformContinuityProblems,
     },
     {
       id: 'ivt',
@@ -220,7 +205,6 @@ For example, watch the column of a 🌡️ thermometer. Rising from 10° in the 
         { kind: 'select', key: 'fn', label: { ko: '함수', en: 'Function' }, options: ['cubic', 'sine'], init: 'cubic' },
         { kind: 'slider', key: 't', label: { ko: '목표 높이 (0–100%)', en: 'Target level (0–100%)' }, min: 0, max: 100, step: 1, init: 50 },
       ],
-problems: ivtProblems,
     },
     {
       id: 'evt',
@@ -252,7 +236,6 @@ For example, picture a 🧑 hiker walking a trail to the summit. If the trail ru
           init: 'closed',
         },
       ],
-problems: evtProblems,
     },
     {
       id: 'additive-functions',
@@ -278,7 +261,6 @@ For example, a 📐 square with side 1 has diagonal \(\sqrt{2}\). Knowing only t
       controls: [
         { kind: 'slider', key: 't', label: { ko: 'f(√2) = t', en: 'f(√2) = t' }, min: -2.5, max: 2.5, step: 0.01, init: 1.41 },
       ],
-      problems: additiveFunctionsProblems,
     },
     {
       id: 'uniform',
@@ -304,7 +286,6 @@ For example, picture 🧑 classmates in a row sitting down together. It counts a
         { kind: 'slider', key: 'n', label: { ko: 'n', en: 'n' }, min: 1, max: 60, step: 1, init: 8 },
         { kind: 'slider', key: 'eps', label: { ko: 'ε', en: 'ε' }, min: 0.05, max: 0.5, step: 0.01, init: 0.2 },
       ],
-problems: uniformProblems,
     },
   ],
 };

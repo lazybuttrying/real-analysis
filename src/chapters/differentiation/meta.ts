@@ -1,22 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { problems as banachProblems } from '../calculus/problems/banach';
-import { problems as cauchyMvtProblems } from '../calculus/problems/cauchy-mvt';
-import { derivativeMonotonicityProblems } from '../calculus/problems/derivative-monotonicity';
-import { inverseFunctionTheoremProblems } from '../calculus/problems/inverse-function-theorem';
-import { problems as convexProblems } from '../calculus/problems/convex';
-import { problems as darbouxProblems } from '../calculus/problems/darboux';
-import { problems as diffcontProblems } from '../calculus/problems/diffcont';
-import { problems as discontinuousDerivativeProblems } from '../calculus/problems/discontinuous-derivative';
-import { problems as lhopitalProblems } from '../calculus/problems/lhopital';
-import { problems as mvtProblems } from '../calculus/problems/mvt';
-import { problems as newtonProblems } from '../calculus/problems/newton';
-import { problems as taylorProblems } from '../calculus/problems/taylor';
-import { problems as taylorThmProblems } from '../calculus/problems/taylor-thm';
-import { problems as weierstrassFunctionProblems } from '../calculus/problems/weierstrass-function';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -62,7 +49,6 @@ For example, a 🚗 car climbing a smooth hill has a speed at every moment. But 
       controls: [
         { kind: 'slider', key: 'zoom', label: { ko: '확대', en: 'Zoom' }, min: 1, max: 8, step: 1, init: 1 },
       ],
-problems: diffcontProblems,
     },
     {
       id: 'discontinuous-derivative',
@@ -89,7 +75,6 @@ For example, picture a ⚽ ball bouncing lower and faster each time it hits the 
         { kind: 'slider', key: 'logR', label: { ko: '관찰 범위 (log₁₀)', en: 'View range (log₁₀)' }, min: -3, max: 0, step: 0.1, init: -1 },
         { kind: 'slider', key: 'logH', label: { ko: 'h (log₁₀)', en: 'h (log₁₀)' }, min: -4, max: 1, step: 0.1, init: -1 },
       ],
-      problems: discontinuousDerivativeProblems,
     },
     {
       id: 'mvt',
@@ -118,7 +103,6 @@ For example, a 🚗 car covering 100 km in one hour averages 100 km/h. At some m
         },
         { kind: 'slider', key: 'xi', label: { ko: 'ξ 위치', en: 'ξ position' }, min: 0, max: 100, step: 1, init: 40 },
       ],
-problems: mvtProblems,
     },
     {
       id: 'derivative-monotonicity',
@@ -151,7 +135,6 @@ For example, while you climb a 🪜 staircase your height keeps growing. While y
         },
         { kind: 'slider', key: 'x', label: { ko: 'x 위치', en: 'x position' }, min: 0, max: 100, step: 1, init: 0 },
       ],
-      problems: derivativeMonotonicityProblems,
     },
     {
       id: 'inverse-function-theorem',
@@ -184,7 +167,6 @@ For example, imagine 💰 money and 🍬 candies traded at a 🏪 shop: 4 money 
         },
         { kind: 'slider', key: 'a', label: { ko: '점 a', en: 'Point a' }, min: -1, max: 2, step: 0.1, init: 1 },
       ],
-      problems: inverseFunctionTheoremProblems,
     },
     {
       id: 'cauchy-mvt',
@@ -210,7 +192,6 @@ For example, a 🚗 car climbing a mountain road gains distance and height toget
       controls: [
         { kind: 'slider', key: 'xi', label: { ko: 'ξ 위치', en: 'ξ position' }, min: 1, max: 2, step: 0.01, init: 1.56 },
       ],
-problems: cauchyMvtProblems,
     },
     {
       id: 'lhopital',
@@ -237,7 +218,6 @@ For example, when two puddles of 💧 water both dry up, their remaining ratio i
         { kind: 'select', key: 'pair', label: { ko: '함수 쌍', en: 'Function pair' }, options: ['sin x / x', 'ln x / x'], init: 'sin x / x' },
         { kind: 'slider', key: 'pos', label: { ko: 'x 위치 (오른쪽 → 한계점)', en: 'x position (right → limit point)' }, min: 0, max: 100, step: 1, init: 55 },
       ],
-      problems: lhopitalProblems,
     },
     {
       id: 'darboux',
@@ -265,7 +245,6 @@ For example, a 🌡️ thermometer sliding from −1° to 1° passes through eve
         { kind: 'slider', key: 'level', label: { ko: '테스트 높이 y = c', en: 'Test level y = c' }, min: -1.2, max: 1.2, step: 0.05, init: 0.4 },
         { kind: 'toggle', key: 'showF', label: { ko: 'f(x) 표시', en: 'Show f(x)' }, init: true },
       ],
-      problems: darbouxProblems,
     },
     {
       id: 'weierstrass-function',
@@ -291,7 +270,6 @@ For example, zoom into a 🌳 tree branch and smaller twigs appear, then smaller
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '부분합 항 수 N', en: 'Partial-sum terms N' }, min: 0, max: 8, step: 1, init: 4 },
       ],
-      problems: weierstrassFunctionProblems,
     },
     {
       id: 'taylor',
@@ -320,7 +298,6 @@ For example, knowing where a 🚗 car is, how fast it goes, and how it accelerat
         },
         { kind: 'slider', key: 'degree', label: { ko: '차수 n', en: 'Degree n' }, min: 1, max: 9, step: 2, init: 3 },
       ],
-problems: taylorProblems,
     },
     {
       id: 'taylor-thm',
@@ -343,7 +320,6 @@ For example, measuring with a 📏 ruler promises an error of at most a millimet
       controls: [
         { kind: 'slider', key: 'degree', label: { ko: '차수 n', en: 'Degree n' }, min: 0, max: 9, step: 1, init: 5 },
       ],
-problems: taylorThmProblems,
     },
     {
       id: 'convex',
@@ -371,7 +347,6 @@ For example, stretch a 🧵 string taut between two points on a bowl-shaped curv
         { kind: 'slider', key: 'a', label: { ko: 'a', en: 'a' }, min: -2, max: 2, step: 0.1, init: -1 },
         { kind: 'slider', key: 'b', label: { ko: 'b', en: 'b' }, min: -2, max: 2, step: 0.1, init: 1 },
       ],
-problems: convexProblems,
     },
     {
       id: 'newton',
@@ -401,7 +376,6 @@ For example, guessing a number a 🧑 friend hid, each hint doubles the correct 
         { kind: 'slider', key: 'x0', label: { ko: '시작점 x₀', en: 'Start x₀' }, min: 0, max: 3, step: 0.5, init: 1.5 },
         { kind: 'slider', key: 'n', label: { ko: '반복 횟수 n', en: 'Iterations n' }, min: 1, max: 8, step: 1, init: 4 },
       ],
-problems: newtonProblems,
     },
     {
       id: 'banach',
@@ -431,7 +405,6 @@ For example, nest a smaller 📦 box inside a box, then a smaller one inside tha
         { kind: 'slider', key: 'x0', label: { ko: '시작점 x₀', en: 'Start x₀' }, min: 0, max: 1, step: 0.1, init: 0.5 },
         { kind: 'slider', key: 'n', label: { ko: '반복 횟수 n', en: 'Iterations n' }, min: 1, max: 24, step: 1, init: 6 },
       ],
-problems: banachProblems,
     },
   ],
 };

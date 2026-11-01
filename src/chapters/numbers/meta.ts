@@ -1,27 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { absoluteValueProblems } from '../limits/problems/absolute-value';
-import { archimedeanProblems } from '../limits/problems/archimedean';
-import { axiomOfChoiceProblems } from '../limits/problems/axiom-of-choice';
-import { problems as binomialProblems } from '../limits/problems/binomial';
-import { cantorTheoremProblems } from '../limits/problems/cantor-theorem';
-import { complexNumbersProblems } from '../limits/problems/complex-numbers';
-import { problems as countableProblems } from '../limits/problems/countable';
-import { densityOfRationalsProblems } from '../limits/problems/density-of-rationals';
-import { problems as dimensionRankProblems } from '../limits/problems/dimension-rank';
-import { problems as groupsFieldsProblems } from '../limits/problems/groups-fields';
-import { problems as integersRationalsProblems } from '../limits/problems/integers-rationals';
-import { problems as naturalNumbersProblems } from '../limits/problems/natural-numbers';
-import { nthRootProblems } from '../limits/problems/nth-root';
-import { orderedFieldsProblems } from '../limits/problems/ordered-fields';
-import { problems as setsProblems } from '../limits/problems/sets';
-import { problems as supremumProblems } from '../limits/problems/supremum';
-import { sqrt2IrrationalProblems } from '../limits/problems/sqrt2-irrational';
-import { problems as vectorSpacesProblems } from '../limits/problems/vector-spaces';
-import { zornLemmaProblems } from '../limits/problems/zorn-lemma';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -71,7 +53,6 @@ For example, stand on the first 🪜 stair and know how to climb one more. The f
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '도미노 개수', en: 'Domino count' }, min: 1, max: 10, step: 1, init: 6 },
       ],
-      problems: naturalNumbersProblems,
     },
     {
       id: 'binomial',
@@ -98,7 +79,6 @@ For example, toss two coins and count the heads: zero, one, or two. The counts g
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '선택된 행', en: 'Selected row' }, min: 0, max: 8, step: 1, init: 4 },
       ],
-      problems: binomialProblems,
     },
     {
       id: 'integers-rationals',
@@ -132,7 +112,6 @@ For example, think of 💰 money and debt. Five coins in hand and three owed is 
         },
         { kind: 'slider', key: 'denom', label: { ko: '최대 분모', en: 'Max denominator' }, min: 1, max: 8, step: 1, init: 4 },
       ],
-      problems: integersRationalsProblems,
     },
     {
       id: 'absolute-value',
@@ -160,7 +139,6 @@ For example, 🌡 −3 degrees and +3 degrees are the same distance from 0 degre
         { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -3, max: 3, step: 0.1, init: 1.5 },
         { kind: 'slider', key: 'y', label: { ko: 'y', en: 'y' }, min: -3, max: 3, step: 0.1, init: -0.5 },
       ],
-      problems: absoluteValueProblems,
     },
     {
       id: 'complex-numbers',
@@ -189,7 +167,6 @@ For example, walk 3 steps east with a 🧭 compass, then turn and walk 4 more. T
         { kind: 'slider', key: 'wre', label: { ko: 'w 실수 부분', en: 'w real part' }, min: -2, max: 2, step: 0.1, init: -0.6 },
         { kind: 'slider', key: 'wim', label: { ko: 'w 허수 부분', en: 'w imaginary part' }, min: -2, max: 2, step: 0.1, init: 1.1 },
       ],
-      problems: complexNumbersProblems,
     },
     {
       id: 'sqrt2-irrational',
@@ -215,7 +192,6 @@ For example, measure a length with a 📏 ruler. However fine the marks, some le
       controls: [
         { kind: 'slider', key: 'denom', label: { ko: '최대 분모', en: 'Max denominator' }, min: 1, max: 12, step: 1, init: 6 },
       ],
-      problems: sqrt2IrrationalProblems,
     },
     {
       id: 'density-of-rationals',
@@ -249,7 +225,6 @@ For example, keep cutting a 🍰 cake in half, again and again. The pieces shrin
         },
         { kind: 'slider', key: 'denom', label: { ko: '최대 분모', en: 'Max denominator' }, min: 1, max: 200, step: 1, init: 24 },
       ],
-      problems: densityOfRationalsProblems,
     },
     {
       id: 'sets',
@@ -287,7 +262,6 @@ For example, some 🧑 classmates love 📚 books, while others love ⚽ soccer.
           init: 'bijective',
         },
       ],
-problems: setsProblems,
     },
     {
       id: 'axiom-of-choice',
@@ -314,7 +288,6 @@ For example, every 📦 box holds some 🍬 candies. With three boxes, just reac
         { kind: 'slider', key: 'm', label: { ko: '집합 개수', en: 'Number of sets' }, min: 2, max: 5, step: 1, init: 3 },
         { kind: 'slider', key: 'seed', label: { ko: '배치', en: 'Arrangement' }, min: 1, max: 5, step: 1, init: 1 },
       ],
-      problems: axiomOfChoiceProblems,
     },
     {
       id: 'zorn-lemma',
@@ -340,7 +313,6 @@ For example, the top of a 🪜 staircase has no next step. Every way up ends som
       controls: [
         { kind: 'slider', key: 'chain', label: { ko: '사슬 선택', en: 'Choose chain' }, min: 0, max: 2, step: 1, init: 0 },
       ],
-      problems: zornLemmaProblems,
     },
     {
       id: 'supremum',
@@ -377,7 +349,6 @@ For example, measure every 🧑 classmate's height. The smallest line above them
           init: 1.4,
         },
       ],
-problems: supremumProblems,
     },
     {
       id: 'archimedean',
@@ -404,7 +375,6 @@ For example, one step of an 🐜 ant is tiny. But an ant that never stops crosse
         { kind: 'slider', key: 'a', label: { ko: '한 걸음 a', en: 'Step a' }, min: 0.1, max: 2, step: 0.1, init: 0.5 },
         { kind: 'slider', key: 'b', label: { ko: '목표 b', en: 'Target b' }, min: 0, max: 10, step: 0.5, init: 5 },
       ],
-      problems: archimedeanProblems,
     },
     {
       id: 'nth-root',
@@ -431,7 +401,6 @@ For example, find the side of a square with area two. Side one gives too little 
         { kind: 'slider', key: 'a', label: { ko: 'a 값', en: 'Value a' }, min: 0.5, max: 8, step: 0.5, init: 2 },
         { kind: 'slider', key: 'n', label: { ko: '제곱근 차수 n', en: 'Root index n' }, min: 2, max: 5, step: 1, init: 2 },
       ],
-      problems: nthRootProblems,
     },
     {
       id: 'countable',
@@ -460,7 +429,6 @@ For example, hand number tickets to every 🧑 classmate. However long the line,
         },
         { kind: 'slider', key: 'n', label: { ko: '나열 개수', en: 'Listed count' }, min: 1, max: 64, step: 1, init: 20 },
       ],
-problems: countableProblems,
     },
     {
       id: 'cantor-theorem',
@@ -486,7 +454,6 @@ For example, three 🧑 classmates have eight subsets. Subsets already outnumber
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '집합 크기 n', en: 'Set size n' }, min: 3, max: 8, step: 1, init: 5 },
       ],
-      problems: cantorTheoremProblems,
     },
     {
       id: 'groups-fields',
@@ -517,7 +484,6 @@ For example, pedaling a bicycle forward can be undone by pedaling back. Staying 
           init: 'z6',
         },
       ],
-problems: groupsFieldsProblems,
     },
     {
       id: 'ordered-fields',
@@ -551,7 +517,6 @@ For example, on a 🕐 clock, seven steps of one hour return to the start. In a 
         { kind: 'slider', key: 'p', label: { ko: '양수 p', en: 'Positive p' }, min: 0.25, max: 2.5, step: 0.25, init: 1.25 },
         { kind: 'slider', key: 'q', label: { ko: '양수 q', en: 'Positive q' }, min: 0.25, max: 2.5, step: 0.25, init: 0.75 },
       ],
-      problems: orderedFieldsProblems,
     },
     {
       id: 'vector-spaces',
@@ -578,7 +543,6 @@ For example, write a recipe on a card. The card's numbers rebuild the dish exact
         { kind: 'slider', key: 'a', label: { ko: '계수 a', en: 'Coefficient a' }, min: -2, max: 2, step: 0.1, init: 1 },
         { kind: 'slider', key: 'b', label: { ko: '계수 b', en: 'Coefficient b' }, min: -2, max: 2, step: 0.1, init: 0.5 },
       ],
-problems: vectorSpacesProblems,
     },
     {
       id: 'dimension-rank',
@@ -610,7 +574,6 @@ For example, sunlight presses a solid object into a flat shadow. The height dire
           init: 'identity',
         },
       ],
-problems: dimensionRankProblems,
     },
   ],
 };

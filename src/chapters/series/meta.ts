@@ -1,26 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { condensationProblems } from './problems/condensation';
-import { eulerMascheroniProblems } from './problems/euler-mascheroni';
-import { eulerProductProblems } from './problems/euler-product';
-import { kummerTestProblems } from './problems/kummer-test';
-import { problems as abelTestProblems } from './problems/abel-test';
-import { problems as baselProblems } from './problems/basel';
-import { problems as dirichletTestProblems } from './problems/dirichlet-test';
-import { doubleSeriesProblems } from './problems/double-series';
-import { problems as geometricProblems } from './problems/geometric';
-import { problems as grandiProblems } from './problems/grandi';
-import { problems as harmonicProblems } from './problems/harmonic';
-import { integralTestProblems } from './problems/integral-test';
-import { problems as leibnizProblems } from './problems/leibniz';
-import { problems as raabeTestProblems } from './problems/raabe-test';
-import { problems as stirlingProblems } from './problems/stirling';
-import { problems as telescopingProblems } from './problems/telescoping';
-import { problems as testsProblems } from './problems/tests';
-import { problems as wallisProblems } from './problems/wallis';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (./problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -65,7 +48,6 @@ For example, stack 🍬 candy pieces of one, a half, a third of a piece, and so 
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 100000, step: 1, init: 1000 },
         { kind: 'toggle', key: 'logX', label: { ko: 'x축 로그 눈금', en: 'Logarithmic x-axis' }, init: true },
       ],
-problems: harmonicProblems,
     },
     {
       id: 'euler-mascheroni',
@@ -91,7 +73,6 @@ For example, two 🧑 friends run side by side. Both run endlessly far, but the 
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 200, step: 1, init: 50 },
       ],
-      problems: eulerMascheroniProblems,
     },
     {
       id: 'basel',
@@ -111,7 +92,6 @@ For example, stack 📦 boxes under a line drawn on a wall. The boxes shrink unt
       },
       tex: [String.raw`\sum_{n=1}^{\infty}\frac{1}{n^2}=\frac{\pi^2}{6}`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 40, step: 1, init: 14 }],
-problems: baselProblems,
     },
     {
       id: 'euler-product',
@@ -135,7 +115,6 @@ For example, line up 🍬 candies numbered from 1 onward. Remove the even number
       ],
       prerequisites: ['basel'],
       controls: [{ kind: 'slider', key: 'k', label: { ko: '소수 개수 k', en: 'Prime count k' }, min: 1, max: 15, step: 1, init: 6 }],
-problems: eulerProductProblems,
     },
     {
       id: 'leibniz',
@@ -158,7 +137,6 @@ For example, a ⚽ ball rolls past a line, comes back, and crosses it again. Eac
         String.raw`\left|S_N-\frac{\pi}{4}\right|\le\frac{1}{2N+1}`,
       ],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 60, step: 1, init: 12 }],
-problems: leibnizProblems,
     },
     {
       id: 'tests',
@@ -185,7 +163,6 @@ For example, hand out 🍬 candies each day, always half of yesterday's amount. 
         { kind: 'select', key: 'series', label: { ko: '급수', en: 'Series' }, options: ['factorial', 'n-over-2n', 'inv-square-plus'], init: 'factorial' },
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 30, step: 1, init: 12 },
       ],
-problems: testsProblems,
     },
     {
       id: 'integral-test',
@@ -212,7 +189,6 @@ For example, stack 📚 books like steps against a ramp. The steps dip below the
         { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 1, max: 3, step: 0.1, init: 2 },
         { kind: 'slider', key: 'N', label: { ko: '항 수 N', en: 'Terms N' }, min: 5, max: 40, step: 1, init: 12 },
       ],
-      problems: integralTestProblems,
     },
     {
       id: 'raabe-test',
@@ -239,7 +215,6 @@ For example, a coarse 📏 ruler sometimes cannot separate two lengths. Switch t
         { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['central', 'log'], init: 'central' },
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Terms n' }, min: 10, max: 500, step: 10, init: 100 },
       ],
-problems: raabeTestProblems,
     },
     {
       id: 'kummer-test',
@@ -267,7 +242,6 @@ For example, turn a dial on a ⚙️ machine and the inspection strength changes
         { kind: 'select', key: 'aSel', label: { ko: '매개변수 a', en: 'Parameter a' }, options: ['a2', 'ahalf'], init: 'a2' },
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Terms n' }, min: 10, max: 500, step: 10, init: 100 },
       ],
-problems: kummerTestProblems,
     },
     {
       id: 'condensation',
@@ -294,7 +268,6 @@ For example, pack 🍬 candies into boxes of 1, 2, 4, doubling each time. Judgin
         { kind: 'select', key: 'series', label: { ko: '수열', en: 'Sequence' }, options: ['inv-n', 'inv-n2', 'inv-n-logn'], init: 'inv-n' },
         { kind: 'slider', key: 'block', label: { ko: '블록 번호 n', en: 'Block index n' }, min: 0, max: 6, step: 1, init: 2 },
       ],
-      problems: condensationProblems,
     },
     {
       id: 'telescoping',
@@ -317,7 +290,6 @@ For example, climb one step of a 🪜 staircase and step back down: you are wher
         String.raw`\frac{1}{n(n+1)}=\frac{1}{n}-\frac{1}{n+1}`,
       ],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 24, step: 1, init: 10 }],
-problems: telescopingProblems,
     },
     {
       id: 'geometric',
@@ -337,7 +309,6 @@ For example, eat half of a 🍰 cake, then half of what is left. The bites go on
       },
       tex: [String.raw`\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+\cdots=1`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '분할 단계 n', en: 'Subdivision steps n' }, min: 1, max: 12, step: 1, init: 6 }],
-problems: geometricProblems,
     },
     {
       id: 'wallis',
@@ -357,7 +328,6 @@ For example, a 🚗 car eases into the center of its lane with small steering co
       },
       tex: [String.raw`\frac{\pi}{2}=\prod_{n=1}^{\infty}\frac{(2n)^2}{(2n-1)(2n+1)}`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '인수 쌍의 수 n', en: 'Factor pairs n' }, min: 1, max: 40, step: 1, init: 12 }],
-problems: wallisProblems,
     },
     {
       id: 'stirling',
@@ -377,7 +347,6 @@ For example, guess a tall 🏢 building's height by counting steps. The taller t
       },
       tex: [String.raw`n!\approx\sqrt{2\pi n}\left(\frac{n}{e}\right)^n`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: 'n', en: 'n' }, min: 1, max: 60, step: 1, init: 20 }],
-problems: stirlingProblems,
     },
     {
       id: 'grandi',
@@ -397,7 +366,6 @@ For example, pick up one 🍬 candy and put it down, over and over without end. 
       },
       tex: [String.raw`1-1+1-1+\cdots\quad\text{diverges}`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 40, step: 1, init: 16 }],
-problems: grandiProblems,
     },
     {
       id: 'dirichlet-test',
@@ -424,7 +392,6 @@ For example, a ⚽ ball bounces around inside a fence and never escapes. Push it
         { kind: 'slider', key: 'terms', label: { ko: '부분합 항 수', en: 'Partial sum terms' }, min: 1, max: 80, step: 1, init: 30 },
         { kind: 'slider', key: 'x', label: { ko: 'x 값', en: 'x value' }, min: 0.2, max: 3.0, step: 0.01, init: 1.0 },
       ],
-      problems: dirichletTestProblems,
     },
     {
       id: 'abel-test',
@@ -451,7 +418,6 @@ For example, a 🏪 shop nudges its prices in one direction only, a little each 
         { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['shifted', 'scaled'], init: 'shifted' },
         { kind: 'slider', key: 'n', label: { ko: '부분합 항 수', en: 'Partial sum terms' }, min: 10, max: 500, step: 10, init: 120 },
       ],
-problems: abelTestProblems,
     },
     {
       id: 'double-series',
@@ -484,7 +450,6 @@ For example, stack 📦 boxes in a grid and count the items inside each box. Cou
           init: '1/(m^2 n^2)',
         },
       ],
-      problems: doubleSeriesProblems,
     },
   ],
 };
