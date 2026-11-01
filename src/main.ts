@@ -1,5 +1,5 @@
 import './style.css';
-import { catalog } from './catalog';
+import { catalogLight as catalog } from './catalog-light';
 import { localize, stripInlineMath } from './contracts';
 import { chapterUrl, errataUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathsUrl } from './paths';
 import { h } from './shell/dom';

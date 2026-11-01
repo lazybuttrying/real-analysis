@@ -1,7 +1,7 @@
 import '../style.css';
-import { catalog } from '../catalog';
+import { catalogLight as catalog } from '../catalog-light';
 import { site } from '../site.config';
-import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type ExerciseMeta, type Lang, type SceneLoader, type SceneMeta } from '../contracts';
+import { localize, stripInlineMath, type AnySceneModule, type ChapterMeta, type ControlState, type ExerciseMeta, type Lang, type ProblemMeta, type SceneLoader, type SceneMeta } from '../contracts';
 import { learningPaths } from '../learning-paths';
 import { chapterUrl, errataUrl, exercisesUrl, fallbackLang, glossaryUrl, homeUrl, parsePath, pathDetailUrl, pathsUrl, sceneUrl, withLang } from '../paths';
 import { sceneGroups } from '../sections';
@@ -24,8 +24,16 @@ type Loaders = Readonly<Record<string, SceneLoader>>;
 /** Loads the chapter's exercise data on demand (dynamic import keeps the text out of the chapter entry bundle). */
 type ExercisesLoader = () => Promise<readonly ExerciseMeta[]>;
 
+/**
+ * Loads the chapter's per-scene problems data on demand, keyed by scene id.
+ * Optional: chapters whose scene metas still carry their problems lists
+ * omit it and the shell falls back to SceneMeta.problems, so the sites
+ * sharing this shell keep working unchanged.
+ */
+type ProblemsLoader = () => Promise<Readonly<Record<string, readonly ProblemMeta[]>>>;
+
 /** Called from a chapter entry. Wires up routing within the chapter (scene navigation), controls, and the scene lifecycle. */
-export function startChapter(chapterId: string, loaders: Loaders, exercisesLoader: ExercisesLoader): void {
+export function startChapter(chapterId: string, loaders: Loaders, exercisesLoader: ExercisesLoader, problemsLoader?: ProblemsLoader): void {
   const root = document.getElementById('app');
   const parsed = parsePath(BASE, location.pathname);
 
@@ -55,7 +63,7 @@ export function startChapter(chapterId: string, loaders: Loaders, exercisesLoade
   // consolidate the duplicate without any redirect.
   const chapter = catalog.find((candidate) => candidate.id === chapterId);
   if (!chapter || !root) throw new Error(`${tr(lang, 'chapterMissing')}: ${chapterId}`);
-  mountChapter(chapter, loaders, exercisesLoader, root, lang);
+  mountChapter(chapter, loaders, exercisesLoader, root, lang, problemsLoader);
 }
 
 function sceneLink(lang: Lang, chapter: ChapterMeta, scene: SceneMeta): HTMLAnchorElement {
@@ -129,12 +137,12 @@ function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
 function renderProblems(
   host: HTMLElement,
   scene: SceneMeta,
+  problems: readonly ProblemMeta[],
   lang: Lang,
   loader: SceneLoader,
   track: (dispose: () => void) => void,
 ): void {
-  const problems = scene.problems;
-  if (!problems || problems.length === 0) return;
+  if (problems.length === 0) return;
 
   const section = h('section', { class: 'problems' });
   section.append(h('h2', {}, tr(lang, 'problemsHeading')));
@@ -203,7 +211,7 @@ function renderProblems(
     .catch((error: unknown) => console.error(error));
 }
 
-function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: ExercisesLoader, root: HTMLElement, lang: Lang): void {
+function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: ExercisesLoader, root: HTMLElement, lang: Lang, problemsLoader?: ProblemsLoader): void {
   const scenes = [...chapter.scenes].sort((a, b) => a.order - b.order);
   // Chapter numbers are automatic: the catalog order is the numbering, never stored in meta files.
   const chapterNumber = catalog.indexOf(chapter) + 1;
@@ -259,6 +267,17 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
   let urlSyncTimer: number | undefined;
   /** Guards the async exercises load against a route change while it is in flight. */
   let exercisesToken = 0;
+  /** Guards the async problems load the same way, and caches the chapter's map after the first scene. */
+  let problemsToken = 0;
+  let problemsCache: Promise<Readonly<Record<string, readonly ProblemMeta[]>> | undefined> | undefined;
+  const problemsFor = (sceneId: string): Promise<readonly ProblemMeta[] | undefined> => {
+    if (!problemsLoader) return Promise.resolve(undefined);
+    problemsCache ??= problemsLoader().catch((error: unknown) => {
+      console.error(error);
+      return undefined;
+    });
+    return problemsCache.then((map) => map?.[sceneId]);
+  };
 
   /** Disposers for the problem mini-visualizations of the current scene. */
   let problemDisposers: Array<() => void> = [];
@@ -291,6 +310,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
 
   const showHub = (notice?: string): void => {
     exercisesToken++;
+    problemsToken++;
     controlsDispose?.();
     controlsDispose = undefined;
     sceneHost.dispose();
@@ -369,9 +389,18 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
       return;
     }
     void sceneHost.show(loader, state);
-    renderProblems(textEl, scene, lang, loader, (dispose) => {
+    const trackProblem = (dispose: () => void): void => {
       problemDisposers.push(dispose);
-    });
+    };
+    if (problemsLoader) {
+      const ticket = ++problemsToken;
+      void problemsFor(scene.id).then((problems) => {
+        if (ticket !== problemsToken || !problems) return;
+        renderProblems(textEl, scene, problems, lang, loader, trackProblem);
+      });
+    } else if (scene.problems) {
+      renderProblems(textEl, scene, scene.problems, lang, loader, trackProblem);
+    }
 
     // Previous/next scene footer: walks the whole reading order, across chapters.
     const position = readingOrder.findIndex((entry) => entry.chapter.id === chapter.id && entry.scene.id === scene.id);
@@ -388,6 +417,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
   };
 
   const showExercises = (): void => {
+    problemsToken++;
     hub.hidden = true;
     sceneView.hidden = true;
     disposeProblems();

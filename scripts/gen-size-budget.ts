@@ -199,7 +199,7 @@ const budgets: Budget[] = [];
 const sharedGroups: Array<[string, string[]]> = [
   ['shared shell chunks', ['app', 'tex', 'sum', 'clamp']],
   ['shared view kit', ['d3kit', 'richslot', 'richtext']],
-  ['shared problems data (all chapters)', ['preload-helper']],
+  ['shared problems data (all chapters)', ['problems']],
 ];
 for (const [name, prefixes] of sharedGroups) {
   const files = prefixes.flatMap(resolveShared);

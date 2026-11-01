@@ -1,18 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { logicPropositionsProblems } from '../limits/problems/logic-propositions';
-import { quantifiersProblems } from '../limits/problems/quantifiers';
-import { directProofProblems } from '../limits/problems/direct-proof';
-import { contrapositiveProblems } from '../limits/problems/contrapositive';
-import { contradictionProblems } from '../limits/problems/contradiction';
-import { casesExistenceProblems } from '../limits/problems/cases-existence';
-import { disproofIffProblems } from '../limits/problems/disproof-iff';
-import { strongInductionProblems } from '../limits/problems/strong-induction';
-import { relationsEquivalenceProblems } from '../limits/problems/relations-equivalence';
-import { functionProofsProblems } from '../limits/problems/function-proofs';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -60,7 +51,6 @@ For example, 'if it rains, the ground gets wet' and 'if the ground is not wet, i
         { kind: 'select', key: 'connective', label: { ko: '연결사', en: 'Connective' }, options: ['and', 'or', 'implies', 'iff'], init: 'implies' },
         { kind: 'toggle', key: 'contrapositive', label: { ko: '대우 함께 보기', en: 'Show contrapositive' }, init: true },
       ],
-      problems: logicPropositionsProblems,
     },
     {
       id: 'quantifiers',
@@ -89,7 +79,6 @@ For example, for every 🧑 classmate, someone taller exists. But one person tal
         { kind: 'slider', key: 'x', label: { ko: '도전값 x', en: 'Challenge x' }, min: -5, max: 5, step: 0.5, init: 2 },
         { kind: 'toggle', key: 'negated', label: { ko: '부정 보기', en: 'Show negation' }, init: false },
       ],
-      problems: quantifiersProblems,
     },
     {
       id: 'direct-proof',
@@ -118,7 +107,6 @@ For example, take three quarters of a 🍰 cake and remove five sixths of one. R
         { kind: 'slider', key: 'p2', label: { ko: '분자 p₂', en: 'Numerator p2' }, min: -9, max: 9, step: 1, init: -5 },
         { kind: 'slider', key: 'q2', label: { ko: '분모 q₂', en: 'Denominator q2' }, min: 1, max: 9, step: 1, init: 6 },
       ],
-      problems: directProofProblems,
     },
     {
       id: 'contrapositive',
@@ -145,7 +133,6 @@ For example, if a square is even, the number itself is even. Instead of studying
         { kind: 'slider', key: 'n', label: { ko: 'n', en: 'n' }, min: 1, max: 50, step: 1, init: 7 },
         { kind: 'select', key: 'view', label: { ko: '보기', en: 'View' }, options: ['statement', 'contrapositive'], init: 'statement' },
       ],
-      problems: contrapositiveProblems,
     },
     {
       id: 'contradiction',
@@ -172,7 +159,6 @@ For example, suppose a biggest number exists. Add one and a bigger number appear
       controls: [
         { kind: 'slider', key: 'k', label: { ko: '소수 개수 k', en: 'Number of primes k' }, min: 1, max: 8, step: 1, init: 4 },
       ],
-      problems: contradictionProblems,
     },
     {
       id: 'cases-existence',
@@ -201,7 +187,6 @@ For example, a 🧑 friend may stand east or west of your house. Either way, the
         { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -5, max: 5, step: 0.5, init: -2 },
         { kind: 'slider', key: 'y', label: { ko: 'y', en: 'y' }, min: -5, max: 5, step: 0.5, init: 3 },
       ],
-      problems: casesExistenceProblems,
     },
     {
       id: 'disproof-iff',
@@ -229,7 +214,6 @@ For example, take 'every 🧑 classmate wears glasses'. One classmate without gl
         { kind: 'select', key: 'claim', label: { ko: '주장', en: 'Claim' }, options: ['primes-odd', 'div4', 'irrational-sum', 'abs-equal'], init: 'primes-odd' },
         { kind: 'slider', key: 'n', label: { ko: '테스트 값 n', en: 'Test value n' }, min: 2, max: 60, step: 1, init: 16 },
       ],
-      problems: disproofIffProblems,
     },
     {
       id: 'strong-induction',
@@ -255,7 +239,6 @@ For example, climbing 🪜 stairs, some steps push off two or three steps below.
       controls: [
         { kind: 'slider', key: 'n', label: { ko: 'n', en: 'n' }, min: 2, max: 60, step: 1, init: 30 },
       ],
-      problems: strongInductionProblems,
     },
     {
       id: 'relations-equivalence',
@@ -282,7 +265,6 @@ For example, split twelve 🧑 classmates into three teams of four. Nobody belon
       controls: [
         { kind: 'slider', key: 'n', label: { ko: '법 n', en: 'Modulus n' }, min: 2, max: 8, step: 1, init: 4 },
       ],
-      problems: relationsEquivalenceProblems,
     },
     {
       id: 'function-proofs',
@@ -308,7 +290,6 @@ For example, pack a 📦 box, close the lid, then tie it with string. To open it
       controls: [
         { kind: 'select', key: 'example', label: { ko: '예제', en: 'Example' }, options: ['injective-chain', 'surjective-chain', 'bijective'], init: 'injective-chain' },
       ],
-      problems: functionProofsProblems,
     },
   ],
 };

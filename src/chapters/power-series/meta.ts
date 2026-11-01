@@ -1,18 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { hadamardGapProblems } from '../series/problems/hadamard-gap';
-import { problems as abelTheoremProblems } from '../series/problems/abel-theorem';
-import { problems as absoluteProblems } from '../series/problems/absolute';
-import { problems as cauchyProductProblems } from '../series/problems/cauchy-product';
-import { problems as eseriesProblems } from '../series/problems/eseries';
-import { problems as powerSeriesProblems } from '../series/problems/power-series';
-import { problems as rearrangementProblems } from '../series/problems/rearrangement';
-import { problems as zeta4Problems } from '../series/problems/zeta4';
-import { riemannRearrangementProblems } from '../series/problems/riemann-rearrangement';
-import { tauberProblems } from '../series/problems/tauber';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -61,7 +52,6 @@ For example, think of Wi-Fi in a 🏠 house. It works well inside and drops as y
         { kind: 'slider', key: 'x', label: { ko: 'x', en: 'x' }, min: -3, max: 3, step: 0.1, init: 1 },
         { kind: 'slider', key: 'n', label: { ko: '항의 개수 N', en: 'Terms N' }, min: 1, max: 30, step: 1, init: 15 },
       ],
-      problems: powerSeriesProblems,
     },
     {
       id: 'hadamard-gap',
@@ -87,7 +77,6 @@ For example, imagine a 🪜 staircase whose steps spread by 1, 2, 4, 8. The firs
       controls: [
         { kind: 'slider', key: 'N', label: { ko: '부분합 차수 N', en: 'Partial-sum degree N' }, min: 1, max: 12, step: 1, init: 6 },
       ],
-      problems: hadamardGapProblems,
     },
     {
       id: 'abel-theorem',
@@ -115,7 +104,6 @@ For example, imagine a 🧑 friend shouting 1 and 0 in turns. If each shout is a
         { kind: 'slider', key: 'x', label: { ko: 'x (1의 왼쪽에서 접근)', en: 'x (approaching 1 from below)' }, min: 0, max: 0.99, step: 0.01, init: 0.8 },
         { kind: 'slider', key: 'n', label: { ko: '부분합 항 수 N', en: 'Partial sum terms N' }, min: 1, max: 200, step: 1, init: 40 },
       ],
-      problems: abelTheoremProblems,
     },
     {
       id: 'tauber',
@@ -141,7 +129,6 @@ For example, think of walking to the door of a 🏠 house. Your steps must keep 
       controls: [
         { kind: 'slider', key: 'R', label: { ko: 'r × 100 (R)', en: 'r × 100 (R)' }, min: 50, max: 99, step: 1, init: 90 },
       ],
-      problems: tauberProblems,
     },
     {
       id: 'eseries',
@@ -161,7 +148,6 @@ For example, think of 💰 money in a 🐷 piggy bank earning interest on its in
       },
       tex: [String.raw`e=\sum_{k=0}^{\infty}\frac{1}{k!}`, String.raw`e=\lim_{n\to\infty}\left(1+\frac{1}{n}\right)^n`],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '단계 수 n', en: 'Steps n' }, min: 1, max: 30, step: 1, init: 10 }],
-problems: eseriesProblems,
     },
     {
       id: 'zeta4',
@@ -184,7 +170,6 @@ For example, picture stacking 🍰 cake slices that shrink fast. Each slice is s
         String.raw`\zeta(2)=\frac{\pi^2}{6},\quad \zeta(6)=\frac{\pi^6}{945}`,
       ],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 20, step: 1, init: 8 }],
-problems: zeta4Problems,
     },
     {
       id: 'rearrangement',
@@ -205,7 +190,6 @@ For example, think of putting 💰 coins into a 🐷 piggy bank and taking them 
       tex: [String.raw`\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n} = \ln 2 \xrightarrow{(+,+,-)} \frac{3}{2}\ln 2`],
       prerequisites: ['leibniz'],
       controls: [{ kind: 'slider', key: 'n', label: { ko: '항 개수', en: 'Terms' }, min: 6, max: 300, step: 1, init: 60 }],
-problems: rearrangementProblems,
     },
     {
       id: 'absolute',
@@ -232,7 +216,6 @@ For example, picture a 🧑 person stepping forward, then a little back. If all 
         { kind: 'select', key: 'series', label: { ko: '급수', en: 'Series' }, options: ['abs', 'cond'], init: 'abs' },
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 200, step: 1, init: 60 },
       ],
-problems: absoluteProblems,
     },
     {
       id: 'riemann-rearrangement',
@@ -258,7 +241,6 @@ For example, think of steering a 🚗 car. Turn more when short of the spot, bac
         { kind: 'slider', key: 'target', label: { ko: '목표 합 s', en: 'Target sum s' }, min: -2, max: 3, step: 0.1, init: 1.0 },
         { kind: 'slider', key: 'terms', label: { ko: '항의 개수', en: 'Number of terms' }, min: 20, max: 400, step: 20, init: 120 },
       ],
-problems: riemannRearrangementProblems,
     },
     {
       id: 'cauchy-product',
@@ -285,7 +267,6 @@ For example, picture 📦 boxes in a grid, picked up one diagonal at a time. If 
         { kind: 'slider', key: 'n', label: { ko: '항의 수 n', en: 'Number of terms n' }, min: 1, max: 30, step: 1, init: 10 },
         { kind: 'select', key: 'pair', label: { ko: '급수 쌍', en: 'Series pair' }, options: ['exp', 'alternating'], init: 'exp' },
       ],
-      problems: cauchyProductProblems,
     },
   ],
 };

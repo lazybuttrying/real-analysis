@@ -12,7 +12,7 @@ import {
   type SimulationLinkDatum,
   type SimulationNodeDatum,
 } from 'd3';
-import { catalog } from '../catalog.ts';
+import { catalogLight as catalog } from '../catalog-light.ts';
 import { localize, type Lang } from '../contracts.ts';
 import { buildConceptMap } from '../concept-map.ts';
 import { sceneUrl } from '../paths.ts';

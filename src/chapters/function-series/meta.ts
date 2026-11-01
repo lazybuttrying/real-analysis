@@ -1,16 +1,9 @@
 import type { ChapterMeta } from '../../contracts.ts';
-import { fejerTheoremProblems } from '../calculus/problems/fejer-theorem';
-import { functionSpacesProblems } from '../series/problems/function-spaces';
-import { gibbsPhenomenonProblems } from '../calculus/problems/gibbs-phenomenon';
-import { problems as diniProblems } from '../series/problems/dini';
-import { problems as fourierProblems } from '../calculus/problems/fourier';
-import { problems as mTestProblems } from '../series/problems/m-test';
-import { parsevalProblems } from '../series/problems/parseval';
-import { riemannLebesgueProblems } from '../series/problems/riemann-lebesgue';
 
 /**
- * Pure data. Imports types plus per-scene problems data modules
- * (../{limits,series,calculus}/problems/* — data only, no code, models, views, or shell). Node build scripts and every chapter's navigation read
+ * Pure data, types only: the per-scene problems data lives in
+ * the sibling problems.ts map, not here, so navigation stays light.
+ * Node build scripts and every chapter's navigation read
  * this file. Every text is stored per language; the shell picks one via the
  * URL language segment. Summaries embed math as inline TeX between \( and \)
  * (see splitInlineMath in contracts.ts).
@@ -56,7 +49,6 @@ For example, think of 📦 box lids covering every item. If the lid sizes add up
       controls: [
         { kind: 'slider', key: 'terms', label: { ko: '부분합 항 수', en: 'Partial sum terms' }, min: 1, max: 40, step: 1, init: 8 },
       ],
-      problems: mTestProblems,
     },
     {
       id: 'dini',
@@ -83,7 +75,6 @@ For example, think of climbing a 🪜 staircase. If nobody steps back, reaching 
         { kind: 'slider', key: 'n', label: { ko: '항 번호 n', en: 'Index n' }, min: 1, max: 60, step: 1, init: 8 },
         { kind: 'select', key: 'domain', label: { ko: '정의역', en: 'Domain' }, options: ['compact', 'noncompact'], init: 'compact' },
       ],
-      problems: diniProblems,
     },
     {
       id: 'fourier',
@@ -103,7 +94,6 @@ For example, zoom into a 🏢 building in a 📷 photo. Smaller pixels sharpen t
       },
       tex: [String.raw`S_N(x) = \frac{4}{\pi}\sum_{k=1}^{N} \frac{\sin((2k-1)x)}{2k-1}`],
       controls: [{ kind: 'slider', key: 'N', label: { ko: '항의 수 N', en: 'Terms N' }, min: 1, max: 50, step: 1, init: 8 }],
-problems: fourierProblems,
     },
     {
       id: 'riemann-lebesgue',
@@ -131,7 +121,6 @@ For example, shake a 🧵 string very fast. The wiggle blurs into a faint band, 
         { kind: 'slider', key: 'n', label: { ko: '진동수 n', en: 'Frequency n' }, min: 1, max: 40, step: 1, init: 12 },
         { kind: 'select', key: 'kind', label: { ko: '계수', en: 'Coefficient' }, options: ['a', 'b'], init: 'b' },
       ],
-      problems: riemannLebesgueProblems,
     },
     {
       id: 'fejer-theorem',
@@ -155,7 +144,6 @@ For example, overlay several shaky 📷 photos. Each photo's wobble cancels in t
       ],
       prerequisites: ['fourier'],
       controls: [{ kind: 'slider', key: 'N', label: { ko: '항의 수 N', en: 'Terms N' }, min: 1, max: 40, step: 1, init: 8 }],
-problems: fejerTheoremProblems,
     },
     {
       id: 'parseval',
@@ -181,7 +169,6 @@ For example, count the 💰 coins in a 🐷 piggy bank by denomination and add t
         { kind: 'select', key: 'mode', label: { ko: '함수', en: 'Function' }, options: ['square', 'sawtooth', 'parabola'], init: 'square' },
         { kind: 'slider', key: 'n', label: { ko: '항의 수 N', en: 'Terms N' }, min: 1, max: 40, step: 1, init: 12 },
       ],
-      problems: parsevalProblems,
     },
     {
       id: 'gibbs-phenomenon',
@@ -205,7 +192,6 @@ For example, zoom into the corner of a 📷 photo. The jagged part gets narrower
       ],
       prerequisites: ['fourier'],
       controls: [{ kind: 'slider', key: 'N', label: { ko: '항의 수 N', en: 'Terms N' }, min: 2, max: 60, step: 1, init: 12 }],
-problems: gibbsPhenomenonProblems,
     },
     {
       id: 'function-spaces',
@@ -232,7 +218,6 @@ For example, a ⛺ tent stands on a finite patch of ground. Fog thins out with d
         { kind: 'select', key: 'mode', label: { ko: '보기', en: 'View' }, options: ['spaces', 'cutoff'], init: 'spaces' },
         { kind: 'slider', key: 'k', label: { ko: '절단 위치 k', en: 'Cutoff k' }, min: 0.5, max: 3, step: 0.25, init: 1 },
       ],
-      problems: functionSpacesProblems,
     },
   ],
 };

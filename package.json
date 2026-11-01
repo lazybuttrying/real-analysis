@@ -38,17 +38,23 @@
         "dist/assets/richslot-*.js",
         "dist/assets/richtext-*.js"
       ],
-      "limit": "2 kB"
+      "limit": "105 kB"
+    },
+    {
+      "name": "shared problems data (all chapters)",
+      "path": [
+        "dist/assets/problems-*.js"
+      ],
+      "limit": "425 kB"
     },
     {
       "name": "shared other chunks",
       "path": [
         "dist/assets/errata-page-*.js",
-        "dist/assets/search-*.js",
         "dist/assets/simple-scene-*.js",
         "dist/assets/simpson-*.js"
       ],
-      "limit": "470 kB"
+      "limit": "3 kB"
     },
     {
       "name": "chapter: proofs (entry + 10 scenes)",
