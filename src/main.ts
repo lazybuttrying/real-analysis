@@ -86,6 +86,14 @@ if (parsed.lang === undefined) {
       h('p', {}, tr(lang, 'mapIntro')),
       mapMount,
     );
+    const appMapMount = h('div', { class: 'map-mount' });
+    const appMapSection = h(
+      'section',
+      { class: 'home-map home-app-map' },
+      h('h2', {}, tr(lang, 'appMap')),
+      h('p', {}, tr(lang, 'appMapIntro')),
+      appMapMount,
+    );
     root.replaceChildren(
       h(
         'header',
@@ -119,6 +127,7 @@ if (parsed.lang === undefined) {
         ),
         h('p', {}, h('a', { href: pathsUrl(BASE, lang) }, tr(lang, 'paths')), ' · ', h('a', { href: glossaryUrl(BASE, lang) }, tr(lang, 'glossary'))),
         mapSection,
+        appMapSection,
       ),
     );
     mountSearch(headerSearch, lang);
@@ -133,10 +142,14 @@ if (parsed.lang === undefined) {
       });
     }
     // The concept map graph (and d3) stays out of the home entry chunk: it
-    // loads only when the section scrolls into view.
+    // loads only when the section scrolls into view. The application map
+    // shares the same lazy chunk and boots alongside it.
     const bootMap = (): void => {
       import('./shell/map-page')
-        .then((module) => module.mountConceptMap(mapMount, lang))
+        .then((module) => {
+          module.mountConceptMap(mapMount, lang);
+          module.mountApplicationMap(appMapMount, lang);
+        })
         .catch((error: unknown) => console.error(error));
     };
     if ('IntersectionObserver' in window) {

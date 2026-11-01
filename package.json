@@ -298,7 +298,7 @@
         "dist/assets/map-page-*.js",
         "dist/assets/paths-page-*.js"
       ],
-      "limit": "40 kB"
+      "limit": "45 kB"
     },
     {
       "name": "vendor: d3",
