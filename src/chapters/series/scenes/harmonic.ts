@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear, scaleLog, type ScaleContinuous
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { harmonicModel, type HarmonicData, type HarmonicPoint } from '../models/harmonic';
 
 function drawMain(chart: Chart, data: HarmonicData, lang: Lang): void {
@@ -42,14 +43,14 @@ function drawMain(chart: Chart, data: HarmonicData, lang: Lang): void {
     .attr('y', 14)
     .attr('fill', 'currentColor')
     .attr('font-size', 12)
-    .text(`n = ${data.n.toLocaleString()}   S_n = ${data.final.sum.toFixed(6)}   ln n + γ = ${data.final.asymptotic.toFixed(6)}`);
+    .call(svgText, String.raw`\(n = ${data.n.toLocaleString()}\)   \(S_n = ${data.final.sum.toFixed(6)}\)   \(\ln n + \gamma = ${data.final.asymptotic.toFixed(6)}\)`);
   g.append('text')
     .attr('x', 8)
     .attr('y', 32)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(localize({ ko: '— 부분합 S_n', en: '— partial sums S_n' }, lang));
-  g.append('text').attr('x', 8).attr('y', 48).attr('font-size', 12).style('fill', 'var(--bound)').text('- - ln n + γ');
+    .call(svgText, localize({ ko: String.raw`— 부분합 \(S_n\)`, en: String.raw`— partial sums \(S_n\)` }, lang));
+  g.append('text').attr('x', 8).attr('y', 48).attr('font-size', 12).style('fill', 'var(--bound)').call(svgText, String.raw`- - \(\ln n + \gamma\)`);
 }
 
 export default defineSimpleScene<HarmonicData>({ model: harmonicModel, drawMain });

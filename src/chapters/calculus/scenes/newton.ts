@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { newtonFunction, newtonModel, type NewtonData } from '../models/newton';
 
 function drawMain(chart: Chart, data: NewtonData, lang: Lang): void {
@@ -36,7 +37,7 @@ function drawMain(chart: Chart, data: NewtonData, lang: Lang): void {
       .attr('text-anchor', 'middle')
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
-      .text(`√2`);
+      .call(svgText, String.raw`\(\sqrt{2}\)`);
   }
 
   // Tangent cobweb: tangent at x_k hits the axis at x_{k+1}, then up to the curve.
@@ -71,7 +72,7 @@ function drawMain(chart: Chart, data: NewtonData, lang: Lang): void {
     .attr('y', 14)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text(`x_n ≈ ${fmt(lastX, 8)}`);
+    .call(svgText, String.raw`\(x_n\) ≈ ${fmt(lastX, 8)}`);
   g.append('text').attr('x', 8).attr('y', 32).attr('font-size', 12).style('fill', 'var(--accent)').text(errText);
 }
 

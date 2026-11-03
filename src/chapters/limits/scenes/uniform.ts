@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { uniformModel, type UniformData, type UniformSample } from '../models/uniform';
 
 
@@ -59,7 +60,7 @@ function drawMain(chart: Chart, data: UniformData, lang: Lang): void {
         .attr('text-anchor', 'end')
         .attr('font-size', 11)
         .style('fill', 'var(--bound)')
-        .text(`x ≈ ${fmt(escapeX, 3)}`);
+        .call(svgText, String.raw`\(x\) ≈ ${fmt(escapeX, 3)}`);
     }
 
     g.append('text')
@@ -67,7 +68,7 @@ function drawMain(chart: Chart, data: UniformData, lang: Lang): void {
       .attr('y', 14)
       .attr('fill', 'currentColor')
       .attr('font-size', 12)
-      .text(`n = ${n}   ε = ${fmt(epsilon)}   sup|f_n − f| ≈ ${fmt(supNorm, 3)}`);
+      .call(svgText, String.raw`\(n = ${n}\)   \(\varepsilon = ${fmt(epsilon)}\)   \(\sup|f_n - f|\) ≈ ${fmt(supNorm, 3)}`);
     g.append('text')
       .attr('x', 8)
       .attr('y', 32)

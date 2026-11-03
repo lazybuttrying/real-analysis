@@ -2,6 +2,7 @@ import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { taylorThmModel, type TaylorThmData, type TaylorThmSample } from '../models/taylorThm';
 
 /**
@@ -62,7 +63,7 @@ function drawMain(chart: Chart, data: TaylorThmData, _lang: Lang): void {
     .attr('y', 14)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text(`T_${n}(x)  ±  |x|^${n + 1}/${n + 1}!`);
+    .call(svgText, String.raw`\(T_{${n}}(x) \pm |x|^{${n + 1}}/{${n + 1}}!\)`);
 }
 
 export default defineSimpleScene<TaylorThmData>({
