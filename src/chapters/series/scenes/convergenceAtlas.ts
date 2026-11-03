@@ -2,6 +2,7 @@ import { line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   convergenceAtlasModel,
   type AtlasCardData,
@@ -55,7 +56,7 @@ function drawMain(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
       .attr('font-size', 12)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(localize(card.def.title, lang));
+      .call(svgText, localize(card.def.title, lang));
     cell
       .append('text')
       .attr('x', 10)
@@ -63,7 +64,7 @@ function drawMain(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
       .attr('font-size', 11)
       .attr('fill', 'currentColor')
       .attr('opacity', 0.75)
-      .text(card.def.formula);
+      .call(svgText, card.def.formula);
 
     // Sparkline of the partial sums, with the limit line when it converges.
     const plotX = 10;
@@ -98,7 +99,7 @@ function drawMain(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
       .attr('d', spark(card.partialSums) ?? '');
 
     const verdict = card.def.converges
-      ? `${localize({ ko: '수렴', en: 'converges' }, lang)} -> ${fmt(card.def.limit ?? 0, 4)}`
+      ? String.raw`${localize({ ko: '수렴', en: 'converges' }, lang)} \(\to ${fmt(card.def.limit ?? 0, 4)}\)`
       : localize({ ko: '발산', en: 'diverges' }, lang);
     cell
       .append('text')
@@ -107,7 +108,7 @@ function drawMain(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
       .attr('font-size', 11)
       .attr('font-weight', 600)
       .attr('fill', verdictColor)
-      .text(verdict);
+      .call(svgText, verdict);
     cell
       .append('text')
       .attr('x', 10)

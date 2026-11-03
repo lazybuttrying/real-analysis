@@ -14,7 +14,7 @@ import type { LocalizedText, SceneModel } from '../../../contracts';
 export interface AtlasCardDef {
   id: string;
   title: LocalizedText;
-  /** Plain-text formula shown on the card (no TeX: it is drawn as SVG text). */
+  /** Formula shown on the card as one inline TeX span, rendered inside the SVG via svgText. */
   formula: string;
   /** The test or idea this card stands for, one line. */
   criterion: LocalizedText;
@@ -28,8 +28,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'geometric',
     title: { ko: '기하급수', en: 'Geometric' },
-    formula: 'sum (1/2)^k',
-    criterion: { ko: '비율 판정, 공비 1/2', en: 'ratio test, ratio 1/2' },
+    formula: String.raw`\(\sum (1/2)^k\)`,
+    criterion: { ko: '비율 판정', en: 'ratio test' },
     converges: true,
     limit: 1,
     term: (k) => Math.pow(1 / 2, k),
@@ -37,16 +37,16 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'harmonic',
     title: { ko: '조화급수', en: 'Harmonic' },
-    formula: 'sum 1/k',
-    criterion: { ko: '항은 0으로 가도 발산', en: 'terms go to 0, still diverges' },
+    formula: String.raw`\(\sum 1/k\)`,
+    criterion: { ko: '항→0에도 발산', en: 'terms to 0, diverges' },
     converges: false,
     limit: null,
     term: (k) => 1 / k,
   },
   {
     id: 'basel',
-    title: { ko: 'p급수, p = 2', en: 'p-series, p = 2' },
-    formula: 'sum 1/k^2',
+    title: { ko: String.raw`\(p\)급수, \(p = 2\)`, en: String.raw`\(p\)-series, \(p = 2\)` },
+    formula: String.raw`\(\sum 1/k^2\)`,
     criterion: { ko: '적분 판정', en: 'integral test' },
     converges: true,
     limit: (Math.PI * Math.PI) / 6,
@@ -55,8 +55,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'leibniz',
     title: { ko: '교대 조화급수', en: 'Alternating harmonic' },
-    formula: 'sum (-1)^(k+1)/k',
-    criterion: { ko: '라이프니츠 판정, 조건부', en: 'Leibniz test, conditional' },
+    formula: String.raw`\(\sum (-1)^{k+1}/k\)`,
+    criterion: { ko: '라이프니츠, 조건부', en: 'Leibniz, conditional' },
     converges: true,
     limit: Math.LN2,
     term: (k) => ((k % 2 === 1 ? 1 : -1) * 1) / k,
@@ -64,8 +64,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'absolute',
     title: { ko: '절댓값 급수', en: 'Absolute version' },
-    formula: 'sum |(-1)^(k+1)/k|',
-    criterion: { ko: '절댓값은 조화급수, 발산', en: 'absolute values give the harmonic series' },
+    formula: String.raw`\(\sum |(-1)^{k+1}/k|\)`,
+    criterion: { ko: '절댓값 = 조화급수', en: 'absolute = harmonic' },
     converges: false,
     limit: null,
     term: (k) => 1 / k,
@@ -73,8 +73,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'telescoping',
     title: { ko: '망원급수', en: 'Telescoping' },
-    formula: 'sum 1/(k(k+1))',
-    criterion: { ko: '부분분수, 상쇄', en: 'partial fractions, cancellation' },
+    formula: String.raw`\(\sum 1/(k(k+1))\)`,
+    criterion: { ko: '부분분수 상쇄', en: 'cancellation' },
     converges: true,
     limit: 1,
     term: (k) => 1 / (k * (k + 1)),
@@ -82,8 +82,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'factorial',
     title: { ko: '팩토리얼 급수', en: 'Factorial series' },
-    formula: 'sum 1/k!',
-    criterion: { ko: '비율 판정, 비율 0', en: 'ratio test, ratio 0' },
+    formula: String.raw`\(\sum 1/k!\)`,
+    criterion: { ko: '비율 판정', en: 'ratio test' },
     converges: true,
     limit: Math.E - 1,
     term: (k) => 1 / factorial(k),
@@ -91,7 +91,7 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'weighted',
     title: { ko: '가중 기하급수', en: 'Weighted geometric' },
-    formula: 'sum k (2/3)^k',
+    formula: String.raw`\(\sum k(2/3)^k\)`,
     criterion: { ko: '근 판정', en: 'root test' },
     converges: true,
     limit: 6,
@@ -100,8 +100,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
   {
     id: 'grandi',
     title: { ko: '그란디 급수', en: 'Grandi series' },
-    formula: '1 - 1 + 1 - 1 + ...',
-    criterion: { ko: '부분합 진동, 발산', en: 'partial sums oscillate, diverges' },
+    formula: String.raw`\(1 - 1 + 1 - 1 + \cdots\)`,
+    criterion: { ko: '부분합 진동', en: 'sums oscillate' },
     converges: false,
     limit: null,
     term: (k) => (k % 2 === 1 ? 1 : -1),

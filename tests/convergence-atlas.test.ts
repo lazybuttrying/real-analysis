@@ -19,6 +19,15 @@ describe('convergence atlas: the nine cards', () => {
     expect(new Set(ATLAS_CARDS.map((c) => c.id)).size).toBe(9);
   });
 
+  it('card formulas are TeX spans and card texts stay short enough not to overflow', () => {
+    for (const card of ATLAS_CARDS) {
+      expect(card.formula.startsWith('\\('), card.id).toBe(true);
+      expect(card.formula.endsWith('\\)'), card.id).toBe(true);
+      expect(card.criterion.ko.length, card.id).toBeLessThanOrEqual(10);
+      expect(card.criterion.en.length, card.id).toBeLessThanOrEqual(22);
+    }
+  });
+
   it('converging cards approach their stated limits at n = 200', () => {
     const data = convergenceAtlasData(200, 'all');
     for (const card of data.cards) {
