@@ -252,7 +252,7 @@ function drawMain(chart: Chart, data: DisproofData, lang: Lang): void {
     .attr('y', boxY + 44)
     .attr('font-size', 13)
     .attr('fill', 'currentColor')
-    .text(data.smallest.label);
+    .call(svgText, data.smallest.label);
   g.append('text')
     .attr('x', 12)
     .attr('y', boxY + 62)

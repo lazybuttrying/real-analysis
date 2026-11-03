@@ -83,7 +83,7 @@ export interface DisproofData {
 const SMALLEST: Record<DisproofClaim, { label: string; value: string }> = {
   'primes-odd': { label: 'n = 2', value: '2 is prime and even' },
   div4: { label: 'n = 2', value: 'n^2 = 4, 4 | 4, but 4 does not divide 2' },
-  'irrational-sum': { label: '(sqrt(2), -sqrt(2))', value: 'sum = 0, rational' },
+  'irrational-sum': { label: String.raw`\((\sqrt{2}, -\sqrt{2})\)`, value: 'sum = 0, rational' },
   'abs-equal': { label: '(x, y) = (1, -1)', value: '|1| = |-1| = 1, but 1 != -1' },
 };
 
