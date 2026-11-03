@@ -14,7 +14,7 @@ for (const chapter of catalog) {
 
 const EXPECTED_APPS: ReadonlyArray<{ id: string; sceneIds: readonly string[] }> = [
   { id: 'app-stacking', sceneIds: ['fourier', 'gibbs-phenomenon', 'parseval', 'taylor', 'weierstrass-approx', 'fourier-epicycles'] },
-  { id: 'app-deformation', sceneIds: ['change-of-variables', 'inverse-function-theorem', 'arc-length', 'fubini-tonelli'] },
+  { id: 'app-deformation', sceneIds: ['change-of-variables', 'inverse-function-theorem', 'arc-length', 'fubini-tonelli', 'jacobian-grid'] },
   { id: 'app-envelope', sceneIds: ['limsup-liminf', 'squeeze', 'uniform', 'topologist-sine'] },
   { id: 'app-peano', sceneIds: ['peano-curve'] },
   { id: 'app-convolution', sceneIds: ['convolution'] },

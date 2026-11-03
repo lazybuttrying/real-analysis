@@ -1762,6 +1762,16 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'change-of-variables',
   },
   {
+    id: 'jacobian-determinant',
+    term: { ko: '야코비 행렬식', en: 'Jacobian determinant' },
+    definition: {
+      ko: String.raw`변환의 편도함수 행렬의 행렬식으로, 한 점에서 넓이가 몇 배로 늘어나는지를 주는 국소 배율이다. 극좌표에서는 \(r\)이다.`,
+      en: String.raw`The determinant of a map's matrix of partial derivatives: the local area stretch factor at a point. For polar coordinates it is \(r\).`,
+    },
+    chapterId: 'integration',
+    sceneId: 'jacobian-grid',
+  },
+  {
     id: 'bounded-variation',
     term: { ko: '유계변동', en: 'bounded variation' },
     definition: {

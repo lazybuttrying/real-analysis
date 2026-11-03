@@ -110,7 +110,7 @@ export const APPLICATIONS: readonly ApplicationDefinition[] = [
       ko: '좌표 격자를 늘이고 뒤집고 펴면서 적분과 길이를 다시 보는 응용이다. 칸이 위치마다 다르게 늘어나면 그 비율이 곧 도함수다. 변형된 칸에서도 넓이와 길이를 세는 법을 익힌다.',
       en: 'An application that revisits integrals and length by stretching, flipping, and unrolling a coordinate grid. When a cell stretches by a different factor at each position, that factor is the derivative. You learn to count area and length on the deformed grid.',
     },
-    sceneIds: ['change-of-variables', 'inverse-function-theorem', 'arc-length', 'fubini-tonelli'],
+    sceneIds: ['change-of-variables', 'inverse-function-theorem', 'arc-length', 'fubini-tonelli', 'jacobian-grid'],
   },
   {
     id: 'app-envelope',

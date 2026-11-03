@@ -26,6 +26,7 @@ export const integration: ChapterMeta = {
     { id: 'variation-stieltjes', title: { ko: '유계변동과 스틸체스 적분', en: 'Bounded Variation and the Stieltjes Integral' }, sceneIds: ['bounded-variation', 'arc-length', 'riemann-stieltjes', 'jordan-decomposition'] },
     { id: 'lebesgue-basics', title: { ko: '측도와 르베그 적분', en: 'Measure and the Lebesgue Integral' }, sceneIds: ['measure', 'vitali', 'borel-cantelli', 'lebesgue'] },
     { id: 'lebesgue-convergence', title: { ko: '르베그 수렴 정리와 응용', en: 'Lebesgue Convergence Theorems and Applications' }, sceneIds: ['lebesgue-convergence', 'fubini-tonelli', 'convolution', 'egorov', 'absolute-continuity', 'differentiation-under-integral', 'minkowski'] },
+    { id: 'applications', title: { ko: '응용', en: 'Applications' }, sceneIds: ['jacobian-grid'] },
   ],
   scenes: [
     {
@@ -704,6 +705,33 @@ For example, a 🚗 car that drives two legs in an L shape travels at least the 
         { kind: 'slider', key: 'p', label: { ko: '지수 p', en: 'Exponent p' }, min: 1, max: 4, step: 0.05, init: 2 },
         { kind: 'slider', key: 'a', label: { ko: '지수 a (f(t) = t^a)', en: 'Exponent a' }, min: 0, max: 3, step: 0.1, init: 1 },
         { kind: 'slider', key: 'b', label: { ko: '지수 b (g(t) = (1-t)^b)', en: 'Exponent b' }, min: 0, max: 3, step: 0.1, init: 1 },
+      ],
+    },
+    {
+      id: 'jacobian-grid',
+      title: { ko: '야코비안 격자 변형', en: 'The Jacobian as a Grid Deformation' },
+      order: 27,
+      summary: {
+        ko: String.raw`네모난 격자를 변환에 통과시키면 직선이 휘고 칸이 부채꼴로 벌어집니다.
+
+초록색 칸 하나를 양쪽에서 따라가 보세요. 변형 뒤 넓이를 재면 원래 넓이의 몇 배인지 나옵니다. 그 배율이 바로 그 자리에서의 행렬식입니다.
+
+예를 들면, 🗺️ 지도를 다른 투영법으로 다시 그린 것과 같아요. 같은 땅 조각인데 지도에서는 넓이가 달라 보입니다. 위치마다 달라지는 배율이 야코비안입니다.`,
+        en: String.raw`Push a rectangular grid through a map and the straight lines bend, the cells fan out.
+
+Follow one green cell on both sides. Measure its area after the map and divide by the original area. That ratio is exactly the determinant at that spot.
+
+For example, redraw a 🗺️ map in another projection. The same piece of land changes size on paper. The position-dependent factor is the Jacobian.`,
+      },
+      tex: [
+        String.raw`\det J_F(a, b) = \frac{\partial (x, y)}{\partial (a, b)}, \qquad \text{image area} \approx |\det J_F| \times \text{domain area}`,
+        String.raw`(r, \theta) \mapsto (r\cos\theta, r\sin\theta): \quad \det J = r`,
+      ],
+      prerequisites: ['change-of-variables'],
+      controls: [
+        { kind: 'select', key: 'map', label: { ko: '변환', en: 'Map' }, options: ['polar', 'stretch', 'square'], init: 'polar' },
+        { kind: 'slider', key: 'cellI', label: { ko: '칸 열', en: 'Cell column' }, min: 0, max: 4, step: 1, init: 3 },
+        { kind: 'slider', key: 'cellJ', label: { ko: '칸 행', en: 'Cell row' }, min: 0, max: 4, step: 1, init: 1 },
       ],
     },
   ],

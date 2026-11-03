@@ -557,6 +557,10 @@ export const SCENE_ALIASES: Record<string, LocalizedText> = {
     ko: '축을 늘이고 줄여 구간을 바꾸는 적분, 눈금을 바꾸면 넓이도 보정',
     en: 'stretching the axis to change the interval, rescaling corrects the area',
   },
+  'jacobian-grid': {
+    ko: '네모 격자가 부채꼴로 벌어지는 변환, 칸마다 넓어지는 배율 재기',
+    en: 'a square grid fanning into sectors, measuring how much each cell stretches',
+  },
   'bounded-variation': {
     ko: '함수가 출렁인 총 거리를 재기, 오르내린 양을 전부 더한 합이 유한',
     en: 'the total distance a function wobbles, all the ups and downs added up',

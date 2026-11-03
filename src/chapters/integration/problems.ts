@@ -12,6 +12,7 @@ import { changeOfVariablesProblems } from '../calculus/problems/change-of-variab
 import { dirichletFunctionProblems } from '../calculus/problems/dirichlet-function';
 import { differentiationUnderIntegralProblems } from '../calculus/problems/differentiation-under-integral';
 import { minkowskiProblems } from '../calculus/problems/minkowski';
+import { jacobianGridProblems } from '../calculus/problems/jacobian-grid';
 import { egorovProblems } from '../calculus/problems/egorov';
 import { fubiniTonelliProblems } from '../calculus/problems/fubini-tonelli';
 import { gabrielHornProblems } from '../calculus/problems/gabriel-horn';
@@ -60,4 +61,5 @@ export const problemsByScene: Readonly<Record<string, readonly ProblemMeta[]>> =
   'absolute-continuity': absoluteContinuityProblems,
   'differentiation-under-integral': differentiationUnderIntegralProblems,
   'minkowski': minkowskiProblems,
+  'jacobian-grid': jacobianGridProblems,
 };

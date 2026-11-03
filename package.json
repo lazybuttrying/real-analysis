@@ -254,7 +254,7 @@
       "limit": "30 kB"
     },
     {
-      "name": "chapter: integration (entry + 26 scenes)",
+      "name": "chapter: integration (entry + 27 scenes)",
       "path": [
         "dist/assets/integration-*.js",
         "dist/assets/gamma-*.js",
@@ -282,7 +282,8 @@
         "dist/assets/egorov-*.js",
         "dist/assets/absoluteContinuity-*.js",
         "dist/assets/differentiationUnderIntegral-*.js",
-        "dist/assets/minkowski-*.js"
+        "dist/assets/minkowski-*.js",
+        "dist/assets/jacobianGrid-*.js"
       ],
       "limit": "65 kB"
     },

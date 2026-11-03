@@ -32,4 +32,5 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'absolute-continuity': () => import('../calculus/scenes/absoluteContinuity').then((module) => module.default),
   'differentiation-under-integral': () => import('../calculus/scenes/differentiationUnderIntegral').then((module) => module.default),
   'minkowski': () => import('../calculus/scenes/minkowski').then((module) => module.default),
+  'jacobian-grid': () => import('../calculus/scenes/jacobianGrid').then((module) => module.default),
 };
