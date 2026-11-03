@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { rearrangementModel, type RearrangementData } from '../models/rearrangement';
 
 // Two partial-sum walks side by side: the original order settles onto ln 2
@@ -39,11 +40,12 @@ function drawMain(chart: Chart, data: RearrangementData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `원래 합 S_n = ${fmt(lastOriginal, 7)} → ln 2 ≈ 0.6931 · 재배열 합 T_n = ${fmt(lastRearranged, 7)} → (3/2) ln 2 ≈ 1.0397`,
-          en: `original S_n = ${fmt(lastOriginal, 7)} → ln 2 ≈ 0.6931 · rearranged T_n = ${fmt(lastRearranged, 7)} → (3/2) ln 2 ≈ 1.0397`,
+          ko: String.raw`원래 합 \(S_n = ${fmt(lastOriginal, 7)} \to \ln 2 \approx 0.6931\) · 재배열 합 \(T_n = ${fmt(lastRearranged, 7)} \to (3/2) \ln 2 \approx 1.0397\)`,
+          en: String.raw`original \(S_n = ${fmt(lastOriginal, 7)} \to \ln 2 \approx 0.6931\) · rearranged \(T_n = ${fmt(lastRearranged, 7)} \to (3/2) \ln 2 \approx 1.0397\)`,
         },
         lang,
       ),
@@ -64,7 +66,7 @@ function drawMain(chart: Chart, data: RearrangementData, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', 'var(--accent)')
-    .text('ln 2');
+    .call(svgText, String.raw`\(\ln 2\)`);
   g.append('line')
     .attr('x1', x(1))
     .attr('x2', x(n))
@@ -79,7 +81,7 @@ function drawMain(chart: Chart, data: RearrangementData, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', 'var(--bound)')
-    .text('(3/2) ln 2');
+    .call(svgText, String.raw`\((3/2) \ln 2\)`);
 
   // The two partial-sum curves.
   g.append('path')
@@ -99,13 +101,13 @@ function drawMain(chart: Chart, data: RearrangementData, lang: Lang): void {
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', 'var(--accent)')
-    .text(localize({ ko: '— 원래 순서 (ln 2로 수렴)', en: '— original order (→ ln 2)' }, lang));
+    .call(svgText, localize({ ko: String.raw`— 원래 순서 (\(\ln 2\)로 수렴)`, en: String.raw`— original order (\(\to \ln 2\))` }, lang));
   g.append('text')
     .attr('x', width / 2)
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', 'var(--bound)')
-    .text(localize({ ko: '— (+,+,-) 재배열 ((3/2) ln 2로 수렴)', en: '— (+,+,-) rearrangement (→ (3/2) ln 2)' }, lang));
+    .call(svgText, localize({ ko: String.raw`— (+,+,-) 재배열 (\((3/2) \ln 2\)로 수렴)`, en: String.raw`— (+,+,-) rearrangement (\(\to (3/2) \ln 2\))` }, lang));
 
   // General formula, stated as a known result.
   g.append('text')
@@ -114,11 +116,12 @@ function drawMain(chart: Chart, data: RearrangementData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.75)
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: '일반 형태(알려진 결과): p개 양항과 q개 음항을 반복하면 ln 2 + (1/2)·ln(p/q) — 증명은 생략',
-          en: 'general form (known result): repeating p positive and q negative terms gives ln 2 + (1/2)·ln(p/q) — proof omitted',
+          ko: String.raw`일반 형태(알려진 결과): \(p\)개 양항과 \(q\)개 음항을 반복하면 \(\ln 2 + (1/2) \cdot \ln(p/q)\) — 증명은 생략`,
+          en: String.raw`general form (known result): repeating \(p\) positive and \(q\) negative terms gives \(\ln 2 + (1/2) \cdot \ln(p/q)\) — proof omitted`,
         },
         lang,
       ),

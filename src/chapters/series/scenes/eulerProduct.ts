@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { ZETA2, eulerProductModel, type EulerProductData } from '../models/eulerProduct';
 
 /**
@@ -51,9 +52,10 @@ function drawMain(chart: Chart, data: EulerProductData, lang: Lang): void {
   g.append('g').call(axisLeft(y).ticks(6));
 
   const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-  header.text(
+  header.call(
+    svgText,
     localize(
-      { ko: `P_k = ∏ 1/(1 − p_i⁻²) — 점선 점근선 ζ(2) = π²/6 ≈ 1.6449를 향해 오릅니다`, en: `P_k = ∏ 1/(1 − p_i⁻²) — climbing toward the dashed asymptote ζ(2) = π²/6 ≈ 1.6449` },
+      { ko: String.raw`\(P_k = \prod 1/(1 - p_i^{-2})\) — 점선 점근선 \(\zeta(2) = \pi^2/6 \approx 1.6449\)를 향해 오릅니다`, en: String.raw`\(P_k = \prod 1/(1 - p_i^{-2})\) — climbing toward the dashed asymptote \(\zeta(2) = \pi^2/6 \approx 1.6449\)` },
       lang,
     ),
   );
@@ -73,7 +75,7 @@ function drawMain(chart: Chart, data: EulerProductData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('text-anchor', 'end')
     .style('fill', 'var(--accent)')
-    .text('ζ(2) = π²/6 ≈ 1.6449');
+    .call(svgText, String.raw`\(\zeta(2) = \pi^2/6\) ≈ 1.6449`);
 
   // Partial product curve.
   const productLine = line<{ k: number; v: number }>()
@@ -96,14 +98,14 @@ function drawMain(chart: Chart, data: EulerProductData, lang: Lang): void {
     .attr('y', height + 32)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(localize({ ko: '● P_k (체로 거른 소수 k개)', en: '● P_k (k sieved primes)' }, lang));
+    .call(svgText, localize({ ko: String.raw`● \(P_k\) (체로 거른 소수 \(k\)개)`, en: String.raw`● \(P_k\) (\(k\) sieved primes)` }, lang));
   g.append('text')
     .attr('x', width / 2)
     .attr('y', height + 32)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.7)
-    .text(localize({ ko: '점선: ζ(2) = π²/6', en: 'Dashed: ζ(2) = π²/6' }, lang));
+    .call(svgText, localize({ ko: String.raw`점선: \(\zeta(2) = \pi^2/6\)`, en: String.raw`Dashed: \(\zeta(2) = \pi^2/6\)` }, lang));
 }
 
 function mountExtra(strips: HTMLElement, lang: Lang): void {

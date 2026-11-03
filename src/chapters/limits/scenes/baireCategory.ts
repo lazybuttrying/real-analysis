@@ -2,6 +2,7 @@ import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { baireModel, type BaireData } from '../models/baireCategory';
 
 /**
@@ -57,11 +58,12 @@ function drawMain(chart: Chart, data: BaireData, lang: Lang): void {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor');
-    header.text(
+    header.call(
+      svgText,
       localize(
         {
-          ko: '중첩 구간으로 유리수 피하기 — 단계 k마다 [a_k, b_k] 그리기',
-          en: 'Dodging the rationals with nested intervals — stage k draws [a_k, b_k]',
+          ko: String.raw`중첩 구간으로 유리수 피하기 — 단계 \(k\)마다 \([a_k, b_k]\) 그리기`,
+          en: String.raw`Dodging the rationals with nested intervals — stage \(k\) draws \([a_k, b_k]\)`,
         },
         lang,
       ),
@@ -117,7 +119,7 @@ function drawMain(chart: Chart, data: BaireData, lang: Lang): void {
           .attr('font-size', 10)
           .attr('text-anchor', anchorRight ? 'end' : 'start')
           .attr('fill', RED)
-          .text(`q${s.k} = ${s.num}/${s.den}`);
+          .call(svgText, String.raw`\(q_{${s.k}} = ${s.num}/${s.den}\)`);
       }
 
       // Row number.
@@ -149,11 +151,12 @@ function drawMain(chart: Chart, data: BaireData, lang: Lang): void {
       .attr('y', height + 32)
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
-      .text(
+      .call(
+        svgText,
         localize(
           {
-            ko: '■ I_k 구간 (진한 막대: 구간 안에서 q_k 회피 · 점선: q_k가 이미 밖) · 빨간 눈금: q_k · ◆x: 생존자',
-            en: '■ I_k bar (solid: dodged q_k inside · dashed: q_k already outside) · red tick: q_k · ◆x: survivor',
+            ko: String.raw`■ \(I_k\) 구간 (진한 막대: 구간 안에서 \(q_k\) 회피 · 점선: \(q_k\)가 이미 밖) · 빨간 눈금: \(q_k\) · ◆\(x\): 생존자`,
+            en: String.raw`■ \(I_k\) bar (solid: dodged \(q_k\) inside · dashed: \(q_k\) already outside) · red tick: \(q_k\) · ◆\(x\): survivor`,
           },
           lang,
         ),

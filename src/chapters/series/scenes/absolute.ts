@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { absoluteModel, type AbsoluteData } from '../models/absolute';
 
 // Two partial-sum walks: S_n of the signed series and T_n of the
@@ -56,11 +57,12 @@ function drawMain(chart: Chart, data: AbsoluteData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `S_n = ${fmt(sLast, 7)} → ${fmt(signedLimit, 7)} · T_n = ${fmt(tLast, 7)} → ${tTarget}`,
-          en: `S_n = ${fmt(sLast, 7)} → ${fmt(signedLimit, 7)} · T_n = ${fmt(tLast, 7)} → ${tTarget}`,
+          ko: String.raw`\(S_n = ${fmt(sLast, 7)} \to ${fmt(signedLimit, 7)}\) · \(T_n = ${fmt(tLast, 7)} \to\) ${tTarget}`,
+          en: String.raw`\(S_n = ${fmt(sLast, 7)} \to ${fmt(signedLimit, 7)}\) · \(T_n = ${fmt(tLast, 7)} \to\) ${tTarget}`,
         },
         lang,
       ),
@@ -71,17 +73,18 @@ function drawMain(chart: Chart, data: AbsoluteData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.75)
-    .text(
+    .call(
+      svgText,
       localize(
         {
           ko:
             data.series === 'abs'
-              ? '절대수렴: Σ|a_k|가 수렴하므로 Σa_k도 수렴합니다'
-              : '조건수렴: Σ|a_k|는 발산하지만 Σa_k는 수렴합니다',
+              ? String.raw`절대수렴: \(\sum|a_k|\)가 수렴하므로 \(\sum a_k\)도 수렴합니다`
+              : String.raw`조건수렴: \(\sum|a_k|\)는 발산하지만 \(\sum a_k\)는 수렴합니다`,
           en:
             data.series === 'abs'
-              ? 'absolute convergence: Σ|a_k| converges, so Σa_k converges too'
-              : 'conditional convergence: Σ|a_k| diverges, but Σa_k converges',
+              ? String.raw`absolute convergence: \(\sum|a_k|\) converges, so \(\sum a_k\) converges too`
+              : String.raw`conditional convergence: \(\sum|a_k|\) diverges, but \(\sum a_k\) converges`,
         },
         lang,
       ),
@@ -128,7 +131,7 @@ function drawMain(chart: Chart, data: AbsoluteData, lang: Lang): void {
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .attr('fill', 'var(--bound)')
-      .text(localize({ ko: 'T_n ~ ln n (발산)', en: 'T_n ~ ln n (diverges)' }, lang));
+      .call(svgText, localize({ ko: String.raw`\(T_n \sim \ln n\) (발산)`, en: String.raw`\(T_n \sim \ln n\) (diverges)` }, lang));
   }
 
   // The two walks.
@@ -149,13 +152,13 @@ function drawMain(chart: Chart, data: AbsoluteData, lang: Lang): void {
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', 'var(--accent)')
-    .text(localize({ ko: '— S_n: 부호 있는 부분합', en: '— S_n: signed partial sums' }, lang));
+    .call(svgText, localize({ ko: String.raw`— \(S_n\): 부호 있는 부분합`, en: String.raw`— \(S_n\): signed partial sums` }, lang));
   g.append('text')
     .attr('x', width / 2)
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', 'var(--bound)')
-    .text(localize({ ko: '— T_n: 절댓값 부분합', en: '— T_n: absolute partial sums' }, lang));
+    .call(svgText, localize({ ko: String.raw`— \(T_n\): 절댓값 부분합`, en: String.raw`— \(T_n\): absolute partial sums` }, lang));
 }
 
 export default defineSimpleScene<AbsoluteData>({

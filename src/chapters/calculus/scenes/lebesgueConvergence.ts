@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   lebesgueConvergenceModel,
   VIEW_MAX,
@@ -20,9 +21,9 @@ import {
 const MARGIN = { top: 36, right: 20, bottom: 44, left: 64 };
 
 const EXAMPLE_NAME: Record<string, { ko: string; en: string }> = {
-  escape: { ko: '이탈: f_n = 1_[n,n+1]', en: 'escape: f_n = 1_[n,n+1]' },
-  spike: { ko: '뾰족: f_n = n·1_[0,1/n]', en: 'spike: f_n = n·1_[0,1/n]' },
-  monotone: { ko: '단조: f_n = 1_[0,1-1/n]', en: 'monotone: f_n = 1_[0,1-1/n]' },
+  escape: { ko: String.raw`이탈: \(f_n = \mathbf{1}_{[n,n+1]}\)`, en: String.raw`escape: \(f_n = \mathbf{1}_{[n,n+1]}\)` },
+  spike: { ko: String.raw`뾰족: \(f_n = n \cdot \mathbf{1}_{[0,1/n]}\)`, en: String.raw`spike: \(f_n = n \cdot \mathbf{1}_{[0,1/n]}\)` },
+  monotone: { ko: String.raw`단조: \(f_n = \mathbf{1}_{[0,1-1/n]}\)`, en: String.raw`monotone: \(f_n = \mathbf{1}_{[0,1-1/n]}\)` },
 };
 
 function exampleName(example: string, lang: Lang): string {
@@ -76,9 +77,10 @@ function drawMain(chart: Chart, data: LebesgueConvergenceData, lang: Lang): void
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: `${exampleName(data.example, 'ko')}: f_n (채움) vs 점별 극한 (점선)`, en: `${exampleName(data.example, 'en')}: f_n (filled) vs pointwise limit (dashed)` },
+        { ko: String.raw`${exampleName(data.example, 'ko')}: \(f_n\) (채움) vs 점별 극한 (점선)`, en: String.raw`${exampleName(data.example, 'en')}: \(f_n\) (filled) vs pointwise limit (dashed)` },
         lang,
       ),
     );
@@ -120,7 +122,7 @@ function drawMain(chart: Chart, data: LebesgueConvergenceData, lang: Lang): void
       .attr('font-style', 'italic')
       .attr('fill', 'currentColor')
       .attr('opacity', 0.7)
-      .text(localize({ ko: '스파이크가 [0, 2] 창 밖에 있습니다 →', en: 'the spike is outside the [0, 2] window →' }, lang));
+      .call(svgText, localize({ ko: String.raw`스파이크가 \([0, 2]\) 창 밖에 있습니다 →`, en: String.raw`the spike is outside the \([0, 2]\) window →` }, lang));
   }
 
   // Readout numbers on the chart.
@@ -131,7 +133,7 @@ function drawMain(chart: Chart, data: LebesgueConvergenceData, lang: Lang): void
     .attr('font-size', 12)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(`n = ${data.n} · ∫f_n = ${fmt(data.integral, 4)} · ∫lim = ${fmt(data.limitIntegral, 4)} · gap = ${fmt(data.gap, 4)}`);
+    .call(svgText, String.raw`\(n = ${data.n}\) · \(\int f_n = ${fmt(data.integral, 4)}\) · \(\int f = ${fmt(data.limitIntegral, 4)}\) · gap \(= ${fmt(data.gap, 4)}\)`);
 }
 
 export default defineSimpleScene<LebesgueConvergenceData>({

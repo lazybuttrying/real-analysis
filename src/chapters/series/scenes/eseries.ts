@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { eseriesModel, LIMIT, type ESeriesData, type StepPoint } from '../models/eseries';
 
 // Both racers plotted as distance below e: compound growth crawls in
@@ -29,11 +30,12 @@ function drawMain(chart: Chart, data: ESeriesData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `n = ${n}    급수 Σ 1/k! = ${fmt(data.seriesValue, 8)}    복리 (1+1/n)^n = ${fmt(data.compoundValue, 8)}    e = ${fmt(LIMIT, 8)}`,
-          en: `n = ${n}    series Σ 1/k! = ${fmt(data.seriesValue, 8)}    compound (1+1/n)^n = ${fmt(data.compoundValue, 8)}    e = ${fmt(LIMIT, 8)}`,
+          ko: String.raw`\(n = ${n}\)    급수 \(\sum 1/k! = ${fmt(data.seriesValue, 8)}\)    복리 \((1 + 1/n)^n = ${fmt(data.compoundValue, 8)}\)    \(e = ${fmt(LIMIT, 8)}\)`,
+          en: String.raw`\(n = ${n}\)    series \(\sum 1/k! = ${fmt(data.seriesValue, 8)}\)    compound \((1 + 1/n)^n = ${fmt(data.compoundValue, 8)}\)    \(e = ${fmt(LIMIT, 8)}\)`,
         },
         lang,
       ),
@@ -91,14 +93,14 @@ function drawMain(chart: Chart, data: ESeriesData, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', GOLD)
-    .text(localize({ ko: '급수 Σ 1/k!', en: 'series Σ 1/k!' }, lang));
+    .call(svgText, localize({ ko: String.raw`급수 \(\sum 1/k!\)`, en: String.raw`series \(\sum 1/k!\)` }, lang));
   g.append('text')
     .attr('x', x(xMax) - 6)
     .attr('y', y(data.compoundValue - LIMIT) + 24)
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(localize({ ko: '복리 (1 + 1/n)^n', en: 'compound (1 + 1/n)^n' }, lang));
+    .call(svgText, localize({ ko: String.raw`복리 \((1 + 1/n)^n\)`, en: String.raw`compound \((1 + 1/n)^n\)` }, lang));
 }
 
 export default defineSimpleScene<ESeriesData>({ model: eseriesModel, margin: MARGIN, drawMain });

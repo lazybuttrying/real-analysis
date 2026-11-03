@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { gibbsModel, OVERSHOOT_FRACTION, type GibbsData, type GibbsPoint } from '../models/gibbsPhenomenon';
 
 /**
@@ -61,7 +62,7 @@ function drawMain(chart: Chart, data: GibbsData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('text-anchor', 'end')
     .attr('fill', 'currentColor')
-    .text('t = 2Nx');
+    .call(svgText, String.raw`\(t = 2Nx\)`);
 
   const header = g
     .append('text')
@@ -70,11 +71,12 @@ function drawMain(chart: Chart, data: GibbsData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor');
-  header.text(
+  header.call(
+    svgText,
     localize(
       {
-        ko: `재조정된 축 위의 붕괴: N = ${n}일 때 S_N(t/2N)이 (2/π)Si(t) 위에 겹쳐집니다`,
-        en: `Collapse on the rescaled axis: S_N(t/2N) lands on (2/π)Si(t) for N = ${n}`,
+        ko: String.raw`재조정된 축 위의 붕괴: \(N = ${n}\)일 때 \(S_N(t/2N)\)이 \((2/\pi)\mathrm{Si}(t)\) 위에 겹쳐집니다`,
+        en: String.raw`Collapse on the rescaled axis: \(S_N(t/2N)\) lands on \((2/\pi)\mathrm{Si}(t)\) for \(N = ${n}\)`,
       },
       lang,
     ),
@@ -119,7 +121,7 @@ function drawMain(chart: Chart, data: GibbsData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('text-anchor', 'end')
     .attr('fill', 'currentColor')
-    .text(`(2/π)Si(π) ≈ ${fmt(theoreticalPeak, 5)}`);
+    .call(svgText, String.raw`\((2/\pi)\mathrm{Si}(\pi)\) ≈ ${fmt(theoreticalPeak, 5)}`);
 
   // Peak markers: measured on the sum, theoretical on the limit curve.
   g.append('circle')
@@ -139,13 +141,13 @@ function drawMain(chart: Chart, data: GibbsData, lang: Lang): void {
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', SUM_COLOR)
-    .text(localize({ ko: '— S_N(t/2N)', en: '— S_N(t/2N)' }, lang));
+    .call(svgText, localize({ ko: String.raw`— \(S_N(t/2N)\)`, en: String.raw`— \(S_N(t/2N)\)` }, lang));
   g.append('text')
     .attr('x', width / 2)
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', LIMIT_COLOR)
-    .text(localize({ ko: '- - (2/π)Si(t) 한계곡선', en: '- - (2/π)Si(t) limit curve' }, lang));
+    .call(svgText, localize({ ko: String.raw`- - \((2/\pi)\mathrm{Si}(t)\) 한계곡선`, en: String.raw`- - \((2/\pi)\mathrm{Si}(t)\) limit curve` }, lang));
 }
 
 export default defineSimpleScene<GibbsData>({

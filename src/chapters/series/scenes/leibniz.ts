@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { leibnizModel, LIMIT, type LeibnizData } from '../models/leibniz';
 
 // Partial sums zigzag around pi/4, plotted as deviation from pi/4 so the
@@ -29,11 +30,12 @@ function drawMain(chart: Chart, data: LeibnizData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `N = ${n}    S_N = ${fmt(data.sum, 7)}    π/4 = ${fmt(LIMIT, 7)}    |오차| = ${fmt(data.error)}`,
-          en: `N = ${n}    S_N = ${fmt(data.sum, 7)}    π/4 = ${fmt(LIMIT, 7)}    |error| = ${fmt(data.error)}`,
+          ko: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum, 7)}\)    \(\pi/4 = ${fmt(LIMIT, 7)}\)    |오차| \(= ${fmt(data.error)}\)`,
+          en: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum, 7)}\)    \(\pi/4 = ${fmt(LIMIT, 7)}\)    |error| \(= ${fmt(data.error)}\)`,
         },
         lang,
       ),
@@ -43,11 +45,12 @@ function drawMain(chart: Chart, data: LeibnizData, lang: Lang): void {
     .attr('y', -22)
     .attr('font-size', 12)
     .attr('fill', GOLD)
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `교대급수 추정: |오차| ≤ 다음 항 1/(2N+1) = ${fmt(data.bound)} — π/4는 항상 S_N과 S_{N+1} 사이에 있습니다`,
-          en: `alternating estimate: |error| ≤ next term 1/(2N+1) = ${fmt(data.bound)} — π/4 always sits between S_N and S_{N+1}`,
+          ko: String.raw`교대급수 추정: |오차| \(\le\) 다음 항 \(1/(2N+1) = ${fmt(data.bound)}\) — \(\pi/4\)는 항상 \(S_N\)과 \(S_{N+1}\) 사이에 있습니다`,
+          en: String.raw`alternating estimate: |error| \(\le\) next term \(1/(2N+1) = ${fmt(data.bound)}\) — \(\pi/4\) always sits between \(S_N\) and \(S_{N+1}\)`,
         },
         lang,
       ),
@@ -62,7 +65,7 @@ function drawMain(chart: Chart, data: LeibnizData, lang: Lang): void {
     .attr('stroke-dasharray', '6 4')
     .attr('stroke-width', 2)
     .style('stroke', GOLD);
-  g.append('text').attr('x', 4).attr('y', y(0) - 8).attr('font-size', 12).attr('fill', GOLD).text('π/4');
+  g.append('text').attr('x', 4).attr('y', y(0) - 8).attr('font-size', 12).attr('fill', GOLD).call(svgText, String.raw`\(\pi/4\)`);
 
   // Zigzag of partial sums.
   const zig = line<{ k: number; dev: number }>()

@@ -1,7 +1,8 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
-import { localize, type Lang, stripInlineMath } from '../../../contracts';
+import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   stoneWeierstrassModel,
   type StoneWeierstrassData,
@@ -20,12 +21,12 @@ const MARGIN = { top: 48, right: 20, bottom: 44, left: 64 };
 
 function headerText(data: StoneWeierstrassData, lang: Lang): string {
   const { degree } = data;
-  // Plain text only: this goes into an SVG <text> element, where KaTeX cannot
-  // render and stripInlineMath would leave raw TeX commands visible.
+  // Delimited math: drawn through svgText, which renders the \(...\)
+  // segments as KaTeX and falls back to the stripped plain text.
   return localize(
     {
-      ko: `삼각다항식 S_${degree}(x)가 삼각파 |x|에 균등수렴합니다.`,
-      en: `Trig polynomial S_${degree}(x) converges uniformly to the triangle wave |x|.`,
+      ko: String.raw`삼각다항식 \(S_{${degree}}(x)\)가 삼각파 \(|x|\)에 균등수렴합니다.`,
+      en: String.raw`Trig polynomial \(S_{${degree}}(x)\) converges uniformly to the triangle wave \(|x|\).`,
     },
     lang,
   );
@@ -88,7 +89,7 @@ function drawMain(chart: Chart, data: StoneWeierstrassData, lang: Lang): void {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor');
-    header.text(stripInlineMath(headerText(data, lang)));
+    header.call(svgText, headerText(data, lang));
 
     // Dashed target triangle wave, solid trigonometric partial sum.
     g.append('path')
@@ -107,7 +108,7 @@ function drawMain(chart: Chart, data: StoneWeierstrassData, lang: Lang): void {
     legend
       .append('tspan')
       .style('fill', 'var(--accent)')
-      .text(localize({ ko: '■ S_n (삼각다항식)   ', en: '■ S_n (trig polynomial)   ' }, lang));
+      .call(svgText, localize({ ko: String.raw`■ \(S_n\) (삼각다항식)   `, en: String.raw`■ \(S_n\) (trig polynomial)   ` }, lang));
     legend
       .append('tspan')
       .attr('fill', 'currentColor')

@@ -2,6 +2,7 @@ import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   integrationByPartsModel,
   type IbpSample,
@@ -74,7 +75,7 @@ function drawPanel(
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(title);
+    .call(svgText, title);
 
   g.append('path')
     .attr('fill', color)
@@ -90,7 +91,7 @@ function drawPanel(
 function drawMain(chart: Chart, data: IntegrationByPartsData, lang: Lang): void {
   const p = pairTeX(data.pair);
   const title = localize(
-    { ko: `u v' = ${p}: 넓이가 LHS`, en: `u v' = ${p}: this area is the LHS` },
+    { ko: String.raw`\(u v' = ${p}\): 넓이가 LHS`, en: String.raw`\(u v' = ${p}\): this area is the LHS` },
     lang,
   );
   drawPanel(chart, data.curve, 'var(--accent)', title, 0.2);
@@ -99,7 +100,7 @@ function drawMain(chart: Chart, data: IntegrationByPartsData, lang: Lang): void 
 function drawSecond(chart: Chart, data: IntegrationByPartsData, lang: Lang): void {
   const subP = data.pair === 'x·sin x' ? '-\\cos x' : 'e^x';
   const title = localize(
-    { ko: `v u' = ${subP}: [uv]에서 빼는 조각`, en: `v u' = ${subP}: the piece subtracted from [uv]` },
+    { ko: String.raw`\(v u' = ${subP}\): \([uv]\)에서 빼는 조각`, en: String.raw`\(v u' = ${subP}\): the piece subtracted from \([uv]\)` },
     lang,
   );
   drawPanel(chart, data.subCurve, 'var(--bound)', title, 0.2);

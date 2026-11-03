@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { cauchyMvtModel, type CauchyMVTData } from '../models/cauchyMvt';
 
 /**
@@ -116,7 +117,7 @@ function drawMain(chart: Chart, data: CauchyMVTData, _lang: Lang): void {
     .attr('y', 14)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text(`(g(t), f(t)) = (t^3, t^2), t in [1, 2]`);
+    .call(svgText, String.raw`\((g(t), f(t)) = (t^3, t^2)\), \(t \in [1, 2]\)`);
 }
 
 export default defineSimpleScene<CauchyMVTData>({

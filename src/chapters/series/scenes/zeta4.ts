@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { zeta4Model, LIMIT, type Zeta4Data } from '../models/zeta4';
 
 // Tiny bars for 1/n^4, a staircase of partial sums rising to pi^4/90,
@@ -10,8 +11,6 @@ import { zeta4Model, LIMIT, type Zeta4Data } from '../models/zeta4';
 
 const GOLD = '#d9930d';
 const MARGIN = { top: 64, right: 20, bottom: 84, left: 56 };
-const SUPERSCRIPT: Record<number, string> = { 2: '²', 3: '³', 4: '⁴', 6: '⁶' };
-
 function drawMain(chart: Chart, data: Zeta4Data, lang: Lang): void {
   const { g, width, height } = chart;
   const n = data.n;
@@ -30,11 +29,12 @@ function drawMain(chart: Chart, data: Zeta4Data, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `N = ${n}    S_N = ${fmt(data.sum)}    극한 π⁴/90 = ${fmt(LIMIT)}    |오차| = ${fmt(data.error)}`,
-          en: `N = ${n}    S_N = ${fmt(data.sum)}    limit π⁴/90 = ${fmt(LIMIT)}    |error| = ${fmt(data.error)}`,
+          ko: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum)}\)    극한 \(\pi^4/90 = ${fmt(LIMIT)}\)    |오차| \(= ${fmt(data.error)}\)`,
+          en: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum)}\)    limit \(\pi^4/90 = ${fmt(LIMIT)}\)    |error| \(= ${fmt(data.error)}\)`,
         },
         lang,
       ),
@@ -81,7 +81,7 @@ function drawMain(chart: Chart, data: Zeta4Data, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', GOLD)
-    .text('π⁴/90');
+    .call(svgText, String.raw`\(\pi^4/90\)`);
 
   const path = line<{ k: number; v: number }>()
     .x((p) => x(p.k))
@@ -109,18 +109,19 @@ function drawMain(chart: Chart, data: Zeta4Data, lang: Lang): void {
     .attr('y', height + 38)
     .attr('font-size', 12.5)
     .attr('fill', GOLD)
-    .text(evens.map((p) => `ζ(${p.p}) = π${SUPERSCRIPT[p.p] ?? `^${p.p}`}/${p.denom} = ${fmt(p.value)}`).join('      '));
+    .call(svgText, evens.map((p) => String.raw`\(\zeta(${p.p}) = \pi^{${p.p}}/${p.denom} = ${fmt(p.value)}\)`).join('      '));
   if (odd) {
     g.append('text')
       .attr('x', 0)
       .attr('y', height + 60)
       .attr('font-size', 12.5)
       .style('fill', 'var(--accent)')
-      .text(
+      .call(
+        svgText,
         localize(
           {
-            ko: `ζ(3) = ${fmt(odd.value)} — π 거듭제곱 패턴 없음 (아페리 상수; 여기서 직접 합산으로 추정)`,
-            en: `ζ(3) = ${fmt(odd.value)} — no π-power pattern (Apéry's constant; estimated here by direct summation)`,
+            ko: String.raw`\(\zeta(3) = ${fmt(odd.value)}\) — \(\pi\) 거듭제곱 패턴 없음 (아페리 상수; 여기서 직접 합산으로 추정)`,
+            en: String.raw`\(\zeta(3) = ${fmt(odd.value)}\) — no \(\pi\)-power pattern (Apéry's constant; estimated here by direct summation)`,
           },
           lang,
         ),

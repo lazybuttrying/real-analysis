@@ -2,6 +2,7 @@ import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { absoluteValueModel, type AbsoluteValueData } from '../models/absoluteValue';
 
 /**
@@ -62,9 +63,9 @@ function drawMain(chart: Chart, data: AbsoluteValueData, lang: Lang): void {
 
   // Bars showing |x|, |y|, |x + y| as heights above their points.
   const bars: { v: number; anchor: number; label: string; color: string }[] = [
-    { v: data.absX, anchor: data.x, label: '|x|', color: 'currentColor' },
-    { v: data.absY, anchor: data.y, label: '|y|', color: 'var(--bound)' },
-    { v: data.absSum, anchor: data.sum, label: '|x+y|', color: 'var(--accent)' },
+    { v: data.absX, anchor: data.x, label: String.raw`\(|x|\)`, color: 'currentColor' },
+    { v: data.absY, anchor: data.y, label: String.raw`\(|y|\)`, color: 'var(--bound)' },
+    { v: data.absSum, anchor: data.sum, label: String.raw`\(|x + y|\)`, color: 'var(--accent)' },
   ];
   for (const bar of bars) {
     const bx = x(bar.anchor);
@@ -82,7 +83,7 @@ function drawMain(chart: Chart, data: AbsoluteValueData, lang: Lang): void {
       .attr('font-size', 11)
       .attr('font-weight', 600)
       .attr('fill', bar.color === 'currentColor' ? 'currentColor' : bar.color)
-      .text(bar.label);
+      .call(svgText, bar.label);
   }
 
   // The number line and the points.
@@ -97,7 +98,7 @@ function drawMain(chart: Chart, data: AbsoluteValueData, lang: Lang): void {
     { v: 0, label: '0', dy: 18 },
     { v: data.x, label: 'x', dy: 18 },
     { v: data.y, label: 'y', dy: 18 },
-    { v: data.sum, label: 'x+y', dy: 18 },
+    { v: data.sum, label: String.raw`\(x + y\)`, dy: 18 },
   ];
   for (const pt of points) {
     g.append('circle').attr('cx', x(pt.v)).attr('cy', lineY).attr('r', 4.5).attr('fill', 'currentColor');
@@ -108,7 +109,7 @@ function drawMain(chart: Chart, data: AbsoluteValueData, lang: Lang): void {
       .attr('font-size', 12)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(pt.label);
+      .call(svgText, pt.label);
   }
 
   g.append('g').attr('transform', `translate(0,${height - 6})`).call(axisBottom(x).ticks(9));

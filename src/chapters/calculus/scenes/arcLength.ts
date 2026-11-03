@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { arcLengthModel, type ArcLengthData, type ArcLengthPoint } from '../models/arcLength';
 
 /**
@@ -64,11 +65,12 @@ function drawMain(chart: Chart, data: ArcLengthData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         data.curve === 'circle'
-          ? { ko: '사분원 — gamma(t) = (cos t, sin t)', en: 'Quarter circle — gamma(t) = (cos t, sin t)' }
-          : { ko: '포물선 — gamma(t) = (t, t^2)', en: 'Parabola — gamma(t) = (t, t^2)' },
+          ? { ko: String.raw`사분원 — \(\gamma(t) = (\cos t, \sin t)\)`, en: String.raw`Quarter circle — \(\gamma(t) = (\cos t, \sin t)\)` }
+          : { ko: String.raw`포물선 — \(\gamma(t) = (t, t^2)\)`, en: String.raw`Parabola — \(\gamma(t) = (t, t^2)\)` },
         lang,
       ),
     );

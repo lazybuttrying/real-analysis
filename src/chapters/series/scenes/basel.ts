@@ -14,6 +14,7 @@ import {
   COLORS,
   type ThreeStage,
 } from '../../../view/threekit';
+import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { baselModel, LIMIT, type BaselData } from '../models/basel';
 
 // Bars of height 1/n^2 in front; the gold staircase of partial sums
@@ -30,6 +31,7 @@ function createBaselScene(): Scene<BaselData> {
   let root: RootGroup | undefined;
   let wrap: HTMLDivElement | undefined;
   let readoutEl: HTMLDivElement | undefined;
+  let readoutSlot: RichSlot | undefined;
   let lang: Lang = 'ko';
   let last: { data: BaselData; state: ControlState } | undefined;
 
@@ -93,13 +95,18 @@ function createBaselScene(): Scene<BaselData> {
     l3.position.set(xAt(n - 1) + 0.4, LIMIT * YS + 0.55, -0.6);
     root.add(l3);
 
-    readoutEl.textContent = localize(
-      {
-        ko: `N = ${n}    S_N = ${fmt(data.sum)}    극한 π²/6 = ${fmt(data.limit)}    |오차| = ${fmt(data.error)}    마지막 항 1/N² = ${fmt(data.lastTerm)}`,
-        en: `N = ${n}    S_N = ${fmt(data.sum)}    limit π²/6 = ${fmt(data.limit)}    |error| = ${fmt(data.error)}    last term 1/N² = ${fmt(data.lastTerm)}`,
-      },
-      lang,
-    );
+    if (readoutSlot) {
+      setRichText(
+        readoutSlot,
+        localize(
+          {
+            ko: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum)}\)    극한 \(\pi^2/6 = ${fmt(data.limit)}\)    |오차| \(= ${fmt(data.error)}\)    마지막 항 \(1/N^2 = ${fmt(data.lastTerm)}\)`,
+            en: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum)}\)    limit \(\pi^2/6 = ${fmt(data.limit)}\)    |error| \(= ${fmt(data.error)}\)    last term \(1/N^2 = ${fmt(data.lastTerm)}\)`,
+          },
+          lang,
+        ),
+      );
+    }
   };
 
   return {
@@ -133,6 +140,7 @@ function createBaselScene(): Scene<BaselData> {
       overlay.style.color = 'var(--fg)';
       readoutEl = document.createElement('div');
       readoutEl.style.fontWeight = '600';
+      readoutSlot = createRichSlot(readoutEl);
       const caption = document.createElement('div');
       caption.style.fontSize = '12px';
       caption.style.color = 'var(--muted)';

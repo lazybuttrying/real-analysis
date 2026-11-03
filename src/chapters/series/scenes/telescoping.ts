@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { telescopingModel, type TelescopingData } from '../models/telescoping';
 
 // Each term 1/(n(n+1)) is drawn as a split pair: +1/n above the axis,
@@ -29,11 +30,12 @@ function drawMain(chart: Chart, data: TelescopingData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `N = ${n}    S_N = ${fmt(data.sum)}    극한 = 1    남은 꼬리 1/(N+1) = ${fmt(data.tail)}    |오차| = ${fmt(data.error)}`,
-          en: `N = ${n}    S_N = ${fmt(data.sum)}    limit = 1    surviving tail 1/(N+1) = ${fmt(data.tail)}    |error| = ${fmt(data.error)}`,
+          ko: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum)}\)    극한 \(= 1\)    남은 꼬리 \(1/(N+1) = ${fmt(data.tail)}\)    |오차| \(= ${fmt(data.error)}\)`,
+          en: String.raw`\(N = ${n}\)    \(S_N = ${fmt(data.sum)}\)    limit \(= 1\)    surviving tail \(1/(N+1) = ${fmt(data.tail)}\)    |error| \(= ${fmt(data.error)}\)`,
         },
         lang,
       ),
@@ -86,14 +88,14 @@ function drawMain(chart: Chart, data: TelescopingData, lang: Lang): void {
     .attr('text-anchor', 'middle')
     .attr('font-size', 13)
     .attr('fill', GOLD)
-    .text('1/n');
+    .call(svgText, String.raw`\(1/n\)`);
   g.append('text')
     .attr('x', x(1) + bw / 2 + 2)
     .attr('y', y(-0.5) + 24)
     .attr('text-anchor', 'middle')
     .attr('font-size', 13)
     .style('fill', 'var(--bound)')
-    .text('-1/(n+1)');
+    .call(svgText, String.raw`\(-1/(n+1)\)`);
 }
 
 export default defineSimpleScene<TelescopingData>({ model: telescopingModel, margin: MARGIN, drawMain });

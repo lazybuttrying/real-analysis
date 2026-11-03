@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   curveDomain,
   inverseFunctionTheoremModel,
@@ -20,7 +21,7 @@ const MARGIN = { top: 40, right: 20, bottom: 44, left: 64 };
 
 function fLabel(fn: string, lang: Lang): string {
   const name = fn === 'e^x' ? 'e^x' : 'x^3+x';
-  return localize({ ko: `f(x) = ${name}`, en: `f(x) = ${name}` }, lang);
+  return localize({ ko: String.raw`\(f(x) = ${name}\)`, en: String.raw`\(f(x) = ${name}\)` }, lang);
 }
 
 function readoutText(data: InverseFunctionTheoremData, lang: Lang): string {
@@ -73,7 +74,7 @@ function drawMain(chart: Chart, data: InverseFunctionTheoremData, lang: Lang): v
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(fLabel(data.fn, lang) + localize({ ko: ' 와 역함수 (대각선 대칭)', en: ' and its inverse (diagonal reflection)' }, lang));
+    .call(svgText, fLabel(data.fn, lang) + localize({ ko: ' 와 역함수 (대각선 대칭)', en: ' and its inverse (diagonal reflection)' }, lang));
 
   // Diagonal y = x, dashed.
   const dLo = Math.max(domX[0] as number, domY[0] as number);
@@ -130,13 +131,13 @@ function drawMain(chart: Chart, data: InverseFunctionTheoremData, lang: Lang): v
     .attr('y', y(data.b) - 8)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(localize({ ko: `(a, f(a)) 기울기 ${fmt(data.fpA, 3)}`, en: `(a, f(a)) slope ${fmt(data.fpA, 3)}` }, lang));
+    .call(svgText, localize({ ko: String.raw`\((a, f(a))\) 기울기 ${fmt(data.fpA, 3)}`, en: String.raw`\((a, f(a))\) slope ${fmt(data.fpA, 3)}` }, lang));
   g.append('text')
     .attr('x', x(data.b) + 8)
     .attr('y', y(data.a) - 8)
     .attr('font-size', 12)
     .style('fill', 'var(--bound)')
-    .text(localize({ ko: `(b, g(b)) 기울기 ${fmt(data.gpB, 4)}`, en: `(b, g(b)) slope ${fmt(data.gpB, 4)}` }, lang));
+    .call(svgText, localize({ ko: String.raw`\((b, g(b))\) 기울기 ${fmt(data.gpB, 4)}`, en: String.raw`\((b, g(b))\) slope ${fmt(data.gpB, 4)}` }, lang));
 
   // Legend.
   const legendY = height + 34;
@@ -151,7 +152,7 @@ function drawMain(chart: Chart, data: InverseFunctionTheoremData, lang: Lang): v
     .attr('y', legendY)
     .attr('font-size', 12)
     .style('fill', 'var(--bound)')
-    .text(localize({ ko: '— g = f⁻¹ (실선) · 접선 (점선)', en: '— g = f⁻¹ (solid) · tangent (dashed)' }, lang));
+    .call(svgText, localize({ ko: String.raw`— \(g = f^{-1}\) (실선) · 접선 (점선)`, en: String.raw`— \(g = f^{-1}\) (solid) · tangent (dashed)` }, lang));
 }
 
 export default defineSimpleScene<InverseFunctionTheoremData>({

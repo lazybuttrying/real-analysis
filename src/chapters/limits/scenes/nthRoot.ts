@@ -2,6 +2,7 @@ import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { nthRootModel, type NthRootData, type NthRootSample } from '../models/nthRoot';
 
 /**
@@ -73,11 +74,12 @@ function drawMain(chart: Chart, data: NthRootData, lang: Lang): void {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(
+      .call(
+        svgText,
         localize(
           {
-            ko: `y = x^${data.n} 곡선과 집합 E (회색 영역)의 상한`,
-            en: `The curve y = x^${data.n} and the supremum of E (shaded)`,
+            ko: String.raw`\(y = x^{${data.n}}\) 곡선과 집합 \(E\) (회색 영역)의 상한`,
+            en: String.raw`The curve \(y = x^{${data.n}}\) and the supremum of \(E\) (shaded)`,
           },
           lang,
         ),
@@ -110,7 +112,7 @@ function drawMain(chart: Chart, data: NthRootData, lang: Lang): void {
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
-      .text(`y = a = ${fmt(data.a, 1)}`);
+      .call(svgText, String.raw`\(y = a = ${fmt(data.a, 1)}\)`);
 
     // Vertical dashed line x = root (bound color).
     g.append('line')
@@ -131,7 +133,7 @@ function drawMain(chart: Chart, data: NthRootData, lang: Lang): void {
       .attr('y', 14)
       .attr('font-size', 12)
       .style('fill', 'var(--bound)')
-      .text(localize({ ko: 's = sup E', en: 's = sup E' }, lang));
+      .call(svgText, localize({ ko: String.raw`\(s = \sup E\)`, en: String.raw`\(s = \sup E\)` }, lang));
 }
 
 export default defineSimpleScene<NthRootData>({

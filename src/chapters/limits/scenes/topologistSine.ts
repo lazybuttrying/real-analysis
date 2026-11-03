@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   topologistSineModel,
   TS_XMAX,
@@ -77,11 +78,12 @@ function drawMain(chart: Chart, data: TopologistSineData, lang: Lang): void {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(
+      .call(
+        svgText,
         localize(
           {
-            ko: '위상수학자의 사인 곡선: S = {(x, sin(1/x)) : x > 0}',
-            en: "Topologist's sine curve: S = {(x, sin(1/x)) : x > 0}",
+            ko: String.raw`위상수학자의 사인 곡선: \(S = \{(x, \sin(1/x)) : x > 0\}\)`,
+            en: String.raw`Topologist's sine curve: \(S = \{(x, \sin(1/x)) : x > 0\}\)`,
           },
           lang,
         ),
@@ -107,7 +109,7 @@ function drawMain(chart: Chart, data: TopologistSineData, lang: Lang): void {
         .attr('font-size', 12)
         .attr('font-weight', 600)
         .attr('fill', '#d64545')
-        .text('{0} × [−1, 1]');
+        .call(svgText, String.raw`\(\{0\} \times [-1, 1]\)`);
     }
 
     if (data.showSeq) {
@@ -140,7 +142,7 @@ function drawMain(chart: Chart, data: TopologistSineData, lang: Lang): void {
       .attr('text-anchor', 'end')
       .attr('font-size', 12)
       .attr('fill', 'currentColor')
-      .text(`x ∈ [${fmt(data.xMin, 3)}, ${fmt(TS_XMAX, 0)}] · ${data.pts.length} pts`);
+      .call(svgText, String.raw`\(x \in [${fmt(data.xMin, 3)}, ${fmt(TS_XMAX, 0)}]\) · ${data.pts.length} pts`);
 }
 
 export default defineSimpleScene<TopologistSineData>({

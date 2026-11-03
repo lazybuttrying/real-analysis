@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { grandiModel, type GrandiData } from '../models/grandi';
 
 // Grandi's series, with honest framing throughout: the series
@@ -31,11 +32,12 @@ function drawMain(chart: Chart, data: GrandiData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `N = ${n}    S_N = ${data.sum} (절대 안정되지 않음)    체사로 평균 = ${fmt(data.cesaroMean)}    급수의 합: 존재하지 않음 — 발산`,
-          en: `N = ${n}    S_N = ${data.sum} (never settles)    Cesàro mean = ${fmt(data.cesaroMean)}    sum of the series: does not exist — divergent`,
+          ko: String.raw`\(N = ${n}\)    \(S_N = ${data.sum}\) (절대 안정되지 않음)    체사로 평균 \(= ${fmt(data.cesaroMean)}\)    급수의 합: 존재하지 않음 — 발산`,
+          en: String.raw`\(N = ${n}\)    \(S_N = ${data.sum}\) (never settles)    Cesàro mean \(= ${fmt(data.cesaroMean)}\)    sum of the series: does not exist — divergent`,
         },
         lang,
       ),
