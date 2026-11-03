@@ -14,7 +14,7 @@ import {
   type SimulationNodeDatum,
 } from 'd3';
 import { catalogLight as catalog } from '../catalog-light.ts';
-import { localize, type Lang } from '../contracts.ts';
+import { localize, stripInlineMath, type Lang } from '../contracts.ts';
 import {
   buildApplicationMap,
   MECHANISM_LABELS,
@@ -48,7 +48,7 @@ const sceneOf = new Map<string, { title: (lang: Lang) => string; chapterTitle: (
 for (const chapter of catalog) {
   for (const scene of chapter.scenes) {
     sceneOf.set(`${chapter.id}/${scene.id}`, {
-      title: (lang: Lang) => localize(scene.title, lang),
+      title: (lang: Lang) => stripInlineMath(localize(scene.title, lang)),
       chapterTitle: (lang: Lang) => localize(chapter.title, lang),
     });
   }

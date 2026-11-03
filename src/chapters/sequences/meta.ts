@@ -83,7 +83,7 @@ For example, picture a 🧍 person walking down a corridor. If both walls narrow
     },
     {
       id: 'standard-limits',
-      title: { ko: '표준 극한: x^n과 x^{1/n}', en: 'Standard Limits: x^n and x^{1/n}' },
+      title: { ko: String.raw`표준 극한: \(x^n\)과 \(x^{1/n}\)`, en: String.raw`Standard Limits: \(x^n\) and \(x^{1/n}\)` },
       order: 3,
       summary: {
         ko: String.raw`절댓값이 1보다 작은 수의 거듭제곱과 양수의 거듭제곱근을 봅니다. 각각 어디로 모이는지 확인하는 장면입니다.

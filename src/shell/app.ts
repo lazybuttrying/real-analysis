@@ -66,8 +66,24 @@ export function startChapter(chapterId: string, loaders: Loaders, exercisesLoade
   mountChapter(chapter, loaders, exercisesLoader, root, lang, problemsLoader);
 }
 
+/**
+ * A span holding a scene title: the delimiter-stripped text shows
+ * immediately, and once the tex module arrives the \(...\) spans are
+ * replaced by inline KaTeX. Same pattern as summarySpan, for the
+ * surfaces that print titles (nav links, the scene heading, the pager).
+ */
+function titleSpan(text: string): HTMLSpanElement {
+  const span = h('span', {}, stripInlineMath(text));
+  if (text.includes('\\(')) {
+    import('./tex')
+      .then((module) => module.renderRichText(span, text))
+      .catch((error: unknown) => console.error(error));
+  }
+  return span;
+}
+
 function sceneLink(lang: Lang, chapter: ChapterMeta, scene: SceneMeta): HTMLAnchorElement {
-  return h('a', { href: sceneUrl(BASE, lang, chapter.id, scene.id), 'data-spa': '', 'data-scene': scene.id }, localize(scene.title, lang));
+  return h('a', { href: sceneUrl(BASE, lang, chapter.id, scene.id), 'data-spa': '', 'data-scene': scene.id }, titleSpan(localize(scene.title, lang)));
 }
 
 interface ReadingEntry {
@@ -84,7 +100,7 @@ function pagerLink(lang: Lang, currentChapterId: string, entry: ReadingEntry, re
   const label = tr(lang, rel === 'prev' ? 'prevScene' : 'nextScene');
   const title = localize(entry.scene.title, lang);
   const arrow = rel === 'prev' ? '←' : '→';
-  const text = rel === 'prev' ? `${arrow} ${label}: ${title}` : `${label}: ${title} ${arrow}`;
+  const text = rel === 'prev' ? `${arrow} ${label}: ${stripInlineMath(title)}` : `${label}: ${stripInlineMath(title)} ${arrow}`;
   // Same-chapter links stay in the SPA; cross-chapter links are plain
   // navigations (the SPA router only knows the current chapter).
   const attrs: Record<string, string> = {
@@ -93,7 +109,9 @@ function pagerLink(lang: Lang, currentChapterId: string, entry: ReadingEntry, re
     'aria-label': text,
   };
   if (entry.chapter.id === currentChapterId) attrs['data-spa'] = '';
-  return h('a', attrs, text);
+  return rel === 'prev'
+    ? h('a', attrs, `${arrow} ${label}: `, titleSpan(title))
+    : h('a', attrs, `${label}: `, titleSpan(title), ` ${arrow}`);
 }
 
 /**
@@ -114,7 +132,7 @@ function renderText(target: HTMLElement, scene: SceneMeta, lang: Lang): void {
   const summary = localize(scene.summary, lang);
   const paragraphs = summary.split('\n\n').map((p) => p.trim()).filter((p) => p.length > 0);
   target.replaceChildren(
-    h('h1', {}, localize(scene.title, lang)),
+    h('h1', {}, titleSpan(localize(scene.title, lang))),
     ...paragraphs.map((p) => h('p', {}, summarySpan(p))),
   );
 
@@ -347,7 +365,7 @@ function mountChapter(chapter: ChapterMeta, loaders: Loaders, exercisesLoader: E
     disposeExercisesPage(exercisesView);
     sceneView.hidden = false;
     disposeProblems();
-    document.title = `${localize(scene.title, lang)} | ${site.name.en}`;
+    document.title = `${stripInlineMath(localize(scene.title, lang))} | ${site.name.en}`;
     markActive(scene.id);
     renderText(textEl, scene, lang);
 

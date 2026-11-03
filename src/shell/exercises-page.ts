@@ -72,7 +72,7 @@ export function renderExercisesPage(
 
   const chapterNumber = catalog.indexOf(chapter) + 1;
   const chapterTitle = `${chapterNumber}. ${localize(chapter.title, lang)}`;
-  const sceneTitleOf = new Map(chapter.scenes.map((scene) => [scene.id, localize(scene.title, lang)]));
+  const sceneTitleOf = new Map(chapter.scenes.map((scene) => [scene.id, stripInlineMath(localize(scene.title, lang))]));
 
   interface RichTarget {
     el: HTMLElement;

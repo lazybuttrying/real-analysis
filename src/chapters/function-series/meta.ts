@@ -195,7 +195,7 @@ For example, zoom into the corner of a 📷 photo. The jagged part gets narrower
     },
     {
       id: 'function-spaces',
-      title: { ko: '함수공간: C_c, C_0, C_b', en: 'Function Spaces: Cc, C0, Cb' },
+      title: { ko: String.raw`함수공간: \(C_c\), \(C_0\), \(C_b\)`, en: String.raw`Function Spaces: \(C_c\), \(C_0\), \(C_b\)` },
       order: 8,
       summary: {
         ko: String.raw`함수공간을 보는 씬입니다. 연속함수들의 세 집합 \(C_c\), \(C_0\), \(C_b\)가 어떻게 겹치고 갈리는지 확인합니다.
