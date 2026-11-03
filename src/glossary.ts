@@ -1078,6 +1078,16 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'double-series',
   },
   {
+    id: 'convergence-atlas',
+    term: { ko: '수렴 개념 지도', en: 'convergence atlas' },
+    definition: {
+      ko: String.raw`대표 급수들을 한 격자에 나란히 놓고 부분합 곡선과 판정을 비교하는 지도. 항이 \(0\)으로 가는 것만으로는 부족하다는 반례들이 함께 놓인다.`,
+      en: String.raw`A grid that lays exemplar series side by side to compare partial-sum curves and verdicts, with the counterexamples showing that terms going to \(0\) is not enough.`,
+    },
+    chapterId: 'series',
+    sceneId: 'convergence-atlas',
+  },
+  {
     id: 'raabe-test',
     term: { ko: '라베 판정법', en: "Raabe's test" },
     definition: {

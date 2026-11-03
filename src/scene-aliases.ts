@@ -381,6 +381,10 @@ export const SCENE_ALIASES: Record<string, LocalizedText> = {
     ko: '행으로 더하나 열로 더하나 같은 이중 합, 더하는 순서를 바꿔도 되는 조건',
     en: 'adding a grid by rows or by columns gives the same total',
   },
+  'convergence-atlas': {
+    ko: '급수 아홉 개를 한눈에 비교하는 카드 지도, 어떤 급수가 왜 갈리는지',
+    en: 'nine series compared on one card grid, which series split which way and why',
+  },
   'power-series': {
     ko: '중심에서 일정 거리 안에서는 안전한 급수, 수렴하는 동네의 반지름',
     en: 'a series that is safe within a radius of its center and collapses outside',

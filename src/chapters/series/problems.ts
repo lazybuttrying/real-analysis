@@ -7,6 +7,7 @@ import { problems as abelTestProblems } from './problems/abel-test';
 import { problems as baselProblems } from './problems/basel';
 import { problems as dirichletTestProblems } from './problems/dirichlet-test';
 import { doubleSeriesProblems } from './problems/double-series';
+import { convergenceAtlasProblems } from './problems/convergence-atlas';
 import { problems as geometricProblems } from './problems/geometric';
 import { problems as grandiProblems } from './problems/grandi';
 import { problems as harmonicProblems } from './problems/harmonic';
@@ -44,4 +45,5 @@ export const problemsByScene: Readonly<Record<string, readonly ProblemMeta[]>> =
   'dirichlet-test': dirichletTestProblems,
   'abel-test': abelTestProblems,
   'double-series': doubleSeriesProblems,
+  'convergence-atlas': convergenceAtlasProblems,
 };

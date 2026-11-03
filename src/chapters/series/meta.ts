@@ -25,6 +25,7 @@ export const series: ChapterMeta = {
     { id: 'tests-1', title: { ko: '판정법 1부', en: 'Convergence Tests, Part 1' }, sceneIds: ['tests', 'integral-test', 'raabe-test', 'kummer-test', 'condensation'] },
     { id: 'computing-series', title: { ko: '급수의 계산', en: 'Computing Series' }, sceneIds: ['telescoping', 'geometric', 'wallis', 'stirling', 'grandi'] },
     { id: 'tests-2', title: { ko: '판정법 2부와 이중급수', en: 'Convergence Tests, Part 2, and Double Series' }, sceneIds: ['dirichlet-test', 'abel-test', 'double-series'] },
+    { id: 'atlas', title: { ko: '수렴 개념 지도', en: 'The Convergence Atlas' }, sceneIds: ['convergence-atlas'] },
   ],
   scenes: [
     {
@@ -449,6 +450,32 @@ For example, stack 📦 boxes in a grid and count the items inside each box. Cou
           options: ['1/(m^2 n^2)', '(-1)^(m+n)/(m^2 n^2)'],
           init: '1/(m^2 n^2)',
         },
+      ],
+    },
+    {
+      id: 'convergence-atlas',
+      title: { ko: '수렴 개념 9칸 지도', en: 'The Nine-Card Convergence Atlas' },
+      order: 19,
+      summary: {
+        ko: String.raw`대표 급수 아홉 개를 3 곱하기 3 격자에 한 장씩 올려놓고 비교합니다.
+
+카드마다 부분합 곡선 하나와 판정 한 줄만 있습니다. 초록은 수렴, 빨강은 발산입니다. 나란히 놓고 보면 차이가 보입니다.
+
+예를 들면, 🗂️ 카드 아홉 장을 책상에 펼쳐 놓은 것과 같아요. 한 장씩 따로 볼 때는 비슷해 보이던 급수들이, 옆 카드와 비교하면 갈림길이 또렷해집니다.`,
+        en: String.raw`Nine exemplar series sit side by side on a 3 by 3 grid, one card each.
+
+Each card holds one partial-sum curve and one verdict line. Green converges, red diverges. Side by side, the differences show.
+
+For example, spread nine 🗂️ cards on a desk. Series that looked alike one at a time show their forks clearly next to their neighbors.`,
+      },
+      tex: [
+        String.raw`\sum_{k=1}^{\infty} \frac{1}{2^k} = 1, \qquad \sum_{k=1}^{\infty} \frac{1}{k} = \infty, \qquad \sum_{k=1}^{\infty} \frac{(-1)^{k+1}}{k} = \ln 2`,
+        String.raw`\sum_{k=1}^{\infty} \frac{1}{k^2} = \frac{\pi^2}{6}, \qquad \sum_{k=1}^{\infty} \frac{1}{k!} = e - 1, \qquad \sum_{k=1}^{\infty} \frac{1}{k(k+1)} = 1`,
+      ],
+      prerequisites: ['tests'],
+      controls: [
+        { kind: 'slider', key: 'n', label: { ko: '부분합 항 수 n', en: 'Partial sum terms n' }, min: 5, max: 200, step: 1, init: 40 },
+        { kind: 'select', key: 'focus', label: { ko: '주목 카드', en: 'Focus card' }, options: ['all', 'geometric', 'harmonic', 'basel', 'leibniz', 'absolute', 'telescoping', 'factorial', 'weighted', 'grandi'], init: 'all' },
       ],
     },
   ],

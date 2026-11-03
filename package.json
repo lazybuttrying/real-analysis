@@ -175,7 +175,7 @@
       "limit": "12 kB"
     },
     {
-      "name": "chapter: series (entry + 18 scenes)",
+      "name": "chapter: series (entry + 19 scenes)",
       "path": [
         "dist/assets/series-*.js",
         "dist/assets/harmonic-*.js",
@@ -195,9 +195,10 @@
         "dist/assets/dirichletTest-*.js",
         "dist/assets/abelTest-*.js",
         "dist/assets/integralTest-*.js",
-        "dist/assets/doubleSeries-*.js"
+        "dist/assets/doubleSeries-*.js",
+        "dist/assets/convergenceAtlas-*.js"
       ],
-      "limit": "40 kB"
+      "limit": "45 kB"
     },
     {
       "name": "chapter: power-series (entry + 10 scenes)",

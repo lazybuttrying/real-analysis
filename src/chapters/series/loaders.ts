@@ -24,4 +24,5 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'abel-test': () => import('./scenes/abelTest').then((module) => module.default),
   'integral-test': () => import('./scenes/integralTest').then((module) => module.default),
   'double-series': () => import('./scenes/doubleSeries').then((module) => module.default),
+  'convergence-atlas': () => import('./scenes/convergenceAtlas').then((module) => module.default),
 };
