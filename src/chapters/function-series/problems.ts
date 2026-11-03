@@ -4,6 +4,7 @@ import { functionSpacesProblems } from '../series/problems/function-spaces';
 import { gibbsPhenomenonProblems } from '../calculus/problems/gibbs-phenomenon';
 import { problems as diniProblems } from '../series/problems/dini';
 import { problems as fourierProblems } from '../calculus/problems/fourier';
+import { fourierEpicyclesProblems } from '../calculus/problems/fourier-epicycles';
 import { problems as mTestProblems } from '../series/problems/m-test';
 import { parsevalProblems } from '../series/problems/parseval';
 import { riemannLebesgueProblems } from '../series/problems/riemann-lebesgue';
@@ -24,4 +25,5 @@ export const problemsByScene: Readonly<Record<string, readonly ProblemMeta[]>> =
   'parseval': parsevalProblems,
   'gibbs-phenomenon': gibbsPhenomenonProblems,
   'function-spaces': functionSpacesProblems,
+  'fourier-epicycles': fourierEpicyclesProblems,
 };

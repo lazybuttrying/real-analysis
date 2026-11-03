@@ -22,7 +22,7 @@ export const functionSeries: ChapterMeta = {
   },
   sections: [
     { id: 'uniform-tests', title: { ko: '균등수렴 판정', en: 'Uniform Convergence Tests' }, sceneIds: ['m-test', 'dini'] },
-    { id: 'fourier', title: { ko: '푸리에 급수와 함수공간', en: 'Fourier Series and Function Spaces' }, sceneIds: ['fourier', 'riemann-lebesgue', 'fejer-theorem', 'parseval', 'gibbs-phenomenon', 'function-spaces'] },
+    { id: 'fourier', title: { ko: '푸리에 급수와 함수공간', en: 'Fourier Series and Function Spaces' }, sceneIds: ['fourier', 'riemann-lebesgue', 'fejer-theorem', 'parseval', 'gibbs-phenomenon', 'function-spaces', 'fourier-epicycles'] },
   ],
   scenes: [
     {
@@ -217,6 +217,33 @@ For example, a ⛺ tent stands on a finite patch of ground. Fog thins out with d
       controls: [
         { kind: 'select', key: 'mode', label: { ko: '보기', en: 'View' }, options: ['spaces', 'cutoff'], init: 'spaces' },
         { kind: 'slider', key: 'k', label: { ko: '절단 위치 k', en: 'Cutoff k' }, min: 0.5, max: 3, step: 0.25, init: 1 },
+      ],
+    },
+    {
+      id: 'fourier-epicycles',
+      title: { ko: '에피사이클 사다리', en: 'The Epicycle Ladder' },
+      order: 9,
+      summary: {
+        ko: String.raw`회전하는 팔을 사슬처럼 이으면 끝점이 곡선을 그립니다.
+
+팔 하나는 원 하나를 그립니다. 팔 두 개면 꽃 모양이 나옵니다. 팔 세 개면 별 모양 패턴이 나옵니다. 팔이 곧 복소지수 항 하나씩입니다.
+
+예를 들면, 🎡 관람차 끝에 작은 관람차를 매단 것과 같아요. 큰 바퀴가 돌고, 그 끝에서 작은 바퀴가 더 빠르게 돕니다. 맨 끝 자리가 그리는 자취가 곡선입니다.`,
+        en: String.raw`Chain rotating arms tip to tip and the endpoint draws a curve.
+
+One arm draws one circle. Two arms already draw a flower. Three arms draw star patterns. Each arm is exactly one complex exponential term.
+
+For example, hang a small 🎡 Ferris wheel at the rim of a big one. The big wheel turns, the small one spins faster at its tip, and the last seat traces the curve.`,
+      },
+      tex: [
+        String.raw`P(t) = \sum_k L_k e^{i f_k t}, \qquad f_k \in \mathbb{Z} \Rightarrow P(t + 2\pi) = P(t)`,
+        String.raw`P(t) = 1.4\,e^{-it} + 1.0\,e^{7it}, \qquad |P(t)| \le \sum_k L_k`,
+      ],
+      prerequisites: ['fourier'],
+      controls: [
+        { kind: 'select', key: 'preset', label: { ko: '프리셋', en: 'Preset' }, options: ['pair', 'trio', 'wave'], init: 'pair' },
+        { kind: 'slider', key: 'arms', label: { ko: '팔 수', en: 'Arms' }, min: 1, max: 5, step: 1, init: 2 },
+        { kind: 'slider', key: 'phase', label: { ko: '위상 t', en: 'Phase t' }, min: 0, max: 6.28, step: 0.02, init: 0.8 },
       ],
     },
   ],

@@ -45,7 +45,7 @@
       "path": [
         "dist/assets/problems-*.js"
       ],
-      "limit": "425 kB"
+      "limit": "430 kB"
     },
     {
       "name": "shared other chunks",
@@ -217,7 +217,7 @@
       "limit": "30 kB"
     },
     {
-      "name": "chapter: function-series (entry + 8 scenes)",
+      "name": "chapter: function-series (entry + 9 scenes)",
       "path": [
         "dist/assets/function-series-*.js",
         "dist/assets/mTest-*.js",
@@ -227,7 +227,8 @@
         "dist/assets/fejerTheorem-*.js",
         "dist/assets/parseval-*.js",
         "dist/assets/gibbsPhenomenon-*.js",
-        "dist/assets/functionSpaces-*.js"
+        "dist/assets/functionSpaces-*.js",
+        "dist/assets/fourierEpicycles-*.js"
       ],
       "limit": "25 kB"
     },

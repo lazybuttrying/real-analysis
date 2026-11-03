@@ -100,7 +100,7 @@ export const APPLICATIONS: readonly ApplicationDefinition[] = [
       ko: '단순한 조각을 한 층씩 쌓아 복잡한 대상을 만드는 응용이다. 고조파를 쌓으면 사각파가 되고, 다항식 항을 쌓으면 원래 함수에 붙는다. 쌓는 손동작은 같고 대상만 바뀐다.',
       en: 'An application that builds a complicated object by stacking simple pieces one layer at a time. Stack harmonics and a square wave appears; stack polynomial terms and they cling to the target function. The stacking motion stays the same, only the target changes.',
     },
-    sceneIds: ['fourier', 'gibbs-phenomenon', 'parseval', 'taylor', 'weierstrass-approx'],
+    sceneIds: ['fourier', 'gibbs-phenomenon', 'parseval', 'taylor', 'weierstrass-approx', 'fourier-epicycles'],
   },
   {
     id: 'app-deformation',

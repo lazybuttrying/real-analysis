@@ -140,6 +140,12 @@ const POST_SPLIT_SCENES = new Set([
   // additive functions and the Hamel basis) — post-split additions.
   'ordered-fields',
   'additive-functions',
+  // 2026-11-03: application scenes from the visualization references
+  // (epicycle ladder, Jacobian grid, convergence atlas) — post-split
+  // additions, no legacy canonical pages.
+  'fourier-epicycles',
+  'jacobian-grid',
+  'convergence-atlas',
 ]);
 
 /**

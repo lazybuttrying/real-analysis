@@ -1400,6 +1400,16 @@ export const glossary: readonly GlossaryEntry[] = [
     sceneId: 'fourier',
   },
   {
+    id: 'epicycle',
+    term: { ko: '에피사이클', en: 'Epicycle' },
+    definition: {
+      ko: String.raw`회전하는 팔의 끝에서 다음 팔이 도는 사슬로, 끝점은 \(P(t) = \sum_k L_k e^{i f_k t}\) 곡선을 그린다. 팔 하나가 푸리에 급수의 항 하나와 같다.`,
+      en: String.raw`A chain of rotating arms, each riding on the tip of the previous one: the endpoint traces \(P(t) = \sum_k L_k e^{i f_k t}\). One arm is one term of a Fourier series.`,
+    },
+    chapterId: 'function-series',
+    sceneId: 'fourier-epicycles',
+  },
+  {
     id: 'fejer-kernel',
     term: { ko: 'Fejér kernel', en: 'Fejér kernel' },
     definition: {

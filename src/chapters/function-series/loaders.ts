@@ -14,4 +14,5 @@ export const loaders: Readonly<Record<string, SceneLoader>> = {
   'parseval': () => import('../series/scenes/parseval').then((module) => module.default),
   'gibbs-phenomenon': () => import('../calculus/scenes/gibbsPhenomenon').then((module) => module.default),
   'function-spaces': () => import('../series/scenes/functionSpaces').then((module) => module.default),
+  'fourier-epicycles': () => import('../calculus/scenes/fourierEpicycles').then((module) => module.default),
 };

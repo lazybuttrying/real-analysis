@@ -453,6 +453,10 @@ export const SCENE_ALIASES: Record<string, LocalizedText> = {
     ko: '멀리 가면 사라지는 함수들의 모임, 유계인 연속함수 전체',
     en: 'families of functions that fade away far out, all bounded continuous functions',
   },
+  'fourier-epicycles': {
+    ko: '도는 팔 끝에 팔을 매달아 그리는 꽃과 별 모양 곡선, 회전 팔 사슬',
+    en: 'a flower and star curve drawn by rotating arms chained tip to tip, a spinning arm chain',
+  },
   diffcont: {
     ko: '미분되면 끊기지 않지만 그 반대는 아니다, 뾰족한 모서리에서 깨지는 미분',
     en: 'differentiable means unbroken but not the other way, a sharp corner breaks it',
