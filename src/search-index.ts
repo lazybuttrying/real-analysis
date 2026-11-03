@@ -93,7 +93,7 @@ export function buildSearchIndex(lang: Lang): SearchIndexData {
   catalog.forEach((chapter, chapterIndex) => {
     const chapterTitle = `${chapterIndex + 1}. ${localize(chapter.title, lang)}`;
     for (const scene of [...chapter.scenes].sort((a, b) => a.order - b.order)) {
-      const title = localize(scene.title, lang);
+      const title = stripInlineMath(localize(scene.title, lang));
       sceneTitleOf.set(`${chapter.id}/${scene.id}`, title);
       scenes.push({
         chapterId: chapter.id,

@@ -52,9 +52,10 @@
       "path": [
         "dist/assets/errata-page-*.js",
         "dist/assets/simple-scene-*.js",
-        "dist/assets/simpson-*.js"
+        "dist/assets/simpson-*.js",
+        "dist/assets/svgtext-*.js"
       ],
-      "limit": "3 kB"
+      "limit": "5 kB"
     },
     {
       "name": "chapter: proofs (entry + 10 scenes)",

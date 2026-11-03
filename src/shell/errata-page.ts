@@ -1,5 +1,5 @@
 import { catalogLight as catalog } from '../catalog-light.ts';
-import { localize, type Lang } from '../contracts.ts';
+import { localize, stripInlineMath, type Lang } from '../contracts.ts';
 import { ERRATA_AS_OF, ERRATA_REPORT_URL, errata } from '../errata.ts';
 import { sceneUrl } from '../paths.ts';
 import { site } from '../site.config.ts';
@@ -38,7 +38,7 @@ export function renderErrataPage(root: HTMLElement, lang: Lang): void {
         if (chapter && scene) {
           meta.append(
             ' — ',
-            h('a', { href: sceneUrl(BASE, lang, chapter.id, scene.id) }, `${localize(chapter.title, lang)} — ${localize(scene.title, lang)}`),
+            h('a', { href: sceneUrl(BASE, lang, chapter.id, scene.id) }, `${localize(chapter.title, lang)} — ${stripInlineMath(localize(scene.title, lang))}`),
           );
         }
       } else {

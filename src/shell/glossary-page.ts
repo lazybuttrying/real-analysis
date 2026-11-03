@@ -85,7 +85,7 @@ export function renderGlossaryPage(root: HTMLElement, lang: Lang): void {
           h(
             'a',
             { href: sceneUrl(BASE, lang, entry.chapterId, entry.sceneId) },
-            sceneTitle ? localize(sceneTitle.title, lang) : entry.sceneId,
+            sceneTitle ? stripInlineMath(localize(sceneTitle.title, lang)) : entry.sceneId,
           ),
         ),
       );

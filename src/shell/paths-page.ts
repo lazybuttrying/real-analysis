@@ -31,7 +31,7 @@ for (const [chapterIndex, chapter] of catalog.entries()) {
     sceneOf.set(`${chapter.id}/${scene.id}`, {
       number: chapterIndex + 1,
       chapterTitle: (lang: Lang) => localize(chapter.title, lang),
-      title: (lang: Lang) => localize(scene.title, lang),
+      title: (lang: Lang) => stripInlineMath(localize(scene.title, lang)),
     });
   }
 }
