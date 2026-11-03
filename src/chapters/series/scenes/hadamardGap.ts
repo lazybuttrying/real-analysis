@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { hadamardGapModel, type HadamardData, type HadamardPoint } from '../models/hadamardGap';
 
 /**
@@ -82,11 +83,12 @@ function drawMain(chart: Chart, data: HadamardData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `|S_${data.n}(r·e^{iθ})| 대 각도 θ — 간극 급수 (실선) vs 간극 없는 대조군 (점선)`,
-          en: `|S_${data.n}(r·e^{iθ})| vs angle θ — gappy series (solid) vs gap-free contrast (dashed)`,
+          ko: String.raw`\(|S_{${data.n}}(r \cdot e^{i\theta})|\) 대 각도 \(\theta\) — 간극 급수 (실선) vs 간극 없는 대조군 (점선)`,
+          en: String.raw`\(|S_{${data.n}}(r \cdot e^{i\theta})|\) vs angle \(\theta\) — gappy series (solid) vs gap-free contrast (dashed)`,
         },
         lang,
       ),
@@ -117,8 +119,8 @@ function drawMain(chart: Chart, data: HadamardData, lang: Lang): void {
   const legendY = height + 34;
   const labels =
     lang === 'ko'
-      ? ['— r = 0.90', '— r = 0.95', '— r = 0.99', '┄ T_N (간극 없음)']
-      : ['— r = 0.90', '— r = 0.95', '— r = 0.99', '┄ T_N (gap-free)'];
+      ? ['— r = 0.90', '— r = 0.95', '— r = 0.99', String.raw`┄ \(T_N\) (간극 없음)`]
+      : ['— r = 0.90', '— r = 0.95', '— r = 0.99', String.raw`┄ \(T_N\) (gap-free)`];
   const xs = [8, width * 0.24, width * 0.4, width * 0.58];
   labels.forEach((label, i) => {
     const t = g
@@ -127,7 +129,7 @@ function drawMain(chart: Chart, data: HadamardData, lang: Lang): void {
       .attr('y', legendY)
       .attr('font-size', 12)
       .attr('fill', 'currentColor')
-      .text(label);
+      .call(svgText, label);
     if (i < 3) {
       t.style('stroke', 'var(--bound)').attr('opacity', opacities[i] ?? 1);
     } else {

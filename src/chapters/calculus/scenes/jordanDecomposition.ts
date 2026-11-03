@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { jordanDecompositionModel, type JordanData, type JordanSample } from '../models/jordanDecomposition';
 
 /**
@@ -105,11 +106,12 @@ function drawMain(chart: Chart, data: JordanData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: 'f(x) = x²·sin(1/x)의 조르당 분해 — f(회색) = g(악센트) − h(테두리 색)',
-          en: 'Jordan decomposition of f(x) = x²·sin(1/x) — f (gray) = g (accent) − h (bound color)',
+          ko: String.raw`\(f(x) = x^2 \cdot \sin(1/x)\)의 조르당 분해 — \(f\)(회색) \(= g\)(악센트) \(- h\)(테두리 색)`,
+          en: String.raw`Jordan decomposition of \(f(x) = x^2 \cdot \sin(1/x)\) — \(f\) (gray) \(= g\) (accent) \(- h\) (bound color)`,
         },
         lang,
       ),
@@ -167,7 +169,7 @@ function drawMain(chart: Chart, data: JordanData, lang: Lang): void {
     .attr('y', legendY)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text(localize({ ko: '┄ f (x²·sin(1/x))', en: '┄ f (x²·sin(1/x))' }, lang));
+    .call(svgText, localize({ ko: String.raw`┄ \(f\) (\(x^2 \cdot \sin(1/x)\))`, en: String.raw`┄ \(f\) (\(x^2 \cdot \sin(1/x)\))` }, lang));
   g.append('text')
     .attr('x', width * 0.32)
     .attr('y', legendY)
@@ -179,7 +181,7 @@ function drawMain(chart: Chart, data: JordanData, lang: Lang): void {
     .attr('y', legendY)
     .attr('font-size', 12)
     .style('fill', 'var(--bound)')
-    .text(localize({ ko: '— h = g − f (단조증가)', en: '— h = g − f (increasing)' }, lang));
+    .call(svgText, localize({ ko: String.raw`— \(h = g - f\) (단조증가)`, en: String.raw`— \(h = g - f\) (increasing)` }, lang));
 }
 
 export default defineSimpleScene<JordanData>({

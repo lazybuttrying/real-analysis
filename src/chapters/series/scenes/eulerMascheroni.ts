@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { GAMMA_TRUE, eulerMascheroniModel, type EulerMascheroniData } from '../models/eulerMascheroni';
 
 /**
@@ -49,9 +50,10 @@ function drawMain(chart: Chart, data: EulerMascheroniData, lang: Lang): void {
     g.append('g').call(axisLeft(y).ticks(6));
 
     const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    header.text(
+    header.call(
+      svgText,
       localize(
-        { ko: `H_n 계단 vs ln n 곡선 — 둘 다 발산합니다`, en: `H_n staircase vs ln n curve — both diverge` },
+        { ko: String.raw`\(H_n\) 계단 vs \(\ln n\) 곡선 — 둘 다 발산합니다`, en: String.raw`\(H_n\) staircase vs \(\ln n\) curve — both diverge` },
         lang,
       ),
     );
@@ -90,14 +92,14 @@ function drawMain(chart: Chart, data: EulerMascheroniData, lang: Lang): void {
       .attr('y', height + 32)
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
-      .text(localize({ ko: '■ H_n 계단', en: '■ H_n staircase' }, lang));
+      .call(svgText, localize({ ko: String.raw`■ \(H_n\) 계단`, en: String.raw`■ \(H_n\) staircase` }, lang));
     g.append('text')
       .attr('x', width / 2)
       .attr('y', height + 32)
       .attr('font-size', 12)
       .attr('fill', 'currentColor')
       .attr('opacity', 0.7)
-      .text(localize({ ko: '— ln n 곡선', en: '— ln n curve' }, lang));
+      .call(svgText, localize({ ko: String.raw`— \(\ln n\) 곡선`, en: String.raw`— \(\ln n\) curve` }, lang));
   }
 }
 
@@ -122,9 +124,10 @@ function drawSecond(chart: Chart, data: EulerMascheroniData, lang: Lang): void {
     g.append('g').call(axisLeft(y).ticks(6));
 
     const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    header.text(
+    header.call(
+      svgText,
       localize(
-        { ko: `γ_n = H_n − ln n — 점선 점근선 γ ≈ 0.5772에 안착합니다`, en: `γ_n = H_n − ln n — settling onto the dashed asymptote γ ≈ 0.5772` },
+        { ko: String.raw`\(\gamma_n = H_n - \ln n\) — 점선 점근선 \(\gamma \approx 0.5772\)에 안착합니다`, en: String.raw`\(\gamma_n = H_n - \ln n\) — settling onto the dashed asymptote \(\gamma \approx 0.5772\)` },
         lang,
       ),
     );
@@ -144,7 +147,7 @@ function drawSecond(chart: Chart, data: EulerMascheroniData, lang: Lang): void {
       .attr('font-size', 12)
       .attr('text-anchor', 'end')
       .style('fill', 'var(--accent)')
-      .text('γ ≈ 0.5772');
+      .call(svgText, String.raw`\(\gamma\) ≈ 0.5772`);
 
     // gamma_n curve.
     const gammaLine = line<{ k: number; v: number }>()

@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { egorovModel, type EgorovData } from '../models/egorov';
 
 /**
@@ -58,11 +59,12 @@ function drawMain(chart: Chart, data: EgorovData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `f_n(x) = 1_[1/(n+1), 1/n](x): 미끄러지는 혹과 줄어드는 나쁜 집합`,
-          en: `f_n(x) = 1_[1/(n+1), 1/n](x): the sliding bump and the shrinking bad set`,
+          ko: String.raw`\(f_n(x) = \mathbf{1}_{[1/(n+1), 1/n]}(x)\): 미끄러지는 혹과 줄어드는 나쁜 집합`,
+          en: String.raw`\(f_n(x) = \mathbf{1}_{[1/(n+1), 1/n]}(x)\): the sliding bump and the shrinking bad set`,
         },
         lang,
       ),
@@ -126,7 +128,7 @@ function drawMain(chart: Chart, data: EgorovData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text('f_n');
+    .call(svgText, String.raw`\(f_n\)`);
 
   // '1/n' marker at the top of the boundary line.
   const nearRight = bx > width - 48;
@@ -146,16 +148,17 @@ function drawMain(chart: Chart, data: EgorovData, lang: Lang): void {
     .attr('y', 16)
     .attr('font-size', 12)
     .attr('fill', 'var(--bound)')
-    .text(localize({ ko: '나쁜 집합 (0, 1/n] — 빨강', en: 'bad set (0, 1/n] — red' }, lang));
+    .call(svgText, localize({ ko: String.raw`나쁜 집합 \((0, 1/n]\) — 빨강`, en: String.raw`bad set \((0, 1/n]\) — red` }, lang));
   g.append('text')
     .attr('x', width - 8)
     .attr('y', 16)
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', 'var(--accent)')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: '좋은 집합 [1/n, 1]: 여기서 균등수렴', en: 'good set [1/n, 1]: uniform here' },
+        { ko: String.raw`좋은 집합 \([1/n, 1]\): 여기서 균등수렴`, en: String.raw`good set \([1/n, 1]\): uniform here` },
         lang,
       ),
     );

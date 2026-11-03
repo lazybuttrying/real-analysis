@@ -1,14 +1,15 @@
 import { localize, type Lang, type LocalizedText } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { setsModel, type SetsData } from '../models/sets';
 
 const OP_TEX: Record<string, string> = {
-  union: 'A ∪ B',
-  intersection: 'A ∩ B',
-  complement: 'Aᶜ',
-  difference: 'A ∖ B',
-  symdiff: 'A △ B',
+  union: String.raw`A \cup B`,
+  intersection: String.raw`A \cap B`,
+  complement: String.raw`A^c`,
+  difference: String.raw`A \setminus B`,
+  symdiff: String.raw`A \triangle B`,
 };
 
 const MODE_LABEL: Record<string, LocalizedText> = {
@@ -114,7 +115,7 @@ function drawVenn(
     .attr('y', 16)
     .attr('font-size', 13)
     .attr('fill', 'currentColor')
-    .text(`${localize({ ko: '집합 연산', en: 'Set operation' }, lang)}: ${OP_TEX[op] ?? op}`);
+    .call(svgText, `${localize({ ko: '집합 연산', en: 'Set operation' }, lang)}: ${OP_TEX[op] ? String.raw`\(${OP_TEX[op]}\)` : op}`);
 }
 
 function drawArrows(

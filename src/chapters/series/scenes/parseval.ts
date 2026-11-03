@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { parsevalModel, type ParsevalData } from '../models/parseval';
 
 /**
@@ -15,8 +16,8 @@ const MARGIN = { top: 36, right: 20, bottom: 44, left: 64 };
 
 const MODE_NAME: Record<string, { ko: string; en: string }> = {
   square: { ko: '구형파 (±1)', en: 'square wave (±1)' },
-  sawtooth: { ko: '톱니파 f(x) = x', en: 'sawtooth f(x) = x' },
-  parabola: { ko: '포물선 f(x) = x²', en: 'parabola f(x) = x²' },
+  sawtooth: { ko: String.raw`톱니파 \(f(x) = x\)`, en: String.raw`sawtooth \(f(x) = x\)` },
+  parabola: { ko: String.raw`포물선 \(f(x) = x^2\)`, en: String.raw`parabola \(f(x) = x^2\)` },
 };
 
 function modeName(mode: string, lang: Lang): string {
@@ -85,9 +86,10 @@ function drawMain(chart: Chart, data: ParsevalData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: `${modeName(data.mode, 'ko')}: 누적 에너지 S_N → L² 노름`, en: `${modeName(data.mode, 'en')}: cumulative energy S_N → L² norm` },
+        { ko: String.raw`${modeName(data.mode, 'ko')}: 누적 에너지 \(S_N \to L^2\) 노름`, en: String.raw`${modeName(data.mode, 'en')}: cumulative energy \(S_N \to L^2\) norm` },
         lang,
       ),
     );
@@ -134,9 +136,10 @@ function drawMain(chart: Chart, data: ParsevalData, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: `L² 노름 = ${fmt(data.norm2, 4)}`, en: `L² norm = ${fmt(data.norm2, 4)}` },
+        { ko: String.raw`\(L^2\) 노름 \(= ${fmt(data.norm2, 4)}\)`, en: String.raw`\(L^2\) norm \(= ${fmt(data.norm2, 4)}\)` },
         lang,
       ),
     );
@@ -148,7 +151,7 @@ function drawMain(chart: Chart, data: ParsevalData, lang: Lang): void {
     .attr('y', 14)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text('S_N');
+    .call(svgText, String.raw`\(S_N\)`);
 
   // Readout numbers on the chart.
   g.append('text')
@@ -158,7 +161,7 @@ function drawMain(chart: Chart, data: ParsevalData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(`N = ${data.nMax} · S_N = ${fmt(data.captured, 4)} · captured = ${fmt(data.fraction * 100, 2)}%`);
+    .call(svgText, String.raw`\(N = ${data.nMax}\) · \(S_N = ${fmt(data.captured, 4)}\) · captured = ${fmt(data.fraction * 100, 2)}%`);
 }
 
 export default defineSimpleScene<ParsevalData>({

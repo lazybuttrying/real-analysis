@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { kummerModel, type KummerData } from '../models/kummerTest';
 
 /**
@@ -107,11 +108,12 @@ function drawMain(chart: Chart, data: KummerData, lang: Lang): void {
   g.append('g').call(axisLeft(y).ticks(6));
 
   const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-  header.text(
+  header.call(
+    svgText,
     localize(
       {
-        ko: `Kummer 몫 K_k = p_k·(a_k/a_{k+1}) − p_{k+1} — a = ${aSel === 'ahalf' ? '1/2' : '2'} (Gauss h = ${aSel === 'ahalf' ? '1/2' : '2'})`,
-        en: `Kummer quotient K_k = p_k·(a_k/a_{k+1}) − p_{k+1} — a = ${aSel === 'ahalf' ? '1/2' : '2'} (Gauss h = ${aSel === 'ahalf' ? '1/2' : '2'})`,
+        ko: String.raw`Kummer 몫 \(K_k = p_k \cdot (a_k/a_{k+1}) - p_{k+1}\) — \(a = ${aSel === 'ahalf' ? '1/2' : '2'}\) (Gauss \(h = ${aSel === 'ahalf' ? '1/2' : '2'}\))`,
+        en: String.raw`Kummer quotient \(K_k = p_k \cdot (a_k/a_{k+1}) - p_{k+1}\) — \(a = ${aSel === 'ahalf' ? '1/2' : '2'}\) (Gauss \(h = ${aSel === 'ahalf' ? '1/2' : '2'}\))`,
       },
       lang,
     ),
@@ -163,9 +165,10 @@ function drawMain(chart: Chart, data: KummerData, lang: Lang): void {
     .attr('y', height + 32)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: `■ K_k 곡선 (p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : 'k ln(k+1)'})`, en: `■ K_k curve (p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : 'k ln(k+1)'})` },
+        { ko: String.raw`■ \(K_k\) 곡선 (\(p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : String.raw`k \ln(k+1)`}\))`, en: String.raw`■ \(K_k\) curve (\(p_k = ${pKind === 'p1' ? '1' : pKind === 'pn' ? 'k' : String.raw`k \ln(k+1)`}\))` },
         lang,
       ),
     );

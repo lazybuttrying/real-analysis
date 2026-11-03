@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { muntzSzaszModel, type MuntzData, type MuntzSample } from '../models/muntzSzasz';
 
 /**
@@ -69,11 +70,12 @@ function drawMain(chart: Chart, data: MuntzData, lang: Lang): void {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(
+      .call(
+        svgText,
         localize(
           {
-            ko: `f(x) = √x 근사 (N = ${data.n}): 조밀 기저 {1, x, …, x^N} vs 희소 기저 {1, x, x⁴, …, x^(N²)}`,
-            en: `Approximating f(x) = √x (N = ${data.n}): dense basis {1, x, …, x^N} vs sparse basis {1, x, x⁴, …, x^(N²)}`,
+            ko: String.raw`\(f(x) = \sqrt{x}\) 근사 (\(N = ${data.n}\)): 조밀 기저 \(\{1, x, \dots, x^N\}\) vs 희소 기저 \(\{1, x, x^4, \dots, x^{N^2}\}\)`,
+            en: String.raw`Approximating \(f(x) = \sqrt{x}\) (\(N = ${data.n}\)): dense basis \(\{1, x, \dots, x^N\}\) vs sparse basis \(\{1, x, x^4, \dots, x^{N^2}\}\)`,
           },
           lang,
         ),
@@ -107,7 +109,7 @@ function drawMain(chart: Chart, data: MuntzData, lang: Lang): void {
       .attr('y', legendY)
       .attr('font-size', 12)
       .attr('fill', 'currentColor')
-      .text(localize({ ko: '┄ f(x) = √x', en: '┄ f(x) = √x' }, lang));
+      .call(svgText, localize({ ko: String.raw`┄ \(f(x) = \sqrt{x}\)`, en: String.raw`┄ \(f(x) = \sqrt{x}\)` }, lang));
     g.append('text')
       .attr('x', width * 0.3)
       .attr('y', legendY)

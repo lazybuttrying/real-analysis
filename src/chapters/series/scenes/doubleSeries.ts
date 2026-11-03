@@ -1,6 +1,7 @@
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   SERIES_ALTERNATING,
   doubleSeriesModel,
@@ -63,8 +64,8 @@ function drawMain(chart: Chart, data: DoubleSeriesData, lang: Lang): void {
 
   const seriesLabel =
     data.series === SERIES_ALTERNATING
-      ? localize({ ko: '(-1)^(m+n)/(m²n²)', en: '(-1)^(m+n)/(m²n²)' }, lang)
-      : localize({ ko: '1/(m²n²)', en: '1/(m²n²)' }, lang);
+      ? localize({ ko: String.raw`(-1)^{m+n}/(m^2 n^2)`, en: String.raw`(-1)^{m+n}/(m^2 n^2)` }, lang)
+      : localize({ ko: String.raw`1/(m^2 n^2)`, en: String.raw`1/(m^2 n^2)` }, lang);
 
   g.append('text')
     .attr('x', 0)
@@ -72,11 +73,12 @@ function drawMain(chart: Chart, data: DoubleSeriesData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `a(m,n) = ${seriesLabel} — 진할수록 절댓값이 큼${data.series === SERIES_ALTERNATING ? ' (bound 색은 음수)' : ''}`,
-          en: `a(m,n) = ${seriesLabel} — darker means larger |a|${data.series === SERIES_ALTERNATING ? ' (bound hue is negative)' : ''}`,
+          ko: String.raw`\(a(m, n) = ${seriesLabel}\) — 진할수록 절댓값이 큼${data.series === SERIES_ALTERNATING ? ' (bound 색은 음수)' : ''}`,
+          en: String.raw`\(a(m, n) = ${seriesLabel}\) — darker means larger \(|a|\)${data.series === SERIES_ALTERNATING ? ' (bound hue is negative)' : ''}`,
         },
         lang,
       ),

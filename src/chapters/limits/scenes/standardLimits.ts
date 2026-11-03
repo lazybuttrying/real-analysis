@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { PLOT_CLIP, standardLimitsModel, type StandardLimitsData } from '../models/standardLimits';
 
 /**
@@ -125,10 +126,11 @@ function drawMain(chart: Chart, data: StandardLimitsData, lang: Lang): void {
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(
+      .call(
+        svgText,
         kind === 'power'
-          ? localize({ ko: `수열 x^n (x = ${fmt(data.x)})`, en: `The sequence x^n (x = ${fmt(data.x)})` }, lang)
-          : localize({ ko: `수열 x^{1/n} (x = ${fmt(data.x)})`, en: `The sequence x^{1/n} (x = ${fmt(data.x)})` }, lang),
+          ? localize({ ko: String.raw`수열 \(x^n\) (\(x = ${fmt(data.x)}\))`, en: String.raw`The sequence \(x^n\) (\(x = ${fmt(data.x)}\))` }, lang)
+          : localize({ ko: String.raw`수열 \(x^{1/n}\) (\(x = ${fmt(data.x)}\))`, en: String.raw`The sequence \(x^{1/n}\) (\(x = ${fmt(data.x)}\))` }, lang),
       );
 
     // Faint zero line.

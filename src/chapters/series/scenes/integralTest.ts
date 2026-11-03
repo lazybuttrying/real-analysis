@@ -2,6 +2,7 @@ import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   fPow,
   integralTestModel,
@@ -90,11 +91,12 @@ function drawMain(chart: Chart, data: IntegralTestData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `y = 1/x^${fmt(p, 1)} — 왼쪽 끝점 직사각형(위) vs 오른쪽 끝점 직사각형(아래), 음영은 적분`,
-          en: `y = 1/x^${fmt(p, 1)} — left-endpoint rectangles (above) vs right-endpoint (below); shaded is the integral`,
+          ko: String.raw`\(y = 1/x^{${fmt(p, 1)}}\) — 왼쪽 끝점 직사각형(위) vs 오른쪽 끝점 직사각형(아래), 음영은 적분`,
+          en: String.raw`\(y = 1/x^{${fmt(p, 1)}}\) — left-endpoint rectangles (above) vs right-endpoint (below); shaded is the integral`,
         },
         lang,
       ),

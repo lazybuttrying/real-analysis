@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear, type ScaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { bohrMollerupModel, type BohrMollerupData } from '../models/bohrMollerup';
 
 /**
@@ -83,11 +84,12 @@ function drawMain(chart: Chart, data: BohrMollerupData, lang: Lang): void {
   g.append('g').call(axisLeft(y).ticks(6));
 
   const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-  header.text(
+  header.call(
+    svgText,
     localize(
       {
-        ko: `ln Γ (기준, 로그볼록) vs ln f_a — impostor f_a(x) = Γ(x)·(1 + ${amp.toFixed(2)}·sin 2πx)`,
-        en: `ln Γ (reference, log-convex) vs ln f_a — impostor f_a(x) = Γ(x)·(1 + ${amp.toFixed(2)}·sin 2πx)`,
+        ko: String.raw`\(\ln \Gamma\) (기준, 로그볼록) vs \(\ln f_a\) — impostor \(f_a(x) = \Gamma(x) \cdot (1 + ${amp.toFixed(2)} \cdot \sin 2\pi x)\)`,
+        en: String.raw`\(\ln \Gamma\) (reference, log-convex) vs \(\ln f_a\) — impostor \(f_a(x) = \Gamma(x) \cdot (1 + ${amp.toFixed(2)} \cdot \sin 2\pi x)\)`,
       },
       lang,
     ),

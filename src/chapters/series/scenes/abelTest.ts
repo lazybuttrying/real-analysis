@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { abelTestModel, type AbelTestData } from '../models/abelTest';
 
 /**
@@ -22,8 +23,8 @@ function factsText(data: AbelTestData, lang: Lang): string {
   const bn = weights[weights.length - 1] ?? 0;
   const terms =
     example === 'shifted'
-      ? { ko: 'a_k=(-1)^k/k', en: 'a_k=(-1)^k/k' }
-      : { ko: 'a_k=(-1)^k/√k', en: 'a_k=(-1)^k/sqrt(k)' };
+      ? { ko: '(-1)^k/k', en: '(-1)^k/k' }
+      : { ko: String.raw`(-1)^k/\sqrt{k}`, en: String.raw`(-1)^k/\sqrt{k}` };
   return localize(
     {
       ko: String.raw`\(N = ${n}\), \(a_k = ${localize(terms, lang)}\)의 부분합은 수렴하고, 가중치 \(b_k\)는 \(b_1 = ${fmt(b1, 4)} \to b_${n} = ${fmt(bn, 4)} \to ${fmt(bLimit, 0)}\)로 단조·유계이나 \(0\)으로 가지 않는다 — 그래서 디리클레 판정법은 직접 적용할 수 없지만, 아벨 판정법으로 \(S_N \to ${fmt(limit, 4)}\)를 얻는다(현재 \(S_N = ${fmt(last, 4)}\)).`,
@@ -66,11 +67,12 @@ function drawMain(chart: Chart, data: AbelTestData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `N = ${n}    S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} → ${fmt(limit, 4)}${limitExact ? ' (정확값)' : ' (수치 근사)'}`,
-          en: `N = ${n}    S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} → ${fmt(limit, 4)}${limitExact ? ' (exact)' : ' (numerical estimate)'}`,
+          ko: String.raw`\(N = ${n}\)    \(S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} \to ${fmt(limit, 4)}\)${limitExact ? ' (정확값)' : ' (수치 근사)'}`,
+          en: String.raw`\(N = ${n}\)    \(S_N = ${fmt(partialSums[partialSums.length - 1] ?? 0, 4)} \to ${fmt(limit, 4)}\)${limitExact ? ' (exact)' : ' (numerical estimate)'}`,
         },
         lang,
       ),
@@ -117,7 +119,7 @@ function drawMain(chart: Chart, data: AbelTestData, lang: Lang): void {
     .attr('y', yScale(bFirst) - 8)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(localize({ ko: `b_k (단조·유계, 0으로 안 감)`, en: `b_k (monotone, bounded, ↛ 0)` }, lang));
+    .call(svgText, localize({ ko: String.raw`\(b_k\) (단조·유계, 0으로 안 감)`, en: String.raw`\(b_k\) (monotone, bounded, \(\nrightarrow 0\))` }, lang));
 
   // Settling weighted partial sums.
   const settle = line<{ k: number; v: number }>()
@@ -145,9 +147,10 @@ function drawMain(chart: Chart, data: AbelTestData, lang: Lang): void {
     .attr('y', height - 6)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: '점선: b_k — 단조·유계이나 0으로 가지 않음', en: 'Dashed: b_k — monotone and bounded, but not → 0' },
+        { ko: String.raw`점선: \(b_k\) — 단조·유계이나 0으로 가지 않음`, en: String.raw`Dashed: \(b_k\) — monotone and bounded, but not \(\to 0\)` },
         lang,
       ),
     );
@@ -157,7 +160,7 @@ function drawMain(chart: Chart, data: AbelTestData, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', GOLD)
-    .text(localize({ ko: '금색: S_N = Σ a_k b_k (수렴)', en: 'Gold: S_N = Σ a_k b_k (converging)' }, lang));
+    .call(svgText, localize({ ko: String.raw`금색: \(S_N = \sum a_k b_k\) (수렴)`, en: String.raw`Gold: \(S_N = \sum a_k b_k\) (converging)` }, lang));
 }
 
 export default defineSimpleScene<AbelTestData>({

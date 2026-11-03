@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   condensationModel,
   type BlockData,
@@ -19,6 +20,7 @@ import {
 
 const MARGIN = { top: 64, right: 20, bottom: 44, left: 56 };
 
+/** TeX fragment for the header's math segment. */
 function seriesFormula(series: CondSeries): string {
   switch (series) {
     case 'inv-n':
@@ -26,7 +28,7 @@ function seriesFormula(series: CondSeries): string {
     case 'inv-n2':
       return 'a_k = 1/k^2';
     case 'inv-n-logn':
-      return 'a_k = 1/(k ln k)';
+      return String.raw`a_k = 1/(k \ln k)`;
   }
 }
 
@@ -97,17 +99,19 @@ function drawMain(chart: Chart, data: CondensationData, lang: Lang): void {
 
   const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
   const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
-  header1.text(
+  header1.call(
+    svgText,
     localize(
-      { ko: `응축으로 보는 블록 합 — ${seriesFormula(series)}, 블록 n = ${blockIndex}`, en: `Block sums through condensation — ${seriesFormula(series)}, block n = ${blockIndex}` },
+      { ko: String.raw`응축으로 보는 블록 합 — \(${seriesFormula(series)}\), 블록 \(n = ${blockIndex}\)`, en: String.raw`Block sums through condensation — \(${seriesFormula(series)}\), block \(n = ${blockIndex}\)` },
       lang,
     ),
   );
-  header2.text(
+  header2.call(
+    svgText,
     localize(
       {
-        ko: `부분합 S_${highlight.end} ≈ ${partialUpToBlock.toFixed(4)} vs 응축 부분합 T_${blockIndex} ≈ ${condensedPartial.toFixed(4)} — 두 수열이 같이 수렴하거나 같이 발산합니다`,
-        en: `Partial sum S_${highlight.end} ≈ ${partialUpToBlock.toFixed(4)} vs condensed partial sum T_${blockIndex} ≈ ${condensedPartial.toFixed(4)} — the two converge or diverge together`,
+        ko: String.raw`부분합 \(S_{${highlight.end}} \approx ${partialUpToBlock.toFixed(4)}\) vs 응축 부분합 \(T_{${blockIndex}} \approx ${condensedPartial.toFixed(4)}\) — 두 수열이 같이 수렴하거나 같이 발산합니다`,
+        en: String.raw`Partial sum \(S_{${highlight.end}} \approx ${partialUpToBlock.toFixed(4)}\) vs condensed partial sum \(T_{${blockIndex}} \approx ${condensedPartial.toFixed(4)}\) — the two converge or diverge together`,
       },
       lang,
     ),
@@ -157,14 +161,14 @@ function drawMain(chart: Chart, data: CondensationData, lang: Lang): void {
     .attr('y', height + 34)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(localize({ ko: `■ 블록 n = ${blockIndex} [${highlight.start}, ${highlight.end + 1})`, en: `■ Block n = ${blockIndex} [${highlight.start}, ${highlight.end + 1})` }, lang));
+    .call(svgText, localize({ ko: String.raw`■ 블록 \(n = ${blockIndex}\) \([${highlight.start}, ${highlight.end + 1})\)`, en: String.raw`■ Block \(n = ${blockIndex}\) \([${highlight.start}, ${highlight.end + 1})\)` }, lang));
   g.append('text')
     .attr('x', width / 2)
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.6)
-    .text(localize({ ko: '점선 = 블록 경계 2^n', en: 'dashed = block boundaries 2^n' }, lang));
+    .call(svgText, localize({ ko: String.raw`점선 = 블록 경계 \(2^n\)`, en: String.raw`dashed = block boundaries \(2^n\)` }, lang));
 }
 
 export default defineSimpleScene<CondensationData>({

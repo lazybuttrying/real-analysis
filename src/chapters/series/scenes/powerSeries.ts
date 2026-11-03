@@ -2,6 +2,7 @@ import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { powerSeriesModel, type PowerData, type PowerSeriesKind } from '../models/power-series';
 
 // A number line from -3 to 3 showing the interval of convergence (-R, R)
@@ -15,22 +16,15 @@ const MARGIN = { top: 64, right: 20, bottom: 44, left: 56 };
 const X_MIN = -3;
 const X_MAX = 3;
 
+/** TeX fragment for the header's math segment. */
 function seriesLabel(series: PowerSeriesKind, lang: Lang): string {
-  if (series === 'factorial') return localize({ ko: 'Σ k!x^k', en: 'Σ k!x^k' }, lang);
-  if (series === 'geom') return localize({ ko: 'Σ x^k', en: 'Σ x^k' }, lang);
-  return localize({ ko: 'Σ x^k/k!', en: 'Σ x^k/k!' }, lang);
+  if (series === 'factorial') return localize({ ko: String.raw`\sum k! x^k`, en: String.raw`\sum k! x^k` }, lang);
+  if (series === 'geom') return localize({ ko: String.raw`\sum x^k`, en: String.raw`\sum x^k` }, lang);
+  return localize({ ko: String.raw`\sum x^k/k!`, en: String.raw`\sum x^k/k!` }, lang);
 }
 
 function radiusText(radius: number): string {
   return radius === Infinity ? '∞' : String(radius);
-}
-
-function subDigits(n: number): string {
-  const map: Record<string, string> = { '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' };
-  return String(n)
-    .split('')
-    .map((d) => map[d] ?? d)
-    .join('');
 }
 
 function readoutText(data: PowerData, lang: Lang): string {
@@ -92,20 +86,22 @@ function drawMain(chart: Chart, data: PowerData, lang: Lang): void {
   const header1 = g.append('text').attr('x', 0).attr('y', -48).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
   const header2 = g.append('text').attr('x', 0).attr('y', -26).attr('font-size', 12).attr('fill', 'currentColor').attr('opacity', 0.75);
 
-  header1.text(
+  header1.call(
+    svgText,
     localize(
       {
-        ko: `${seriesLabel(data.series, lang)} — 수렴반경 R = ${radiusText(radius)}`,
-        en: `${seriesLabel(data.series, lang)} — radius of convergence R = ${radiusText(radius)}`,
+        ko: String.raw`\(${seriesLabel(data.series, lang)}\) — 수렴반경 \(R = ${radiusText(radius)}\)`,
+        en: String.raw`\(${seriesLabel(data.series, lang)}\) — radius of convergence \(R = ${radiusText(radius)}\)`,
       },
       lang,
     ),
   );
-  header2.text(
+  header2.call(
+    svgText,
     localize(
       {
-        ko: `x = ${fmt(data.x)}, 항의 개수 N = ${data.n}, S${subDigits(data.n)}(${fmt(data.x)}) = ${data.overflow ? '10¹⁵ 초과' : fmt(data.partialSum)}`,
-        en: `x = ${fmt(data.x)}, terms N = ${data.n}, S${subDigits(data.n)}(${fmt(data.x)}) = ${data.overflow ? 'beyond 10¹⁵' : fmt(data.partialSum)}`,
+        ko: String.raw`\(x = ${fmt(data.x)}\), 항의 개수 \(N = ${data.n}\), \(S_{${data.n}}(${fmt(data.x)})\) = ${data.overflow ? '10¹⁵ 초과' : fmt(data.partialSum)}`,
+        en: String.raw`\(x = ${fmt(data.x)}\), terms \(N = ${data.n}\), \(S_{${data.n}}(${fmt(data.x)})\) = ${data.overflow ? 'beyond 10¹⁵' : fmt(data.partialSum)}`,
       },
       lang,
     ),
@@ -147,7 +143,7 @@ function drawMain(chart: Chart, data: PowerData, lang: Lang): void {
       .attr('text-anchor', 'middle')
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
-      .text(localize({ ko: '수렴 구간 (−R, R)', en: 'interval of convergence (−R, R)' }, lang));
+      .call(svgText, localize({ ko: String.raw`수렴 구간 \((-R, R)\)`, en: String.raw`interval of convergence \((-R, R)\)` }, lang));
   }
 
   // Open circles at finite endpoints ±R inside the visible range.
