@@ -1,6 +1,7 @@
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { disproofIffModel, type DisproofClaim, type DisproofData } from '../models/disproofIff';
 
 /**
@@ -137,8 +138,8 @@ function drawTestStrip(chart: Chart, data: DisproofData, lang: Lang, yTop: numbe
       break;
     case 'div4':
       items.push(
-        { label: ko ? `가정 4 | n² = ${fmt(data.n2, 0)}` : `hypothesis 4 | n² = ${fmt(data.n2, 0)}`, value: data.div4Hypothesis ? '✓' : '✗', on: data.div4Hypothesis },
-        { label: ko ? `결론 4 | n = ${fmt(data.n, 0)}` : `conclusion 4 | n = ${fmt(data.n, 0)}`, value: data.div4Conclusion ? '✓' : '✗', on: data.div4Conclusion },
+        { label: ko ? String.raw`가정 \(4 \mid n^2 = ${fmt(data.n2, 0)}\)` : String.raw`hypothesis \(4 \mid n^2 = ${fmt(data.n2, 0)}\)`, value: data.div4Hypothesis ? '✓' : '✗', on: data.div4Hypothesis },
+        { label: ko ? String.raw`결론 \(4 \mid n = ${fmt(data.n, 0)}\)` : String.raw`conclusion \(4 \mid n = ${fmt(data.n, 0)}\)`, value: data.div4Conclusion ? '✓' : '✗', on: data.div4Conclusion },
         {
           label: ko ? '반례 (가정 참·결론 거짓)' : 'counterexample (hyp true, concl false)',
           value: data.div4IsCounterexample ? '✓' : '—',
@@ -148,14 +149,14 @@ function drawTestStrip(chart: Chart, data: DisproofData, lang: Lang, yTop: numbe
       break;
     case 'irrational-sum':
       items.push(
-        { label: ko ? '√2 무리수' : '√2 irrational', value: '✓', on: true },
-        { label: ko ? '−√2 무리수' : '−√2 irrational', value: '✓', on: true },
+        { label: ko ? String.raw`\(\sqrt{2}\) 무리수` : String.raw`\(\sqrt{2}\) irrational`, value: '✓', on: true },
+        { label: ko ? String.raw`\(-\sqrt{2}\) 무리수` : String.raw`\(-\sqrt{2}\) irrational`, value: '✓', on: true },
         { label: ko ? `합 = 0 (유리수)` : `sum = 0 (rational)`, value: '✓', on: true },
       );
       break;
     case 'abs-equal':
       items.push(
-        { label: ko ? `|x| = |y| = ${fmt(data.absXValue, 0)}` : `|x| = |y| = ${fmt(data.absXValue, 0)}`, value: '✓', on: true },
+        { label: ko ? String.raw`\(|x| = |y| = ${fmt(data.absXValue, 0)}\)` : String.raw`\(|x| = |y| = ${fmt(data.absXValue, 0)}\)`, value: '✓', on: true },
         { label: ko ? `x = ${fmt(data.absX, 0)}` : `x = ${fmt(data.absX, 0)}`, value: fmt(data.absX, 0), on: true },
         { label: ko ? `y = ${fmt(data.absY, 0)}` : `y = ${fmt(data.absY, 0)}`, value: fmt(data.absY, 0), on: true },
         {
@@ -190,7 +191,7 @@ function drawTestStrip(chart: Chart, data: DisproofData, lang: Lang, yTop: numbe
       .attr('y', ry)
       .attr('font-size', 12)
       .attr('fill', 'currentColor')
-      .text(`${item.label}: ${item.value}`);
+      .call(svgText, `${item.label}: ${item.value}`);
   });
   return y + rows * 30 + 8;
 }

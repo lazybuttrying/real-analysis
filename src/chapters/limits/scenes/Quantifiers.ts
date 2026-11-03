@@ -2,6 +2,7 @@ import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { quantifiersModel, type QuantifierData } from '../models/quantifiers';
 
 /**
@@ -198,16 +199,17 @@ function drawEpsDelta(chart: Chart, data: QuantifierData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(localize({ ko: 't-축: |t| < δ 구간', en: 't-axis: the band |t| < δ' }, lang));
+    .call(svgText, localize({ ko: String.raw`t-축: \(|t| < \delta\) 구간`, en: String.raw`t-axis: the band \(|t| < \delta\)` }, lang));
   g.append('text')
     .attr('x', 0)
     .attr('y', vY - 26)
     .attr('font-size', 12)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: '값-축: f(t) = 2t, |2t| < ε 구간', en: 'value axis: f(t) = 2t, the band |2t| < ε' },
+        { ko: String.raw`값-축: \(f(t) = 2t\), \(|2t| < \varepsilon\) 구간`, en: String.raw`value axis: \(f(t) = 2t\), the band \(|2t| < \varepsilon\)` },
         lang,
       ),
     );
@@ -250,17 +252,17 @@ function drawMain(chart: Chart, data: QuantifierData, lang: Lang): void {
 
   const titles: Record<QuantifierData['statement'], string> = {
     'forall-exists': localize(
-      { ko: '∀x ∃y (y > x) — 참', en: '∀x ∃y (y > x) — true' },
+      { ko: String.raw`\(\forall x\, \exists y\ (y > x)\) — 참`, en: String.raw`\(\forall x\, \exists y\ (y > x)\) — true` },
       lang,
     ),
     'exists-forall': localize(
-      { ko: '∃y ∀x (y > x) — 거짓', en: '∃y ∀x (y > x) — false' },
+      { ko: String.raw`\(\exists y\, \forall x\ (y > x)\) — 거짓`, en: String.raw`\(\exists y\, \forall x\ (y > x)\) — false` },
       lang,
     ),
     'eps-delta': localize(
       {
-        ko: `∀ε>0 ∃δ>0 ∀t (|t| < δ → |2t| < ε) — 참 (δ = ε/2)`,
-        en: `∀ε>0 ∃δ>0 ∀t (|t| < δ → |2t| < ε) — true (δ = ε/2)`,
+        ko: String.raw`\(\forall \varepsilon > 0\, \exists \delta > 0\, \forall t\ (|t| < \delta \to |2t| < \varepsilon)\) — 참 (\(\delta = \varepsilon/2\))`,
+        en: String.raw`\(\forall \varepsilon > 0\, \exists \delta > 0\, \forall t\ (|t| < \delta \to |2t| < \varepsilon)\) — true (\(\delta = \varepsilon/2\))`,
       },
       lang,
     ),
@@ -272,7 +274,7 @@ function drawMain(chart: Chart, data: QuantifierData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(titles[data.statement]);
+    .call(svgText, titles[data.statement]);
 
   if (data.statement === 'eps-delta') drawEpsDelta(chart, data, lang);
   else drawGameLine(chart, data, lang);

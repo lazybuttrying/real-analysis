@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear, scaleLog } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { lhopitalModel, type LHopitalData } from '../models/lhopital';
 
 /**
@@ -78,15 +79,15 @@ function drawMain(chart: Chart, data: LHopitalData, lang: Lang): void {
     data.pair === 'sin'
       ? localize(
           {
-            ko: 'f(x) = sin x, g(x) = x — x → 0⁺에서 둘 다 0으로 (0/0 꼴)',
-            en: 'f(x) = sin x, g(x) = x — both → 0 as x → 0⁺ (a 0/0 form)',
+            ko: String.raw`\(f(x) = \sin x\), \(g(x) = x\) — \(x \to 0^+\)에서 둘 다 0으로 (\(0/0\) 꼴)`,
+            en: String.raw`\(f(x) = \sin x\), \(g(x) = x\) — both \(\to 0\) as \(x \to 0^+\) (a \(0/0\) form)`,
           },
           lang,
         )
       : localize(
           {
-            ko: 'f(x) = ln x, g(x) = x — x → ∞에서 둘 다 ∞로 (∞/∞ 꼴)',
-            en: 'f(x) = ln x, g(x) = x — both → ∞ as x → ∞ (an ∞/∞ form)',
+            ko: String.raw`\(f(x) = \ln x\), \(g(x) = x\) — \(x \to \infty\)에서 둘 다 \(\infty\)로 (\(\infty/\infty\) 꼴)`,
+            en: String.raw`\(f(x) = \ln x\), \(g(x) = x\) — both \(\to \infty\) as \(x \to \infty\) (an \(\infty/\infty\) form)`,
           },
           lang,
         );
@@ -94,15 +95,15 @@ function drawMain(chart: Chart, data: LHopitalData, lang: Lang): void {
     data.pair === 'sin'
       ? localize(
           {
-            ko: 'f(x)/g(x) (진한 선)가 f′(x)/g′(x) (점선)를 따라 1로',
-            en: 'f(x)/g(x) (bold) tracks f′(x)/g′(x) (dashed) toward 1',
+            ko: String.raw`\(f(x)/g(x)\) (진한 선)가 \(f'(x)/g'(x)\) (점선)를 따라 1로`,
+            en: String.raw`\(f(x)/g(x)\) (bold) tracks \(f'(x)/g'(x)\) (dashed) toward 1`,
           },
           lang,
         )
       : localize(
           {
-            ko: 'f(x)/g(x) (진한 선)가 f′(x)/g′(x) (점선)를 따라 0으로',
-            en: 'f(x)/g(x) (bold) tracks f′(x)/g′(x) (dashed) toward 0',
+            ko: String.raw`\(f(x)/g(x)\) (진한 선)가 \(f'(x)/g'(x)\) (점선)를 따라 0으로`,
+            en: String.raw`\(f(x)/g(x)\) (bold) tracks \(f'(x)/g'(x)\) (dashed) toward 0`,
           },
           lang,
         );
@@ -114,7 +115,7 @@ function drawMain(chart: Chart, data: LHopitalData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(topTitle);
+    .call(svgText, topTitle);
   botG
     .append('text')
     .attr('x', 0)
@@ -122,7 +123,7 @@ function drawMain(chart: Chart, data: LHopitalData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(botTitle);
+    .call(svgText, botTitle);
 
   const curveLine = (vals: number[], y: (v: number) => number) =>
     line<number>()

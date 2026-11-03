@@ -2,6 +2,7 @@ import { scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   casesExistenceModel,
   SQRT2_POW,
@@ -27,22 +28,22 @@ function caseSvgLabel(caseId: SignCaseId, lang: Lang): string {
   switch (caseId) {
     case 'pos-pos':
       return localize(
-        { ko: '경우 1: x ≥ 0, y ≥ 0 — xy ≥ 0이므로 |xy| = xy = |x|·|y|', en: 'case 1: x ≥ 0, y ≥ 0 — xy ≥ 0, so |xy| = xy = |x|·|y|' },
+        { ko: String.raw`경우 1: \(x \ge 0\), \(y \ge 0\) — \(xy \ge 0\)이므로 \(|xy| = xy = |x| \cdot |y|\)`, en: String.raw`case 1: \(x \ge 0\), \(y \ge 0\) — \(xy \ge 0\), so \(|xy| = xy = |x| \cdot |y|\)` },
         lang,
       );
     case 'pos-neg':
       return localize(
-        { ko: '경우 2: x > 0, y < 0 — xy < 0이므로 |xy| = -(xy) = x·(-y) = |x|·|y|', en: 'case 2: x > 0, y < 0 — xy < 0, so |xy| = -(xy) = x·(-y) = |x|·|y|' },
+        { ko: String.raw`경우 2: \(x > 0\), \(y < 0\) — \(xy < 0\)이므로 \(|xy| = -(xy) = x \cdot (-y) = |x| \cdot |y|\)`, en: String.raw`case 2: \(x > 0\), \(y < 0\) — \(xy < 0\), so \(|xy| = -(xy) = x \cdot (-y) = |x| \cdot |y|\)` },
         lang,
       );
     case 'neg-pos':
       return localize(
-        { ko: '경우 3: x < 0, y > 0 — xy < 0이므로 |xy| = -(xy) = (-x)·y = |x|·|y|', en: 'case 3: x < 0, y > 0 — xy < 0, so |xy| = -(xy) = (-x)·y = |x|·|y|' },
+        { ko: String.raw`경우 3: \(x < 0\), \(y > 0\) — \(xy < 0\)이므로 \(|xy| = -(xy) = (-x) \cdot y = |x| \cdot |y|\)`, en: String.raw`case 3: \(x < 0\), \(y > 0\) — \(xy < 0\), so \(|xy| = -(xy) = (-x) \cdot y = |x| \cdot |y|\)` },
         lang,
       );
     case 'neg-neg':
       return localize(
-        { ko: '경우 4: x < 0, y < 0 — xy > 0이므로 |xy| = xy = (-x)·(-y) = |x|·|y|', en: 'case 4: x < 0, y < 0 — xy > 0, so |xy| = xy = (-x)·(-y) = |x|·|y|' },
+        { ko: String.raw`경우 4: \(x < 0\), \(y < 0\) — \(xy > 0\)이므로 \(|xy| = xy = (-x) \cdot (-y) = |x| \cdot |y|\)`, en: String.raw`case 4: \(x < 0\), \(y < 0\) — \(xy > 0\), so \(|xy| = xy = (-x) \cdot (-y) = |x| \cdot |y|\)` },
         lang,
       );
     case 'zero':
@@ -144,7 +145,7 @@ function drawCases(chart: Chart, data: CasesExistenceData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(caseSvgLabel(data.caseId, lang));
+    .call(svgText, caseSvgLabel(data.caseId, lang));
 
   const x = scaleLinear().domain([-5, 5]).range([0, width]);
   const y = scaleLinear().domain([-5, 5]).range([plotH, 0]);
@@ -208,9 +209,10 @@ function drawExistence(chart: Chart, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: '비구성적 존재 증명: 무리수 a, b와 유리수 a^b', en: 'non-constructive existence: irrational a, b with rational a^b' },
+        { ko: String.raw`비구성적 존재 증명: 무리수 \(a\), \(b\)와 유리수 \(a^b\)`, en: String.raw`non-constructive existence: irrational \(a\), \(b\) with rational \(a^b\)` },
         lang,
       ),
     );
@@ -228,14 +230,14 @@ function drawExistence(chart: Chart, lang: Lang): void {
         .attr('x', cx).attr('y', top + 24 + i * 22)
         .attr('text-anchor', 'middle').attr('font-size', 13)
         .attr('font-weight', i === 0 ? 600 : 400).attr('fill', 'currentColor')
-        .text(line);
+        .call(svgText, line);
     });
     return { top, bottom: top + h, cx };
   };
 
   const root = drawBox(
     width / 2, 6, 250, 62,
-    ['c = √2^√2 ≈ 1.6325', localize({ ko: 'c는 유리수인가?', en: 'is c rational?' }, lang)],
+    [String.raw`\(c = \sqrt{2}^{\sqrt{2}} \approx 1.6325\)`, localize({ ko: 'c는 유리수인가?', en: 'is c rational?' }, lang)],
     'var(--bound)', 0.25, false,
   );
   const leftCx = width * 0.27;
@@ -243,16 +245,16 @@ function drawExistence(chart: Chart, lang: Lang): void {
   const left = drawBox(
     leftCx, 116, 270, 76,
     [
-      localize({ ko: '예 → a = b = √2', en: 'yes → a = b = √2' }, lang),
-      localize({ ko: 'a^b = c (유리수) ✓', en: 'a^b = c (rational) ✓' }, lang),
+      localize({ ko: String.raw`예 → \(a = b = \sqrt{2}\)`, en: String.raw`yes → \(a = b = \sqrt{2}\)` }, lang),
+      localize({ ko: String.raw`\(a^b = c\) (유리수) ✓`, en: String.raw`\(a^b = c\) (rational) ✓` }, lang),
     ],
     'var(--accent)', 0.28, false,
   );
   const right = drawBox(
     rightCx, 116, 270, 76,
     [
-      localize({ ko: '아니오 → a = c, b = √2', en: 'no → a = c, b = √2' }, lang),
-      localize({ ko: 'a^b = (√2^√2)^√2 = 2 ✓', en: 'a^b = (√2^√2)^√2 = 2 ✓' }, lang),
+      localize({ ko: String.raw`아니오 → \(a = c\), \(b = \sqrt{2}\)`, en: String.raw`no → \(a = c\), \(b = \sqrt{2}\)` }, lang),
+      localize({ ko: String.raw`\(a^b = (\sqrt{2}^{\sqrt{2}})^{\sqrt{2}} = 2\) ✓`, en: String.raw`\(a^b = (\sqrt{2}^{\sqrt{2}})^{\sqrt{2}} = 2\) ✓` }, lang),
     ],
     'var(--accent)', 0.28, false,
   );
@@ -260,7 +262,7 @@ function drawExistence(chart: Chart, lang: Lang): void {
     width / 2, 244, 300, 68,
     [
       localize({ ko: '어느 경우든 존재한다 ✓', en: 'existence either way ✓' }, lang),
-      localize({ ko: '무리수 a, b와 유리수 a^b', en: 'irrational a, b with rational a^b' }, lang),
+      localize({ ko: String.raw`무리수 \(a\), \(b\)와 유리수 \(a^b\)`, en: String.raw`irrational \(a\), \(b\) with rational \(a^b\)` }, lang),
     ],
     'var(--accent)', 0.5, true,
   );

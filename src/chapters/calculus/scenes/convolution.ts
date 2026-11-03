@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   convolutionModel,
   phiEps,
@@ -274,7 +275,7 @@ function drawSmooth(chart: Chart, data: ConvolutionData, lang: Lang): void {
     .attr('y', legendY)
     .attr('font-size', 12)
     .style('fill', 'var(--bound)')
-    .text(localize({ ko: '— 봉우리 φ_ε(x - t)', en: '— bump phi_eps(x - t)' }, lang));
+    .call(svgText, localize({ ko: String.raw`— 봉우리 \(\varphi_\varepsilon(x - t)\)`, en: String.raw`— bump \(\phi_{\mathrm{eps}}(x - t)\)` }, lang));
   g.append('text')
     .attr('x', width * 0.66)
     .attr('y', legendY)

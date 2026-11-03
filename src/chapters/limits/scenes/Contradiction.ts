@@ -1,6 +1,7 @@
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { contradictionModel, type EuclidData } from '../models/contradiction';
 
 /**
@@ -98,9 +99,10 @@ function drawMain(chart: Chart, data: EuclidData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.8)
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: '가정: 소수는 이 k개가 전부', en: 'assumption: these k primes are all there are' },
+        { ko: String.raw`가정: 소수는 이 \(k\)개가 전부`, en: String.raw`assumption: these \(k\) primes are all there are` },
         lang,
       ),
     );
@@ -153,14 +155,14 @@ function drawMain(chart: Chart, data: EuclidData, lang: Lang): void {
     .attr('y', lineY)
     .attr('font-size', 14)
     .attr('fill', 'currentColor')
-    .text(`P = ${data.primes.join('·')} = ${fmt(data.product, 0)}`);
+    .call(svgText, String.raw`\(P = ${data.primes.join(String.raw` \cdot `)} = ${fmt(data.product, 0)}\)`);
   g.append('text')
     .attr('x', 0)
     .attr('y', lineY + 30)
     .attr('font-size', 17)
     .attr('font-weight', 700)
     .attr('fill', 'currentColor')
-    .text(`N = P + 1 = ${fmt(data.n, 0)}`);
+    .call(svgText, String.raw`\(N = P + 1 = ${fmt(data.n, 0)}\)`);
 
   // N's factorization: every factor is a new prime, the smallest one highlighted.
   const facY = lineY + 64;
@@ -170,9 +172,10 @@ function drawMain(chart: Chart, data: EuclidData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.8)
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: 'N의 소인수분해 — 모두 새 소수 (목록에 없음)', en: 'prime factorization of N — all new primes (off the list)' },
+        { ko: String.raw`\(N\)의 소인수분해 — 모두 새 소수 (목록에 없음)`, en: String.raw`prime factorization of \(N\) — all new primes (off the list)` },
         lang,
       ),
     );

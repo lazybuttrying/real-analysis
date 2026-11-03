@@ -8,6 +8,7 @@ import {
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { svgText } from '../../../view/svgtext';
 import {
   arzelaAscoliModel,
   FAMILY_B,
@@ -86,7 +87,7 @@ function drawMembers(
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(title);
+    .call(svgText, title);
 
   const seg = line<{ x: number; y: number }>()
     .x((d) => x(d.x))
@@ -120,7 +121,7 @@ function drawMembers(
     .attr('font-size', 12)
     .attr('text-anchor', 'end')
     .attr('fill', 'currentColor')
-    .text(String.raw`f* = (1/2) sin 2x`);
+    .call(svgText, String.raw`\(f^* = (1/2) \sin 2x\)`);
 
   // Amplitude labels for the first and last drawn members.
   const first = curves[0];
@@ -131,9 +132,10 @@ function drawMembers(
       .attr('y', 16)
       .attr('font-size', 12)
       .attr('fill', ACCENT)
-      .text(
+      .call(
+        svgText,
         localize(
-          { ko: `a_1 = ${fmt(first.a, 4)} … a_${members} = ${fmt(lastC.a, 4)} → 1/2`, en: `a_1 = ${fmt(first.a, 4)} … a_${members} = ${fmt(lastC.a, 4)} → 1/2` },
+          { ko: String.raw`\(a_1 = ${fmt(first.a, 4)}\) … \(a_{${members}} = ${fmt(lastC.a, 4)} \to 1/2\)`, en: String.raw`\(a_1 = ${fmt(first.a, 4)}\) … \(a_{${members}} = ${fmt(lastC.a, 4)} \to 1/2\)` },
           lang,
         ),
       );
@@ -156,7 +158,7 @@ function drawContrast(chart: Chart, data: ArzelaData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(localize({ ko: '대조군: x^n — 등연속이 아닌 수열', en: 'Contrast: x^n — a non-equicontinuous sequence' }, lang));
+    .call(svgText, localize({ ko: String.raw`대조군: \(x^n\) — 등연속이 아닌 수열`, en: String.raw`Contrast: \(x^n\) — a non-equicontinuous sequence` }, lang));
 
   const seg = line<{ x: number; y: number }>()
     .x((d) => x(d.x))
@@ -178,7 +180,7 @@ function drawContrast(chart: Chart, data: ArzelaData, lang: Lang): void {
       .attr('y', y((samples[Math.floor(samples.length * 0.55)] ?? 0) + 0.05))
       .attr('font-size', 12)
       .attr('fill', BOUND)
-      .text(`x^${n}`);
+      .call(svgText, String.raw`\(x^{${n}}\)`);
   }
 
   // The jump of the pointwise limit at x = 1.
@@ -213,8 +215,8 @@ function createArzelaAscoliScene(): Scene<ArzelaData> {
       lang,
       localize(
         {
-          ko: `등연속 수열 fₐₖ → f*: 균등 유계(≤ 3/4) + ${LIP_UNIFORM}-Lipschitz`,
-          en: `Equicontinuous sequence fₐₖ → f*: uniformly bounded (≤ 3/4) + ${LIP_UNIFORM}-Lipschitz`,
+          ko: String.raw`등연속 수열 \(f_{a_k} \to f^*\): 균등 유계(\(\le 3/4\)) + ${LIP_UNIFORM}-Lipschitz`,
+          en: String.raw`Equicontinuous sequence \(f_{a_k} \to f^*\): uniformly bounded (\(\le 3/4\)) + ${LIP_UNIFORM}-Lipschitz`,
         },
         lang,
       ),

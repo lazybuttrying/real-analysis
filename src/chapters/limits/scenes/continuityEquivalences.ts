@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   XRANGE,
   continuityEquivalencesModel,
@@ -34,14 +35,14 @@ function viewTitle(view: ContView, lang: Lang): string {
     case 'epsdelta':
       return localize({ ko: 'ε-δ: ε 띠와 δ 구간', en: 'ε–δ: the ε-band and the δ-interval' }, lang);
     case 'sequential':
-      return localize({ ko: '수열: x_n → 0 이면 f(x_n) → f(0) 인가', en: 'Sequential: does x_n → 0 give f(x_n) → f(0)?' }, lang);
+      return localize({ ko: String.raw`수열: \(x_n \to 0\)이면 \(f(x_n) \to f(0)\)인가`, en: String.raw`Sequential: does \(x_n \to 0\) give \(f(x_n) \to f(0)\)?` }, lang);
     case 'preimage':
       return localize({ ko: '역상: 열린 집합 V의 역상', en: 'Preimage: the preimage of the open set V' }, lang);
   }
 }
 
 function fnName(data: ContinuityEquivalencesData): string {
-  return data.fn === 'square' ? 'f(x) = x²' : 'f(x) = x² (x < 0), x² + 1 (x ≥ 0)';
+  return data.fn === 'square' ? String.raw`\(f(x) = x^2\)` : String.raw`\(f(x) = x^2\ (x < 0),\ x^2 + 1\ (x \ge 0)\)`;
 }
 
 function readoutText(data: ContinuityEquivalencesData, lang: Lang): string {
@@ -162,7 +163,7 @@ function drawMain(chart: Chart, data: ContinuityEquivalencesData, lang: Lang): v
       .attr('font-size', 13)
       .attr('font-weight', 600)
       .attr('fill', 'currentColor')
-      .text(`${fnName(data)} — ${viewTitle(view, lang)}`);
+      .call(svgText, `${fnName(data)} — ${viewTitle(view, lang)}`);
 
     const px = branchLine.x((d) => x(d.x)).y((d) => y(d.y));
 

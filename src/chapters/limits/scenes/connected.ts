@@ -2,6 +2,7 @@ import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang, type LocalizedText } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   connectedModel,
   RATIONAL_CUT,
@@ -25,8 +26,8 @@ const MARGIN = { top: 72, right: 24, bottom: 52, left: 40 };
 const CASE_TEXT: Record<string, { title: LocalizedText; explain: LocalizedText }> = {
   interval: {
     title: {
-      ko: 'X = [0, 1], U = (-0.2, t), V = (t, 1.2) — 하나의 구간은 갈라지지 않습니다',
-      en: 'X = [0, 1], U = (-0.2, t), V = (t, 1.2) — one interval never splits',
+      ko: String.raw`\(X = [0, 1]\), \(U = (-0.2, t)\), \(V = (t, 1.2)\) — 하나의 구간은 갈라지지 않습니다`,
+      en: String.raw`\(X = [0, 1]\), \(U = (-0.2, t)\), \(V = (t, 1.2)\) — one interval never splits`,
     },
     explain: {
       ko: String.raw`\(t\)를 어디에 두어도 이 시도는 실패합니다. \(0 \le t \le 1\)이면 절단점 \(t\) 자체가 \(X\)의 점인데 \(U\)에도 \(V\)에도 속하지 않아 덮지 못합니다. \(t < 0\)이면 \(U \cap X = \emptyset\)이고, \(t > 1\)이면 \(V \cap X = \emptyset\)입니다. 사실 \([0,1]\)은 어떤 열린 쌍으로도 분리할 수 없습니다 — 그것이 연결집합이라는 뜻이며, 문제 1이 supremum 논법으로 증명합니다.`,
@@ -35,8 +36,8 @@ const CASE_TEXT: Record<string, { title: LocalizedText; explain: LocalizedText }
   },
   'two-pieces': {
     title: {
-      ko: 'X = [0, 1] ∪ [2, 3], U = (-0.2, t), V = (t, 3.2) — 틈 사이에서는 갈라집니다',
-      en: 'X = [0, 1] ∪ [2, 3], U = (-0.2, t), V = (t, 3.2) — the gap separates',
+      ko: String.raw`\(X = [0, 1] \cup [2, 3]\), \(U = (-0.2, t)\), \(V = (t, 3.2)\) — 틈 사이에서는 갈라집니다`,
+      en: String.raw`\(X = [0, 1] \cup [2, 3]\), \(U = (-0.2, t)\), \(V = (t, 3.2)\) — the gap separates`,
     },
     explain: {
       ko: String.raw`절단이 틈 \(1 < t < 2\) 안에 떨어지면 \(U \cap X = [0,1]\), \(V \cap X = [2,3]\)이 되어 네 조건이 모두 성립합니다 — 분리 성공, \(X\)는 연결집합이 아닙니다. 절단이 한 조각 안 (\(0 \le t \le 1\) 또는 \(2 \le t \le 3\))에 떨어지면 그 절단점이 덮이지 않고, 절단이 바깥에 있으면 한쪽이 비어 버립니다. 끝점 \(t = 1\)과 \(t = 2\)에서도 점 \(1\) (또는 \(2\))이 어느 열린 쪽에도 속하지 않아 실패합니다.`,
@@ -45,8 +46,8 @@ const CASE_TEXT: Record<string, { title: LocalizedText; explain: LocalizedText }
   },
   rationals: {
     title: {
-      ko: 'X = ℚ ∩ [0, 1], 절단 c = √2/2 — 무리수 절단이 유리수를 가릅니다',
-      en: 'X = ℚ ∩ [0, 1], cut c = √2/2 — an irrational cut splits the rationals',
+      ko: String.raw`\(X = \mathbb{Q} \cap [0, 1]\), 절단 \(c = \sqrt{2}/2\) — 무리수 절단이 유리수를 가릅니다`,
+      en: String.raw`\(X = \mathbb{Q} \cap [0, 1]\), cut \(c = \sqrt{2}/2\) — an irrational cut splits the rationals`,
     },
     explain: {
       ko: String.raw`절단 \(c = \sqrt{2}/2 \approx 0.7071\)은 무리수라서 \(X\)의 어떤 점과도 겹치지 않습니다. 그래서 \(U = \{q \in X : q < c\}\)와 \(V = \{q \in X : q > c\}\)는 \(X\)에서 열려 있고, 서로소이며, 합치면 \(X\) 전체를 덮습니다 — \(\mathbb{Q} \cap [0,1]\)은 연결집합이 아닙니다. 유리수 절단이었다면 그 절단점이 덮이지 않아 실패했을 것입니다. 사실 두 점 이상을 가진 \(\mathbb{Q}\)의 모든 부분집합이 이렇게 갈라집니다 (완전 비연결, 문제 3). \(t\) 슬라이더는 이 경우에 쓰이지 않습니다.`,
@@ -208,7 +209,7 @@ function drawMain(chart: Chart, data: ConnectedData, lang: Lang): void {
     .attr('font-size', 14)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(caseText ? localize(caseText.title, lang) : data.caseId);
+    .call(svgText, caseText ? localize(caseText.title, lang) : data.caseId);
 
   // Verdict badges, top right.
   const badge = (dy: number, label: string, v: boolean, accent: boolean): void => {
@@ -318,8 +319,9 @@ function drawMain(chart: Chart, data: ConnectedData, lang: Lang): void {
     .attr('text-anchor', 'middle')
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text(
-      data.caseId === 'rationals' ? `c = ${fmt(data.cut, 4)}` : `t = ${fmt(data.t, 2)}`,
+    .call(
+      svgText,
+      data.caseId === 'rationals' ? String.raw`\(c = ${fmt(data.cut, 4)}\)` : String.raw`\(t = ${fmt(data.t, 2)}\)`,
     );
 
   // The uncovered witness, when the pair fails to cover.
