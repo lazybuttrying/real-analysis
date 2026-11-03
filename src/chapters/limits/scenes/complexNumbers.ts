@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, scaleLinear, type ScaleLinear } from 'd3';
 import { localize, type Lang, type LocalizedText } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { complexNumbersModel, type ComplexNumbersData } from '../models/complexNumbers';
 
 /**
@@ -115,7 +116,7 @@ function drawPointLabel(
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(label);
+    .call(svgText, label);
 }
 
 function drawMain(chart: Chart, data: ComplexNumbersData, lang: Lang): void {
@@ -194,8 +195,8 @@ function drawMain(chart: Chart, data: ComplexNumbersData, lang: Lang): void {
 
   drawPointLabel(g, x, y, data.zre, data.zim, 'z', 'var(--bound)');
   drawPointLabel(g, x, y, data.wre, data.wim, 'w', '#d64545');
-  drawPointLabel(g, x, y, data.sumRe, data.sumIm, 'z + w', 'var(--accent)');
-  drawPointLabel(g, x, y, data.diffRe, data.diffIm, 'z - w', 'currentColor');
+  drawPointLabel(g, x, y, data.sumRe, data.sumIm, String.raw`\(z + w\)`, 'var(--accent)');
+  drawPointLabel(g, x, y, data.diffRe, data.diffIm, String.raw`\(z - w\)`, 'currentColor');
 
   // Origin.
   g.append('circle').attr('cx', x(0)).attr('cy', y(0)).attr('r', 3).attr('fill', 'currentColor');
@@ -206,11 +207,12 @@ function drawMain(chart: Chart, data: ComplexNumbersData, lang: Lang): void {
     .attr('font-size', 11)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.75)
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: '실선 원 = |z + w|, 점선 원 = |z| + |w| — 두 원 사이 간격이 삼각부등식의 여유입니다',
-          en: 'solid circle = |z + w|, dashed circle = |z| + |w| — the gap between them is the triangle-inequality slack',
+          ko: String.raw`실선 원 \(= |z + w|\), 점선 원 \(= |z| + |w|\) — 두 원 사이 간격이 삼각부등식의 여유입니다`,
+          en: String.raw`solid circle \(= |z + w|\), dashed circle \(= |z| + |w|\) — the gap between them is the triangle-inequality slack`,
         },
         lang,
       ),

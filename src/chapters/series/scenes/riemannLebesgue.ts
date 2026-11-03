@@ -2,6 +2,7 @@ import { area, axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { riemannLebesgueModel, RL_TWO_PI, type RiemannLebesgueData } from '../models/riemannLebesgue';
 
 /**
@@ -14,9 +15,9 @@ import { riemannLebesgueModel, RL_TWO_PI, type RiemannLebesgueData } from '../mo
 const MARGIN = { top: 36, right: 20, bottom: 44, left: 64 };
 
 const MODE_NAME: Record<string, { ko: string; en: string }> = {
-  step: { ko: '계단 f = 1_[0, π]', en: 'step f = 1_[0, π]' },
-  tent: { ko: '텐트 f = max(0, 1 − |x−π|/π)', en: 'tent f = max(0, 1 − |x−π|/π)' },
-  smooth: { ko: '매끈 f = sin²x', en: 'smooth f = sin²x' },
+  step: { ko: String.raw`계단 \(f = \mathbf{1}_{[0, \pi]}\)`, en: String.raw`step \(f = \mathbf{1}_{[0, \pi]}\)` },
+  tent: { ko: String.raw`텐트 \(f = \max(0, 1 - |x - \pi|/\pi)\)`, en: String.raw`tent \(f = \max(0, 1 - |x - \pi|/\pi)\)` },
+  smooth: { ko: String.raw`매끈 \(f = \sin^2 x\)`, en: String.raw`smooth \(f = \sin^2 x\)` },
 };
 
 function modeName(mode: string, lang: Lang): string {
@@ -30,8 +31,9 @@ function kindLabel(kind: string): string {
   return kind === 'a' ? 'a' : 'b';
 }
 
+/** TeX fragment: the probe factor inside a math segment. */
 function trigLabel(kind: string, n: number): string {
-  return kind === 'a' ? `cos(${n}x)` : `sin(${n}x)`;
+  return kind === 'a' ? String.raw`\cos(${n}x)` : String.raw`\sin(${n}x)`;
 }
 
 function readoutText(data: RiemannLebesgueData, lang: Lang): string {
@@ -124,11 +126,12 @@ function drawMain(chart: Chart, data: RiemannLebesgueData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `${modeName(data.mode, 'ko')}: 탐침 f(x)${trigLabel(data.kind, data.probeN)} — 부호 있는 넓이의 상쇄`,
-          en: `${modeName(data.mode, 'en')}: probe f(x)${trigLabel(data.kind, data.probeN)} — signed areas canceling`,
+          ko: String.raw`${modeName(data.mode, 'ko')}: 탐침 \(f(x)\,${trigLabel(data.kind, data.probeN)}\) — 부호 있는 넓이의 상쇄`,
+          en: String.raw`${modeName(data.mode, 'en')}: probe \(f(x)\,${trigLabel(data.kind, data.probeN)}\) — signed areas canceling`,
         },
         lang,
       ),
@@ -186,7 +189,7 @@ function drawMain(chart: Chart, data: RiemannLebesgueData, lang: Lang): void {
     .attr('y', 14)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
-    .text(`|${k}_n|, n = 1..${data.nMax}`);
+    .call(svgText, String.raw`\(|${k}_n|, n = 1..${data.nMax}\)`);
 
   // Readout numbers on the chart.
   g.append('text')
@@ -196,8 +199,9 @@ function drawMain(chart: Chart, data: RiemannLebesgueData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
-      `n = ${data.probeN} · ∫ ≈ ${fmt(data.probeIntegral, 6)} · max|${k}_n| = ${fmt(data.maxShown, 6)}`,
+    .call(
+      svgText,
+      String.raw`\(n = ${data.probeN}\) · \(\int \approx ${fmt(data.probeIntegral, 6)}\) · \(\max|${k}_n| = ${fmt(data.maxShown, 6)}\)`,
     );
 }
 

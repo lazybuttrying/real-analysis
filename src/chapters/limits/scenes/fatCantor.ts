@@ -8,6 +8,7 @@ import {
 } from '../../../contracts';
 import { createRichSlot, setRichText, type RichSlot } from '../../../view/richslot';
 import { createChart, createSceneShell, fmt, type Chart, type SceneShell } from '../../../view/d3kit';
+import { svgText } from '../../../view/svgtext';
 import { fatCantorModel, type FatCantorData, type Interval } from '../models/fatCantor';
 
 /**
@@ -50,7 +51,7 @@ function drawStrip(
     .attr('font-size', 12)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(label);
+    .call(svgText, label);
 }
 
 function readoutText(data: FatCantorData, lang: Lang): string {

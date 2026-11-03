@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { riemannStieltjesModel, type RiemannStieltjesData } from '../models/riemannStieltjes';
 
 /**
@@ -16,9 +17,9 @@ import { riemannStieltjesModel, type RiemannStieltjesData } from '../models/riem
 const MARGIN = { top: 36, right: 20, bottom: 44, left: 64 };
 
 const ALPHA_NAME: Record<string, { ko: string; en: string }> = {
-  identity: { ko: '항등원 α(x) = x', en: 'identity α(x) = x' },
-  square: { ko: '제곱 α(x) = x²', en: 'square α(x) = x²' },
-  step: { ko: '계단 α (x < 1/2에서 0, x ≥ 1/2에서 1)', en: 'step α (0 for x < 1/2, 1 for x ≥ 1/2)' },
+  identity: { ko: String.raw`항등원 \(\alpha(x) = x\)`, en: String.raw`identity \(\alpha(x) = x\)` },
+  square: { ko: String.raw`제곱 \(\alpha(x) = x^2\)`, en: String.raw`square \(\alpha(x) = x^2\)` },
+  step: { ko: String.raw`계단 \(\alpha\) (\(x < 1/2\)에서 0, \(x \ge 1/2\)에서 1)`, en: String.raw`step \(\alpha\) (0 for \(x < 1/2\), 1 for \(x \ge 1/2\))` },
 };
 
 function alphaName(alpha: string, lang: Lang): string {
@@ -95,9 +96,10 @@ function drawMain(chart: Chart, data: RiemannStieltjesData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: `f(x) = x, ${alphaName(data.alpha, 'ko')}: 리만합 막대 vs α-늘이기 막대`, en: `f(x) = x, ${alphaName(data.alpha, 'en')}: Riemann bars vs α-stretched bars` },
+        { ko: String.raw`\(f(x) = x\), ${alphaName(data.alpha, 'ko')}: 리만합 막대 vs \(\alpha\)-늘이기 막대`, en: String.raw`\(f(x) = x\), ${alphaName(data.alpha, 'en')}: Riemann bars vs \(\alpha\)-stretched bars` },
         lang,
       ),
     );

@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear, scaleLog } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   exampleValue,
   monotoneDiscontinuitiesModel,
@@ -61,9 +62,10 @@ function drawMain(chart: Chart, data: MonotoneDiscontinuitiesData, lang: Lang): 
     g.append('g').call(axisLeft(y).ticks(6));
 
     const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    header.text(
+    header.call(
+      svgText,
       localize(
-        { ko: `f(x) = x + Σ 2^{-k} 계단 — 유리수마다 2^{-k}만큼 뛰어오릅니다`, en: `f(x) = x + Σ 2^{-k} staircase — it jumps by 2^{-k} at every rational` },
+        { ko: String.raw`\(f(x) = x + \sum 2^{-k}\) 계단 — 유리수마다 \(2^{-k}\)만큼 뛰어오릅니다`, en: String.raw`\(f(x) = x + \sum 2^{-k}\) staircase — it jumps by \(2^{-k}\) at every rational` },
         lang,
       ),
     );
@@ -120,9 +122,10 @@ function drawSecond(chart: Chart, data: MonotoneDiscontinuitiesData, lang: Lang)
     g.append('g').call(axisLeft(y).ticks(6));
 
     const header = g.append('text').attr('x', 0).attr('y', -32).attr('font-size', 13).attr('font-weight', 600).attr('fill', 'currentColor');
-    header.text(
+    header.call(
+      svgText,
       localize(
-        { ko: `점프 크기 2^{-k} vs 임계값 1/${n} — 위의 ${bigCount}개가 큰 점프입니다`, en: `Jump sizes 2^{-k} vs threshold 1/${n} — the ${bigCount} above are the big jumps` },
+        { ko: String.raw`점프 크기 \(2^{-k}\) vs 임계값 \(1/${n}\) — 위의 ${bigCount}개가 큰 점프입니다`, en: String.raw`Jump sizes \(2^{-k}\) vs threshold \(1/${n}\) — the ${bigCount} above are the big jumps` },
         lang,
       ),
     );
@@ -163,7 +166,7 @@ function drawSecond(chart: Chart, data: MonotoneDiscontinuitiesData, lang: Lang)
       .attr('y', height + 32)
       .attr('font-size', 12)
       .style('fill', 'var(--accent)')
-      .text(localize({ ko: `■ ${bigCount}개의 큰 점프 (1/${n} 초과)`, en: `■ ${bigCount} big jumps (above 1/${n})` }, lang));
+      .call(svgText, localize({ ko: String.raw`■ ${bigCount}개의 큰 점프 (\(1/${n}\) 초과)`, en: String.raw`■ ${bigCount} big jumps (above \(1/${n}\))` }, lang));
   }
 }
 

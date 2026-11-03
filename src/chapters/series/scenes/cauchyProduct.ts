@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   alternatingAbsBound,
   cauchyProductModel,
@@ -96,15 +97,15 @@ function drawMain(chart: Chart, data: CauchyProductData, lang: Lang): void {
 
   const topTitle = localize(
     {
-      ko: '코시 곱 부분합 C_N vs A_N·B_N',
-      en: 'Cauchy-product partial sums C_N vs A_N·B_N',
+      ko: String.raw`코시 곱 부분합 \(C_N\) vs \(A_N \cdot B_N\)`,
+      en: String.raw`Cauchy-product partial sums \(C_N\) vs \(A_N \cdot B_N\)`,
     },
     lang,
   );
   const botTitle = localize(
     {
-      ko: 'a_k·b_j 격자 — c_n은 k+j=n 대각선의 합 (강조된 대각선)',
-      en: 'The a_k·b_j lattice — c_n is the sum along the k+j=n diagonal (highlighted)',
+      ko: String.raw`\(a_k \cdot b_j\) 격자 — \(c_n\)은 \(k + j = n\) 대각선의 합 (강조된 대각선)`,
+      en: String.raw`The \(a_k \cdot b_j\) lattice — \(c_n\) is the sum along the \(k + j = n\) diagonal (highlighted)`,
     },
     lang,
   );
@@ -116,7 +117,7 @@ function drawMain(chart: Chart, data: CauchyProductData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(topTitle);
+    .call(svgText, topTitle);
   botG
     .append('text')
     .attr('x', 0)
@@ -124,7 +125,7 @@ function drawMain(chart: Chart, data: CauchyProductData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(botTitle);
+    .call(svgText, botTitle);
 
   // ---- Top panel: C_N and A_N * B_N against N. ----
   let yLo = Infinity;
@@ -166,7 +167,7 @@ function drawMain(chart: Chart, data: CauchyProductData, lang: Lang): void {
       .attr('font-size', 12)
       .attr('text-anchor', 'end')
       .attr('fill', 'var(--muted)')
-      .text(`e² ≈ ${fmt(limit, 6)}`);
+      .call(svgText, String.raw`\(e^2\) ≈ ${fmt(limit, 6)}`);
   }
 
   const seqLine = (vals: readonly number[]) =>
@@ -213,14 +214,14 @@ function drawMain(chart: Chart, data: CauchyProductData, lang: Lang): void {
     .attr('y', topH + 34)
     .attr('font-size', 12)
     .style('fill', 'var(--accent)')
-    .text(localize({ ko: '■ C_N (코시 곱 부분합)', en: '■ C_N (Cauchy-product partial sums)' }, lang));
+    .call(svgText, localize({ ko: String.raw`■ \(C_N\) (코시 곱 부분합)`, en: String.raw`■ \(C_N\) (Cauchy-product partial sums)` }, lang));
   topG
     .append('text')
     .attr('x', width / 2)
     .attr('y', topH + 34)
     .attr('font-size', 12)
     .style('fill', 'var(--bound)')
-    .text(localize({ ko: '■ A_N·B_N (부분합의 곱)', en: '■ A_N·B_N (product of partial sums)' }, lang));
+    .call(svgText, localize({ ko: String.raw`■ \(A_N \cdot B_N\) (부분합의 곱)`, en: String.raw`■ \(A_N \cdot B_N\) (product of partial sums)` }, lang));
 
   // ---- Bottom strip: the a_k * b_j lattice; c_d = sum of the k+j=d diagonal. ----
   const cell = Math.min(width / (n + 1), botH / (n + 1));

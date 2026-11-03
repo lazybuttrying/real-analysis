@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { raabeModel, type RaabeData } from '../models/raabeTest';
 
 // Top panel: the Raabe quotient R_k = k (a_k/a_{k+1} - 1) settling toward
@@ -16,8 +17,8 @@ const TOP_MARGIN = { top: 60, right: 20, bottom: 36, left: 56 };
 const BOTTOM_MARGIN = { top: 52, right: 20, bottom: 36, left: 56 };
 
 function exampleLabel(example: string, lang: Lang): string {
-  if (example === 'log') return localize({ ko: 'a_k = 1/(k(ln k)²)', en: 'a_k = 1/(k(ln k)²)' }, lang);
-  return localize({ ko: 'a_k = C(2k,k)/(4^k(2k+1))', en: 'a_k = C(2k,k)/(4^k(2k+1))' }, lang);
+  if (example === 'log') return localize({ ko: String.raw`\(a_k = 1/(k(\ln k)^2)\)`, en: String.raw`\(a_k = 1/(k(\ln k)^2)\)` }, lang);
+  return localize({ ko: String.raw`\(a_k = C(2k, k)/(4^k(2k+1))\)`, en: String.raw`\(a_k = C(2k, k)/(4^k(2k+1))\)` }, lang);
 }
 
 function verdictText(data: RaabeData, lang: Lang): string {
@@ -65,18 +66,19 @@ function drawMain(chart: Chart, data: RaabeData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(localize({ ko: `R_k = k(a_k/a_{k+1} − 1) — ${exampleLabel(data.example, lang)}`, en: `R_k = k(a_k/a_{k+1} − 1) — ${exampleLabel(data.example, lang)}` }, lang));
+    .call(svgText, localize({ ko: String.raw`\(R_k = k(a_k/a_{k+1} - 1)\) — ${exampleLabel(data.example, lang)}`, en: String.raw`\(R_k = k(a_k/a_{k+1} - 1)\) — ${exampleLabel(data.example, lang)}` }, lang));
   g.append('text')
     .attr('x', 0)
     .attr('y', -20)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.75)
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: data.example === 'log' ? `R_k → 1 — 진하게 p = 2, 옅게 p = 1` : `R_k → 3/2 — 경계 1 위에 안착하면 수렴`,
-          en: data.example === 'log' ? `R_k → 1 — solid: p = 2, faint: p = 1` : `R_k → 3/2 — settling above the boundary 1 means convergence`,
+          ko: data.example === 'log' ? String.raw`\(R_k \to 1\) — 진하게 \(p = 2\), 옅게 \(p = 1\)` : String.raw`\(R_k \to 3/2\) — 경계 1 위에 안착하면 수렴`,
+          en: data.example === 'log' ? String.raw`\(R_k \to 1\) — solid: \(p = 2\), faint: \(p = 1\)` : String.raw`\(R_k \to 3/2\) — settling above the boundary 1 means convergence`,
         },
         lang,
       ),
@@ -153,7 +155,7 @@ function drawMain(chart: Chart, data: RaabeData, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 12)
     .attr('fill', 'var(--accent)')
-    .text(localize({ ko: `R_${kStart + n - 1} ≈ ${fmt(raabe[raabe.length - 1] ?? 0)}`, en: `R_${kStart + n - 1} ≈ ${fmt(raabe[raabe.length - 1] ?? 0)}` }, lang));
+    .call(svgText, localize({ ko: String.raw`\(R_{${kStart + n - 1}} \approx ${fmt(raabe[raabe.length - 1] ?? 0)}\)`, en: String.raw`\(R_{${kStart + n - 1}} \approx ${fmt(raabe[raabe.length - 1] ?? 0)}\)` }, lang));
 }
 
 function drawSecond(chart: Chart, data: RaabeData, lang: Lang): void {
@@ -177,16 +179,17 @@ function drawSecond(chart: Chart, data: RaabeData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(localize({ ko: 'r_k = a_{k+1}/a_k — 비율 판정법은 판단을 유보합니다', en: 'r_k = a_{k+1}/a_k — the ratio test abstains' }, lang));
+    .call(svgText, localize({ ko: String.raw`\(r_k = a_{k+1}/a_k\) — 비율 판정법은 판단을 유보합니다`, en: String.raw`\(r_k = a_{k+1}/a_k\) — the ratio test abstains` }, lang));
   g.append('text')
     .attr('x', 0)
     .attr('y', -12)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.75)
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: `r_${kStart + n - 1} ≈ ${fmt(ratios[ratios.length - 1] ?? 0)} — 1에 달라붙어 극한이 1이라 판정 불가`, en: `r_${kStart + n - 1} ≈ ${fmt(ratios[ratios.length - 1] ?? 0)} — clinging to 1, so the limit is 1 and no verdict` },
+        { ko: String.raw`\(r_{${kStart + n - 1}} \approx ${fmt(ratios[ratios.length - 1] ?? 0)}\) — 1에 달라붙어 극한이 1이라 판정 불가`, en: String.raw`\(r_{${kStart + n - 1}} \approx ${fmt(ratios[ratios.length - 1] ?? 0)}\) — clinging to 1, so the limit is 1 and no verdict` },
         lang,
       ),
     );

@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { diniModel, type DiniData } from '../models/dini';
 
 /**
@@ -26,16 +27,16 @@ function header2Text(data: DiniData, lang: Lang): string {
   if (domain === 'compact') {
     return localize(
       {
-        ko: `f_n(x) = nx/(n+1) ↗ x (점선) — n = ${n}까지의 단조 증가 곡선들, 정의역 [0,1]`,
-        en: `f_n(x) = nx/(n+1) ↗ x (dashed) — increasing curves up to n = ${n}, on [0,1]`,
+        ko: String.raw`\(f_n(x) = nx/(n+1) \nearrow x\) (점선) — \(n = ${n}\)까지의 단조 증가 곡선들, 정의역 \([0,1]\)`,
+        en: String.raw`\(f_n(x) = nx/(n+1) \nearrow x\) (dashed) — increasing curves up to \(n = ${n}\), on \([0,1]\)`,
       },
       lang,
     );
   }
   return localize(
     {
-      ko: `g_n(x) = x^n ↘ 0 (점선) — n = ${n}까지의 단조 감소 곡선들, 정의역 (0,1]은 컴팩트가 아님`,
-      en: `g_n(x) = x^n ↘ 0 (dashed) — decreasing curves up to n = ${n}, on (0,1] which is not compact`,
+      ko: String.raw`\(g_n(x) = x^n \searrow 0\) (점선) — \(n = ${n}\)까지의 단조 감소 곡선들, 정의역 \((0,1]\)은 컴팩트가 아님`,
+      en: String.raw`\(g_n(x) = x^n \searrow 0\) (dashed) — decreasing curves up to \(n = ${n}\), on \((0,1]\) which is not compact`,
     },
     lang,
   );
@@ -118,7 +119,7 @@ function drawMain(chart: Chart, data: DiniData, lang: Lang): void {
       lang,
     ),
   );
-  header2.text(header2Text(data, lang));
+  header2.call(svgText, header2Text(data, lang));
 
   // Faint earlier curves, then the current term bold.
   for (let k = 0; k < curves.length; k++) {
@@ -166,9 +167,10 @@ function drawMain(chart: Chart, data: DiniData, lang: Lang): void {
     .attr('font-size', 12)
     .attr('text-anchor', 'end')
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       domain === 'compact'
-        ? localize({ ko: `간격 1/${n + 1}`, en: `gap 1/${n + 1}` }, lang)
+        ? localize({ ko: String.raw`간격 \(1/${n + 1}\)`, en: String.raw`gap \(1/${n + 1}\)` }, lang)
         : localize({ ko: 'sup 간격 1', en: 'sup gap 1' }, lang),
     );
 
@@ -181,20 +183,20 @@ function drawMain(chart: Chart, data: DiniData, lang: Lang): void {
       .attr('font-size', 12)
       .attr('text-anchor', 'end')
       .attr('fill', 'currentColor')
-      .text(localize({ ko: 'g_n(1)=1 — 극한이 x=1에서 불연속', en: 'g_n(1)=1 — the limit is discontinuous at x=1' }, lang));
+      .call(svgText, localize({ ko: String.raw`\(g_n(1) = 1\) — 극한이 \(x = 1\)에서 불연속`, en: String.raw`\(g_n(1) = 1\) — the limit is discontinuous at \(x = 1\)` }, lang));
   }
 
   // Legend.
   const legend = domain === 'compact'
-    ? localize({ ko: `■ f_${n} (진한) · - - f (점선) · i 선 = 최대 간격 1/(${n}+1)`, en: `■ f_${n} (bold) · - - f (dashed) · i line = worst gap 1/(${n}+1)` }, lang)
-    : localize({ ko: `■ g_${n} (진한) · - - g=0 (점선) · i 선 = sup 간격 1`, en: `■ g_${n} (bold) · - - g=0 (dashed) · i line = sup gap 1` }, lang);
+    ? localize({ ko: String.raw`■ \(f_{${n}}\) (진한) · - - \(f\) (점선) · i 선 = 최대 간격 \(1/(${n}+1)\)`, en: String.raw`■ \(f_{${n}}\) (bold) · - - \(f\) (dashed) · i line = worst gap \(1/(${n}+1)\)` }, lang)
+    : localize({ ko: String.raw`■ \(g_{${n}}\) (진한) · - - \(g = 0\) (점선) · i 선 = sup 간격 1`, en: String.raw`■ \(g_{${n}}\) (bold) · - - \(g = 0\) (dashed) · i line = sup gap 1` }, lang);
   g.append('text')
     .attr('x', 8)
     .attr('y', height + 34)
     .attr('font-size', 12)
     .attr('fill', 'currentColor')
     .attr('opacity', 0.7)
-    .text(legend);
+    .call(svgText, legend);
 }
 
 function mountExtra(strips: HTMLElement, lang: Lang): void {

@@ -2,6 +2,7 @@ import { axisBottom, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { borelCantelliModel, type BorelCantelliData } from '../models/borelCantelli';
 
 /**
@@ -18,7 +19,7 @@ import { borelCantelliModel, type BorelCantelliData } from '../models/borelCante
 const MARGIN = { top: 40, right: 20, bottom: 30, left: 64 };
 
 const MODE_NAME: Record<string, { ko: string; en: string }> = {
-  summable: { ko: '합 수렴 모드 (E_n = [0, 1/n²])', en: 'summable (E_n = [0, 1/n²])' },
+  summable: { ko: String.raw`합 수렴 모드 (\(E_n = [0, 1/n^2]\))`, en: String.raw`summable (\(E_n = [0, 1/n^2]\))` },
   nonsummable: { ko: '합 발산 모드 (dyadic 순환)', en: 'nonsummable (cycling dyadic)' },
 };
 
@@ -100,11 +101,12 @@ function drawMain(chart: Chart, data: BorelCantelliData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `Borel–Cantelli: ${modeName(data.mode, 'ko')} — E_1부터 E_${data.n}까지`,
-          en: `Borel–Cantelli: ${modeName(data.mode, 'en')} — E_1 through E_${data.n}`,
+          ko: String.raw`Borel–Cantelli: ${modeName(data.mode, 'ko')} — \(E_1\)부터 \(E_{${data.n}}\)까지`,
+          en: String.raw`Borel–Cantelli: ${modeName(data.mode, 'en')} — \(E_1\) through \(E_{${data.n}}\)`,
         },
         lang,
       ),

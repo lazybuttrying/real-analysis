@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   monotonicityModel,
   signOf,
@@ -82,10 +83,11 @@ function verdictText(lang: Lang): string {
   );
 }
 
+/** TeX fragment for the chart title's math segment. */
 function fnLabel(key: string, lang: Lang): string {
-  if (key === 'sine') return localize({ ko: 'sin x', en: 'sin x' }, lang);
+  if (key === 'sine') return localize({ ko: String.raw`\sin x`, en: String.raw`\sin x` }, lang);
   if (key === 'exp') return localize({ ko: 'e^x', en: 'e^x' }, lang);
-  return localize({ ko: 'x³ − 3x', en: 'x³ − 3x' }, lang);
+  return localize({ ko: 'x^3 - 3x', en: 'x^3 - 3x' }, lang);
 }
 
 const curvePath = line<MonotonicitySample>()
@@ -139,11 +141,12 @@ function drawMain(chart: Chart, data: MonotonicityData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
         {
-          ko: `y = ${fnLabel(data.key, lang)}: 배경은 f′ 부호 (초록 +, 빨강 −)`,
-          en: `y = ${fnLabel(data.key, lang)}: background is the sign of f′ (green +, red −)`,
+          ko: String.raw`\(y = ${fnLabel(data.key, lang)}\): 배경은 \(f'\) 부호 (초록 +, 빨강 −)`,
+          en: String.raw`\(y = ${fnLabel(data.key, lang)}\): background is the sign of \(f'\) (green +, red −)`,
         },
         lang,
       ),

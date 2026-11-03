@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import { ddOscModel, oscF, type DdOscData } from '../models/discontinuousDerivative';
 
 /**
@@ -54,9 +55,10 @@ function drawMain(chart: Chart, data: DdOscData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: 'f(x) = x²sin(1/x), f(0) = 0', en: 'f(x) = x²sin(1/x), f(0) = 0' },
+        { ko: String.raw`\(f(x) = x^2 \sin(1/x)\), \(f(0) = 0\)`, en: String.raw`\(f(x) = x^2 \sin(1/x)\), \(f(0) = 0\)` },
         lang,
       ),
     );
@@ -118,7 +120,7 @@ function drawMain(chart: Chart, data: DdOscData, lang: Lang): void {
     .attr('y', y(0) + 16)
     .attr('font-size', 11)
     .attr('fill', 'currentColor')
-    .text(localize({ ko: "f'(0) = 0", en: "f'(0) = 0" }, lang));
+    .call(svgText, localize({ ko: String.raw`\(f'(0) = 0\)`, en: String.raw`\(f'(0) = 0\)` }, lang));
 
   g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(5));
   g.append('g').call(axisLeft(y).ticks(5));
@@ -134,9 +136,10 @@ function drawSecond(chart: Chart, data: DdOscData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(
+    .call(
+      svgText,
       localize(
-        { ko: "f'(x) = 2x·sin(1/x) − cos(1/x), f'(0) = 0", en: "f'(x) = 2x·sin(1/x) − cos(1/x), f'(0) = 0" },
+        { ko: String.raw`\(f'(x) = 2x \cdot \sin(1/x) - \cos(1/x)\), \(f'(0) = 0\)`, en: String.raw`\(f'(x) = 2x \cdot \sin(1/x) - \cos(1/x)\), \(f'(0) = 0\)` },
         lang,
       ),
     );
@@ -171,7 +174,7 @@ function drawSecond(chart: Chart, data: DdOscData, lang: Lang): void {
     .attr('text-anchor', 'end')
     .attr('font-size', 11)
     .attr('fill', 'var(--bound)')
-    .text(localize({ ko: 'xₙ = 1/(2πn)에서 −1', en: '−1 along xₙ = 1/(2πn)' }, lang));
+    .call(svgText, localize({ ko: String.raw`\(x_n = 1/(2\pi n)\)에서 \(-1\)`, en: String.raw`\(-1\) along \(x_n = 1/(2\pi n)\)` }, lang));
 
   // The sequence points inside the window.
   g.selectAll('circle.seq')
@@ -192,7 +195,7 @@ function drawSecond(chart: Chart, data: DdOscData, lang: Lang): void {
     .attr('y', y(0) - 8)
     .attr('font-size', 11)
     .attr('fill', 'currentColor')
-    .text(localize({ ko: "f'(0) = 0", en: "f'(0) = 0" }, lang));
+    .call(svgText, localize({ ko: String.raw`\(f'(0) = 0\)`, en: String.raw`\(f'(0) = 0\)` }, lang));
 
   g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(5));
   g.append('g').call(axisLeft(y).ticks(5));

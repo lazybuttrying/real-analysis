@@ -1,6 +1,7 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang, type LocalizedText } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
+import { svgText } from '../../../view/svgtext';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import {
   functionSpacesModel,
@@ -96,12 +97,12 @@ function drawMain(chart: Chart, data: FunctionSpacesData, lang: Lang): void {
   const title: LocalizedText =
     data.mode === 'spaces'
       ? {
-          ko: '세 층의 대표원소: 텐트 (C_c), e^{-|x|} (C_0), 상수 1 (C_b)',
-          en: 'One witness per layer: tent (C_c), e^{-|x|} (C_0), constant 1 (C_b)',
+          ko: String.raw`세 층의 대표원소: 텐트 (\(C_c\)), \(e^{-|x|}\) (\(C_0\)), 상수 \(1\) (\(C_b\))`,
+          en: String.raw`One witness per layer: tent (\(C_c\)), \(e^{-|x|}\) (\(C_0\)), constant \(1\) (\(C_b\))`,
         }
       : {
-          ko: `절단 근사: f = e^{-|x|}, φ_k, f_k = φ_k f (k = ${fmt(data.k, 2)})`,
-          en: `Cutoff approximation: f = e^{-|x|}, phi_k, f_k = phi_k f (k = ${fmt(data.k, 2)})`,
+          ko: String.raw`절단 근사: \(f = e^{-|x|}\), \(\varphi_k\), \(f_k = \varphi_k f\) (\(k = ${fmt(data.k, 2)}\))`,
+          en: String.raw`Cutoff approximation: \(f = e^{-|x|}\), \(\phi_k\), \(f_k = \phi_k f\) (\(k = ${fmt(data.k, 2)}\))`,
         };
   g.append('text')
     .attr('x', 0)
@@ -109,7 +110,7 @@ function drawMain(chart: Chart, data: FunctionSpacesData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(localize(title, lang));
+    .call(svgText, localize(title, lang));
 
   const curve = (
     points: readonly FsPoint[],
@@ -159,16 +160,16 @@ function drawMain(chart: Chart, data: FunctionSpacesData, lang: Lang): void {
       .attr('y', legendY)
       .attr('font-size', 12)
       .style('fill', color)
-      .text(localize(label, lang));
+      .call(svgText, localize(label, lang));
   };
   if (data.mode === 'spaces') {
-    legend(8, 'var(--accent)', { ko: '— 텐트 (C_c)', en: '— tent (C_c)' });
-    legend(width * 0.34, 'var(--bound)', { ko: '— e^{-|x|} (C_0)', en: '— e^{-|x|} (C_0)' });
-    legend(width * 0.66, 'currentColor', { ko: '┄ 상수 1 (C_b)', en: '┄ constant 1 (C_b)' });
+    legend(8, 'var(--accent)', { ko: String.raw`— 텐트 (\(C_c\))`, en: String.raw`— tent (\(C_c\))` });
+    legend(width * 0.34, 'var(--bound)', { ko: String.raw`— \(e^{-|x|}\) (\(C_0\))`, en: String.raw`— \(e^{-|x|}\) (\(C_0\))` });
+    legend(width * 0.66, 'currentColor', { ko: String.raw`┄ 상수 \(1\) (\(C_b\))`, en: String.raw`┄ constant \(1\) (\(C_b\))` });
   } else {
-    legend(8, 'var(--accent)', { ko: '— f_k = φ_k f (C_c)', en: '— f_k = phi_k f (C_c)' });
-    legend(width * 0.36, 'var(--bound)', { ko: '— f = e^{-|x|}', en: '— f = e^{-|x|}' });
-    legend(width * 0.68, 'currentColor', { ko: '┄ φ_k (절단)', en: '┄ phi_k (cutoff)' });
+    legend(8, 'var(--accent)', { ko: String.raw`— \(f_k = \varphi_k f\) (\(C_c\))`, en: String.raw`— \(f_k = \phi_k f\) (\(C_c\))` });
+    legend(width * 0.36, 'var(--bound)', { ko: String.raw`— \(f = e^{-|x|}\)`, en: String.raw`— \(f = e^{-|x|}\)` });
+    legend(width * 0.68, 'currentColor', { ko: String.raw`┄ \(\varphi_k\) (절단)`, en: String.raw`┄ \(\phi_k\) (cutoff)` });
   }
 }
 

@@ -2,6 +2,7 @@ import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
 import { fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
+import { svgText } from '../../../view/svgtext';
 import {
   MAX_DRAWN_CROSSINGS,
   darbouxModel,
@@ -71,15 +72,15 @@ function drawMain(chart: Chart, data: DarbouxData, lang: Lang): void {
 
   const topTitle = localize(
     {
-      ko: 'f(x) = x² sin(1/x), f(0) = 0 — ±x² 띠 안에 갇힌 매끈한 곡선',
-      en: 'f(x) = x² sin(1/x), f(0) = 0 — a smooth-looking curve trapped in the ±x² envelope',
+      ko: String.raw`\(f(x) = x^2 \sin(1/x)\), \(f(0) = 0\) — \(\pm x^2\) 띠 안에 갇힌 매끈한 곡선`,
+      en: String.raw`\(f(x) = x^2 \sin(1/x)\), \(f(0) = 0\) — a smooth-looking curve trapped in the \(\pm x^2\) envelope`,
     },
     lang,
   );
   const botTitle = localize(
     {
-      ko: 'f′(x) = 2x sin(1/x) − cos(1/x), f′(0) = 0 — ±1 띠 사이에서 격렬하게 진동하지만 모든 높이를 만남',
-      en: 'f′(x) = 2x sin(1/x) − cos(1/x), f′(0) = 0 — oscillates wildly between the ±1 bands, yet hits every level',
+      ko: String.raw`\(f'(x) = 2x \sin(1/x) - \cos(1/x)\), \(f'(0) = 0\) — \(\pm 1\) 띠 사이에서 격렬하게 진동하지만 모든 높이를 만남`,
+      en: String.raw`\(f'(x) = 2x \sin(1/x) - \cos(1/x)\), \(f'(0) = 0\) — oscillates wildly between the \(\pm 1\) bands, yet hits every level`,
     },
     lang,
   );
@@ -91,7 +92,7 @@ function drawMain(chart: Chart, data: DarbouxData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(topTitle);
+    .call(svgText, topTitle);
   botG
     .append('text')
     .attr('x', 0)
@@ -99,7 +100,7 @@ function drawMain(chart: Chart, data: DarbouxData, lang: Lang): void {
     .attr('font-size', 13)
     .attr('font-weight', 600)
     .attr('fill', 'currentColor')
-    .text(botTitle);
+    .call(svgText, botTitle);
 
   const curveLine = (vals: number[], y: (v: number) => number) =>
     line<number>()
@@ -249,7 +250,7 @@ function drawMain(chart: Chart, data: DarbouxData, lang: Lang): void {
     .attr('y', botH + 34)
     .attr('font-size', 12)
     .style('fill', 'var(--bound)')
-    .text(localize({ ko: '─ 테스트 높이 y = c', en: '─ test level y = c' }, lang));
+    .call(svgText, localize({ ko: String.raw`─ 테스트 높이 \(y = c\)`, en: String.raw`─ test level \(y = c\)` }, lang));
 }
 
 export default defineSimpleScene<DarbouxData>({
