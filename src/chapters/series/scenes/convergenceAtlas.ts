@@ -10,18 +10,22 @@ import {
 } from '../models/convergenceAtlas';
 
 /**
- * Two stacked graph sections (the engine's extraCharts support). The top
- * section is one series drawn large: its terms as stems from the zero
- * line and its partial sums as a curve settling onto (or never reaching)
- * the limit, so the shape of the convergence is visible before the grid
- * is read. The main section is the 3 by 3 atlas grid: every card gets
- * the same layout (title, formula, a sparkline of the partial sums up to
- * n, and a one-line verdict in green or red), and the focused card gets
- * a bold border so one card can be talked about at a time.
+ * Three stacked graph sections (the engine's extraCharts support). The
+ * top section draws the original function f(x) whose values at the
+ * integers are the terms, so the terms can be read as samples of a
+ * continuous curve before any summation happens. The middle section is
+ * the selected series drawn large: its terms as stems from the zero
+ * line and its partial sums as a curve settling onto (or never
+ * reaching) the limit. The main section is the 3 by 3 atlas grid:
+ * every card gets the same layout (title, formula, a sparkline of the
+ * partial sums up to n, and a one-line verdict in green or red), and
+ * the focused card gets a bold border so one card can be talked about
+ * at a time.
  */
 
 const CONVERGE_COLOR = '#59a14f';
 const DIVERGE_COLOR = '#e15759';
+const FN_COLOR = '#4e79a7';
 
 function drawMain(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
   const { g, width, height } = chart;
@@ -125,8 +129,96 @@ function drawMain(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
 }
 
 /**
- * The top section: the focused series (the first card while the focus
- * control is on 'all') drawn at full width. Stems show the terms
+ * The top section: the original function of the focused card (the
+ * first card while the focus control is on 'all'), drawn as a
+ * continuous curve with dots at the integers. The dots are the terms
+ * before summation: a_k = f(k). Sampling starts at x = 0.8 so the
+ * reciprocal-style functions stay finite on screen.
+ */
+function drawFn(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
+  const { g, width, height } = chart;
+  g.selectAll('*').remove();
+  const card = data.focused ?? (data.cards[0] as AtlasCardData);
+  const color = card.def.converges ? CONVERGE_COLOR : DIVERGE_COLOR;
+  const fn = card.def.fn;
+
+  g.append('text')
+    .attr('x', 0)
+    .attr('y', -12)
+    .attr('font-size', 13)
+    .attr('font-weight', 700)
+    .attr('fill', 'currentColor')
+    .call(svgText, localize(card.def.title, lang));
+  g.append('text')
+    .attr('x', width)
+    .attr('y', -12)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 12)
+    .attr('fill', 'currentColor')
+    .attr('opacity', 0.8)
+    .call(svgText, card.def.fnFormula);
+
+  const x0 = 0.8;
+  const x1 = Math.max(8, data.n);
+  const SAMPLES = 260;
+  const pts: Array<[number, number]> = [];
+  let lo = 0;
+  let hi = 0;
+  for (let i = 0; i <= SAMPLES; i++) {
+    const x = x0 + ((x1 - x0) * i) / SAMPLES;
+    const v = fn(x);
+    if (Number.isFinite(v)) {
+      pts.push([x, v]);
+      if (v < lo) lo = v;
+      if (v > hi) hi = v;
+    }
+  }
+  for (let k = 1; k <= data.n; k++) {
+    const t = card.def.term(k);
+    if (t < lo) lo = t;
+    if (t > hi) hi = t;
+  }
+  const pad = (hi - lo) * 0.1 + 0.02;
+  const x = scaleLinear().domain([x0, x1]).range([0, width]);
+  const y = scaleLinear()
+    .domain([lo - pad, hi + pad])
+    .range([height, 0]);
+
+  g.append('g').attr('transform', `translate(0,${height})`).call(axisBottom(x).ticks(5));
+  g.append('g').call(axisLeft(y).ticks(4));
+
+  g.append('line')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', y(0))
+    .attr('y2', y(0))
+    .attr('stroke', 'currentColor')
+    .attr('opacity', 0.35);
+
+  const path = line<[number, number]>()
+    .x((p) => x(p[0]))
+    .y((p) => y(p[1]));
+  g.append('path')
+    .attr('fill', 'none')
+    .attr('stroke', FN_COLOR)
+    .attr('stroke-width', 2.2)
+    .attr('d', path(pts) ?? '');
+
+  const dotStep = Math.max(1, Math.floor(data.n / 60));
+  for (let k = 1; k <= data.n; k += dotStep) {
+    g.append('circle')
+      .attr('cx', x(k))
+      .attr('cy', y(card.def.term(k)))
+      .attr('r', 3.2)
+      .attr('fill', color)
+      .attr('stroke', 'var(--bg)')
+      .attr('stroke-width', 1);
+  }
+}
+
+/**
+ * The middle section: the focused series (the first card while the
+ * focus control is on 'all') drawn at full width. Stems show the terms
  * themselves, the curve shows the partial sums approaching the dashed
  * limit line, so both halves of a convergence test stay visible.
  */
@@ -250,8 +342,20 @@ function readoutText(data: ConvergenceAtlasData, lang: Lang): string {
 export default defineSimpleScene<ConvergenceAtlasData>({
   model: convergenceAtlasModel,
   drawMain,
-  chartWrapHeight: 'min(82vh, 680px)',
+  chartWrapHeight: 'min(94vh, 880px)',
   extraCharts: [
+    {
+      before: true,
+      draw: drawFn,
+      margin: { top: 30, right: 16, bottom: 24, left: 46 },
+      fallbackHeight: 180,
+      wrapCss: 'flex: 0 0 196px; min-height: 0; position: relative;',
+      label: (lang) =>
+        localize(
+          { ko: '원본 함수, 항은 정수에서의 함수값', en: 'The original function; the terms are its values at integers' },
+          lang,
+        ),
+    },
     {
       before: true,
       draw: drawFocus,

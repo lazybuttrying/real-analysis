@@ -23,8 +23,18 @@ describe('convergence atlas: the nine cards', () => {
     for (const card of ATLAS_CARDS) {
       expect(card.formula.startsWith('\\('), card.id).toBe(true);
       expect(card.formula.endsWith('\\)'), card.id).toBe(true);
+      expect(card.fnFormula.startsWith('\\('), card.id).toBe(true);
+      expect(card.fnFormula.endsWith('\\)'), card.id).toBe(true);
       expect(card.criterion.ko.length, card.id).toBeLessThanOrEqual(10);
       expect(card.criterion.en.length, card.id).toBeLessThanOrEqual(22);
+    }
+  });
+
+  it('each original function passes through the terms at the integers', () => {
+    for (const card of ATLAS_CARDS) {
+      for (let k = 1; k <= 12; k++) {
+        expect(Math.abs(card.fn(k) - card.term(k)), `${card.id} at k=${k}`).toBeLessThan(1e-6);
+      }
     }
   });
 

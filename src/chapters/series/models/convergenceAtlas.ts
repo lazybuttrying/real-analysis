@@ -1,4 +1,5 @@
 import type { LocalizedText, SceneModel } from '../../../contracts';
+import { gamma } from './gamma';
 
 /**
  * The convergence atlas: nine exemplar series on one 3 by 3 grid, in
@@ -22,6 +23,10 @@ export interface AtlasCardDef {
   /** The sum when it converges, otherwise null. */
   limit: number | null;
   term: (k: number) => number;
+  /** The original continuous function whose values at the integers are the terms: fn(k) equals term(k) for every k >= 1. */
+  fn: (x: number) => number;
+  /** TeX span naming fn, shown in the function chart header. */
+  fnFormula: string;
 }
 
 export const ATLAS_CARDS: readonly AtlasCardDef[] = [
@@ -33,6 +38,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: true,
     limit: 1,
     term: (k) => Math.pow(1 / 2, k),
+    fn: (x) => Math.pow(1 / 2, x),
+    fnFormula: String.raw`\(f(x) = (1/2)^x\)`,
   },
   {
     id: 'harmonic',
@@ -42,6 +49,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: false,
     limit: null,
     term: (k) => 1 / k,
+    fn: (x) => 1 / x,
+    fnFormula: String.raw`\(f(x) = 1/x\)`,
   },
   {
     id: 'basel',
@@ -51,6 +60,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: true,
     limit: (Math.PI * Math.PI) / 6,
     term: (k) => 1 / (k * k),
+    fn: (x) => 1 / (x * x),
+    fnFormula: String.raw`\(f(x) = 1/x^2\)`,
   },
   {
     id: 'leibniz',
@@ -60,6 +71,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: true,
     limit: Math.LN2,
     term: (k) => ((k % 2 === 1 ? 1 : -1) * 1) / k,
+    fn: (x) => -Math.cos(Math.PI * x) / x,
+    fnFormula: String.raw`\(f(x) = -\cos(\pi x)/x\)`,
   },
   {
     id: 'absolute',
@@ -69,6 +82,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: false,
     limit: null,
     term: (k) => 1 / k,
+    fn: (x) => Math.abs(Math.cos(Math.PI * x)) / x,
+    fnFormula: String.raw`\(f(x) = |\cos(\pi x)|/x\)`,
   },
   {
     id: 'telescoping',
@@ -78,6 +93,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: true,
     limit: 1,
     term: (k) => 1 / (k * (k + 1)),
+    fn: (x) => 1 / (x * (x + 1)),
+    fnFormula: String.raw`\(f(x) = 1/(x(x+1))\)`,
   },
   {
     id: 'factorial',
@@ -87,6 +104,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: true,
     limit: Math.E - 1,
     term: (k) => 1 / factorial(k),
+    fn: (x) => 1 / gamma(x + 1),
+    fnFormula: String.raw`\(f(x) = 1/\Gamma(x+1)\)`,
   },
   {
     id: 'weighted',
@@ -96,6 +115,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: true,
     limit: 6,
     term: (k) => k * Math.pow(2 / 3, k),
+    fn: (x) => x * Math.pow(2 / 3, x),
+    fnFormula: String.raw`\(f(x) = x(2/3)^x\)`,
   },
   {
     id: 'grandi',
@@ -105,6 +126,8 @@ export const ATLAS_CARDS: readonly AtlasCardDef[] = [
     converges: false,
     limit: null,
     term: (k) => (k % 2 === 1 ? 1 : -1),
+    fn: (x) => -Math.cos(Math.PI * x),
+    fnFormula: String.raw`\(f(x) = -\cos(\pi x)\)`,
   },
 ];
 
