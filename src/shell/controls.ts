@@ -3,8 +3,8 @@ import { h } from './dom';
 import { tr } from './i18n';
 import { shedAutoplay } from './load-policy';
 
-/** Default playback interval: slow, one step every two seconds. */
-export const PLAYBACK_DEFAULT_INTERVAL_MS = 2000;
+/** Default playback interval: one step every half second. */
+export const PLAYBACK_DEFAULT_INTERVAL_MS = 500;
 
 /** Intervals offered in the playback settings. */
 export const PLAYBACK_INTERVAL_OPTIONS_MS = [500, 1000, 2000, 4000] as const;
@@ -40,7 +40,7 @@ export function playbackNextValue(
  *
  * Playback: scenes with at least one slider get an autoplay bar below the
  * controls. It advances the target slider by one step per interval, starting
- * automatically at the slow 2000ms default (paused only when the user
+ * automatically at the 500ms default (paused only when the user
  * prefers reduced motion). Every setting in the bar actually works: play
  * and pause start and stop the timer, the interval select restarts it at
  * the chosen interval, the loop checkbox decides whether the slider wraps
