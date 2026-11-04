@@ -115,6 +115,8 @@ export const STRINGS = {
   appMapHub: { ko: '메커니즘 묶음', en: 'Mechanism bundle' },
   appMapBuildsOn: { ko: '먼저 읽는 응용', en: 'Builds on an earlier application' },
   appMapOverview: { ko: '응용 지도 개요', en: 'Application map overview' },
+  appMapExpandAll: { ko: '모두 열기', en: 'Open all' },
+  appMapCollapseAll: { ko: '모두 닫기', en: 'Close all' },
   appMapOverviewHint: {
     ko: '메커니즘 묶음을 누르면 그 안의 응용과 기초 씬이 펼쳐집니다. 개별 응용은 바로 선택할 수 있습니다.',
     en: 'Select a mechanism bundle to expand its applications and basic scenes. Standalone applications can be selected directly.',

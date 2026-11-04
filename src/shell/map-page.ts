@@ -410,10 +410,12 @@ function appsCountLabel(lang: Lang, count: number): string {
  * one hub per bundled mechanism (a rounded rectangle with an application
  * count badge, visually distinct from both the round scene nodes and
  * the application diamonds) plus the individual applications as
- * diamonds. Clicking a hub expands its cluster, its applications and
- * their basic scenes anchored as a lobe beside the hub; only one
- * cluster is expanded at a time, and clicking the expanded hub again
- * or the reset control returns to the collapsed top level. In the
+ * diamonds. Clicking a hub toggles its cluster, its applications and
+ * their basic scenes anchored as a lobe beside the hub; several
+ * clusters can be open at once. The open-all and close-all controls
+ * above the map open or collapse every cluster at once, clicking an
+ * open hub closes just its cluster, and the reset control returns to
+ * the collapsed top level. In the
  * collapsed view no basic scene nodes or labels render at all.
  * App-to-app builds-on edges from the data layer render as dashed
  * arrows between the application diamonds visible in the current
@@ -487,6 +489,18 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
   const resetButton = h('button', { class: 'map-reset', type: 'button' }, tr(lang, 'mapResetView'));
   wrap.append(resetButton);
 
+  const expandAllButton = h(
+    'button',
+    { class: 'map-reset appmap-all-btn', type: 'button' },
+    tr(lang, 'appMapExpandAll'),
+  ) as HTMLButtonElement;
+  const collapseAllButton = h(
+    'button',
+    { class: 'map-reset appmap-all-btn', type: 'button' },
+    tr(lang, 'appMapCollapseAll'),
+  ) as HTMLButtonElement;
+  const allControls = h('div', { class: 'appmap-controls' }, expandAllButton, collapseAllButton);
+
   const panel = h('div', { class: 'appmap-panel' });
 
   // Arrowhead markers, one per navigable edge kind (hub links have none).
@@ -518,10 +532,17 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
   });
   select(svg).call(zoomBehavior);
 
-  // View state: which mechanism cluster (if any) is expanded, and which
-  // application the panel currently shows.
-  let expandedMechanism: BundledMechanism | null = null;
+  // View state: which mechanism clusters are expanded (any number can
+  // be open at once), and which application the panel currently shows.
+  const expandedMechanisms = new Set<BundledMechanism>();
+  const hubCount = topItems.filter((item) => item.kind === 'hub').length;
   let selectedAppId: string | null = null;
+
+  /** Open-all is disabled when every cluster is open, close-all when none is. */
+  const syncAllButtons = (): void => {
+    expandAllButton.disabled = expandedMechanisms.size >= hubCount;
+    collapseAllButton.disabled = expandedMechanisms.size === 0;
+  };
   let currentNodes: AppSimNode[] = [];
   let currentNodeSel: Selection<SVGGElement, AppSimNode, SVGElement, unknown> | null = null;
 
@@ -672,8 +693,11 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
       }
     }
 
-    if (expandedMechanism !== null) {
-      const mechanism = expandedMechanism;
+    // A basic scene shared by two open clusters is emitted once, under
+    // the first cluster that claims it; the other cluster's applies
+    // edges still link to that single node.
+    const emittedSceneKeys = new Set<string>();
+    for (const mechanism of expandedMechanisms) {
       const hubAnchor = topAnchorOf(`hub/${mechanism}`);
       const cluster = bundledAppsOf(mechanism);
       for (const [slot, app] of cluster.entries()) {
@@ -701,6 +725,8 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
         });
         links.push({ source: `hub/${mechanism}`, target: `app/${app.id}`, kind: 'hub' });
         for (const [sceneSlot, ref] of app.scenes.entries()) {
+          if (emittedSceneKeys.has(`${ref.chapterId}/${ref.sceneId}`)) continue;
+          emittedSceneKeys.add(`${ref.chapterId}/${ref.sceneId}`);
           const info = sceneOf.get(`${ref.chapterId}/${ref.sceneId}`);
           const ring = 68 + (sceneSlot % 3) * 20;
           const angle = (sceneSlot / Math.max(1, app.scenes.length)) * Math.PI * 2;
@@ -795,7 +821,9 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
             : node.kind === 'app'
               ? 'appmap-node appmap-node-app'
               : 'appmap-node appmap-node-scene';
-        return node.kind === 'hub' && node.mechanism === expandedMechanism ? `${base} appmap-expanded` : base;
+        return node.kind === 'hub' && expandedMechanisms.has(node.mechanism as BundledMechanism)
+          ? `${base} appmap-expanded`
+          : base;
       })
       .attr('data-chapter', (node) => (node.kind === 'scene' ? node.chapterId : null));
     currentNodeSel = nodeSel;
@@ -902,12 +930,13 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
       }
       if (d.kind === 'hub') {
         const mechanism = d.mechanism as BundledMechanism;
-        if (expandedMechanism === mechanism) {
-          expandedMechanism = null;
+        if (expandedMechanisms.has(mechanism)) {
+          expandedMechanisms.delete(mechanism);
           renderGraph();
-          showOverview();
+          const selected = selectedAppId ? appById.get(selectedAppId) : undefined;
+          if (!selected || selected.mechanism === mechanism) showOverview();
         } else {
-          expandedMechanism = mechanism;
+          expandedMechanisms.add(mechanism);
           renderGraph();
           const first = bundledAppsOf(mechanism)[0];
           if (first) showApp(first.id);
@@ -943,12 +972,26 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
       });
 
     markSelected();
+    syncAllButtons();
     fitView();
   };
 
   // The reset control returns to the collapsed top-level view.
   resetButton.addEventListener('click', () => {
-    expandedMechanism = null;
+    expandedMechanisms.clear();
+    renderGraph();
+    showOverview();
+  });
+
+  expandAllButton.addEventListener('click', () => {
+    for (const item of topItems) {
+      if (item.kind === 'hub') expandedMechanisms.add(item.mechanism as BundledMechanism);
+    }
+    renderGraph();
+  });
+
+  collapseAllButton.addEventListener('click', () => {
+    expandedMechanisms.clear();
     renderGraph();
     showOverview();
   });
@@ -956,5 +999,5 @@ export function mountApplicationMap(container: HTMLElement, lang: Lang): void {
   renderGraph();
   showOverview();
 
-  container.replaceChildren(legend, wrap, panel);
+  container.replaceChildren(legend, allControls, wrap, panel);
 }
