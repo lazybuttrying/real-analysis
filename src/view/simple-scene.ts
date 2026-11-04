@@ -350,6 +350,17 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
           extraPanels = extraConfigs.map((extra) => {
             const wrapEl = document.createElement('div');
             wrapEl.style.cssText = extra.wrapCss ?? DUAL_WRAP_CSS;
+            if (extra.label) {
+              // A labelled panel hosts its chart in an inner div below the
+              // label (buildChartHost). That div only gets a definite
+              // height when the panel is a flex column; without it the
+              // chart svg (height 100% of an auto-height div) falls back to
+              // its viewBox aspect ratio and paints over the sections
+              // below. The dual-chart scenes pass this css themselves via
+              // mainWrapCss/secondWrapCss; extra panels get it here.
+              wrapEl.style.display = 'flex';
+              wrapEl.style.flexDirection = 'column';
+            }
             const sizeWrap = buildChartHost(wrapEl, extra.label, extra.labelCss);
             return { chart: createChart(sizeWrap, extra.margin ?? margin), sizeWrap, wrap: wrapEl };
           });

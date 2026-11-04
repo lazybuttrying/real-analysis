@@ -155,8 +155,18 @@ function drawFocus(chart: Chart, data: ConvergenceAtlasData, lang: Lang): void {
     .call(svgText, card.def.formula);
 
   const limit = card.def.limit;
-  const lo = Math.min(0, card.min, limit ?? Infinity);
-  const hi = Math.max(0, card.max, limit ?? -Infinity);
+  // The y domain must cover the terms as well as the partial sums: the
+  // Grandi terms are +-1 while its sums stay in [0, 1], and stems drawn
+  // outside the domain would paint over the grid section below.
+  let termLo = Infinity;
+  let termHi = -Infinity;
+  for (let i = 0; i < sums.length; i++) {
+    const term = (sums[i] as number) - (i > 0 ? (sums[i - 1] as number) : 0);
+    if (term < termLo) termLo = term;
+    if (term > termHi) termHi = term;
+  }
+  const lo = Math.min(0, card.min, limit ?? Infinity, termLo);
+  const hi = Math.max(0, card.max, limit ?? -Infinity, termHi);
   const pad = (hi - lo) * 0.1 + 0.02;
   const x = scaleLinear()
     .domain([1, Math.max(2, n)])
