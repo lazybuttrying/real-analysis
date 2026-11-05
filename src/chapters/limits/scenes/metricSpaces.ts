@@ -116,10 +116,14 @@ function drawMain(chart: Chart, data: MetricSpacesData): void {
       .attr('opacity', 0.25);
 
     if (metric === 'euclid') {
+      // The pixel radius comes from the x scale; on a wide chart that
+      // radius is taller than the half-height, so clamp it to the
+      // vertical space or the ball paints above and below the box.
+      const rPx = Math.min(Math.max(0, xScale(r) - xScale(0)), cy, height - cy);
       g.append('circle')
         .attr('cx', cx)
         .attr('cy', cy)
-        .attr('r', Math.max(0, xScale(r) - xScale(0)))
+        .attr('r', rPx)
         .attr('fill', 'var(--accent)')
         .attr('opacity', 0.18)
         .attr('stroke', 'var(--accent)')

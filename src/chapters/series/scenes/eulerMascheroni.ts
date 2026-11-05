@@ -58,12 +58,15 @@ function drawMain(chart: Chart, data: EulerMascheroniData, lang: Lang): void {
       ),
     );
 
-    // Staircase bars of H_n.
+    // Staircase bars of H_n. The last bar is clamped to the plot edge:
+    // its unclamped end x(n + 1) sits half a unit past the x domain,
+    // so the rect would paint right of the chart box.
     for (const t of terms) {
       const prevH = t.k === 1 ? 0 : (terms[t.k - 2]?.h ?? 0);
+      const barEnd = Math.min(x(t.k + 1), width);
       g.append('rect')
         .attr('x', x(t.k) + 0.5)
-        .attr('width', Math.max(0.5, x(t.k + 1) - x(t.k) - 1))
+        .attr('width', Math.max(0.5, barEnd - x(t.k) - 1))
         .attr('y', y(t.h))
         .attr('height', Math.max(0, height - y(t.h)))
         .style('fill', 'var(--accent)')

@@ -177,13 +177,16 @@ function drawMain(chart: Chart, data: CauchySchwarzData, lang: Lang): void {
         .text(projLabel);
     }
 
-    // Angle arc from the x-axis to y.
+    // Angle arc from the x-axis to y. arcR is already a pixel length,
+    // so the endpoints are computed in pixel space directly; feeding
+    // them through px/py would multiply by unit a second time and fling
+    // the arc thousands of pixels outside the chart.
     const arcR = 0.55 * unit;
-    const endX = px(arcR * Math.cos(theta));
-    const endY = py(arcR * Math.sin(theta));
+    const endX = ox + arcR * Math.cos(theta);
+    const endY = oy - arcR * Math.sin(theta);
     const largeArc = theta > Math.PI ? 1 : 0;
     g.append('path')
-      .attr('d', `M ${px(arcR)} ${oy} A ${arcR} ${arcR} 0 ${largeArc} 0 ${endX} ${endY}`)
+      .attr('d', `M ${ox + arcR} ${oy} A ${arcR} ${arcR} 0 ${largeArc} 0 ${endX} ${endY}`)
       .attr('fill', 'none')
       .attr('stroke', 'currentColor')
       .attr('stroke-width', 1.5)

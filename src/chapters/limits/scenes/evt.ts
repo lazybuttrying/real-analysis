@@ -56,8 +56,10 @@ function drawMain(chart: Chart, data: EvtData, lang: Lang): void {
       .y((p) => y(p.y));
 
     if (mode === 'open-interval') {
-      // Clip the exploding branch; the annotation says where it is going.
-      const visible = samples.filter((s) => s.y <= 6.5);
+      // Clip the exploding branch at the domain top (6); the
+      // annotation says where it is going. Filtering at 6.5 instead
+      // let the last segment paint above the chart box.
+      const visible = samples.filter((s) => s.y <= 6);
       g.append('path').attr('d', path(visible)).attr('fill', 'none').attr('stroke', 'currentColor').attr('stroke-width', 2);
       g.append('text')
         .attr('x', x(0.06))

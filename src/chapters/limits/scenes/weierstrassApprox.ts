@@ -64,7 +64,11 @@ function drawMain(chart: Chart, data: BernsteinData, lang: Lang): void {
       .y((p) => y(p.p));
 
     g.selectAll('*').remove();
-    g.append('g').attr('transform', `translate(0,${y(0)})`).call(axisBottom(x).ticks(5));
+    // The x-axis sits at y = 0 when 0 is inside the domain, clamped to
+    // the plot edge otherwise: for the constant f = 1 the domain is
+    // [0.9, 1.1] and the unclamped y(0) lands ~1900px below the chart.
+    const axisY = Math.min(Math.max(y(0), 0), height);
+    g.append('g').attr('transform', `translate(0,${axisY})`).call(axisBottom(x).ticks(5));
     g.append('g').call(axisLeft(y).ticks(5));
 
     g.append('path').attr('fill', 'none').attr('stroke-width', 2).attr('stroke-dasharray', '5 4').attr('opacity', 0.65).attr('d', fLine(samples) ?? '');

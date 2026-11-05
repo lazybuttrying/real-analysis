@@ -202,6 +202,9 @@ export default defineSimpleScene<DoubleSeriesData>({
   ],
   sizeFromData: (data, container) => ({
     width: Math.max(container.width || 640, MARGIN.left + data.N * (CELL + GAP) + MARGIN.right),
-    height: 8 + data.N * (CELL + GAP) + 44,
+    // Same accounting as the double-sequences grid: margins plus the
+    // column-sums row below the grid (+22 and its text) must fit, or
+    // the sums paint below the chart box.
+    height: MARGIN.top + 8 + data.N * (CELL + GAP) + 28 + MARGIN.bottom,
   }),
 });

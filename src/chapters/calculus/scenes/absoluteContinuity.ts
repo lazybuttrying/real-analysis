@@ -135,24 +135,35 @@ function drawMain(chart: Chart, data: AbsoluteContinuityData, lang: Lang): void 
       .attr('width', x(row.value))
       .style('fill', row.key === 'variation' ? 'var(--accent)' : 'currentColor')
       .attr('opacity', 0.85);
+    // The value label sits right of the bar end, unless the bar already
+    // reaches (nearly) the plot edge: then the label goes inside the
+    // bar, anchored at its end, so it never paints past the chart box.
+    const endX = x(row.value);
+    const labelOutside = endX + 48 <= width;
     g.append('text')
-      .attr('x', x(row.value) + 6)
+      .attr('x', labelOutside ? endX + 6 : endX - 6)
       .attr('y', yPos(i) + bw / 2 + 4)
       .attr('font-size', 12)
+      .attr('text-anchor', labelOutside ? 'start' : 'end')
       .attr('fill', 'currentColor')
       .text(row.value.toFixed(4));
   });
 
-  // Marker at 1 on the variation scale: where the Cantor function lives.
-  g.append('line')
-    .attr('x1', x(1))
-    .attr('x2', x(1))
-    .attr('y1', 0)
-    .attr('y2', height)
-    .attr('stroke', 'var(--accent)')
-    .attr('stroke-width', 1.5)
-    .attr('stroke-dasharray', '6,4')
-    .attr('opacity', 0.7);
+  // Marker at 1 on the variation scale: where the Cantor function
+  // lives. Only drawn when 1 is inside the scale domain: with the
+  // square example at small delta the domain tops out at varSum < 1,
+  // and x(1) would land far right of the chart box.
+  if (hi >= 1) {
+    g.append('line')
+      .attr('x1', x(1))
+      .attr('x2', x(1))
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke', 'var(--accent)')
+      .attr('stroke-width', 1.5)
+      .attr('stroke-dasharray', '6,4')
+      .attr('opacity', 0.7);
+  }
 }
 
 export default defineSimpleScene<AbsoluteContinuityData>({
