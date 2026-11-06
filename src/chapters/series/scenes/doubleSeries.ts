@@ -200,11 +200,11 @@ export default defineSimpleScene<DoubleSeriesData>({
     { text: readoutText, bold: true },
     { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
   ],
+  // Inner sizes (the engine adds MARGIN back): the grid plus the
+  // column-sums row below it (+22 and its text) must fit inside the
+  // drawing area, or the sums paint below the chart box.
   sizeFromData: (data, container) => ({
-    width: Math.max(container.width || 640, MARGIN.left + data.N * (CELL + GAP) + MARGIN.right),
-    // Same accounting as the double-sequences grid: margins plus the
-    // column-sums row below the grid (+22 and its text) must fit, or
-    // the sums paint below the chart box.
-    height: MARGIN.top + 8 + data.N * (CELL + GAP) + 28 + MARGIN.bottom,
+    width: Math.max(container.width, data.N * (CELL + GAP)),
+    height: 8 + data.N * (CELL + GAP) + 28,
   }),
 });

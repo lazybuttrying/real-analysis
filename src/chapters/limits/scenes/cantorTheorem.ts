@@ -207,7 +207,12 @@ export default defineSimpleScene<CantorTheoremData>({
     { text: readoutText, bold: true, spaced: true },
     { text: (_data, lang) => verdictText(lang), bold: true, spaced: true },
   ],
+  // Inner height (the engine adds MARGIN back): exactly the content
+  // extent in drawMain — grid top offset 8, the n rows, the 34px gap,
+  // and the flipped row (CELL tall). The old outer-size formula
+  // (8 + n*step + 34 + step + 44) never accounted for the margins and
+  // left the flipped row ~14px below the chart box.
   sizeFromData: (data) => ({
-    height: 8 + data.n * (CELL + GAP) + 34 + (CELL + GAP) + 44,
+    height: 8 + data.n * (CELL + GAP) + 34 + CELL,
   }),
 });

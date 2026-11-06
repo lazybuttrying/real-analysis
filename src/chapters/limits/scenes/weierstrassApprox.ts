@@ -1,6 +1,6 @@
 import { axisBottom, axisLeft, line, scaleLinear } from 'd3';
 import { localize, type Lang } from '../../../contracts';
-import { fmt, type Chart } from '../../../view/d3kit';
+import { clampedScalePos, fmt, type Chart } from '../../../view/d3kit';
 import { defineSimpleScene } from '../../../view/simple-scene';
 import { bernsteinModel, type BernsteinData, type BernsteinSample } from '../models/weierstrass-approx';
 
@@ -67,7 +67,7 @@ function drawMain(chart: Chart, data: BernsteinData, lang: Lang): void {
     // The x-axis sits at y = 0 when 0 is inside the domain, clamped to
     // the plot edge otherwise: for the constant f = 1 the domain is
     // [0.9, 1.1] and the unclamped y(0) lands ~1900px below the chart.
-    const axisY = Math.min(Math.max(y(0), 0), height);
+    const axisY = clampedScalePos(y, 0, 0, height);
     g.append('g').attr('transform', `translate(0,${axisY})`).call(axisBottom(x).ticks(5));
     g.append('g').call(axisLeft(y).ticks(5));
 

@@ -258,12 +258,11 @@ export default defineSimpleScene<DoubleSequencesData>({
   sizeFromData: (data, container) => {
     const step = cellOf(data) + GAP;
     return {
-      width: Math.max(container.width || 640, MARGIN.left + data.k * step + MARGIN.right),
-      // The height must cover the margins plus everything drawMain
-      // paints below the grid: the column-limit row at +22 and its
-      // text. The old formula (8 + k*step + 44) ignored the margins,
-      // so at k = 12 the column limits painted below the chart box.
-      height: MARGIN.top + 8 + data.k * step + 28 + MARGIN.bottom,
+      width: Math.max(container.width, data.k * step),
+      // Inner height (the engine adds MARGIN back): it must cover
+      // everything drawMain paints below the grid — the column-limit
+      // row at +22 and its text.
+      height: 8 + data.k * step + 28,
     };
   },
 });
