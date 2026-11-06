@@ -13,8 +13,9 @@
  *
  *   1. shrink the font, down to MIN_FONT_PX;
  *   2. if it still overflows and the label has spaces, wrap it onto
- *      two lines (a <text> gains <tspan> lines; a <foreignObject>
- *      label's div wraps in place and the box grows downward).
+ *      two or, when two are not enough, three lines (a <text> gains
+ *      <tspan> lines; a <foreignObject> label's div wraps in place
+ *      and the box grows downward).
  *
  * Axis tick labels (inside .tick groups) are never touched: shrinking
  * or wrapping axis numbers would corrupt the axis layout, and their
@@ -67,11 +68,11 @@ function shrinkText(el: SVGTextElement, svgBox: HBox): void {
 }
 
 /**
- * Wrap a plain <text> label onto two lines at the word boundary that
- * best balances the lines, keeping the label's anchor x. The first
- * line rises half a line so the pair stays centered on the original
- * baseline; if that clips the svg top, the whole label shifts down
- * by the clipped amount (into the top margin, never above the box).
+ * Wrap a plain <text> label onto two or three lines at the word
+ * boundaries that best balance the lines, keeping the label's anchor
+ * x. The line stack stays centered on the original baseline; if that
+ * clips the svg top, the whole label shifts down by the clipped
+ * amount (into the top margin, never above the box).
  */
 function wrapText(el: SVGTextElement, svg: SVGSVGElement, svgBox: HBox): void {
   if (el.hasAttribute('transform') || el.dataset['fitWrapped']) return;
@@ -83,29 +84,50 @@ function wrapText(el: SVGTextElement, svg: SVGSVGElement, svgBox: HBox): void {
   const lineHeight = fs * 1.25;
   const availPx = svgBox.width - 8;
 
-  const build = (split: number): [SVGTSpanElement, SVGTSpanElement] => {
+  const build = (splits: number[]): SVGTSpanElement[] => {
     el.replaceChildren();
-    const t1 = document.createElementNS(SVG_NS, 'tspan');
-    t1.setAttribute('x', x);
-    t1.setAttribute('dy', `${-lineHeight / 2}`);
-    t1.textContent = words.slice(0, split).join(' ');
-    const t2 = document.createElementNS(SVG_NS, 'tspan');
-    t2.setAttribute('x', x);
-    t2.setAttribute('dy', `${lineHeight}`);
-    t2.textContent = words.slice(split).join(' ');
-    el.append(t1, t2);
-    return [t1, t2];
+    const lines: SVGTSpanElement[] = [];
+    let from = 0;
+    splits.concat(words.length).forEach((to, i) => {
+      const t = document.createElementNS(SVG_NS, 'tspan');
+      t.setAttribute('x', x);
+      // The line stack stays centered on the original baseline: the
+      // first line rises by half the stack, the rest step down evenly.
+      t.setAttribute('dy', i === 0 ? `${(-lineHeight * splits.length) / 2}` : `${lineHeight}`);
+      t.textContent = words.slice(from, to).join(' ');
+      from = to;
+      el.append(t);
+      lines.push(t);
+    });
+    return lines;
   };
 
-  let best: { split: number; worst: number } | undefined;
-  for (let split = 1; split < words.length; split++) {
-    const [t1, t2] = build(split);
-    const worst = Math.max(t1.getComputedTextLength(), t2.getComputedTextLength());
-    if (!best || worst < best.worst) best = { split, worst };
-    if (worst <= availPx) break;
+  // Try two lines first; a long title in a narrow mini preview can
+  // still overflow at the minimum font, so fall back to three lines
+  // before giving up. The split search rebuilds per candidate, which
+  // is quadratic for three lines — acceptable here because it runs
+  // only for labels that already failed to fit at the minimum font.
+  let best: { splits: number[]; worst: number } | undefined;
+  for (const lineCount of [2, 3]) {
+    if (words.length < lineCount) break;
+    const candidates: number[][] = [];
+    if (lineCount === 2) {
+      for (let s = 1; s < words.length; s++) candidates.push([s]);
+    } else {
+      for (let s1 = 1; s1 < words.length - 1; s1++) {
+        for (let s2 = s1 + 1; s2 < words.length; s2++) candidates.push([s1, s2]);
+      }
+    }
+    for (const splits of candidates) {
+      const lines = build(splits);
+      const worst = Math.max(...lines.map((t) => t.getComputedTextLength()));
+      if (!best || worst < best.worst) best = { splits, worst };
+      if (worst <= availPx) break;
+    }
+    if (best && best.worst <= availPx) break;
   }
   if (!best) return;
-  build(best.split);
+  build(best.splits);
   el.dataset['fitWrapped'] = '1';
 
   const b = el.getBoundingClientRect();
