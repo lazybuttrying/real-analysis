@@ -1,5 +1,6 @@
 import type { AnySceneModule, ControlState, Lang, SceneLoader } from '../contracts';
 import { shallowEqual } from '../state';
+import { fitSvgText } from '../view/fittext';
 import { site } from '../site.config';
 import { h } from './dom';
 import { tr } from './i18n';
@@ -73,7 +74,14 @@ export class SceneHost {
 
       this.observer = new ResizeObserver((entries) => {
         const rect = entries[0]?.contentRect;
-        if (rect && this.mounted === mounted) mounted.scene.resize?.(rect.width, rect.height);
+        if (rect && this.mounted === mounted) {
+          mounted.scene.resize?.(rect.width, rect.height);
+          try {
+            fitSvgText(this.host);
+          } catch (error) {
+            console.error(error);
+          }
+        }
       });
       this.observer.observe(this.host);
 
@@ -161,6 +169,15 @@ export class SceneHost {
         mounted.scene.render(mounted.data, mounted.state);
       } catch (error) {
         this.fail(error);
+        return;
+      }
+      // Shrink or wrap chart labels that overflow their svg at this
+      // width (the mobile title class). A fitting failure must never
+      // fail the scene itself.
+      try {
+        fitSvgText(this.host);
+      } catch (error) {
+        console.error(error);
       }
     });
   }
@@ -221,7 +238,14 @@ export function mountMiniViz(
   // the first render (strip text is set synchronously, so the sizes read
   // here are final) and again whenever the host box itself changes.
   const observer = new ResizeObserver(() => {
-    if (host.isConnected) mini.resize?.(host.clientWidth, host.clientHeight);
+    if (host.isConnected) {
+      mini.resize?.(host.clientWidth, host.clientHeight);
+      try {
+        fitSvgText(host);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   });
   observer.observe(host);
   registerDispose(() => {
@@ -235,6 +259,11 @@ export function mountMiniViz(
         if (!host.isConnected) return;
         mini.render(data, preset);
         mini.resize?.(host.clientWidth, host.clientHeight);
+        try {
+          fitSvgText(host);
+        } catch (error) {
+          console.error(error);
+        }
       },
       (error: unknown) => console.error(error),
     );

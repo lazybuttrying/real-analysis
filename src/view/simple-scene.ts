@@ -9,6 +9,7 @@ import { createRichSlot, setRichText, type RichSlot } from './richslot';
 import {
   createChart,
   createSceneShell,
+  DEFAULT_MARGIN,
   type Chart,
   type Margin,
   type SceneShell,
@@ -142,15 +143,21 @@ export interface SimpleSceneConfig<D> {
   /**
    * Optional data-driven sizing for the main chart, applied in resize()
    * in place of (per dimension) the container-based size. Receives the
-   * last rendered data and the chart wrap's RAW clientWidth/clientHeight
-   * (either may be 0 before layout), and returns the dimensions it wants
-   * to override; an omitted dimension keeps the standard container-based
-   * value (clientWidth || fallback, clientHeight || fallbackHeight).
-   * Extracted from the grid scenes, whose resize() derives the chart size
-   * from the data (e.g. height = rows * cell + constants, width =
-   * max(clientWidth, grid width)). Only called once data exists — before
-   * the first render, resize() uses the standard sizing, exactly like the
-   * original scenes' createChart initial size.
+   * last rendered data and the chart wrap's INNER container size — the
+   * raw clientWidth/clientHeight minus this scene's margins (either may
+   * be 0 before layout) — and returns the INNER dimensions it wants to
+   * override: the size of the drawing area (chart.width/chart.height),
+   * never the svg size. The engine adds the margins back, so a scene
+   * must NOT add margins itself; the pre-2026-11 contract returned the
+   * outer size and two of the three grid scenes forgot the margins,
+   * painting a row of sums below the chart box. An omitted dimension
+   * keeps the standard container-based value (clientWidth || fallback,
+   * clientHeight || fallbackHeight, as outer sizes as before).
+   * Extracted from the grid scenes, whose resize() derives the chart
+   * size from the data (e.g. height = rows * cell + constants, width =
+   * max(container width, grid width)). Only called once data exists —
+   * before the first render, resize() uses the standard sizing, exactly
+   * like the original scenes' createChart initial size.
    */
   sizeFromData?: (
     data: D,
@@ -302,7 +309,12 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
       return chartDiv;
     };
 
-    /** Main-chart size for one resize: container-based, with sizeFromData overrides. */
+    /**
+     * Main-chart size for one resize: container-based, with sizeFromData
+     * overrides. sizeFromData speaks in inner sizes (see its contract):
+     * the container it receives is the wrap size minus the margins, and
+     * the dimensions it returns get the margins added back here.
+     */
     const mainSize = (
       wrapEl: HTMLElement,
       fallbackW: number,
@@ -310,12 +322,17 @@ export function defineSimpleScene<D>(config: SimpleSceneConfig<D>) {
       let w = wrapEl.clientWidth || fallbackW;
       let h = wrapEl.clientHeight || fallbackHeight;
       if (config.sizeFromData && last) {
+        const eff = margin ?? DEFAULT_MARGIN;
         const override = config.sizeFromData(last.data, {
-          width: wrapEl.clientWidth,
-          height: wrapEl.clientHeight,
+          width: wrapEl.clientWidth
+            ? Math.max(0, wrapEl.clientWidth - eff.left - eff.right)
+            : 0,
+          height: wrapEl.clientHeight
+            ? Math.max(0, wrapEl.clientHeight - eff.top - eff.bottom)
+            : 0,
         });
-        if (override.width !== undefined) w = override.width;
-        if (override.height !== undefined) h = override.height;
+        if (override.width !== undefined) w = override.width + eff.left + eff.right;
+        if (override.height !== undefined) h = override.height + eff.top + eff.bottom;
       }
       return { w, h };
     };

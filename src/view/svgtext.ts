@@ -1,5 +1,6 @@
 import type { Selection } from 'd3';
 import { stripInlineMath } from '../contracts';
+import { fitLabelElement } from './fittext';
 
 /**
  * Rich text for SVG <text> labels (chart titles, axis labels, legends,
@@ -134,9 +135,16 @@ function replaceWithRichLabel(
   fo.style.overflow = 'visible';
   const transform = el.getAttribute('transform');
   if (transform) fo.setAttribute('transform', transform);
+  // The fit pass (view/fittext) re-anchors this label after shrinking
+  // it, so it needs the anchor the scene asked for and its x.
+  fo.dataset['svgLabelAnchor'] = anchor;
+  fo.dataset['svgLabelAnchorX'] = String(x);
   fo.append(div);
   parent.insertBefore(fo, el);
   el.remove();
+  // The upgrade lands after the host's post-render fit pass, so fit
+  // this label now, in case the KaTeX rendering overflows its svg.
+  fitLabelElement(fo);
 }
 
 /**

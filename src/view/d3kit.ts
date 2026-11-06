@@ -13,6 +13,28 @@ export function fmtSci(x: number, digits = 3): string {
   return x.toExponential(digits);
 }
 
+/**
+ * A scale position clamped into [lo, hi]: where an axis line or a marker
+ * for `value` belongs when the value may fall outside the scale's domain.
+ * A scale extrapolates linearly past its domain, so an axis drawn at
+ * y(0) with 0 outside the domain lands arbitrarily far outside the plot
+ * (the Weierstrass scene's constant f = 1 domain [0.9, 1.1] put the
+ * x-axis ~1900px below the chart) and the svg paints it there silently.
+ * Clamping pins the position to the nearest plot edge instead. Infinite
+ * positions (a log scale at 0) clamp to the matching edge; a NaN
+ * position falls back to lo.
+ */
+export function clampedScalePos(
+  scale: (value: number) => number,
+  value: number,
+  lo: number,
+  hi: number,
+): number {
+  const pos = scale(value);
+  if (Number.isNaN(pos)) return lo;
+  return Math.min(hi, Math.max(lo, pos));
+}
+
 export interface Margin {
   top: number;
   right: number;
@@ -20,7 +42,7 @@ export interface Margin {
   left: number;
 }
 
-const DEFAULT_MARGIN: Margin = { top: 16, right: 16, bottom: 36, left: 52 };
+export const DEFAULT_MARGIN: Margin = { top: 16, right: 16, bottom: 36, left: 52 };
 
 export interface Chart {
   readonly svg: Selection<SVGSVGElement, unknown, null, undefined>;
