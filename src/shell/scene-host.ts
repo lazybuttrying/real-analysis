@@ -179,6 +179,29 @@ export class SceneHost {
       } catch (error) {
         console.error(error);
       }
+      this.armFontRefit();
+    });
+  }
+
+  private fontRefitArmed = false;
+
+  /**
+   * Labels are measured against whatever font is active at render
+   * time; when the webfont swaps in they can widen past the box.
+   * Re-run the fit pass once the fonts settle (once per host).
+   */
+  private armFontRefit(): void {
+    if (this.fontRefitArmed) return;
+    this.fontRefitArmed = true;
+    const fonts = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts;
+    if (!fonts) return;
+    void fonts.ready.then(() => {
+      if (!this.mounted) return;
+      try {
+        fitSvgText(this.host);
+      } catch (error) {
+        console.error(error);
+      }
     });
   }
 
@@ -237,6 +260,7 @@ export function mountMiniViz(
   // shrink that stale viewBox into a tiny thumbnail. Re-fit right after
   // the first render (strip text is set synchronously, so the sizes read
   // here are final) and again whenever the host box itself changes.
+  // (Promoted from the real-analysis tree, where this was fixed first.)
   const observer = new ResizeObserver(() => {
     if (host.isConnected) {
       mini.resize?.(host.clientWidth, host.clientHeight);
@@ -263,6 +287,19 @@ export function mountMiniViz(
           fitSvgText(host);
         } catch (error) {
           console.error(error);
+        }
+        // Same webfont-swap concern as the full host: refit once the
+        // fonts settle, while the mini is still on the page.
+        const fonts = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts;
+        if (fonts) {
+          void fonts.ready.then(() => {
+            if (!host.isConnected) return;
+            try {
+              fitSvgText(host);
+            } catch (error) {
+              console.error(error);
+            }
+          });
         }
       },
       (error: unknown) => console.error(error),

@@ -75,8 +75,13 @@ function shrinkText(el: SVGTextElement, svgBox: HBox): void {
  * amount (into the top margin, never above the box).
  */
 function wrapText(el: SVGTextElement, svg: SVGSVGElement, svgBox: HBox): void {
-  if (el.hasAttribute('transform') || el.dataset['fitWrapped']) return;
-  if (el.childElementCount > 0) return;
+  if (el.hasAttribute('transform')) return;
+  // A label fitted before the webfont arrived can overflow again
+  // once the real font swaps in: the host re-runs the fit pass on
+  // document.fonts.ready, and an already-wrapped label re-splits
+  // from its full text (bounded, so a pathological label settles).
+  const wraps = Number.parseInt(el.dataset['fitWraps'] ?? '0', 10) || 0;
+  if (wraps >= 3) return;
   const words = (el.textContent ?? '').trim().split(/\s+/);
   if (words.length < 2) return;
   const x = el.getAttribute('x') ?? '0';
@@ -128,7 +133,7 @@ function wrapText(el: SVGTextElement, svg: SVGSVGElement, svgBox: HBox): void {
   }
   if (!best) return;
   build(best.splits);
-  el.dataset['fitWrapped'] = '1';
+  el.dataset['fitWraps'] = String(wraps + 1);
 
   const b = el.getBoundingClientRect();
   if (b.top < svgBox.top + 1) {
